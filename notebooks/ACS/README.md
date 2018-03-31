@@ -1,3 +1,5 @@
+[![Developed For: ACS](https://img.shields.io/badge/Developed%20For-ACS-orange.svg)](http://www.stsci.edu/hst/acs) [![Powered By: STScI](https://img.shields.io/badge/powered%20by-STScI-blue.svg?colorA=707170&colorB=3e8ddd&style=flat)](http://www.stsci.edu/)
+
 # acs-notebook
 
 This repository contains downloadable versions of several *HST*/ACS webpages with basic Python examples. These code examples are simple and only designed for a limited scope. Users are advised to visit the [ACS website](http://www.stsci.edu/hst/acs), [Instrument Handbook](http://www.stsci.edu/hst/acs/documents/handbooks/current/cover.html), and [Data Handbook](http://www.stsci.edu/hst/acs/documents/handbooks/currentDHB/acs_cover.html) for more information about the the current status of ACS, instrument specifications, and data analysis.
