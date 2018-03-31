@@ -1,6 +1,6 @@
 # acs-notebook
 
-This repository contains downloadable versions of several *HST*/ACS webpages with basic Python examples. These code examples are simple and only designed for a limited scope. Users are advised to visit the [ACS website](http://www.stsci.edu/hst/acs), [Instrument Handbook](http://www.stsci.edu/hst/acs/documents/handbooks/current/cover.html), and [Data Handbook](http://www.stsci.edu/hst/acs/documents/handbooks/currentDHB/acs_cover.html) for more information about the the current status of ACS, instrument specifications, and data analysis. Before running these examples, you must install or update to the latest version of [AstroConda](https://astroconda.readthedocs.io/en/latest/).
+This repository contains downloadable versions of several *HST*/ACS webpages with basic Python examples. These code examples are simple and only designed for a limited scope. Users are advised to visit the [ACS website](http://www.stsci.edu/hst/acs), [Instrument Handbook](http://www.stsci.edu/hst/acs/documents/handbooks/current/cover.html), and [Data Handbook](http://www.stsci.edu/hst/acs/documents/handbooks/currentDHB/acs_cover.html) for more information about the the current status of ACS, instrument specifications, and data analysis.
 
 Users who need help transitioning from IRAF/PyRAF to Python should see the [stak-notebooks](https://github.com/spacetelescope/stak-notebooks) repository. 
 
@@ -13,6 +13,8 @@ To download the notebooks in this repository, simply open a terminal, go to the 
 git clone https://github.com/spacetelescope/acs-notebook.git
 ```
 which will create a new acs-notebook/ directory containing the contents of this repository.
+ 
+___Warning:___ Before running these examples, you must install or update to the latest version of [AstroConda](https://astroconda.readthedocs.io/en/latest/).
 
 Jupyter Notebooks allow code to be packaged with formatted text to create illustrative examples. Users who are unfamiliar with Jupyter Notebooks should also see the [short guide](https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/) for how to use these tools.
 
