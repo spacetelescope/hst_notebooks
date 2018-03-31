@@ -8,4 +8,4 @@ For examples of workflows with *HST* data, please see the CSI notebooks reposito
 
 ## Contributing
 
-If you have feedback concerning our documentation or examples presented here, please open an [issue](https://github.com/spacetelescope/acs-notebook/issues). For questions about the ACS instrument or data, please contact the ACS Team via the [Hubble Space Telescope Help Desk portal](http://hsthelp.stsci.edu). 
+If you have feedback concerning our documentation or examples presented here, please open an [issue](https://github.com/spacetelescope/acs-notebook/issues). For questions about the ACS instrument or data, please contact the ACS Branch at STScI via the [Hubble Space Telescope Help Desk portal](http://hsthelp.stsci.edu). 
