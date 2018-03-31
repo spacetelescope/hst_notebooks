@@ -12,7 +12,9 @@ To download the notebooks in this repository, simply open a terminal, go to the 
 ```
 git clone https://github.com/spacetelescope/acs-notebook.git
 ```
-Jupyter Notebooks allow code to be packaged with formatted text to create illustrative examples. Users who are unfamiliar with Jupyter Notebooks should also see the [short guide](https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/) to getting started with these useful tools.
+which will create a new acs-notebook/ directory containing the contents of this repository.
+
+Jupyter Notebooks allow code to be packaged with formatted text to create illustrative examples. Users who are unfamiliar with Jupyter Notebooks should also see the [short guide](https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/) for how to use these tools.
 
 ## Active Notebooks
 
