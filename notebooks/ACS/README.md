@@ -20,10 +20,11 @@ Jupyter Notebooks allow code to be packaged with formatted text to create illust
 
 ## Active Notebooks
 
-* **acs_zeropoints.ipynb**: A description of the ACS photometric systems, header keywords, and topics related to photometrically calibrating ACS data. 
-
 
 * **acs_subarray_cte.ipynb**: Instructions for how to use the `acs_destripe_plus` code to calibrate, de-stripe, and correct ACS subarray observations for charge transfer efficiency (CTE).
+
+
+* **acs_zeropoints.ipynb**: A description of the ACS photometric systems, header keywords, and topics related to photometrically calibrating ACS data. 
 
 ## Contributing
 
