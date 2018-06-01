@@ -16,14 +16,18 @@ git clone https://github.com/spacetelescope/acs-notebook.git
 ```
 which will create a new acs-notebook/ directory containing the contents of this repository.
  
-___Warning:___ Before running these examples, you must install or update to the latest version of [AstroConda](https://astroconda.readthedocs.io/en/latest/).
+___Warning:___ Before running these examples, you must install or update to the latest version of [AstroConda](https://astroconda.readthedocs.io/en/latest/). Additionally, `astroquery` is not currently included in the AstroConda distribution. Users will need to run
+```
+conda install astroquery
+```
+before using the notebooks as many of them use this tool to download datasets for the examples.
 
-Jupyter Notebooks allow code to be packaged with formatted text to create illustrative examples. Users who are unfamiliar with Jupyter Notebooks should also see the [short guide](https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/) for how to use these tools.
+Jupyter Notebooks allow code to be packaged with formatted text to create illustrative examples. Users who are unfamiliar with Jupyter Notebooks should also see the [short guide](https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/) for how to use these tools. Users may also prefer to use [Jupyter Lab](http://jupyterlab.readthedocs.io/en/stable/), which is another helpful tool that can be used to view these tutorials, but will need to be installed in addition to AstroConda.
 
 ## Active Notebooks
 
 
-* **acs_subarray_cte.ipynb**: Instructions for how to use the `acs_destripe_plus` code to calibrate, de-stripe, and correct ACS subarray observations for charge transfer efficiency (CTE).
+* **acs_subarrays.ipynb**: Instructions for how to use the `acs_destripe_plus` code to calibrate, de-stripe, and correct ACS subarray observations for charge transfer efficiency (CTE). Also included are instructions for updating the `OSCNTAB` reference file to subtract the bias level from the prescan columns in user-defined subarray observations.
 
 
 * **acs_zeropoints.ipynb**: A description of the ACS photometric systems, header keywords, and topics related to photometrically calibrating ACS data. 
