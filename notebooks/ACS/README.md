@@ -26,11 +26,11 @@ Jupyter Notebooks allow code to be packaged with formatted text to create illust
 
 ## Active Notebooks
 
-
 * **acs_subarrays.ipynb**: Instructions for how to use the `acs_destripe_plus` code to calibrate, de-stripe, and correct ACS subarray observations for charge transfer efficiency (CTE). Also included are instructions for updating the `OSCNTAB` reference file to subtract the bias level from the prescan columns in user-defined subarray observations.
 
-
 * **acs_zeropoints.ipynb**: A description of the ACS photometric systems, header keywords, and topics related to photometrically calibrating ACS data. 
+
+* **pixel_area_maps.ipynb**: How to use Python to create pixel area maps (PAMs) to account for the effects of geometric distortion in distorted images. This enables users to perform photometry on distorted images if desired.
 
 ## Contributing
 
