@@ -23,6 +23,7 @@ ___Warning:___ Before running these examples, you must install or update to the 
 conda install astroquery
 conda install nodejs
 jupyter labextension install @jupyter-widgets/jupyterlab-manager
+jupyter labextension install @jupyterlab/plotly-extension
 ```
 before using the notebooks as many of them use this tool to download datasets for the examples.
 
