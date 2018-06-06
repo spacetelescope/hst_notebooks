@@ -8,7 +8,7 @@ This repository contains downloadable versions of several *HST*/ACS webpages wit
 
 Users who need help transitioning from IRAF/PyRAF to Python should see the [stak-notebooks](https://github.com/spacetelescope/stak-notebooks) repository. 
 
-If you have questions about HST data analysis, calibration software, instrument capabilities, and/or the methods discussed in this notebook, please visit the [HST Help Desk](http://hsthelp.stsci.edu). Through the help desk portal, you can explore the HST Knowledge Base and request additional help from experts.
+If you have questions about HST data analysis, calibration software, instrument capabilities, and/or the methods discussed in this repository, please visit the [HST Help Desk](http://hsthelp.stsci.edu). Through the help desk portal, you can explore the HST Knowledge Base and request additional help from experts.
 
 # Getting Started
 
