@@ -18,16 +18,9 @@ git clone https://github.com/spacetelescope/acs-notebook.git
 ```
 which will create a new acs-notebook/ directory containing the contents of this repository.
  
-___Warning:___ Before running these examples, you must install or update to the latest version of [AstroConda](https://astroconda.readthedocs.io/en/latest/). Additionally, `astroquery` is not currently included in the AstroConda distribution and a jupyter extension is required for some notebooks. Users will need to run the following:
-```
-conda install astroquery
-conda install nodejs
-jupyter labextension install @jupyter-widgets/jupyterlab-manager
-jupyter labextension install @jupyterlab/plotly-extension
-```
-before using the notebooks as many of them use this tool to download datasets for the examples.
+___Warning:___ Before running these examples, you must install or update to the latest version of [AstroConda](https://astroconda.readthedocs.io/en/latest/). Additionally, [astroquery](https://github.com/astropy/astroquery) is not currently included in the AstroConda distribution and will need to be installed seperately using either `conda` or `pip`.
 
-Jupyter Notebooks allow code to be packaged with formatted text to create illustrative examples. Users who are unfamiliar with Jupyter Notebooks should also see the [short guide](https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/) for how to use these tools. Users may also prefer to use [Jupyter Lab](http://jupyterlab.readthedocs.io/en/stable/), which is another helpful tool that can be used to view these tutorials, but will need to be installed in addition to AstroConda.
+Jupyter Notebooks allow code to be packaged with formatted text to create illustrative examples. Users who are unfamiliar with Jupyter Notebooks should also see the [short guide](https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/) for how to use these tools.
 
 # Contents
 
