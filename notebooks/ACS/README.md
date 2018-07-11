@@ -26,7 +26,9 @@ Jupyter Notebooks allow code to be packaged with formatted text to create illust
 
 ## Complex Workflow Notebooks
 
-* **acs_reduction.py**: This notebook walks a user through an example of how to: 1) download data from MAST using `astroquery`, 2) update calibration information in the FITS primary headers, 3) calibration ACS observations using `calacs`, 4) align images to a common WCS, and 5) combine images using `AstroDrizzle`.
+* **acs_reduction.ipynb**: This notebook walks a user through an example of how to: 1) download data from MAST using `astroquery`, 2) update calibration information in the FITS primary headers, 3) calibration ACS observations using `calacs`, 4) align images to a common WCS, and 5) combine images using `AstroDrizzle`.
+
+* **acs_sbc_dark_analysis.ipynb**: The ACS Solar Blind Channel (SBC) has nominally negligible dark current. However, the temperature of the SBC detector increases steadily over time while it is in use, and the dark current is proportional to temperature. At temperatures above 25 ºC, the dark current is no longer negligible and must be subracted. This workflow demonstrates how to account for dark current in ACS/SBC observations.
 
 ## Simple Example Notebooks
 
