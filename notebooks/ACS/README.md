@@ -26,17 +26,19 @@ Jupyter Notebooks allow code to be packaged with formatted text to create illust
 
 ## Complex Workflow Notebooks
 
-* **acs_reduction.ipynb**: This notebook walks a user through an example of how to: 1) download data from MAST using `astroquery`, 2) update calibration information in the FITS primary headers, 3) calibration ACS observations using `calacs`, 4) align images to a common WCS, and 5) combine images using `AstroDrizzle`.
+* **acs_reduction**: This worked example demonstrates how to use the CALACS pipeline to re-process raw ACS data retrieved from MAST. Users are shown how to update reference files in the image headers, retrieve reference files from the Calibration Reference Data System (CRDS), and how to toggle steps in the calibration pipeline (e.g., the CTE correction). 
+
+* **acs_cte_forward_model** The capability to simulate the readout of an ACS image at a given epoch was recently added to CALACS. This example demonstrates how to take an image corrected for time-dependent CTE loss and then simulate the CTE effects on the same image if observed at another time.
+
+* **acs_saturation_trails** The ACS/WFC CCDs remain linear beyond the full-well saturation, which allows users the opportunity to perform photometry on even saturated stars. This notebook demonstrates the methods and caveats when performing saturated star photometry.
 
 * **acs_sbc_dark_analysis.ipynb**: The ACS Solar Blind Channel (SBC) has nominally negligible dark current. However, the temperature of the SBC detector increases steadily over time while it is in use, and the dark current is proportional to temperature. At temperatures above 25 ºC, the dark current is no longer negligible and must be subracted. This workflow demonstrates how to account for dark current in ACS/SBC observations.
 
 ## Simple Example Notebooks
 
-* **acs_subarrays.ipynb**: Instructions for how to use the `acs_destripe_plus` code to calibrate, de-stripe, and correct ACS subarray observations for charge transfer efficiency (CTE). Also included are instructions for updating the `OSCNTAB` reference file to subtract the bias level from the prescan columns in user-defined subarray observations.
+* **acs_subarrays**: Instructions for how to use the `acs_destripe_plus` code to calibrate, de-stripe, and correct ACS subarray observations for charge transfer efficiency (CTE). Also included are instructions for updating the `OSCNTAB` reference file to subtract the bias level from the prescan columns in user-defined subarray observations.
 
-* **acs_zeropoints.ipynb**: A description of the ACS photometric systems, header keywords, and topics related to photometrically calibrating ACS data. 
-
-* **pixel_area_maps.ipynb**: How to use Python to create pixel area maps (PAMs) to account for the effects of geometric distortion in distorted images. This enables users to perform photometry on distorted images if desired.
+* **pixel_area_maps**: How to use Python to create pixel area maps (PAMs) to account for the effects of geometric distortion in distorted images. This enables users to perform photometry on distorted images if desired.
 
 ## Contributing
 
