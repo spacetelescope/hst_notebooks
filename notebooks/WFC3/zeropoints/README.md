@@ -1,1 +1,1 @@
-Initial readme for WFC3 Zeropoints
+This notebook shows how to calculate photometric zeropoints using the Python package stsynphot for any WFC3 detector, filter, date, or aperture. This tutorial is especially useful for calculating Vegamag zeropoints, which require an input spectrum. The notebook is also useful for computing time-dependent WFC3/UVIS zeropoints for any observation date, as the values listed in WFC3 ISR 2021-04 are defined for the reference epoch. As of mid-2021, the WFC3/IR zeropoints are not time-dependent.
