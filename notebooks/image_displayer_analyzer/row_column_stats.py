@@ -8,17 +8,17 @@ import matplotlib.pyplot as plt
 from scipy.stats import mode as mode
 
 def get_bunit(ext1header):
-    """ Get the brightness unit for the plot axis label.
+    """ Get the brightness unit for the plot axis label
 
     Parameters
     ----------
     ext1header: Header
         The extension 1 header of the fits file being displayed. This is the
-        extension that contains the brightness unit keyword.
+        extension that contains the brightness unit keyword
 
     Returns
     -------
-    The string of the brightness unit for the axis label.
+    The string of the brightness unit for the axis label
         {'counts', 'counts/s','e$^-$', 'e$^-$/s'}
 
     """
@@ -36,7 +36,7 @@ def get_bunit(ext1header):
         return units
 
 def get_yaxis_and_label(stat, scidata, axes):
-    """ Get the y-axis values and the y-axis label for the plot.
+    """ Get the y-axis values and the y axis label for the plot
 
     Parameters
     ----------
@@ -50,15 +50,15 @@ def get_yaxis_and_label(stat, scidata, axes):
 
     axes: Integer {0, 1}
         The axis over which to compute the statistc. For column stats axes = 0
-        for row stats axes = 1.
+        for row stats axes = 1
 
     Returns
     -------
     yaxis: Array
-        The array of statistical values requested.
+        The array of statistical values requested
 
     ylabel: String
-        The string of the statistic being computed to be used as the axis label.
+        The string of the statistic being computed to be used as the axis label
 
     """
     if stat == 'median':
@@ -81,40 +81,40 @@ def get_yaxis_and_label(stat, scidata, axes):
 def makeplot(xaxis, yaxis, axlabel, ylabel,
              bunit,detector, fname, h1, ylim,
              figsize, dpi):
-    """ Make and display the plot for WFC3 UVIS or IR images.
+    """ Make and display the plot for WFC3 UVIS or IR images
 
     Parameters
     ----------
     xaxis: Range
-        Range from 1 to the total number of rows or columns. If image section,
-        range will go from x1 to x2.
+        Range from 1 to the total number of rows or columns. If image section
+        range will go from x1 to x2
 
     yaxis: Array
-        The statistical values being plotted.
+        The statistical values being plotted
 
     axlabel: String {"Row", "Column"}
-        The axis which the statistc was computed over.
+        The axis which the statistc was computed over
 
     bunit: String
-        The string of the brightness unit for the axis label.
+        The string of the brightness unit for the axis label
 
     detector: String {"UVIS", "IR"}
-        The detector used for the image.
+        The detector used for the image
 
     fname: String
-        The name of the file being plotted.
+        The name of the file being plotted
 
     h1: Header
         The extension 1 header of the fits file being displayed.
 
     ylim: (float,float)
-        The minimum and maximum values for y-axis scale.
+        The minimum and maximum values for y axis scale.
 
     figsize: (float,float)
-        The width, height of the figure. Default is (9,6).
+        The width, height of the figure. Default is (9,6)
 
     dpi: float
-        The resolution of the figure in dots-per-inch. Default is 120.
+        The resolution of the figure in dots-per-inch. Default is 120
 
     Returns
     -------
@@ -142,28 +142,28 @@ def makeplot(xaxis, yaxis, axlabel, ylabel,
 def make_ima_plot(xaxis, yaxis, axlabel, ylabel,
                   bunit, detector, fname,h1, ylim, nsamps, ext,
                   figsize, dpi):
-    """ Make and display the plot for WFC3 IR IMA images.
+    """ Make and display the plot for WFC3 IR IMA images
 
     Parameters
     ----------
     xaxis: Range
-        Range from 1 to the total number of rows or columns. If image section,
-        range will go from x1 to x2.
+        Range from 1 to the total number of rows or columns. If image section
+        range will go from x1 to x2
 
     yaxis: Array
-        The statistical values being plotted.
+        The statistical values being plotted
 
     axlabel: String {"Row", "Column"}
-        The axis which the statistc was computed over.
+        The axis which the statistc was computed over
 
     bunit: String
-        The string of the brightness unit for the axis label.
+        The string of the brightness unit for the axis label
 
     detector: String {"UVIS", "IR"}
-        The detector used for the image.
+        The detector used for the image
 
     fname: String
-        The name of the file being plotted.
+        The name of the file being plotted
 
     h1: Header
         The extension 1 header of the fits file being displayed.
@@ -172,16 +172,16 @@ def make_ima_plot(xaxis, yaxis, axlabel, ylabel,
         The minimum and maximum values for y axis scale.
 
     nsamps: Integer
-        The number of samples (readouts) contained in the file.
+        The number of samples (readouts) contained in the file
 
     ext: Integer
-        The extension to be displayed. Ranges from 1 to nsamp.
+        The extension to be displayed. Ranges from 1 to nsamp
 
     figsize: (float,float)
-        The width, height of the figure. Default is (9,6).
+        The width, height of the figure. Default is (9,6)
 
     dpi: float
-        The resolution of the figure in dots-per-inch. Default is 120.
+        The resolution of the figure in dots-per-inch. Default is 120
 
     Returns
     -------
@@ -233,13 +233,13 @@ def row_column_stats(filename, stat='median', axis='column', ylim=(None,None),
            y2 = y-axis pixel number end
 
         stat: String { "mean", "median", "mode", "stddev"}
-           The type of statistic to compute.
+           The type of statistic to compute
 
         axis: String { "row", "column"}
-           The axis to compute the statistic over.
+           The axis to compute the statistic over
 
         ylim: Tuple
-            A Tuple of two real numbers that will serve as the min and max values
+            A Tuple of two real numbers that will serve as the min a max values
             for the y-axis of the plot.
 
         printmeta: Bool
@@ -248,27 +248,27 @@ def row_column_stats(filename, stat='median', axis='column', ylim=(None,None),
             screen such as the filter, target name, date observed, brightness
             units and more.
 
-        ima_multiread: Bool
+        ima_multiread:  Bool
            Set ima_multiread to True if you would like each indiviual read of
            the ima to be plotted. Set ima_multiread to False if you would like
            just the final read of the ima to be plotted.
 
-        plot: Bool
+        plot:  Bool
            Set plot to False if you do not want the function to plot.
 
         figsize: (float,float)
-            The width, height of the figure. Default is (9,6).
+            The width, height of the figure. Default is (9,6)
 
         dpi: float
-            The resolution of the figure in dots-per-inch. Default is 120.
+            The resolution of the figure in dots-per-inch. Default is 120
 
         Returns
         -------
         xaxis: Range
-           Range from 1 to the total number of rows or columns.
+           Range from 1 to the total number of rows or columns
 
         yaxis: Array
-           Array of y-axis row or column statistic values.
+           Array of y-axis row or column statistic values
 
         """
 
