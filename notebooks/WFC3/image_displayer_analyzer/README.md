@@ -1,3 +1,5 @@
+In this tutorial, we present `display_image`, a tool for displaying full images with metadata, individual WFC3/UVIS chip images, a section of an image with various colormaps/scaling, and individual WFC3/IR `ima` reads. In addition, we present `row_column_stats`, a tool for computing row and column statistics for the types of WFC3 images previously mentioned.
+
 This directory, once unzipped, should contain this `README.md`,
 the image displayer tool `display_image.py`, the row and column statistic
 tool `row_column_stats.py`, and the Jupyter Notebook tutorial
