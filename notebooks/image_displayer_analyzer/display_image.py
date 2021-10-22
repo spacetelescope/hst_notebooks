@@ -163,10 +163,10 @@ def display_image(filename,
                 yend = naxis2*2 # full y size
 
             with fits.open(imagename) as hdu:
-                uvis2_sci = hdu["SCI",2].data
+                uvis2_sci = hdu["SCI",1].data
                 uvis2_err = hdu[2].data
                 uvis2_dq = hdu[3].data
-                uvis1_sci = hdu["SCI",1].data
+                uvis1_sci = hdu["SCI",2].data
                 uvis1_err = hdu[5].data
                 uvis1_dq = hdu[6].data
 
