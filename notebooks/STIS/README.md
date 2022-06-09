@@ -6,4 +6,4 @@ The [Space Telescope Imaging Spectrograph](https://www.stsci.edu/hst/instrumenta
 ### STIS Coronagraphic Visualization Tool
 Jupyter Notebook that assists users in planning and preparing STIS coronagraphic observations.
 ### STIS DrizzlePac Tutorial
-Jupyter Notebook for aligning and combining STIS images with [DrizzlePac](https://www.stsci.edu/scientific-community/software/drizzlepac.html).
+Jupyter Notebook for aligning and combining STIS images with [DrizzlePac](https://www.stsci.edu/scientific-community/software/drizzlepac.html). 
