@@ -13090,7 +13090,7 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><a id=top></a></p>
-<h1>1-D Spectra Extraction <a class="tocSkip"></h1>
+<h1>1D Spectra Extraction <a class="tocSkip"></h1>
 
 </div>
 </div>
@@ -13099,14 +13099,14 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><h1>Learning Goals<span class="tocSkip"></span></h1></p>
-<div class="toc"><ul class="toc-item"><li><span><a href="#Introduction" data-toc-modified-id="Introduction-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Introduction</a></span><ul class="toc-item"><li><span><a href="#Import-Necessary-Packages" data-toc-modified-id="Import-Necessary-Packages-1.1"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Import Necessary Packages</a></span></li><li><span><a href="#Collect-Data-Set-From-the-MAST-Archive-Using-Astroquery" data-toc-modified-id="Collect-Data-Set-From-the-MAST-Archive-Using-Astroquery-1.2"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Collect Data Set From the MAST Archive Using Astroquery</a></span></li></ul></li><li><span><a href="#_x1d-FITS-File-Structure" data-toc-modified-id="_x1d-FITS-File-Structure-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>_x1d FITS File Structure</a></span></li><li><span><a href="#Plot-the-Extraction-Region" data-toc-modified-id="Plot-the-Extraction-Region-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Plot the Extraction Region</a></span></li><li><span><a href="#Extracted-Spectra-of-STIS-Echelle" data-toc-modified-id="Extracted-Spectra-of-STIS-Echelle-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Extracted Spectra of STIS Echelle</a></span></li></ul></div>
+<div class="toc"><ul class="toc-item"><li><span><a href="#Introduction" data-toc-modified-id="Introduction-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Introduction</a></span><ul class="toc-item"><li><span><a href="#Import-Necessary-Packages" data-toc-modified-id="Import-Necessary-Packages-1.1"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Import Necessary Packages</a></span></li><li><span><a href="#Collect-Data-Set-From-the-MAST-Archive-Using-Astroquery" data-toc-modified-id="Collect-Data-Set-From-the-MAST-Archive-Using-Astroquery-1.2"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Collect Data Set From the MAST Archive Using Astroquery</a></span></li></ul></li><li><span><a href="#x1d-FITS-File-Structure" data-toc-modified-id="x1d-FITS-File-Structure-2"><span class="toc-item-num">2&nbsp;&nbsp;</span><code>x1d</code> FITS File Structure</a></span></li><li><span><a href="#Plot-the-Extraction-Region" data-toc-modified-id="Plot-the-Extraction-Region-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Plot the Extraction Region</a></span></li><li><span><a href="#Extracted-Spectra-of-STIS-Echelle" data-toc-modified-id="Extracted-Spectra-of-STIS-Echelle-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Extracted Spectra of STIS Echelle</a></span></li></ul></div>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Introduction">Introduction<a class="anchor-link" href="#Introduction">&#182;</a></h2><p>The _x1d fits file is the one-dimensional extracted spectra for individual imsets of _flt, _sfl, or _crj images. The _x1d file is in binary table with the science information stored in the 'SCI' extension. In this notebook, we will show how to visualize the extraction regions when generating the _x1d extracted spectra from a _flt image. In some cases when users work with images with multiple sources or extended background, they might want to customize extraction. The goal of visualizing extraction region is to help confirm that the proper extraction parameters are selected, and the extraction regions do not overlap.</p>
+<h2 id="Introduction">Introduction<a class="anchor-link" href="#Introduction">&#182;</a></h2><p>The <code>x1d</code> FITS file is the one-dimensional extracted spectra for individual imsets of <code>flt</code>, <code>sfl</code>, or <code>crj</code> images. The <code>x1d</code> file is in binary table with the science information stored in the 'SCI' extension. In this notebook, we will show how to visualize the extraction regions when generating the <code>x1d</code> extracted spectra from a <code>flt</code> image. In some cases when users work with images with multiple sources or extended background, they might want to customize extraction. The goal of visualizing extraction region is to help confirm that the proper extraction parameters are selected, and the extraction regions do not overlap.</p>
 <p>For more information on extracted spectra, see the STIS Data Handbook: <a href="https://hst-docs.stsci.edu/stisdhb/chapter-5-stis-data-analysis/5-5-working-with-extracted-spectra">5.5 Working with Extracted Spectra</a></p>
 
 </div>
@@ -13116,11 +13116,11 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Import-Necessary-Packages">Import Necessary Packages<a class="anchor-link" href="#Import-Necessary-Packages">&#182;</a></h3><ul>
-<li><code>astropy.io fits</code> <code>astropy.table Table</code> for accessing FITS files</li>
-<li><code>astroquery.mast Observations</code> for finding and downloading data from the <a href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST</a> archive</li>
+<li><code>astropy.io.fits</code> and <code>astropy.table.Table</code> for accessing FITS files</li>
+<li><code>astroquery.mast.Observations</code> for finding and downloading data from the <a href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST</a> archive</li>
 <li><code>os</code> for managing system paths</li>
 <li><code>numpy</code> to handle array functions</li>
-<li><code>stistools</code> for quick operations on STIS Data</li>
+<li><code>stistools</code> for operations on STIS Data</li>
 <li><code>matplotlib</code> for plotting data</li>
 </ul>
 
@@ -13129,7 +13129,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Import for: Reading in fits file</span>
@@ -13153,7 +13153,52 @@ div#notebook {
 <span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">FixedLocator</span>
-<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/kding/miniconda3/envs/stis/lib/python3.7/site-packages/stsci/tools/nmpfit.py:8: UserWarning: NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.
+  warnings.warn(&#34;NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.&#34;)
+/Users/kding/miniconda3/envs/stis/lib/python3.7/site-packages/stsci/tools/gfit.py:18: UserWarning: GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.Use astropy.modeling instead.
+  warnings.warn(&#34;GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.&#34;
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>The following tasks in the stistools package can be run with TEAL:
+   basic2d      calstis     ocrreject     wavecal        x1d          x2d
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.cmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;viridis&#39;</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
 </pre></div>
@@ -13173,19 +13218,19 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># change this field in you have a specific dataset to be explored</span>
-<span class="n">obs_id</span><span class="o">=</span><span class="s2">&quot;odj102010&quot;</span>
+<span class="n">obs_id</span> <span class="o">=</span> <span class="s1">&#39;odj102010&#39;</span>
 <span class="c1"># Search target object by obs_id</span>
 <span class="n">target</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">obs_id</span><span class="p">)</span>
 <span class="c1"># get a list of files assiciated with that target</span>
 <span class="n">target_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
 <span class="c1"># Download fits files</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">target_list</span><span class="p">,</span><span class="n">extension</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_flt.fits&#39;</span><span class="p">,</span><span class="s1">&#39;_x1d.fits&#39;</span><span class="p">],</span><span class="n">productType</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SCIENCE&quot;</span><span class="p">,])</span>
-<span class="n">flt_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./mastDownload/HST&quot;</span><span class="p">,</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obs_id</span><span class="p">),</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_flt.fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obs_id</span><span class="p">))</span>
-<span class="n">x1d_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./mastDownload/HST&quot;</span><span class="p">,</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obs_id</span><span class="p">),</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_x1d.fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obs_id</span><span class="p">))</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">target_list</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_flt.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;_x1d.fits&#39;</span><span class="p">],</span> <span class="n">productType</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SCIENCE&#39;</span><span class="p">])</span>
+<span class="n">flt_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./mastDownload/HST/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">)</span>
+<span class="n">x1d_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./mastDownload/HST/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">_x1d.fits&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13202,8 +13247,8 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj102010_x1d.fits to ./mastDownload/HST/odj102010/odj102010_x1d.fits ... [Done]
-Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj102010_flt.fits to ./mastDownload/HST/odj102010/odj102010_flt.fits ... [Done]
+<pre>INFO: Found cached file ./mastDownload/HST/odj102010/odj102010_x1d.fits with expected size 77760. [astroquery.query]
+INFO: Found cached file ./mastDownload/HST/odj102010/odj102010_flt.fits with expected size 10535040. [astroquery.query]
 </pre>
 </div>
 </div>
@@ -13215,7 +13260,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/produ
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="_x1d-FITS-File-Structure">_x1d FITS File Structure<a class="anchor-link" href="#_x1d-FITS-File-Structure">&#182;</a></h2><p>The _x1d FITS file is a multi-extension FITS file with header information stored in the primary extension (note that for CCD data the similar extension is _sx1), and the science data stored in the first extension called "SCI":</p>
+<h2 id="x1d-FITS-File-Structure"><code>x1d</code> FITS File Structure<a class="anchor-link" href="#x1d-FITS-File-Structure">&#182;</a></h2><p>The <code>x1d</code> file is a multi-extension FITS file with header information stored in the primary extension (note that for CCD data the similar extension is <code>sx1</code>), and the science data stored in the first extension called "SCI".</p>
 
 </div>
 </div>
@@ -13257,7 +13302,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The SCI extension contains the science data of the spectra along the spectral direction such as the wavelength and the flux, and information on the extraction region and the background region when performing the 1-D spectra extraction:</p>
+<p>The SCI extension contains the science data of the spectra along the spectral direction such as the wavelength and the flux, and information on the extraction region and the background region when performing the 1D spectra extraction:</p>
 <table>
 <thead><tr>
 <th style="text-align:left">Column name</th>
@@ -13272,7 +13317,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <td style="text-align:left">float32 array[1024]</td>
 </tr>
 <tr>
-<td style="text-align:left">EXTRSIZE</td>
+<td style="text-align:left">A2CENTER</td>
 <td style="text-align:left">row number in the y direction at which the spectral trace is centered</td>
 <td style="text-align:left">float32</td>
 </tr>
@@ -13309,10 +13354,11 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">)[[</span><span class="s2">&quot;SPORDER&quot;</span><span class="p">,</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">,</span><span class="s2">&quot;FLUX&quot;</span><span class="p">,</span><span class="s2">&quot;EXTRLOCY&quot;</span><span class="p">,</span><span class="s2">&quot;A2CENTER&quot;</span><span class="p">,</span><span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">,</span><span class="s2">&quot;BK1SIZE&quot;</span><span class="p">,</span><span class="s2">&quot;BK2SIZE&quot;</span><span class="p">,</span><span class="s2">&quot;BK1OFFST&quot;</span><span class="p">,</span><span class="s2">&quot;BK2OFFST&quot;</span><span class="p">]]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SPORDER&#39;</span><span class="p">,</span> <span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX&#39;</span><span class="p">,</span> <span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">,</span> <span class="s1">&#39;A2CENTER&#39;</span><span class="p">,</span> <span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">,</span><span class="s1">&#39;BK1SIZE&#39;</span><span class="p">,</span> <span class="s1">&#39;BK2SIZE&#39;</span><span class="p">,</span> <span class="s1">&#39;BK1OFFST&#39;</span><span class="p">,</span> <span class="s1">&#39;BK2OFFST&#39;</span><span class="p">]</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">)[</span><span class="n">cols</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -13336,12 +13382,12 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[16]:</div>
+    <div class="prompt output_prompt">Out[4]:</div>
 
 
 
 <div class="output_html rendered_html output_subarea output_execute_result"><i>Table length=1</i>
-<table id="table140243596095760" class="table-striped table-bordered table-condensed">
+<table id="table140684755886224" class="table-striped table-bordered table-condensed">
 <thead><tr><th>SPORDER</th><th>WAVELENGTH [1024]</th><th>FLUX [1024]</th><th>EXTRLOCY [1024]</th><th>A2CENTER</th><th>EXTRSIZE</th><th>BK1SIZE</th><th>BK2SIZE</th><th>BK1OFFST</th><th>BK2OFFST</th></tr></thead>
 <thead><tr><th></th><th>Angstroms</th><th>erg / (Angstrom cm2 s)</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th></tr></thead>
 <thead><tr><th>int16</th><th>float64</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th></tr></thead>
@@ -13357,7 +13403,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Note that X1D columns in pixel units (e.g. EXTRLOCY) are in one-indexed coordinates. Thus when visualizing the extraction region with Python (zero-indexed), the pixel coordinates need to be subtracted by 1. Additionally, the n-th pixel (in one-index coordinates) ranges from n-0.5 to n+0.5.</strong></p>
+<p><strong>Note that X1D columns in pixel units (e.g. <code>EXTRLOCY</code>) are in one-indexed coordinates. Thus when visualizing the extraction region with Python (zero-indexed), the pixel coordinates need to be subtracted by 1. Additionally, the n-th pixel (in one-index coordinates) ranges from n-0.5 to n+0.5.</strong></p>
 
 </div>
 </div>
@@ -13365,8 +13411,8 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Plot-the-Extraction-Region">Plot the Extraction Region<a class="anchor-link" href="#Plot-the-Extraction-Region">&#182;</a></h2><p><strong>Left:</strong>  The 2D FLT image.</p>
-<p><strong>Right:</strong>  The 2D FLT image with extraction regions over-plotted. The extraction region is plotted in red, and the 2 background regions are plotted in orange.</p>
+<h2 id="Plot-the-Extraction-Region">Plot the Extraction Region<a class="anchor-link" href="#Plot-the-Extraction-Region">&#182;</a></h2><p><strong>Left:</strong>  The 2D <code>FLT</code> image.</p>
+<p><strong>Right:</strong>  The 2D <code>FLT</code> image with extraction regions over-plotted. The extraction region is plotted in red, and the 2 background regions are plotted in orange.</p>
 <p>To zoom in to a specific region along the Y axis, pass in the optional parameter yrange.</p>
 
 </div>
@@ -13374,10 +13420,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">show_extraction_regions</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">,</span> <span class="n">flt_filename</span><span class="p">,</span> <span class="n">sci_ext</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">xrange</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">yrange</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">show_extraction_regions</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">,</span> <span class="n">flt_filename</span><span class="p">,</span> <span class="n">sci_ext</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xrange</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yrange</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     
     <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
@@ -13398,35 +13444,41 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span>
 
     <span class="c1"># Right PLOT:</span>
-    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;A2CENTER=</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;A2CENTER&#39;</span><span class="p">]))</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A2CENTER=</span><span class="si">{</span><span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;A2CENTER&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="c1"># Extraction region in red:</span>
     <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
-                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;r:&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;r:&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
     <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
-                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
     <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
-                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
     <span class="c1"># Background regions in orange:</span>
     <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
-                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK1OFFST&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK1SIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK1OFFST&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK1SIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
     <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
-                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK1OFFST&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK1SIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK1OFFST&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK1SIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
     <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
-                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK2OFFST&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK2SIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK2OFFST&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK2SIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> 
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
     <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
-                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK2OFFST&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK2SIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK2OFFST&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK2SIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> 
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
     
-    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1023.5</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1023.5</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1023.5</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1023.5</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1023.5</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1023.5</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1023.5</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1023.5</span><span class="p">)</span>
     
-    <span class="k">if</span> <span class="n">xrange</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">xrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">xrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="k">if</span> <span class="n">yrange</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">yrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">yrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">yrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">yrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">xrange</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">yrange</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">yrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">yrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -13436,7 +13488,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_extraction_regions</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">,</span> <span class="n">flt_filename</span><span class="p">)</span>
@@ -13479,10 +13531,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_extraction_regions</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">,</span> <span class="n">flt_filename</span><span class="p">,</span><span class="n">yrange</span><span class="o">=</span><span class="p">(</span><span class="mi">350</span><span class="p">,</span><span class="mi">450</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_extraction_regions</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">,</span> <span class="n">flt_filename</span><span class="p">,</span> <span class="n">yrange</span><span class="o">=</span><span class="p">[</span><span class="mi">350</span><span class="p">,</span> <span class="mi">450</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -13522,10 +13574,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_extraction_regions</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">,</span> <span class="n">flt_filename</span><span class="p">,</span><span class="n">yrange</span><span class="o">=</span><span class="p">(</span><span class="mi">650</span><span class="p">,</span><span class="mi">720</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_extraction_regions</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">,</span> <span class="n">flt_filename</span><span class="p">,</span> <span class="n">yrange</span><span class="o">=</span><span class="p">[</span><span class="mi">650</span><span class="p">,</span> <span class="mi">720</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -13558,26 +13610,26 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Extracted-Spectra-of-STIS-Echelle">Extracted Spectra of STIS Echelle<a class="anchor-link" href="#Extracted-Spectra-of-STIS-Echelle">&#182;</a></h2><p>The method of visualizing the extracted region also applies to echelle data, except that echelle data has multiple spectra orders, and therefore has multiple EXTRLOCY corresponding to each SPORDER. In the plotting method, there is a parameter called 'row' which specifies the SPORDER we want to extract. We'll show how to visualize the extracted region for STIS echelle data.</p>
+<h2 id="Extracted-Spectra-of-STIS-Echelle">Extracted Spectra of STIS Echelle<a class="anchor-link" href="#Extracted-Spectra-of-STIS-Echelle">&#182;</a></h2><p>The method of visualizing the extracted region also applies to echelle data, except that echelle data has multiple spectra orders, and therefore has multiple <code>EXTRLOCY</code> corresponding to each <code>SPORDER</code>. In the plotting method, there is a parameter called 'row' which specifies the <code>SPORDER</code> we want to extract. We'll show how to visualize the extracted region for STIS echelle data.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Download the octx01030 dataset, which is a NUV-MAMA echelle data</span>
-<span class="n">obs_id</span><span class="o">=</span><span class="s2">&quot;octx01030&quot;</span>
+<span class="n">obs_id</span> <span class="o">=</span> <span class="s1">&#39;octx01030&#39;</span>
 <span class="c1"># Search target objscy by obs_id</span>
 <span class="n">target</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">obs_id</span><span class="p">)</span>
 <span class="c1"># get a list of files assiciated with that target</span>
 <span class="n">echelle_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
 <span class="c1"># Download fits files</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">echelle_list</span><span class="p">,</span><span class="n">extension</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_flt.fits&#39;</span><span class="p">,</span><span class="s1">&#39;_x1d.fits&#39;</span><span class="p">],</span><span class="n">productType</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SCIENCE&quot;</span><span class="p">,])</span>
-<span class="n">echelle_flt</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./mastDownload/HST&quot;</span><span class="p">,</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obs_id</span><span class="p">),</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_flt.fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obs_id</span><span class="p">))</span>
-<span class="n">echelle_x1d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./mastDownload/HST&quot;</span><span class="p">,</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obs_id</span><span class="p">),</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_x1d.fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obs_id</span><span class="p">))</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">echelle_list</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_flt.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;_x1d.fits&#39;</span><span class="p">],</span> <span class="n">productType</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SCIENCE&#39;</span><span class="p">,])</span>
+<span class="n">echelle_flt</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./mastDownload/HST/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">)</span>
+<span class="n">echelle_x1d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./mastDownload/HST/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">_x1d.fits&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13594,8 +13646,8 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/octx01030_x1d.fits to ./mastDownload/HST/octx01030/octx01030_x1d.fits ... [Done]
-Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/octx01030_flt.fits to ./mastDownload/HST/octx01030/octx01030_flt.fits ... [Done]
+<pre>INFO: Found cached file ./mastDownload/HST/octx01030/octx01030_x1d.fits with expected size 7629120. [astroquery.query]
+INFO: Found cached file ./mastDownload/HST/octx01030/octx01030_flt.fits with expected size 84139200. [astroquery.query]
 </pre>
 </div>
 </div>
@@ -13607,17 +13659,18 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/produ
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>As shown in the table data, there are multiple rows with each row having a different SPORDER. Each row also has different EXTRLOCY, which corresponds to different extraction regions in the _flt image for each SPORDER.</p>
+<p>As shown in the table data, there are multiple rows with each row having a different <code>SPORDER</code>. Each row also has different <code>EXTRLOCY</code>, which corresponds to different extraction regions in the <code>flt</code> image for each <code>SPORDER</code>.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">echelle_x1d</span><span class="p">,</span><span class="n">hdu</span><span class="o">=</span><span class="mi">1</span><span class="p">)[[</span><span class="s2">&quot;SPORDER&quot;</span><span class="p">,</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">,</span><span class="s2">&quot;FLUX&quot;</span><span class="p">,</span><span class="s2">&quot;EXTRLOCY&quot;</span><span class="p">,</span><span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">,</span><span class="s2">&quot;BK1SIZE&quot;</span><span class="p">,</span><span class="s2">&quot;BK2SIZE&quot;</span><span class="p">,</span><span class="s2">&quot;BK1OFFST&quot;</span><span class="p">,</span><span class="s2">&quot;BK2OFFST&quot;</span><span class="p">]]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SPORDER&#39;</span><span class="p">,</span> <span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX&#39;</span><span class="p">,</span> <span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">,</span> <span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">,</span> <span class="s1">&#39;BK1SIZE&#39;</span><span class="p">,</span> <span class="s1">&#39;BK2SIZE&#39;</span><span class="p">,</span> <span class="s1">&#39;BK1OFFST&#39;</span><span class="p">,</span> <span class="s1">&#39;BK2OFFST&#39;</span><span class="p">]</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">echelle_x1d</span><span class="p">,</span> <span class="n">hdu</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">cols</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -13641,12 +13694,12 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/produ
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[22]:</div>
+    <div class="prompt output_prompt">Out[10]:</div>
 
 
 
 <div class="output_html rendered_html output_subarea output_execute_result"><i>Table length=24</i>
-<table id="table140245194162448" class="table-striped table-bordered table-condensed">
+<table id="table140686369711312" class="table-striped table-bordered table-condensed">
 <thead><tr><th>SPORDER</th><th>WAVELENGTH [1024]</th><th>FLUX [1024]</th><th>EXTRLOCY [1024]</th><th>EXTRSIZE</th><th>BK1SIZE</th><th>BK2SIZE</th><th>BK1OFFST</th><th>BK2OFFST</th></tr></thead>
 <thead><tr><th></th><th>Angstroms</th><th>erg / (Angstrom cm2 s)</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th></tr></thead>
 <thead><tr><th>int16</th><th>float64</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th></tr></thead>
@@ -13709,17 +13762,17 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/produ
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Similarly, we can show the extraction region of the next SPORDER by passing the row number into the plotting method:</p>
+<p>Similarly, we can show the extraction region of the next <code>SPORDER</code> by passing the row number into the plotting method:</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_extraction_regions</span><span class="p">(</span><span class="n">echelle_x1d</span><span class="p">,</span> <span class="n">echelle_flt</span><span class="p">,</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">show_extraction_regions</span><span class="p">(</span><span class="n">echelle_x1d</span><span class="p">,</span> <span class="n">echelle_flt</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13752,7 +13805,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/produ
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>After visualizing the extraction, we can use the <code>x1d</code> function in stistools to customize extraction. For more information, see <a href="https://stistools.readthedocs.io/en/latest/x1d.html"><code>x1d</code></a></p>
+<p>After visualizing the extraction, we can use the <code>x1d()</code> function in stistools to customize extraction. For more information, see <a href="https://stistools.readthedocs.io/en/latest/x1d.html"><code>x1d</code></a>.</p>
 
 </div>
 </div>
