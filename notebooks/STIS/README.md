@@ -46,8 +46,8 @@ If you have `pip` or `conda` installed:
 |`pip install jupyterlab`|`conda install -c conda-forge jupyterlab`|
 
 
-### Python enviroment
-STScI has recently replaced `astroconda` with `stenv`.  See [stenv](https://stenv.readthedocs.io/) for more details on how to set up and install this envirnoment.
+### Python environment
+STScI has recently replaced `astroconda` with `stenv`.  See [stenv](https://stenv.readthedocs.io/) for more details on how to set up and install this environment.
 
 
 #### Running Jupyter
