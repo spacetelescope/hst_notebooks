@@ -48,7 +48,7 @@ If you have `pip` or `conda` installed:
 |`pip install jupyterlab`|`conda install -c conda-forge jupyterlab`|
 
 
-### Python environment
+#### Python environment
 STScI has recently replaced `astroconda` with `stenv`.  See [stenv](https://stenv.readthedocs.io/) for more details on how to set up and install this environment.
 <<<<<<< HEAD
 We also provide the environment that was used when testing the introductory notebooks in `stis_env.yml`.
