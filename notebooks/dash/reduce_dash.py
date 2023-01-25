@@ -358,7 +358,7 @@ class DashData(object):
         #tbl['cxy'].info.format = '.2f'
         #tbl['cyy'].info.format = '.2f'
 
-        ascii.write(tbl, 'segmentation_maps/{}_source_list.dat'.format(self.root))
+        ascii.write(tbl, 'segmentation_maps/{}_source_list.dat'.format(self.root), overwrite=True)
 
     def diff_seg_map(self, cat_images=None, remove_column_names=True, nsigma=1.0, sig=5.0, npixels=5):
         '''
@@ -413,8 +413,6 @@ class DashData(object):
 
             # Create source list
             cat = SourceCatalog(data, segm)
-            
-            print(cat)
 
             tbl = cat.to_table()
             tbl['xcentroid'].info.format = '.2f'
@@ -423,7 +421,7 @@ class DashData(object):
             #tbl['cxy'].info.format = '.2f'
             #tbl['cyy'].info.format = '.2f'
 
-            ascii.write(tbl, 'segmentation_maps/{}_{:02d}_diff_source_list.dat'.format(self.root, index))
+            ascii.write(tbl, 'segmentation_maps/{}_{:02d}_diff_source_list.dat'.format(self.root, index), overwrite=True)
 
             if remove_column_names is True:
                 #Remove headers to source lists so tweakreg can read them
@@ -446,7 +444,7 @@ class DashData(object):
             #Save catfile in catalogs folder
             if not os.path.exists('catalogs'):
                 os.mkdir('catalogs')
-            ascii.write(catdata, 'catalogs/diff_catfile.cat')
+            ascii.write(catdata, 'catalogs/diff_catfile.cat', overwrite=True)
         else:
             raise Exception('Need to input list of difference files in order to make source list. List should include full path.')
 
