@@ -65,7 +65,8 @@ from stsci.tools import teal
 import stwcs
 from photutils import detect_sources #Needed for create_seg_map
 from photutils import detect_threshold #Needed for create_seg_map
-from photutils import source_properties
+#from photutils import source_properties
+from photutils.segmentation import SourceCatalog
 
 from utils import get_flat
 from utils import get_IDCtable
@@ -347,7 +348,7 @@ class DashData(object):
         hdu.writeto(('segmentation_maps/{}_seg.fits').format(self.root), overwrite=True)
 
         # Create source list
-        cat = source_properties(data, segm)
+        cat = SourceCatalog(data, segm)
 
         tbl = cat.to_table()
         tbl['xcentroid'].info.format = '.2f'
@@ -409,7 +410,7 @@ class DashData(object):
             hdu.writeto(('segmentation_maps/{}_{:02d}_diff_seg.fits').format(self.root, index), overwrite=True)
 
             # Create source list
-            cat = source_properties(data, segm)
+            cat = SourceCatalog(data, segm)
 
             tbl = cat.to_table()
             tbl['xcentroid'].info.format = '.2f'
