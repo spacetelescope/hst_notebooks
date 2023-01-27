@@ -8,7 +8,7 @@ def ds9_imitate(ax, image, extent=None):
                           interval=ZScaleInterval(),
                           stretch=LinearStretch())
 
-    ax.imshow(image, cmap='bone', norm=norm, origin=1, extent=extent)
+    ax.imshow(image, cmap='bone', norm=norm, origin='lower', extent=extent)
     return
 
 def triple_pam_plot(flt_file, pam_file, figtitle):
