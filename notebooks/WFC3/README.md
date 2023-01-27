@@ -56,13 +56,9 @@ All notebooks used to require the same anaconda virtual environment named
 `wfc3_env`. To create the virtual environment, run this line in a terminal 
 window:
 
-::
-
     conda env create -f wfc3_env_legacy.yml
 
 To activate `wfc3_env`, run this line in a terminal window:
-
-::
 
     conda activate wfc3_env
 
@@ -83,7 +79,7 @@ and strives to provide a welcoming community to all of our users and
 contributors.
 
 Want more information about how to make a contribution?  Take a look at
-the the astropy 
+the the `astropy` 
 [contributing](https://www.astropy.org/contribute.html)
 and [developer](https://docs.astropy.org/en/stable/index.html#developer-documentation) 
 documentation.
