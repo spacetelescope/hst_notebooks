@@ -18,7 +18,7 @@ git clone https://github.com/spacetelescope/acs-notebook.git
 ```
 which will create a new acs-notebook/ directory containing the contents of this repository.
  
-___Warning:___ Before running these examples, you must install or update to the latest version of [AstroConda](https://astroconda.readthedocs.io/en/latest/). Additionally, [astroquery](https://github.com/astropy/astroquery) is not currently included in the AstroConda distribution and will need to be installed seperately using either `conda` or `pip`.
+___Warning:___ Before running these examples, you must install or update to the latest version of [stenv](https://stenv.readthedocs.io/en/latest/).
 
 Jupyter Notebooks allow code to be packaged with formatted text to create illustrative examples. Users who are unfamiliar with Jupyter Notebooks should also see the [short guide](https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/) for how to use these tools.
 
