@@ -22,7 +22,7 @@ Authors
 -------
     Rosalia O'Brien 2019
     Iva Momcheva 2018
-    Catherine Martlin 2018
+    Catherine Martlin 2018, 2023
     Mario Gennaro 2018
 
 Use
@@ -52,6 +52,7 @@ References
 from glob import glob
 import os
 
+from astropy.convolution import convolve
 from astropy.convolution import Gaussian2DKernel
 from astropy.io import ascii
 from astropy.io import fits
@@ -65,7 +66,7 @@ from stsci.tools import teal
 import stwcs
 from photutils import detect_sources #Needed for create_seg_map
 from photutils import detect_threshold #Needed for create_seg_map
-from photutils import source_properties
+from photutils.segmentation import SourceCatalog
 
 from utils import get_flat
 from utils import get_IDCtable
@@ -339,7 +340,8 @@ class DashData(object):
         sigma = 3.0 * gaussian_fwhm_to_sigma    # FWHM = 3.
         kernel = Gaussian2DKernel(sigma, x_size=3, y_size=3)
         kernel.normalize()
-        segm = detect_sources(data, threshold, npixels=10, filter_kernel=kernel)
+        convolved_data = convolve(data, kernel)
+        segm = detect_sources(convolved_data, threshold, npixels=10)
 
         hdu = fits.PrimaryHDU(segm.data)
         if not os.path.exists('segmentation_maps'):
@@ -347,18 +349,18 @@ class DashData(object):
         hdu.writeto(('segmentation_maps/{}_seg.fits').format(self.root), overwrite=True)
 
         # Create source list
-        cat = source_properties(data, segm)
+        cat = SourceCatalog(data, segm)
 
         tbl = cat.to_table()
         tbl['xcentroid'].info.format = '.2f'
         tbl['ycentroid'].info.format = '.2f'
-        tbl['cxx'].info.format = '.2f'
-        tbl['cxy'].info.format = '.2f'
-        tbl['cyy'].info.format = '.2f'
+        #tbl['cxx'].info.format = '.2f'
+        #tbl['cxy'].info.format = '.2f'
+        #tbl['cyy'].info.format = '.2f'
 
-        ascii.write(tbl, 'segmentation_maps/{}_source_list.dat'.format(self.root))
+        ascii.write(tbl, 'segmentation_maps/{}_source_list.dat'.format(self.root), overwrite=True)
 
-    def diff_seg_map(self, cat_images=None, remove_column_names=True, nsigma=1.0, sig=6.0, npixels=5):
+    def diff_seg_map(self, cat_images=None, remove_column_names=True, nsigma=1.0, sig=5.0, npixels=5):
         '''
         Creates segmentation image and source list from difference files.
 
@@ -401,7 +403,8 @@ class DashData(object):
             sigma = sig * gaussian_fwhm_to_sigma
             kernel = Gaussian2DKernel(sigma, x_size=sig, y_size=sig)
             kernel.normalize()
-            segm = detect_sources(data, threshold, npixels=npixels, filter_kernel=kernel)
+            convolved_data = convolve(data, kernel)
+            segm = detect_sources(convolved_data, threshold, npixels=npixels)
 
             hdu = fits.PrimaryHDU(segm.data)
             if not os.path.exists('segmentation_maps'):
@@ -409,16 +412,16 @@ class DashData(object):
             hdu.writeto(('segmentation_maps/{}_{:02d}_diff_seg.fits').format(self.root, index), overwrite=True)
 
             # Create source list
-            cat = source_properties(data, segm)
+            cat = SourceCatalog(data, segm)
 
             tbl = cat.to_table()
             tbl['xcentroid'].info.format = '.2f'
             tbl['ycentroid'].info.format = '.2f'
-            tbl['cxx'].info.format = '.2f'
-            tbl['cxy'].info.format = '.2f'
-            tbl['cyy'].info.format = '.2f'
+            #tbl['cxx'].info.format = '.2f'
+            #tbl['cxy'].info.format = '.2f'
+            #tbl['cyy'].info.format = '.2f'
 
-            ascii.write(tbl, 'segmentation_maps/{}_{:02d}_diff_source_list.dat'.format(self.root, index))
+            ascii.write(tbl, 'segmentation_maps/{}_{:02d}_diff_source_list.dat'.format(self.root, index), overwrite=True)
 
             if remove_column_names is True:
                 #Remove headers to source lists so tweakreg can read them
@@ -441,7 +444,7 @@ class DashData(object):
             #Save catfile in catalogs folder
             if not os.path.exists('catalogs'):
                 os.mkdir('catalogs')
-            ascii.write(catdata, 'catalogs/diff_catfile.cat')
+            ascii.write(catdata, 'catalogs/diff_catfile.cat', overwrite=True)
         else:
             raise Exception('Need to input list of difference files in order to make source list. List should include full path.')
 

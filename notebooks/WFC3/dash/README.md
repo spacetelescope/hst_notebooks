@@ -8,16 +8,20 @@ Installation
 ```
 >>> conda activate wfc3_env
 ```
-2. Go to https://github.com/cmccully/lacosmicx and clone the repository in the current directory:
+2. First install `cython` to allow the installation of `lacosmicx`:
+```
+>>> conda install cython
+```
+3. Go to https://github.com/cmccully/lacosmicx and clone the repository in the current directory:
 ```
 >>> git clone https://github.com/cmccully/lacosmicx.git
 ```
-3. Change directory to the `lacosmicx` repository:
+4. Change directory to the `lacosmicx` repository:
 ```
 >>> cd lacosmicx
 ```
-4. Install the `lacosmicx` package:
+5. Install the `lacosmicx` package:
 ```
 >>> python setup.py develop
 ```
-5. **The package is installed; now you will be able to complete the WFC3 Dash notebook.**
+6. **The package is installed; now you will be able to complete the WFC3 Dash notebook.**
