@@ -2,13 +2,13 @@ In this Jupyter Notebook tutorial, we present the steps that should be taken
 when an observer receives a WFC3 Exception Report Email.
 
 This directory, once downloaded, should contain this README.md, the tutorial
-Jupyter Notebook wfc3_exception_report.ipynb, an `html` copy of the notebook,
+Jupyter Notebook `wfc3_exception_report.ipynb`, an `html` copy of the notebook,
 and a subdirectory titled `docs`. The subdirectory should contain two `.py`
 files, one `.png`, and one `.gif` file that are used in the notebook.
 
 In order to run this Jupyter Notebook, you must have created a virtual
 environment, such as the one in [WFC3 Library's](https://github.com/spacetelescope/WFC3Library) installation instructions. If
-you are using the `wfc3_env` environment from the `environment.yml` file in the
+you are using the `wfc3_env` environment from the `wfc3_env_legacy.yml` file in the
 WFC3Library repository, then you should not need any other packages to run this
 notebook.
 
