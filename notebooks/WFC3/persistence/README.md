@@ -8,7 +8,7 @@ By the end of this tutorial, you will:
 
 Dependencies: 
 
-`wfc3_env` from the installation instructions contain the packages you need. However if you would like to run this notebook from a different environment, then refer to the instructions below:
+The environment from [WFC3 Library's](https://github.com/spacetelescope/WFC3Library) installation instructions contain the packages you need. However if you would like to run this notebook from a different environment, then refer to the instructions below:
 
 Two astropy packages must be installed in your conda environment before downloading the data. To do this, type the following command in the terminal before starting the notebook:
 
