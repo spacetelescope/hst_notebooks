@@ -6,7 +6,7 @@ tool `row_column_stats.py`, and the Jupyter Notebook tutorial
 `wfc3_imageanalysis.ipynb`. Both of these tools are meant to be used inside of
 a Jupyter Notebook.
 
-In order to run the Jupyter Notebook you must have created the virtual
+In order to run the Jupyter Notebook you must create the virtual
 environment in [WFC3 Library's](https://github.com/spacetelescope/WFC3Library)
 installation instructions. No additional packages are required to run this
 Jupyter Notebook.
