@@ -27,7 +27,6 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/main.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -757,16 +756,90 @@ This type of data separation is possible with the <a class="reference external" 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/lbry01i6q_corrtag_a.fits to data/mastDownload/HST/lbry01i6q/lbry01i6q_corrtag_a.fits ...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/lbry01i6q_corrtag_b.fits to data/mastDownload/HST/lbry01i6q/lbry01i6q_corrtag_b.fits ...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">HTTPError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">filename_root</span> <span class="o">=</span> <span class="s1">&#39;lbry01i6q&#39;</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">pl</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">proposal_id</span> <span class="o">=</span> <span class="s1">&#39;12604&#39;</span><span class="p">,</span> <span class="n">obs_id</span> <span class="o">=</span> <span class="s1">&#39;lbry01*&#39;</span><span class="p">))</span> <span class="c1"># Create product list of all observations with that obs_id root</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">pl_mask</span> <span class="o">=</span> <span class="p">((</span><span class="n">pl</span><span class="p">[</span><span class="s1">&#39;productSubGroupDescription&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CORRTAG_A&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">pl</span><span class="p">[</span><span class="s1">&#39;productSubGroupDescription&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CORRTAG_B&quot;</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">pl</span><span class="p">[</span><span class="s1">&#39;obs_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">filename_root</span><span class="p">)</span> <span class="c1"># create mask with only the corrtag files</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">pl</span><span class="p">[</span><span class="n">pl_mask</span><span class="p">],</span> <span class="n">download_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datadir</span><span class="p">))</span> <span class="c1"># Download those corrtag files</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.10/site-packages/astroquery/utils/class_or_instance.py:25,</span> in <span class="ni">class_or_instance.__get__.&lt;locals&gt;.f</span><span class="nt">(*args, **kwds)</span>
+<span class="g g-Whitespace">     </span><span class="mi">23</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">24</span>     <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">25</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">26</span>     <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">27</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.10/site-packages/astroquery/utils/process_asyncs.py:26,</span> in <span class="ni">async_to_sync.&lt;locals&gt;.create_method.&lt;locals&gt;.newmethod</span><span class="nt">(self, *args, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">22</span> <span class="nd">@class_or_instance</span>
+<span class="g g-Whitespace">     </span><span class="mi">23</span> <span class="k">def</span> <span class="nf">newmethod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">24</span>     <span class="n">verbose</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">26</span>     <span class="n">response</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">async_method_name</span><span class="p">)(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">27</span>     <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;get_query_payload&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;field_help&#39;</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">28</span>         <span class="k">return</span> <span class="n">response</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.10/site-packages/astroquery/utils/class_or_instance.py:25,</span> in <span class="ni">class_or_instance.__get__.&lt;locals&gt;.f</span><span class="nt">(*args, **kwds)</span>
+<span class="g g-Whitespace">     </span><span class="mi">23</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">24</span>     <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">25</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">26</span>     <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">27</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.10/site-packages/astroquery/mast/observations.py:288,</span> in <span class="ni">ObservationsClass.query_criteria_async</span><span class="nt">(self, pagesize, page, **criteria)</span>
+<span class="g g-Whitespace">    </span><span class="mi">257</span> <span class="nd">@class_or_instance</span>
+<span class="g g-Whitespace">    </span><span class="mi">258</span> <span class="k">def</span> <span class="nf">query_criteria_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">pagesize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">criteria</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">259</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">260</span><span class="sd">     Given an set of criteria, returns a list of MAST observations.</span>
+<span class="g g-Whitespace">    </span><span class="mi">261</span><span class="sd">     Valid criteria are returned by ``get_metadata(&quot;observations&quot;)``</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">285</span><span class="sd">     response : list of `~requests.Response`</span>
+<span class="g g-Whitespace">    </span><span class="mi">286</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">288</span>     <span class="n">position</span><span class="p">,</span> <span class="n">mashup_filters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_caom_criteria</span><span class="p">(</span><span class="o">**</span><span class="n">criteria</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">290</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">mashup_filters</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">291</span>         <span class="k">raise</span> <span class="n">InvalidQueryError</span><span class="p">(</span><span class="s2">&quot;At least one non-positional criterion must be supplied.&quot;</span><span class="p">)</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.10/site-packages/astroquery/mast/observations.py:165,</span> in <span class="ni">ObservationsClass._parse_caom_criteria</span><span class="nt">(self, **criteria)</span>
+<span class="g g-Whitespace">    </span><span class="mi">163</span>     <span class="n">coordinates</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parse_input_location</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">objectname</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">164</span> <span class="k">else</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">165</span>     <span class="n">mashup_filters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_portal_api_connection</span><span class="o">.</span><span class="n">build_filter_set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_caom_cone</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">166</span>                                                     <span class="bp">self</span><span class="o">.</span><span class="n">_caom_filtered</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">167</span>                                                     <span class="o">**</span><span class="n">criteria</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">169</span> <span class="c1"># handle position info (if any)</span>
+<span class="g g-Whitespace">    </span><span class="mi">170</span> <span class="n">position</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.10/site-packages/astroquery/mast/discovery_portal.py:396,</span> in <span class="ni">PortalAPI.build_filter_set</span><span class="nt">(self, column_config_name, service_name, **filters)</span>
+<span class="g g-Whitespace">    </span><span class="mi">393</span>     <span class="n">service_name</span> <span class="o">=</span> <span class="n">column_config_name</span>
+<span class="g g-Whitespace">    </span><span class="mi">395</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_column_configs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">service_name</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">396</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_get_col_config</span><span class="p">(</span><span class="n">service_name</span><span class="p">,</span> <span class="n">fetch_name</span><span class="o">=</span><span class="n">column_config_name</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">398</span> <span class="n">caom_col_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_column_configs</span><span class="p">[</span><span class="n">service_name</span><span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">400</span> <span class="n">mashup_filters</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.10/site-packages/astroquery/mast/discovery_portal.py:234,</span> in <span class="ni">PortalAPI._get_col_config</span><span class="nt">(self, service, fetch_name)</span>
+<span class="g g-Whitespace">    </span><span class="mi">228</span>     <span class="n">fetch_name</span> <span class="o">=</span> <span class="n">service</span>
+<span class="g g-Whitespace">    </span><span class="mi">230</span> <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">],</span>
+<span class="g g-Whitespace">    </span><span class="mi">231</span>            <span class="s2">&quot;Content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-www-form-urlencoded&quot;</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">232</span>            <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">}</span>
+<span class="ne">--&gt; </span><span class="mi">234</span> <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">COLUMNS_CONFIG_URL</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">235</span>                          <span class="n">data</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;colConfigId=&quot;</span><span class="o">+</span><span class="n">fetch_name</span><span class="p">),</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">237</span> <span class="bp">self</span><span class="o">.</span><span class="n">_column_configs</span><span class="p">[</span><span class="n">service</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">239</span> <span class="n">more</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># for some catalogs this is not enough information</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.10/site-packages/astroquery/mast/discovery_portal.py:190,</span> in <span class="ni">PortalAPI._request</span><span class="nt">(self, method, url, params, data, headers, files, stream, auth, retrieve_all)</span>
+<span class="g g-Whitespace">    </span><span class="mi">187</span>     <span class="k">raise</span> <span class="ne">TimeoutError</span><span class="p">(</span><span class="s2">&quot;Timeout limit of </span><span class="si">{}</span><span class="s2"> exceeded.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">))</span>
+<span class="g g-Whitespace">    </span><span class="mi">189</span> <span class="c1"># Raising error based on HTTP status if necessary</span>
+<span class="ne">--&gt; </span><span class="mi">190</span> <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">192</span> <span class="n">result</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">194</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>  <span class="c1"># kind of hacky, but col_config service returns nothing if there is an error</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.10/site-packages/requests/models.py:1021,</span> in <span class="ni">Response.raise_for_status</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1016</span>     <span class="n">http_error_msg</span> <span class="o">=</span> <span class="p">(</span>
+<span class="g g-Whitespace">   </span><span class="mi">1017</span>         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2"> Server Error: </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2"> for url: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="g g-Whitespace">   </span><span class="mi">1018</span>     <span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1020</span> <span class="k">if</span> <span class="n">http_error_msg</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1021</span>     <span class="k">raise</span> <span class="n">HTTPError</span><span class="p">(</span><span class="n">http_error_msg</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+
+<span class="ne">HTTPError</span>: 503 Server Error: Service Unavailable for url: https://mast.stsci.edu/portal/Mashup/Mashup.asmx/columnsconfig
 </pre></div>
 </div>
 </div>
@@ -914,15 +987,6 @@ This type of data separation is possible with the <a class="reference external" 
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Input file /home/runner/work/hst_notebooks/hst_notebooks/notebooks/COS/DayNight/data/lbry01i6q_corrtag_a.fits
-sun_alt &gt; 0. flagged as bad
-EXPTIME changed from 1176.192 to 137.18394
-New GTI extension appended
-Writing to /home/runner/work/hst_notebooks/hst_notebooks/notebooks/COS/DayNight/intermediate/filtered_corrtag_a.fits
-</pre></div>
-</div>
-</div>
 </div>
 <p><a id = asnF></a></p>
 </section>
@@ -980,11 +1044,6 @@ Writing to /home/runner/work/hst_notebooks/hst_notebooks/notebooks/COS/DayNight/
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved: filtered_asn.fits in the cwd directory
-</pre></div>
-</div>
-</div>
 </div>
 <p>We can see the contents of this new association file below:</p>
 <div class="cell docutils container">
@@ -993,14 +1052,6 @@ Writing to /home/runner/work/hst_notebooks/hst_notebooks/notebooks/COS/DayNight/
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div><i>Table length=2</i>
-<table id="table140073389626112" class="table-striped table-bordered table-condensed">
-<thead><tr><th>MEMNAME</th><th>MEMTYPE</th><th>MEMPRSNT</th></tr></thead>
-<thead><tr><th>bytes40</th><th>bytes14</th><th>bool</th></tr></thead>
-<tr><td>intermediate/filtered_corrtag_a.fits</td><td>EXP-FP</td><td>True</td></tr>
-<tr><td>FILTERED</td><td>PROD-FP</td><td>True</td></tr>
-</table></div></div></div>
 </div>
 <p><em>Note</em> that in the “MEMNAME” column, we define the location of the corrtag file we wish to process in terms of a local path (the path from the current working directory from which we run our code to the file in the <code class="docutils literal notranslate"><span class="pre">intermediate</span></code> directory.) It is also possible to simply give the “MEMNAME” column the file’s rootname (i.e <code class="docutils literal notranslate"><span class="pre">filtered_corrtag_a</span></code>) as long as this file and the association files are in the same directory.</p>
 <div class="cell docutils container">
@@ -1033,11 +1084,6 @@ Writing to /home/runner/work/hst_notebooks/hst_notebooks/notebooks/COS/DayNight/
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved: lbry01i6q_asn.fits in the current working directory
-</pre></div>
-</div>
-</div>
 </div>
 <p>Again, we can see the contents of this association file below:</p>
 <div class="cell docutils container">
@@ -1046,14 +1092,6 @@ Writing to /home/runner/work/hst_notebooks/hst_notebooks/notebooks/COS/DayNight/
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div><i>Table length=2</i>
-<table id="table140073389632064" class="table-striped table-bordered table-condensed">
-<thead><tr><th>MEMNAME</th><th>MEMTYPE</th><th>MEMPRSNT</th></tr></thead>
-<thead><tr><th>bytes40</th><th>bytes14</th><th>bool</th></tr></thead>
-<tr><td>./data/lbry01i6q_corrtag_a.fits</td><td>EXP-FP</td><td>True</td></tr>
-<tr><td>LBRY01I6Q</td><td>PROD-FP</td><td>True</td></tr>
-</table></div></div></div>
 </div>
 <p><a id = CalCOSF></a></p>
 </section>
@@ -1124,11 +1162,6 @@ In the next two cells, we will setup an environment of reference files, download
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: AstropyDeprecationWarning: The following keywords are now recognized as special column-related attributes and should be set via the Column objects: TCDLTn, TCRPXn, TCRVLn, TCTYPn, TCUNIn. In future, these values will be dropped from manually specified headers automatically and replaced with values generated based on the Column objects. [astropy.io.fits.hdu.table]
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1164,12 +1197,6 @@ In the next two cells, we will setup an environment of reference files, download
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">unfilt_tab</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span> <span class="c1"># reverse segments FUVA and B for UNfiltered data</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
         <span class="n">combo_dict_u</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">+=</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: UnitsWarning: &#39;erg /s /cm**2 /angstrom&#39; contains multiple slashes, which is discouraged by the FITS standard [astropy.units.format.generic]
-WARNING: UnitsWarning: &#39;count /s /pixel&#39; contains multiple slashes, which is discouraged by the FITS standard [astropy.units.format.generic]
 </pre></div>
 </div>
 </div>
@@ -1212,9 +1239,6 @@ WARNING: UnitsWarning: &#39;count /s /pixel&#39; contains multiple slashes, whic
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/DayNight_35_0.png" src="../../../_images/DayNight_35_0.png" />
-</div>
 </div>
 <p><strong>We can see that the filtered spectrum largely follows the unfiltered spectrum; however, we significantly reduce the Lyman-alpha light from airglow around 1215 Å.</strong></p>
 <p>Because we filter out many of the datapoints used to calculate the spectrum, we can see a significant reduction in precision in flux space (visible as a <strong>banding</strong> in the y-axis). This can come about because with few datapoints, the bands represent wavelengths which received (0,1,2…n) discrete photons. The banding can sometimes be more pronounced at longer, redder wavelengths.</p>
@@ -1237,9 +1261,6 @@ WARNING: UnitsWarning: &#39;count /s /pixel&#39; contains multiple slashes, whic
 <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">plotsdir</span> <span class="o">/</span> <span class="s1">&#39;ebar_compare_spectra_sunalt.png&#39;</span><span class="p">),</span> <span class="n">dpi</span> <span class="o">=</span> <span class="mi">300</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/DayNight_37_0.png" src="../../../_images/DayNight_37_0.png" />
 </div>
 </div>
 <p><strong>With substantially fewer datapoints, our filtered dataset has larger errors.</strong></p>

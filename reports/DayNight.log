@@ -17,83 +17,29 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# This code cell condenses the key material of the Notebook into a single cell summary.
+filename_root = 'lbry01i6q'
 
-# 1. Import the necessary libraries:
-from astropy.table import Table
-from astropy.io import fits
-from astroquery.mast import Observations
-from cos_functions import estimate_snr
-import matplotlib.pyplot as plt
+pl = Observations.get_product_list(Observations.query_criteria(proposal_id = '12604', obs_id = 'lbry01*')) # Create product list of all observations with that obs_id root
+pl_mask = ((pl['productSubGroupDescription'] == "CORRTAG_A") | (pl['productSubGroupDescription'] == "CORRTAG_B")) & (pl['obs_id'] == filename_root) # create mask with only the corrtag files
+Observations.download_products(pl[pl_mask], download_dir = str(datadir)) # Download those corrtag files
 
-# 2. Download an example dataset using astroquery:
-# For more information, see the "Downloading your data" Notebook in this git repository
-onecell_x1dsum_data_products = Observations.download_products(
-    Observations.filter_products(
-        Observations.get_product_list(
-            Observations.query_criteria(
-                obs_id="LDM701020"  # The Obs ID of the observation to download
-            )
-        ),
-        # Only downloads the 1 dimensional extracted spectrum
-        productSubGroupDescription="X1DSUM"
-    )
-)
+file_locations_orig = glob.glob('./data/**/*corrtag*.fits', recursive=True)
+for file_orig in file_locations_orig:
+    os.rename(file_orig, './data/'+os.path.basename(file_orig)) # Aggregates the data from out of long convoluted filepaths
+    # NOTE - can cause problems if you have any non-unique filenames
+    #  for large datasets don't aggregate your data in this simple way that can't handle repeat names
 
-# 3. Read in the data to an Astropy Table:
-x1dsum_data_table = Table.read(onecell_x1dsum_data_products["Local Path"][0])
-# Some users may be familiar with another way to read in FITS table data, though it can be less user-friendly:
-with fits.open(onecell_x1dsum_data_products["Local Path"][0]) as hdulist:
-    alternate_x1dsum_data_structure = hdulist[1].data
-
-# 4. Estimate the S/N ratio of the spectrum by calculating sqrt(counts):
-#    The `estimate_snr` function is defined in the associated file: `cos_functions.py`
-SNR_estimate = estimate_snr(x1dsum_data_table, binsize_=6, verbose=False)
-
-# 5. Create a plot of the spectrum and the estimated S/N:
-# Create 2-subplots and populate the upper one with the flux and the lower with S/N:
-fig, (ax0, ax1) = plt.subplots(2, 1, figsize=(10, 8), sharex=True, dpi=100)
-for i, segment_row in enumerate(x1dsum_data_table):
-    # In the upper panel, plot the spectrum as Flux over Wavelength:
-    ax0.plot(segment_row["WAVELENGTH"],
-             segment_row["FLUX"], label=f"Segment FUV{'AB'[i]}")
-    # In the lower panel, plot the S/N ratio as estimated S/N over Wavelength:
-    ax1.plot(SNR_estimate[1][i][0], SNR_estimate[1]
-             [i][1], label=f"Segment FUV{'AB'[i]}")
-# Format the plot and save
-ax0.legend()
-# Adds a title of fontsize 20 points
-ax0.set_title("Fig. 0.1\nSimple COS G160M Spectrum", size=20)
-# Adds y axis label to the top panel
-ax0.set_ylabel('Flux [$erg\ s^{-1}\ cm^{-2}\ Angstrom^{-1}$]', size=10)
-# Adds y axis label to the bottom panel
-ax1.set_ylabel(
-    'Estimated  $\dfrac{SIGNAL}{NOISE}$  for a resolution element', size=10)
-# Adds x axis label to the bottom panel
-ax1.set_xlabel('Wavelength [$\AA$]', size=12)
-plt.tight_layout()
-plt.savefig("./Fig_0.1_quick_plot.png")
+file_locations_a = glob.glob('./data/**/*corrtag_a.fits', recursive=True) # Finds all the FUVA files
+file_locations_b = glob.glob('./data/**/*corrtag_b.fits', recursive=True) # Finds all the FUVB files
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mHTTPError[0m                                 Traceback (most recent call last)
-Cell [0;32mIn[1], line 15[0m
-[1;32m      8[0m [38;5;28;01mimport[39;00m [38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mpyplot[39;00m [38;5;28;01mas[39;00m [38;5;21;01mplt[39;00m
-[1;32m     10[0m [38;5;66;03m# 2. Download an example dataset using astroquery:[39;00m
-[1;32m     11[0m [38;5;66;03m# For more information, see the "Downloading your data" Notebook in this git repository[39;00m
-[1;32m     12[0m onecell_x1dsum_data_products [38;5;241m=[39m Observations[38;5;241m.[39mdownload_products(
-[1;32m     13[0m     Observations[38;5;241m.[39mfilter_products(
-[1;32m     14[0m         Observations[38;5;241m.[39mget_product_list(
-[0;32m---> 15[0m             [43mObservations[49m[38;5;241;43m.[39;49m[43mquery_criteria[49m[43m([49m
-[1;32m     16[0m [43m                [49m[43mobs_id[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mLDM701020[39;49m[38;5;124;43m"[39;49m[43m  [49m[38;5;66;43;03m# The Obs ID of the observation to download[39;49;00m
-[1;32m     17[0m [43m            [49m[43m)[49m
-[1;32m     18[0m         ),
-[1;32m     19[0m         [38;5;66;03m# Only downloads the 1 dimensional extracted spectrum[39;00m
-[1;32m     20[0m         productSubGroupDescription[38;5;241m=[39m[38;5;124m"[39m[38;5;124mX1DSUM[39m[38;5;124m"[39m
-[1;32m     21[0m     )
-[1;32m     22[0m )
-[1;32m     24[0m [38;5;66;03m# 3. Read in the data to an Astropy Table:[39;00m
-[1;32m     25[0m x1dsum_data_table [38;5;241m=[39m Table[38;5;241m.[39mread(onecell_x1dsum_data_products[[38;5;124m"[39m[38;5;124mLocal Path[39m[38;5;124m"[39m][[38;5;241m0[39m])
+Cell [0;32mIn[3], line 3[0m
+[1;32m      1[0m filename_root [38;5;241m=[39m [38;5;124m'[39m[38;5;124mlbry01i6q[39m[38;5;124m'[39m
+[0;32m----> 3[0m pl [38;5;241m=[39m Observations[38;5;241m.[39mget_product_list([43mObservations[49m[38;5;241;43m.[39;49m[43mquery_criteria[49m[43m([49m[43mproposal_id[49m[43m [49m[38;5;241;43m=[39;49m[43m [49m[38;5;124;43m'[39;49m[38;5;124;43m12604[39;49m[38;5;124;43m'[39;49m[43m,[49m[43m [49m[43mobs_id[49m[43m [49m[38;5;241;43m=[39;49m[43m [49m[38;5;124;43m'[39;49m[38;5;124;43mlbry01*[39;49m[38;5;124;43m'[39;49m[43m)[49m) [38;5;66;03m# Create product list of all observations with that obs_id root[39;00m
+[1;32m      4[0m pl_mask [38;5;241m=[39m ((pl[[38;5;124m'[39m[38;5;124mproductSubGroupDescription[39m[38;5;124m'[39m] [38;5;241m==[39m [38;5;124m"[39m[38;5;124mCORRTAG_A[39m[38;5;124m"[39m) [38;5;241m|[39m (pl[[38;5;124m'[39m[38;5;124mproductSubGroupDescription[39m[38;5;124m'[39m] [38;5;241m==[39m [38;5;124m"[39m[38;5;124mCORRTAG_B[39m[38;5;124m"[39m)) [38;5;241m&[39m (pl[[38;5;124m'[39m[38;5;124mobs_id[39m[38;5;124m'[39m] [38;5;241m==[39m filename_root) [38;5;66;03m# create mask with only the corrtag files[39;00m
+[1;32m      5[0m Observations[38;5;241m.[39mdownload_products(pl[pl_mask], download_dir [38;5;241m=[39m [38;5;28mstr[39m(datadir)) [38;5;66;03m# Download those corrtag files[39;00m
 
 File [0;32m/usr/share/miniconda/lib/python3.10/site-packages/astroquery/utils/class_or_instance.py:25[0m, in [0;36mclass_or_instance.__get__.<locals>.f[0;34m(*args, **kwds)[0m
 [1;32m     23[0m [38;5;28;01mdef[39;00m [38;5;21mf[39m([38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwds):
