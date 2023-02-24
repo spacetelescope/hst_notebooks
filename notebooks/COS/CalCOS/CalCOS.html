@@ -1,0 +1,1657 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Running the COS Data Pipeline (CalCOS) &#8212; HST Notebooks</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Splitting COS Exposures into sub-exposures with splittag" href="../SplitTag/SplitTag.html" />
+    <link rel="prev" title="Modifying or Creating an Association File" href="../AsnFile/AsnFile.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">HST Notebooks</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI Notebook Repository Template
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  COS
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../README.html">
+   COS Notebooks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Setup/Setup.html">
+   Setting up your computer environment for working with COS data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../DataDl/DataDl.html">
+   Downloading COS Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ViewData/ViewData.html">
+   Viewing COS Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../AsnFile/AsnFile.html">
+   Modifying or Creating an Association File
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Running the COS Data Pipeline (
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../SplitTag/SplitTag.html">
+   Splitting COS Exposures into sub-exposures with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     splittag
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../DayNight/DayNight.html">
+   Filtering out COS Data taken during the Day or Night
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../LSF/LSF.html">
+   Working with the COS Line Spread Function (LSF)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Extract/Extract.html">
+   Editing the extraction boxes in a spectral extraction file (XTRACTAB)
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  DrizzlePac
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../DrizzlePac/README.html">
+   DrizzlePac Jupyter Notebook Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../DrizzlePac/Initialization/Initialization.html">
+   DrizzlePac Initialization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">
+   Aligning HST images to an absolute reference catalog
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">
+   Optimizing Image Alignment for Multiple HST Visits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">
+   Aligning Deep Exposures of Sparse Fields
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">
+   Drizzling WFPC2 Images to use a Single Zeropoint
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">
+   Satellite Trail Masking Techniques
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">
+   Optimizing the Image Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">
+   Using updated astrometry solutions
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  NICMOS
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">
+   Programmatic Replacements for NICMOS Units Conversion Form
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/therealzoidberg/hst_merge/main?urlpath=tree/notebooks/COS/CalCOS/CalCOS.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://colab.research.google.com/github/therealzoidberg/hst_merge/blob/main/notebooks/COS/CalCOS/CalCOS.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Colab"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="headerbtn__text-container">Colab</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="initThebeSBT()"
+  class="headerbtn headerbtn-launch-thebe"
+  data-toggle="tooltip"
+data-placement="left"
+title="Launch Thebe"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="headerbtn__text-container">Live Code</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="github.com/therealzoidberg/hst_merge"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="github.com/therealzoidberg/hst_merge/issues/new?title=Issue%20on%20page%20%2Fnotebooks/COS/CalCOS/CalCOS.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/notebooks/COS/CalCOS/CalCOS.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Running the COS Data Pipeline (
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#learning-goals">
+   Learning Goals
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   0. Introduction
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#notes-for-those-new-to-python-jupyter-coding">
+     Notes for those new to Python/Jupyter/Coding:
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setting-up-the-environment-to-run-calcos">
+   1. Setting up the environment to run
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#prerequisites">
+     1.1. Prerequisites
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-your-conda-environment">
+     1.2. Create your conda environment
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#imports-and-basic-directories">
+     1.3. Imports and basic directories
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#we-will-also-define-a-few-basic-directories-in-which-to-place-our-inputs-and-outputs">
+       We will also define a few basic directories in which to place our inputs and outputs.
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#set-up-a-reference-file-directory">
+     1.4. Set up a reference file directory
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gathering-the-data-to-run-calcos">
+   2. Gathering the data to run
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#downloading-the-raw-data">
+     2.1. Downloading the raw data
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gathering-reference-files">
+     2.2. Gathering reference files
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#processing-raw-cos-data-using-calcos">
+   3. Processing raw COS data using
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-from-a-python-environment">
+     3.1. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     :
+     <em>
+      From a python environment
+     </em>
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-from-the-command-line">
+     3.2. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     :
+     <em>
+      From the command line
+     </em>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#re-processing-cos-data-with-altered-parameters">
+   4. Re-processing COS data with altered parameters
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#altering-the-calibration-switches">
+     4.1. Altering the calibration switches
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-with-a-specific-set-of-switches">
+     4.2. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     with a specific set of switches
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-with-a-different-reference-file">
+     4.3. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     with a different reference file
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#congratulations-you-finished-this-notebook">
+     Congratulations! You finished this Notebook!
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#there-are-more-cos-data-walkthrough-notebooks-on-different-topics-you-can-find-them-here">
+       There are more COS data walkthrough Notebooks on different topics. You can find them here.
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#about-this-notebook">
+     About this Notebook
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#citations">
+     Citations
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Running the COS Data Pipeline (CalCOS)</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Running the COS Data Pipeline (
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#learning-goals">
+   Learning Goals
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   0. Introduction
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#notes-for-those-new-to-python-jupyter-coding">
+     Notes for those new to Python/Jupyter/Coding:
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setting-up-the-environment-to-run-calcos">
+   1. Setting up the environment to run
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#prerequisites">
+     1.1. Prerequisites
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-your-conda-environment">
+     1.2. Create your conda environment
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#imports-and-basic-directories">
+     1.3. Imports and basic directories
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#we-will-also-define-a-few-basic-directories-in-which-to-place-our-inputs-and-outputs">
+       We will also define a few basic directories in which to place our inputs and outputs.
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#set-up-a-reference-file-directory">
+     1.4. Set up a reference file directory
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gathering-the-data-to-run-calcos">
+   2. Gathering the data to run
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#downloading-the-raw-data">
+     2.1. Downloading the raw data
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gathering-reference-files">
+     2.2. Gathering reference files
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#processing-raw-cos-data-using-calcos">
+   3. Processing raw COS data using
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-from-a-python-environment">
+     3.1. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     :
+     <em>
+      From a python environment
+     </em>
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-from-the-command-line">
+     3.2. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     :
+     <em>
+      From the command line
+     </em>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#re-processing-cos-data-with-altered-parameters">
+   4. Re-processing COS data with altered parameters
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#altering-the-calibration-switches">
+     4.1. Altering the calibration switches
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-with-a-specific-set-of-switches">
+     4.2. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     with a specific set of switches
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-with-a-different-reference-file">
+     4.3. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     with a different reference file
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#congratulations-you-finished-this-notebook">
+     Congratulations! You finished this Notebook!
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#there-are-more-cos-data-walkthrough-notebooks-on-different-topics-you-can-find-them-here">
+       There are more COS data walkthrough Notebooks on different topics. You can find them here.
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#about-this-notebook">
+     About this Notebook
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#citations">
+     Citations
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <p><a id="topC"></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="running-the-cos-data-pipeline-calcos">
+<h1>Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)<a class="headerlink" href="#running-the-cos-data-pipeline-calcos" title="Permalink to this headline">#</a></h1>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="learning-goals">
+<h1>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this headline">#</a></h1>
+<p><font size="4 "> This Notebook is designed to walk the user (<em>you</em>) through:</font></p>
+<p><strong>1. <a class="reference external" href="#setupC">Setting up the environment to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></a></strong></p>
+<p>- 1.1. <a class="reference external" href="#prereqC">Prerequisites</a></p>
+<p>- 1.2. <a class="reference external" href="#condaenvC">Create your conda environment</a></p>
+<p>- 1.3. <a class="reference external" href="#impdirC">Imports and basic directories</a></p>
+<p>- 1.4. <a class="reference external" href="#lrefC">Set up a reference file directory</a></p>
+<p><strong>2. <a class="reference external" href="#gatherC">Gathering the data to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></a></strong></p>
+<p>- 2.1. <a class="reference external" href="#datadlC">Downloading the raw data</a></p>
+<p>- 2.2. <a class="reference external" href="#reffileC">Gathering reference files</a></p>
+<p><strong>3. <a class="reference external" href="#runC">Processing raw COS data using <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></a></strong></p>
+<p>- 3.1. <a class="reference external" href="#runpyC">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>: <em>From a python environment</em></a></p>
+<p>- 3.2. <a class="reference external" href="#runcliC">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>: <em>From the command line</em></a></p>
+<p><strong>4. <a class="reference external" href="#rerunC">Re-processing COS data with altered parameters</a></strong></p>
+<p>- 4.1. <a class="reference external" href="#alterswitchC">Altering the calibration switches</a></p>
+<p>- 4.2. <a class="reference external" href="#switchrunC">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a specific set of switches</a></p>
+<p>- 4.3. <a class="reference external" href="#refrunC">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a different reference file</a></p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="introduction">
+<h1>0. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">#</a></h1>
+<p><strong>The Cosmic Origins Spectrograph (<a class="reference external" href="https://www.nasa.gov/content/hubble-space-telescope-cosmic-origins-spectrograph"><em>COS</em></a>) is an ultraviolet spectrograph on-board the Hubble Space Telescope (<a class="reference external" href="https://www.stsci.edu/hst/about"><em>HST</em></a>) with capabilities in the near ultraviolet (<em>NUV</em>) and far ultraviolet (<em>FUV</em>).</strong></p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></strong> is the data processing pipeline which converts the raw data produced by COS’s detectors onboard HST into usable spectral data. It transforms the data from a list of many individual recorded photon interactions into tables of wavelength and flux at that wavelength.</p>
+<p><strong>This tutorial aims to prepare you run the <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> pipeline to reduce spectral data taken with the COS instrument.</strong> It focuses on COS data taken in <code class="docutils literal notranslate"><span class="pre">TIME-TAG</span></code> mode.
+<em>Note</em> that there is another, less commonly used mode: <code class="docutils literal notranslate"><span class="pre">ACCUM</span></code>, which should generally be used only for UV bright targets.</p>
+<ul class="simple">
+<li><p>For an in-depth manual to working with COS data and a discussion of caveats and user tips, see the <a class="reference external" href="https://hst-docs.stsci.edu/display/COSDHB/">COS Data Handbook</a>.</p></li>
+<li><p>For a detailed overview of the COS instrument, see the <a class="reference external" href="https://hst-docs.stsci.edu/display/COSIHB/">COS Instrument Handbook</a>.</p></li>
+</ul>
+<section id="notes-for-those-new-to-python-jupyter-coding">
+<h2>Notes for those new to Python/Jupyter/Coding:<a class="headerlink" href="#notes-for-those-new-to-python-jupyter-coding" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>You will frequently see exclamation points (<strong>!</strong>) or dollar signs (<strong>$</strong>) at the beginning of a line of code. These are not part of the actual commands. The exclamation points tell a jupyter Notebook to pass the following line to the command line, and the dollar sign merely indicates the start of a terminal prompt.</p></li>
+</ul>
+<p><a id = setupC></a></p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="setting-up-the-environment-to-run-calcos">
+<h1>1. Setting up the environment to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#setting-up-the-environment-to-run-calcos" title="Permalink to this headline">#</a></h1>
+<p>The first step to processing your data is setting up an environment from which to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>.
+<a id = prereqC></a></p>
+<section id="prerequisites">
+<h2>1.1. Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">#</a></h2>
+<p>This tutorial assumes some basic knowledge of the command line and was built using a unix style shell. Those using a Windows computer will likely have the best results if working within the <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">Windows Subsystem for Linux</a>.</p>
+<p>If you do not already have any distribution of the <code class="docutils literal notranslate"><span class="pre">conda</span></code> tool, see <a class="reference external" href="https://astroconda.readthedocs.io/en/latest/getting_started.html#getting-started-jump">this page</a> for instructions, and install either <a class="reference external" href="https://docs.anaconda.com/anaconda/install/"><code class="docutils literal notranslate"><span class="pre">anaconda</span></code> (more beginner friendly, ~ 3 GB, lots of extras you likely won’t use)</a> or <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html"><code class="docutils literal notranslate"><span class="pre">miniconda</span></code> (~ 400 MB, only what you need to make environments)</a>.</p>
+<p><a id = condaenvC></a></p>
+</section>
+<section id="create-your-conda-environment">
+<h2>1.2. Create your conda environment<a class="headerlink" href="#create-your-conda-environment" title="Permalink to this headline">#</a></h2>
+<p>Once you have <code class="docutils literal notranslate"><span class="pre">conda</span></code> installed, you can create an environment.</p>
+<p>Open up your terminal app, likely <code class="docutils literal notranslate"><span class="pre">Terminal</span></code> or <code class="docutils literal notranslate"><span class="pre">iTerm</span></code> on a Mac or <code class="docutils literal notranslate"><span class="pre">Windows</span> <span class="pre">Terminal</span></code> or <code class="docutils literal notranslate"><span class="pre">Powershell</span></code> on Windows.</p>
+<p>First, add the “conda-forge” channel to your computer’s conda channel list. This enables conda to look in the right place to find all the packages we want to install.</p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">config</span> <span class="pre">--add</span> <span class="pre">channels</span> <span class="pre">conda-forge</span></code></p>
+<p>Now we can create a new environment for running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>; let’s call it <code class="docutils literal notranslate"><span class="pre">calcos_env</span></code>, and initialize it with python version 3.10 and several packages we’ll need.</p>
+<p><code class="docutils literal notranslate"> <span class="pre">$</span> <span class="pre">conda</span> <span class="pre">create</span> <span class="pre">-n</span> <span class="pre">calcos_env</span> <span class="pre">python=3.10</span> <span class="pre">notebook</span> <span class="pre">jupyterlab</span> <span class="pre">numpy</span> <span class="pre">astropy</span> <span class="pre">matplotlib</span> <span class="pre">astroquery</span></code></p>
+<p>After allowing conda to proceed to installing the packages (type <code class="docutils literal notranslate"><span class="pre">y</span></code> then hit enter/return), you can see all of your environments with:</p>
+<p><code class="docutils literal notranslate"> <span class="pre">$</span> <span class="pre">conda</span> <span class="pre">env</span> <span class="pre">list</span></code></p>
+<p>and then switch over to your new environment with</p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">calcos_env</span></code></p>
+<!-- Substitute for working astroconda - hopefully change once astroconda is updated  -->
+<p>Finally you must install the <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> and <code class="docutils literal notranslate"><span class="pre">CRDS</span></code> packages using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<p><code class="docutils literal notranslate"> <span class="pre">$</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">calcos</span> <span class="pre">crds</span></code></p>
+<p>At this point, typing <code class="docutils literal notranslate"><span class="pre">calcos</span> <span class="pre">--version</span></code> into the command line and hitting enter should no longer yield the error</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">command</span> <span class="pre">not</span> <span class="pre">found:</span> <span class="pre">calcos</span></code></p>
+</div></blockquote>
+<p>but rather respond with a version number, i.e. <code class="docutils literal notranslate"><span class="pre">3.4.0</span></code>.</p>
+<p>At this point, if you started this Jupyter Notebook in another Python environment, you should now quit that instance, run <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">calcos_env</span></code>, and reopen this Jupyter Notebook. If you’re unsure whether you’re already using the <code class="docutils literal notranslate"><span class="pre">calcos_env</span></code> environment, you can see the active environment with the following cell.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Displays name of current conda environment</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">environ</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You are using:&quot;</span><span class="p">,</span> <span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CONDA_DEFAULT_ENV&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyError</span><span class="g g-Whitespace">                                  </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># Displays name of current conda environment</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">environ</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You are using:&quot;</span><span class="p">,</span> <span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CONDA_DEFAULT_ENV&quot;</span><span class="p">])</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.10/os.py:680,</span> in <span class="ni">_Environ.__getitem__</span><span class="nt">(self, key)</span>
+<span class="g g-Whitespace">    </span><span class="mi">677</span>     <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">encodekey</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span>
+<span class="g g-Whitespace">    </span><span class="mi">678</span> <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">679</span>     <span class="c1"># raise KeyError with the original key value</span>
+<span class="ne">--&gt; </span><span class="mi">680</span>     <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
+<span class="g g-Whitespace">    </span><span class="mi">681</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decodevalue</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<span class="ne">KeyError</span>: &#39;CONDA_DEFAULT_ENV&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id=impdirC></a></p>
+</section>
+<section id="imports-and-basic-directories">
+<h2>1.3. Imports and basic directories<a class="headerlink" href="#imports-and-basic-directories" title="Permalink to this headline">#</a></h2>
+<p>We will import the following packages:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">calcos</span></code> to run the COS data pipeline</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astroquery.mast</span> <span class="pre">Mast</span> <span class="pre">and</span> <span class="pre">Observations</span></code> for finding and downloading data from the <a class="reference external" href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST</a> archive</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> to handle array functions (version <span class="math notranslate nohighlight">\(\ge\)</span> 1.17)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy.io</span></code> fits for accessing FITS files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy.table</span> <span class="pre">Table</span></code> for creating/reading organized tables of the data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> for plotting data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">glob</span></code>, <code class="docutils literal notranslate"><span class="pre">shutil</span></code>, and <code class="docutils literal notranslate"><span class="pre">os</span></code> for searching and working with system files and variables</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pathlib</span> <span class="pre">Path</span></code> for managing system paths</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import for: The COS Data Reduction Pipeline</span>
+<span class="kn">import</span> <span class="nn">calcos</span>
+
+<span class="c1"># Import for: Manipulating arrays</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Import for: Reading in data</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
+
+<span class="c1"># Import for: Plotting</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="c1"># This line makes matplotlib plots appear in the Notebook instead of possibly showing up in separate windows</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="c1"># Import for: Downloading data from archive</span>
+<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+
+<span class="c1"># Import for: Searching for files on our system</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+
+<span class="c1"># Import for: Making environment variables</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">shutil</span>
+
+<span class="c1"># Import for: Working with system paths</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="we-will-also-define-a-few-basic-directories-in-which-to-place-our-inputs-and-outputs">
+<h3>We will also define a few basic directories in which to place our inputs and outputs.<a class="headerlink" href="#we-will-also-define-a-few-basic-directories-in-which-to-place-our-inputs-and-outputs" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># These will be important directories for the Notebook</span>
+
+<span class="n">datadir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./data/&#39;</span><span class="p">)</span>
+<span class="n">outputdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./output/&#39;</span><span class="p">)</span>
+
+<span class="c1"># Make the directories if they don&#39;t exist</span>
+<span class="n">datadir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">outputdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id = lrefC></a></p>
+</section>
+</section>
+<section id="set-up-a-reference-file-directory">
+<h2>1.4. Set up a reference file directory<a class="headerlink" href="#set-up-a-reference-file-directory" title="Permalink to this headline">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> needs to be able to find all your reference files, (flat field image, bad pixel table, etc.), and the best way to enable that is to create a central directory of all the calibration files you’ll need. We refer to this directory  as “lref” by convention, and set a system variable <code class="docutils literal notranslate"><span class="pre">lref</span></code> to the location of the directory. In this section, we will create the <code class="docutils literal notranslate"><span class="pre">lref</span></code> environment variable; however, we need to populate the <code class="docutils literal notranslate"><span class="pre">lref</span></code> folder with the actual reference files. We do this in <a class="reference external" href="#reffileC">Section 2.2</a>. If you have already downloaded the set of COS reference files you need to use into an existing lref directory, you should instead set <code class="docutils literal notranslate"><span class="pre">lref</span></code> to the path to this directory.</p>
+<p>We can assign a system variable in three different ways, depending on whether we are working from:</p>
+<ol class="simple">
+<li><p>The command line</p></li>
+<li><p>A python environment</p></li>
+<li><p>A Jupyter Notebook</p></li>
+</ol>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Unix-style Command Line</p></th>
+<th class="head"><p>Python</p></th>
+<th class="head"><p>Jupyter Notebook</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>export lref=’./data/reference/…’</p></td>
+<td><p>os.environ[“lref”] = “./data/reference/…”</p></td>
+<td><p>%env lref ./data/reference/…</p></td>
+</tr>
+</tbody>
+</table>
+<p>Note that this system variable must be set again with every new instance of a terminal - if you frequently need to use the same <code class="docutils literal notranslate"><span class="pre">lref</span></code> directory, consider adding an export statement to your <code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code> or equivalent file.</p>
+<p>Because this is a jupyter Notebook, we set our reference directory with the <a class="reference external" href="https://ipython.readthedocs.io/en/stable/interactive/magics.html">cell magic</a> below:</p>
+<!-- Looking in the headers of our data below, we see that the `$lref` argument appears at the beginning of all of the reference file locations: --><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">env</span> lref ./data/reference/references/hst/cos/
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can note the value of the system variable using the <code class="docutils literal notranslate"><span class="pre">echo</span></code> command:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$lref</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<p><a id = gatherC></a></p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="gathering-the-data-to-run-calcos">
+<h1>2. Gathering the data to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#gathering-the-data-to-run-calcos" title="Permalink to this headline">#</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> pipeline can be run either from a python environment, or directly from a Unix-style command line. The two use the same underlying machinery but can differ in syntax. For specifics on the keywords to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with specific behaviors and arguments, see <a class="reference external" href="https://hst-docs.stsci.edu/cosdhb/chapter-3-cos-calibration/3-6-customizing-cos-data-calibration">Table 3.2: Arguments for Running CalCOS in Python</a> and <a class="reference external" href="https://hst-docs.stsci.edu/cosdhb/chapter-3-cos-calibration/3-6-customizing-cos-data-calibration">Table 3.3: Command-line Options for Running CalCOS in Unix/Linux/Mac</a>.</p>
+<p><a id = datadlC></a></p>
+<section id="downloading-the-raw-data">
+<h2>2.1. Downloading the raw data<a class="headerlink" href="#downloading-the-raw-data" title="Permalink to this headline">#</a></h2>
+<p>First, we need to make sure we have all of our data ready and in the right spot. If you are unfamiliar with searching the archive for data, we recommend that you view our <a class="reference external" href="https://github.com/spacetelescope/COS-Notebooks">tutorial on downloading COS data</a>. This Notebook will largely gloss over downloading the data.</p>
+<p>To run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>, we will need the following files:</p>
+<ol class="simple">
+<li><p>All the <strong>raw data</strong> from separate exposures we wish to combine as <code class="docutils literal notranslate"><span class="pre">_rawtag</span></code> fits files</p></li>
+<li><p>The <strong>association</strong> file telling <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> which files to combine as a <code class="docutils literal notranslate"><span class="pre">_asn</span></code> fits file.</p></li>
+</ol>
+<p><strong><em>Note</em> that we do not generally run the <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> pipeline directly on the data files, but instead on an association <code class="docutils literal notranslate"><span class="pre">_asn</span></code> file. This allows for the calibration of related exposures into combined <code class="docutils literal notranslate"><span class="pre">_x1dsum</span></code> files.</strong></p>
+<p>If you instead use <code class="docutils literal notranslate"><span class="pre">_rawtag</span></code> or <code class="docutils literal notranslate"><span class="pre">_corrtag</span></code> exposure files files as your inputs, you will only receive the exposure-specific <code class="docutils literal notranslate"><span class="pre">_x1d</span></code> files as your outputs.</p>
+<p>For this example, we’re choosing the dataset <code class="docutils literal notranslate"><span class="pre">LCXV13040</span></code> of COS/FUV observing the <a class="reference external" href="https://en.wikipedia.org/wiki/3C_48">quasar 3C48</a>. In the cell below we download the data from the archive.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Guery the MAST archive for data with observation id starting with lcxv1304</span>
+<span class="n">q1</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="s1">&#39;lcxv1304*&#39;</span><span class="p">)</span>
+
+<span class="c1"># Make a list of all products we could download associates with this file</span>
+<span class="n">pl</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">q1</span><span class="p">)</span>
+
+<span class="c1"># Filter to a list of only the products which are association files</span>
+<span class="n">asn_file_list</span> <span class="o">=</span> <span class="n">pl</span><span class="p">[</span><span class="n">pl</span><span class="p">[</span><span class="s2">&quot;productSubGroupDescription&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ASN&#39;</span><span class="p">]</span>
+
+<span class="c1"># Filter to a list of only the products which are rawtag files</span>
+<span class="n">rawtag_list</span> <span class="o">=</span> <span class="n">pl</span><span class="p">[</span>
+    <span class="p">(</span><span class="n">pl</span><span class="p">[</span><span class="s2">&quot;productSubGroupDescription&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;RAWTAG_A&#39;</span><span class="p">)</span> <span class="o">|</span> 
+    <span class="p">(</span><span class="n">pl</span><span class="p">[</span><span class="s2">&quot;productSubGroupDescription&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;RAWTAG_B&#39;</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="c1"># Download the two file lists to the data directory</span>
+<span class="n">rawtag_locs</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span>
+    <span class="n">rawtag_list</span><span class="p">,</span> <span class="n">download_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">datadir</span><span class="p">))</span>
+<span class="n">asn_locs</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span>
+    <span class="n">asn_file_list</span><span class="p">,</span> <span class="n">download_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">datadir</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>By default, each exposure’s files are downloaded to separate directories, as is the association file.</strong></p>
+<p>We need to move around these files to all be in the same directory, which we do below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># move the files to the base data directory</span>
+<span class="k">for</span> <span class="n">lpath</span> <span class="ow">in</span> <span class="n">rawtag_locs</span><span class="p">[</span><span class="s1">&#39;Local Path&#39;</span><span class="p">]:</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">lpath</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">datadir</span><span class="o">/</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">lpath</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">lpath</span> <span class="ow">in</span> <span class="n">asn_locs</span><span class="p">[</span><span class="s1">&#39;Local Path&#39;</span><span class="p">]:</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">lpath</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">datadir</span><span class="o">/</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">lpath</span><span class="p">))</span>
+    <span class="n">asn_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">lpath</span><span class="p">)</span>
+
+<span class="c1"># Delete the now-empty nested subdirectories</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">datadir</span><span class="o">/</span><span class="s1">&#39;mastDownload&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id = reffileC></a></p>
+</section>
+<section id="gathering-reference-files">
+<h2>2.2. Gathering reference files<a class="headerlink" href="#gathering-reference-files" title="Permalink to this headline">#</a></h2>
+<p>The following process of gathering reference files is given a detailed explanation in Section 3 of our <a class="reference external" href="https://github.com/spacetelescope/notebooks/blob/master/notebooks/COS/Setup/Setup.ipynb">Notebook on Setting up an environment to work with COS data</a>. Your process will be somewhat simpler and quicker if you have already downloaded the reference files.</p>
+<p>Each data file has an associated set of calibration files which are needed to run the associated correction with (i.e. you need the <code class="docutils literal notranslate"><span class="pre">FLATFILE</span></code> to flat field correct the data.) These reference files must be located in the <code class="docutils literal notranslate"><span class="pre">$lref</span></code> directory to run the pipeline.</p>
+<p>The Space Telescope Science Institute (STScI) team is regularly producing new calibration files in an effort to keep improving data reduction. Periodically the pipeline is re-run on all COS data.
+To determine which reference files were used most recently by STScI to calibrate your data, you can refer to your data file’s “CRDS_CTX” keyword in its fits header (see next cell).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find all of the raw files:</span>
+<span class="n">rawfiles</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datadir</span><span class="o">/</span><span class="s1">&#39;*raw*.fits&#39;</span><span class="p">))</span>
+<span class="c1"># Get the header of the 0th raw file, look for its CRDS context keyword:</span>
+<span class="n">crds_ctx</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">rawfiles</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="s1">&#39;CRDS_CTX&#39;</span><span class="p">]</span>
+<span class="c1"># Print it:</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The CRDS Context last run with </span><span class="si">{</span><span class="n">rawfiles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> was:</span><span class="se">\t</span><span class="si">{</span><span class="n">crds_ctx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The value of this keyword in the header is a <code class="docutils literal notranslate"><span class="pre">.pmap</span></code> or observatory context file which tells the CRDS calibration data distribution program which files to distribute. You can also find the newest “operational” context on the <a class="reference external" href="https://hst-crds.stsci.edu">HST CRDS website</a>.</p>
+<p>To download the reference files specified by a context file, we use the <code class="docutils literal notranslate"><span class="pre">crds</span></code> tool we installed earlier.</p>
+<hr class="docutils" />
+<p><strong>If you haven’t already downloaded up-to-date reference files,</strong> (as in Section 3 of “Setup.ipynb”,) <a class="reference external" href="#skipcellC">click to skip this cell and begin downloading the files!</a></p>
+<p><strong>If you have recently downloaded COS reference files,</strong> (i.e. if you ran Section 3 of the “Setup” Notebook,) you likely do not have to download more reference files. Instead, follow the instructions in this cell and then skip to Section 3.</p>
+<p>If you already downloaded the files, you can simply point the pipeline to the ones you downloaded, using the <code class="docutils literal notranslate"><span class="pre">crds</span> <span class="pre">bestrefs</span></code> command, as shown in the following three steps. Run these steps from your command line if you already have the reference files in a local cache. <em>Note</em> also that there may be newer reference files available. To make sure you are always using the most up-to-date reference files, we advise you familiarize yourself with the newest files and documentation at the <a class="reference external" href="https://hst-crds.stsci.edu">CRDS homepage</a>.</p>
+<ol class="simple">
+<li><p>The following sets the environment variable for crds to look for the reference data online:</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">export</span> <span class="pre">CRDS_SERVER_URL=https://hst-crds.stsci.edu</span></code></p>
+<ol class="simple">
+<li><p>The following tells crds where to save the files it downloads - set this to the directory where you saved the crds_cache, i.e. in <a class="reference external" href="https://spacetelescope.github.io/COS-Notebooks/Setup.html#crdsS">Section 3 of our Notebook on “Setup”</a>:</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">export</span> <span class="pre">CRDS_PATH=${HOME}/crds_cache</span></code></p>
+<ol class="simple">
+<li><p>The following will update the data files you downloaded so that they will be processed with the reference files you previously downloaded:</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">crds</span> <span class="pre">bestrefs</span> <span class="pre">--files</span> <span class="pre">data/*raw*.fits</span> <span class="pre">--update-bestrefs</span> <span class="pre">--new-context</span> <span class="pre">'&lt;the</span> <span class="pre">imap</span> <span class="pre">or</span> <span class="pre">pmap</span> <span class="pre">file</span> <span class="pre">you</span> <span class="pre">used</span> <span class="pre">to</span> <span class="pre">download</span> <span class="pre">the</span> <span class="pre">reference</span> <span class="pre">files&gt;'</span></code></p>
+<p><strong>Assuming everything ran successfully, you can now <a class="reference external" href="#runC">skip to Section 3</a>.</strong></p>
+<hr class="docutils" />
+<p><a id=skipcellC></a></p>
+<p><font size="4 "> If you have not yet downloaded the reference files, you will need to do so, as shown below:</font></p>
+<p><font size="4 ">Caution!</font></p>
+<img src= ./figures/warning.png width ="60" title="CAUTION!"> 
+<p><em>Note</em> that as of the time of this Notebook’s last update, the pipeline context used below was <strong><code class="docutils literal notranslate"><span class="pre">hst_0989.pmap</span></code></strong>, but this changes over time. You are running this in the future, and there is certainly a newer context you would be better off working with. Take a minute to consider this, and check the <a class="reference external" href="http://hst-crds.stsci.edu/">HST Calibration Reference Data System webpage</a> to determine what the <strong>current operational pmap file</strong> is.</p>
+<p>Unless we are connected to the STScI network, or already have the reference files on our machine, we will need to download the reference files and tell the pipeline where to look for the flat files, bad-pixel files, etc.</p>
+<p>The process in the following two cells can take a long time and strain network resources. If you have already downloaded <em>up-to-date</em> COS reference files, we recommend that you avoid doing so again. Instead, keep these crds files in an accessible location, and point an environment variable <code class="docutils literal notranslate"><span class="pre">lref</span></code> to this directory. For instance, if your <code class="docutils literal notranslate"><span class="pre">lref</span></code> files are on your username’s home directory in a subdirectory called <code class="docutils literal notranslate"><span class="pre">crds_cache</span></code>, give Jupyter the following command then skip to <a class="reference external" href="#runpyC">Section 2.3</a>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">%env</span> <span class="pre">lref</span> <span class="pre">/Users/&lt;your</span> <span class="pre">username&gt;/crds_cache/references/hst/cos/</span></code></p>
+<p>If you have an older cache of reference files, you may also simply update your cached reference files. Please see the <a class="reference external" href="https://hst-crds.stsci.edu/static/users_guide/index.html">CRDS Guide</a> for more information.</p>
+<p>Assuming you have not yet downloaded these files, in the next two cells, we will setup an environment of reference files, download the files, and save the output of the crds download process in a log file:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%capture cap --no-stderr 
+# The above ^ allows us to redirect the cell&#39;s output into a txt file created in the next cell
+#  This avoids a very long printed output
+%env CRDS_SERVER_URL https://hst-crds.stsci.edu
+# The above ^ sets an environment variable for crds to look for the reference data online
+%env CRDS_PATH ./data/reference/ 
+#The above ^ tells crds where to save the files it downloads
+
+# The next command depends on your context and pmap file  - it looks up the specified pmap &quot;context&quot; file,
+    # which tells it what reference files to download. It then downloads these to the CRDS_PATH directory
+# You may wish to update this pmap if there is a newer pmap file - check https://hst-crds.stsci.edu
+!crds bestrefs --files data/*raw*.fits  --sync-references=2 --update-bestrefs --new-context &#39;hst_0989.pmap&#39; 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This file will contain the output of the last cell</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s1">&#39;crds_output_1.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>We’ll print the beginning and end of that file just to take a look:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">crds_output_dict</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># pair each line with its line number, start at 0</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s1">&#39;crds_output_1.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cell_outputs</span><span class="p">:</span>  <span class="c1"># open the file</span>
+    <span class="k">for</span> <span class="n">linenum</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cell_outputs</span><span class="p">):</span>  <span class="c1"># loop through lines</span>
+        <span class="n">crds_output_dict</span><span class="p">[</span><span class="n">linenum</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># save each line to dict</span>
+<span class="c1"># Get the length of the dictionary - how many lines of output</span>
+<span class="n">total_lines</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">crds_output_dict</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Printing the first and last 5 lines of </span><span class="si">{</span><span class="n">total_lines</span><span class="si">}</span><span class="s2"> lines output by the previous cell:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">total_lines</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Line </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:   </span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">crds_output_dict</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="c1"># Delete the contents of the dict to avoid &#39;garbage&#39; filling memory</span>
+<span class="n">crds_output_dict</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Line 158 of the output should show 0 errors.</strong></p>
+<p>If you receive errors, you may need to attempt to run the <code class="docutils literal notranslate"><span class="pre">crds</span> <span class="pre">bestrefs</span></code> line again. These errors can arise from imperfect network connections.</p>
+<p><strong>It is recommended that you use this new <code class="docutils literal notranslate"><span class="pre">$lref</span></code> folder of reference files for subsequent <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> use, rather than re-downloading the reference files each time.</strong> To do this (<em>after completing this Notebook</em>):</p>
+<ul class="simple">
+<li><p>Save this folder somewhere accessibile, i.e. <code class="docutils literal notranslate"><span class="pre">~/crds_cache</span></code></p></li>
+<li><p>Add a line to your .bashrc or similar: <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">lref=&lt;Path</span> <span class="pre">to</span> <span class="pre">your</span> <span class="pre">reference</span> <span class="pre">file</span> <span class="pre">directory&gt;</span></code></p>
+<ul>
+<li><p>If you wish to avoid adding this to your .bashrc, simply type the line above into any terminal you wish to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> from</p></li>
+<li><p>If running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> from a jupyter Notebook, instead add a cell with: <code class="docutils literal notranslate"><span class="pre">%env</span> <span class="pre">lref</span> <span class="pre">/Users/&lt;Your</span> <span class="pre">Username&gt;/crds_cache/references/hst/cos</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p><a id = runC></a></p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="processing-raw-cos-data-using-calcos">
+<h1>3. Processing raw COS data using <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#processing-raw-cos-data-using-calcos" title="Permalink to this headline">#</a></h1>
+<p><strong>Now we have all the reference files we need to  run the pipeline on our data.</strong></p>
+<p>This following cells which run the pipeline can take a while, sometimes more than <strong>10 minutes</strong>, so you may choose to not run the remaining cells of this Notebook on the example data. You may, instead, wish to simply look at the rendered output in the <a class="reference external" href="https://spacetelescope.github.io/COS-Notebooks/Calcos.html">html version of this Notebook</a>.</p>
+<p>By default, the pipeline also outputs hundreds of lines of text - we will suppress the printing of this text and instead save it to a text file.</p>
+<p><a id = runpyC></a></p>
+<section id="running-calcos-from-a-python-environment">
+<h2>3.1. Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>: <em>From a python environment</em><a class="headerlink" href="#running-calcos-from-a-python-environment" title="Permalink to this headline">#</a></h2>
+<p><strong>Now, we can run the pipeline program:</strong></p>
+<p>Note that generally, <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> should be run on an association (<code class="docutils literal notranslate"><span class="pre">_asn</span></code>) file (in this case: <code class="docutils literal notranslate"><span class="pre">./data/lcxv13040_asn.fits</span></code>). You <em>may</em> run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> directly on <code class="docutils literal notranslate"><span class="pre">_rawtag</span></code> or <code class="docutils literal notranslate"><span class="pre">_corrtag</span></code> exposure files, but this will not produce an <code class="docutils literal notranslate"><span class="pre">_x1dsum</span></code> file and can result in errors for data taken at certain lifetime positions. No matter what type of files you run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> on, you should only specify the FUVA segment’s file, i.e. the <code class="docutils literal notranslate"><span class="pre">_rawtag_a</span></code> file. If a <code class="docutils literal notranslate"><span class="pre">rawtag_b</span></code> file is in the same directory, <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> will find both segments’ files.</p>
+<p>In this example, we also specify that <code class="docutils literal notranslate"><span class="pre">verbosity</span></code> = 2, resulting in a <strong>very</strong> verbose output, and we specify a directory to put all the output files in: <code class="docutils literal notranslate"><span class="pre">output/calcos_processed_1</span></code>. To avoid polluting this Notebook with more than a thousand lines of the output, we again capture the output of the next cell and save it to <code class="docutils literal notranslate"><span class="pre">output/output_calcos_1.txt</span></code> in the cell below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> cap --no-stderr 
+<span class="c1"># Above ^ again, capture the output and save it in the next cell</span>
+
+<span class="n">calcos</span><span class="o">.</span><span class="n">calcos</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datadir</span><span class="o">/</span><span class="n">asn_name</span><span class="p">),</span> <span class="c1"># 1st param specifies which asn file to run the pipeline on</span>
+              <span class="n">verbosity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="c1"># verbosity param: [0 = don&#39;t print much at all to the console or text file, 1 = print some, 2 = print everything]</span>
+              <span class="n">outdir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s2">&quot;calcos_processed_1&quot;</span><span class="p">))</span> <span class="c1"># save all resulting files in this subdirectory in our output directory</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This file now contains the output of the last cell</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s1">&#39;output_calcos_1.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Again, we’ll print the beginning and end of that file just to take a look and make sure <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> ran successfully.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">calcos_output_dict</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># pair each line with its line number, start at 0</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s1">&#39;output_calcos_1.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cell_outputs</span><span class="p">:</span>  <span class="c1"># open the file</span>
+    <span class="k">for</span> <span class="n">linenum</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cell_outputs</span><span class="p">):</span>  <span class="c1"># loop through lines</span>
+        <span class="n">calcos_output_dict</span><span class="p">[</span><span class="n">linenum</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># save each line to dict</span>
+<span class="c1"># Get the length of the dictionary - how many lines of output</span>
+<span class="n">total_lines</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">calcos_output_dict</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Printing the first and last 5 lines of </span><span class="si">{</span><span class="n">total_lines</span><span class="si">}</span><span class="s2"> lines output by the previous cell:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">total_lines</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Line </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:   </span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">calcos_output_dict</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="n">calcos_output_dict</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>  <span class="c1"># Delete the contents of the dict</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id = runcliC></a></p>
+</section>
+<section id="running-calcos-from-the-command-line">
+<h2>3.2. Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>: <em>From the command line</em><a class="headerlink" href="#running-calcos-from-the-command-line" title="Permalink to this headline">#</a></h2>
+<p>The syntax for running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> from the command line is very similar. Assuming your data files, <code class="docutils literal notranslate"><span class="pre">lref</span></code> directory, and reference files are all where you’ve told <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> to look, you can simply run:</p>
+<p><code class="docutils literal notranslate"><span class="pre">calcos</span> <span class="pre">--outdir</span> <span class="pre">directory_to_save_outputs_in</span> <span class="pre">filename_asn.fits</span></code></p>
+<p><em>or, if you want to save a very verbose output to a log file <code class="docutils literal notranslate"><span class="pre">log.txt</span></code></em>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">calcos</span> <span class="pre">-v</span> <span class="pre">--outdir</span> <span class="pre">directory_to_save_outputs_in</span> <span class="pre">filename_asn.fits</span> <span class="pre">&gt;</span> <span class="pre">log.txt</span></code></p>
+<p>To see the full list of commands, <a class="reference external" href="https://hst-docs.stsci.edu/cosdhb/chapter-3-cos-calibration/3-6-customizing-cos-data-calibration">Table 3.2:Command-line Options for Running CalCOS in Unix/Linux/Mac</a>, or run the following cell with no arguments.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>calcos
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id = rerunC></a></p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="re-processing-cos-data-with-altered-parameters">
+<h1>4. Re-processing COS data with altered parameters<a class="headerlink" href="#re-processing-cos-data-with-altered-parameters" title="Permalink to this headline">#</a></h1>
+<p><a id = alterswitchC></a></p>
+<section id="altering-the-calibration-switches">
+<h2>4.1. Altering the calibration switches<a class="headerlink" href="#altering-the-calibration-switches" title="Permalink to this headline">#</a></h2>
+<p>The way to alter how <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> runs - i.e. which calibrations it performs - is with the <strong>calibration switches</strong> contained in the fits headers.</p>
+<p>The switches (with the exception of “XTRACTALG”), can be set to the values in the following table:</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p><em><strong>Value:</strong></em></p></th>
+<th class="head"><p>“PERFORM”</p></th>
+<th class="head"><p>“OMIT”</p></th>
+<th class="head"><p>“N/A”</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><em><strong>Meaning:</strong></em></p></td>
+<td><p>Performs the calibration step</p></td>
+<td><p>Does not perform the calibration step</p></td>
+<td><p>This step would not make sense for this file</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">XTRACTALG</span></code> instead can be set to either “BOXCAR” or “TWOZONE”, to specify the spectral extraction algorithm to be used. For more information, see <a class="reference external" href="https://hst-docs.stsci.edu/cosdhb/chapter-3-cos-calibration/3-2-pipeline-processing-overview#id-3.2PipelineProcessingOverview-3.2.1OverviewofTWOZONEextraction">Section 3.2.1: “Overview of TWOZONE extraction” of the Data Handbook</a>.</p>
+<p>In the cell below, we get a full list of the switches by name. If you want to learn more about the calibration steps and switches, see <a class="reference external" href="https://hst-docs.stsci.edu/cosdhb">Chapters 2 and 3 of the COS Data Handbook</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reads the header of the 0th rawfile</span>
+<span class="n">header</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">rawfiles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1"># The calib switches are found in lines 82 - 109 of the header</span>
+<span class="n">calibswitches</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="mi">82</span><span class="p">:</span><span class="mi">109</span><span class="p">]</span>
+<span class="n">calibswitches</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Let’s begin by switching off all the switches currently set to “PERFORM” to a new value of “OMIT”, in every rawfile:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Set to True to see a bit more about what is going on here</span>
+
+<span class="c1"># Find each rawfile, i is just a counter variable for the files you loop through</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rawfile</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rawfiles</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">rawfile</span><span class="p">)</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">rawfiles</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>  <span class="c1"># Read that rawfiles header</span>
+    <span class="c1"># Find all calib switches</span>
+    <span class="n">corrections</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="k">if</span> <span class="s2">&quot;CORR&quot;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">correction</span> <span class="ow">in</span> <span class="n">corrections</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">header</span><span class="p">[</span><span class="n">correction</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;PERFORM&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;switching</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">header</span><span class="p">[</span><span class="n">correction</span><span class="p">],</span>
+                      <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">correction</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">to OMIT&quot;</span><span class="p">)</span>
+            <span class="c1"># Turn off all the calib switches</span>
+            <span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">rawfile</span><span class="p">,</span> <span class="n">correction</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;OMIT&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>In this case, <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> realizes that all the switches are set to “OMIT”, and exits without doing anything.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">calcos</span><span class="o">.</span><span class="n">calcos</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datadir</span><span class="o">/</span><span class="n">asn_name</span><span class="p">),</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+              <span class="n">outdir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s2">&quot;calcos_processed_2&quot;</span><span class="p">))</span>
+<span class="c1"># Run CalCOS with all calib switches OFF; allow text output this time</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id = switchrunC></a></p>
+</section>
+<section id="running-calcos-with-a-specific-set-of-switches">
+<h2>4.2. Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a specific set of switches<a class="headerlink" href="#running-calcos-with-a-specific-set-of-switches" title="Permalink to this headline">#</a></h2>
+<p>Now, let’s set a single switch to “PERFORM”, and just run a flat-field correction (“FLATCORR”) and a pulse-height filter correction (“PHACORR”). Set verbosity = 1 or 2 to learn more about how <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> is working.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># Find each rawfile, i is just a counter variable for the files you loop through</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rawfile</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rawfiles</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">rawfile</span><span class="p">)</span>
+    <span class="c1"># Change the header&#39;s keyword FLATCORR to the value PERFORM</span>
+    <span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">rawfile</span><span class="p">,</span> <span class="s2">&quot;FLATCORR&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;PERFORM&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Change the header&#39;s keyword PHACORR to the value PERFORM</span>
+    <span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">rawfile</span><span class="p">,</span> <span class="s2">&quot;PHACORR&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;PERFORM&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> cap --no-stderr
+<span class="n">calcos</span><span class="o">.</span><span class="n">calcos</span><span class="p">(</span>
+    <span class="nb">str</span><span class="p">(</span><span class="n">datadir</span><span class="o">/</span><span class="n">asn_name</span><span class="p">),</span>
+    <span class="n">verbosity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">outdir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s2">&quot;calcos_processed_3&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This file now contains the output of the last cell</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s1">&#39;output_calcos_3.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id = refrunC></a></p>
+</section>
+<section id="running-calcos-with-a-different-reference-file">
+<h2>4.3. Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a different reference file<a class="headerlink" href="#running-calcos-with-a-different-reference-file" title="Permalink to this headline">#</a></h2>
+<p>You may wish to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a specific flat file, bad pixel table, or any other reference file. <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> offers the ability to do just this on a file-by-file basis, by changing the CALIBRATION REFERENCE FILES values in the header of your data.</p>
+<p>As an example, we check which calibration files are selected for one of our rawtag files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">header</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">rawfiles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># Read 0th rawfile&#39;s header</span>
+<span class="c1"># The 110th to 138th lines of the header are filled with these reference files</span>
+<span class="n">refFiles</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="mi">110</span><span class="p">:</span><span class="mi">138</span><span class="p">]</span>
+<span class="c1"># Get just the keywords i.e. &quot;FLATFILE&quot; and &quot;DEADTAB&quot;</span>
+<span class="n">refFile_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">refFiles</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">refFiles</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>For this section, let’s download another Pulse Height Amplitude (_pha) table file using the <code class="docutils literal notranslate"><span class="pre">crds</span></code> tool (<em>I arbitrarily choose this one</em>):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>crds<span class="w"> </span>sync<span class="w"> </span>--files<span class="w"> </span>u1t1616ll_pha.fits<span class="w"> </span>--output-dir<span class="w"> </span><span class="nv">$lref</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can use the fits headers to set this new file as the <code class="docutils literal notranslate"><span class="pre">_pha</span></code> file. As a demonstration, let’s do this for <strong>only the raw data from segment FUVA</strong> of the FUV detector:</p>
+<p><em>Note</em> that we are still only performing two corrections, as all calibration switches aside from <code class="docutils literal notranslate"><span class="pre">FLATCORR</span></code> and <code class="docutils literal notranslate"><span class="pre">PHACORR</span></code> are set to <code class="docutils literal notranslate"><span class="pre">OMIT</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find just the FUVA raw files</span>
+<span class="n">rawfiles_segA</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datadir</span><span class="o">/</span><span class="s1">&#39;*rawtag_a*.fits&#39;</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">rawfileA</span> <span class="ow">in</span> <span class="n">rawfiles_segA</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rawfileA</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">rawfileA</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
+        <span class="n">hdr0</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>  <span class="c1"># Update the 0th header of that FUVA file</span>
+        <span class="c1"># NOTE that you need the $lref in there if you put it with your other ref files</span>
+        <span class="n">hdr0</span><span class="p">[</span><span class="s2">&quot;PHATAB&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lref$u1t1616ll_pha.fits&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Finally, let’s run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with the new <code class="docutils literal notranslate"><span class="pre">_pha</span></code> file for only the FUVA data:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> cap --no-stderr
+<span class="n">calcos</span><span class="o">.</span><span class="n">calcos</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datadir</span><span class="o">/</span><span class="n">asn_name</span><span class="p">),</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">outdir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s2">&quot;calcos_processed_4&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This file now contains the output of the last cell</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s1">&#39;output_calcos_4.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><font size="5">Before we go, let’s have a look at the spectra we calibrated and extracted in <a href="#runpyC">Section 2.3</a></font></p>
+<p><strong>We’ll make a very quick plot to show the two spectra calibrated by STScI’s pipeline and by us right now.</strong>
+The two should agree very well. Small differences may be expected, given that the <code class="docutils literal notranslate"><span class="pre">RANDSEED</span></code> values may be different between the two versions.</p>
+<p>Much more information on reading in and plotting COS spectra can be found in our other tutorial: <a class="reference external" href="https://spacetelescope.github.io/COS-Notebooks/ViewData.html">Viewing COS Data</a>.</p>
+<p><em>(You can ignore the UnitsWarning below)</em></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the STScI calibrated x1dsum spectrum from the archive</span>
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="s1">&#39;lcxv13040&#39;</span><span class="p">)),</span>
+                               <span class="n">mrp_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="n">download_dir</span><span class="o">=</span><span class="s1">&#39;data/compare/&#39;</span><span class="p">)</span>
+<span class="c1"># Read in this STScI spectrum</span>
+<span class="n">output_spectrum</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="nb">str</span><span class="p">(</span><span class="n">datadir</span><span class="o">/</span><span class="s1">&#39;compare/mastDownload/HST/lcxv13040/lcxv13040_x1dsum.fits&#39;</span><span class="p">))</span>
+<span class="n">wvln_orig</span><span class="p">,</span> <span class="n">flux_orig</span><span class="p">,</span> <span class="n">fluxErr_orig</span><span class="p">,</span> <span class="n">dqwgt_orig</span> <span class="o">=</span> <span class="n">output_spectrum</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span>
+    <span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">,</span> <span class="s2">&quot;FLUX&quot;</span><span class="p">,</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;DQ_WGT&quot;</span><span class="p">]</span>
+<span class="c1"># Convert the data quality (DQ) weight into a boolean we can use to mask the data</span>
+<span class="n">dqwgt_orig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dqwgt_orig</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+<span class="c1"># Also read in the spectrum we recently calibrated in Section 2.3</span>
+<span class="n">output_spectrum</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+    <span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s1">&#39;calcos_processed_1/lcxv13040_x1dsum.fits&#39;</span><span class="p">))</span>
+<span class="n">new_wvln</span><span class="p">,</span> <span class="n">new_flux</span><span class="p">,</span> <span class="n">new_fluxErr</span><span class="p">,</span> <span class="n">new_dqwgt</span> <span class="o">=</span> <span class="n">output_spectrum</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span>
+    <span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">,</span> <span class="s2">&quot;FLUX&quot;</span><span class="p">,</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;DQ_WGT&quot;</span><span class="p">]</span>
+<span class="c1"># Convert the data quality (DQ) weight into a boolean we can use to mask the data</span>
+<span class="n">new_dqwgt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">new_dqwgt</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax0</span><span class="p">,</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+    <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>  <span class="c1"># Build a 3 row x 1 column figure</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wvln_orig</span><span class="p">[</span><span class="n">dqwgt_orig</span><span class="p">],</span> <span class="n">flux_orig</span><span class="p">[</span><span class="n">dqwgt_orig</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span>
+         <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Processed by the archive&quot;</span><span class="p">)</span>  <span class="c1"># Plot the archive&#39;s spectrum in top section</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">new_wvln</span><span class="p">[</span><span class="n">new_dqwgt</span><span class="p">],</span> <span class="n">new_flux</span><span class="p">[</span><span class="n">new_dqwgt</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span>
+         <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Just now processed by you&quot;</span><span class="p">)</span>  <span class="c1"># Plot your calibrated spectrum in middle section</span>
+
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wvln_orig</span><span class="p">[</span><span class="n">dqwgt_orig</span><span class="p">],</span> <span class="n">flux_orig</span><span class="p">[</span><span class="n">dqwgt_orig</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span>
+         <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Processed by the archive&quot;</span><span class="p">)</span>  <span class="c1"># Plot both spectra in bottom section</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">new_wvln</span><span class="p">[</span><span class="n">new_dqwgt</span><span class="p">],</span> <span class="n">new_flux</span><span class="p">[</span><span class="n">new_dqwgt</span><span class="p">],</span>
+         <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Just now processed by you&quot;</span><span class="p">)</span>
+
+<span class="n">ax0</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Fig 3.1</span><span class="se">\n</span><span class="s2">Comparison of processed spectra&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">28</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s2">&quot;fig3.1_compare_plot.png&quot;</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="congratulations-you-finished-this-notebook">
+<h2>Congratulations! You finished this Notebook!<a class="headerlink" href="#congratulations-you-finished-this-notebook" title="Permalink to this headline">#</a></h2>
+<section id="there-are-more-cos-data-walkthrough-notebooks-on-different-topics-you-can-find-them-here">
+<h3>There are more COS data walkthrough Notebooks on different topics. You can find them <a class="reference external" href="https://spacetelescope.github.io/COS-Notebooks/">here</a>.<a class="headerlink" href="#there-are-more-cos-data-walkthrough-notebooks-on-different-topics-you-can-find-them-here" title="Permalink to this headline">#</a></h3>
+</section>
+</section>
+<hr class="docutils" />
+<section id="about-this-notebook">
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this headline">#</a></h2>
+<p><strong>Author:</strong> Nat Kerman - <a class="reference external" href="mailto:nkerman&#37;&#52;&#48;stsci&#46;edu">mailto:nkerman<span>&#64;</span>stsci<span>&#46;</span>edu</a></p>
+<p><strong>Updated On:</strong> 2022-03-24</p>
+<blockquote>
+<div><p><em>This tutorial was generated to be in compliance with the <a class="reference external" href="https://github.com/spacetelescope/style-guides">STScI style guides</a> and would like to cite the <a class="reference external" href="https://github.com/spacetelescope/style-guides/blob/master/templates/example_notebook.ipynb">Jupyter guide</a> in particular.</em></p>
+</div></blockquote>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Permalink to this headline">#</a></h2>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, or <code class="docutils literal notranslate"><span class="pre">numpy</span></code> for published research, please cite the
+authors. Follow these links for more information about citations:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.scipy.org/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code>/<code class="docutils literal notranslate"><span class="pre">numpy</span></code>/<code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
+<li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
+</ul>
+<hr class="docutils" />
+<p><a class="reference external" href="#topC">Top of Page</a>
+<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/></p>
+<p><br></br>
+<br></br>
+<br></br></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "therealzoidberg/hst_merge",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/COS/CalCOS"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../AsnFile/AsnFile.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Modifying or Creating an Association File</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../SplitTag/SplitTag.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By STScI<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

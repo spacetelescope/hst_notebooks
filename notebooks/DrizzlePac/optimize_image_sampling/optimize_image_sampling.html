@@ -1,0 +1,1072 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Optimizing the Image Sampling &#8212; HST Notebooks</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Using updated astrometry solutions" href="../using_updated_astrometry_solutions/using_updated_astrometry_solutions.html" />
+    <link rel="prev" title="Satellite Trail Masking Techniques" href="../mask_satellite/mask_satellite.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">HST Notebooks</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI Notebook Repository Template
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  COS
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../COS/README.html">
+   COS Notebooks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../COS/Setup/Setup.html">
+   Setting up your computer environment for working with COS data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../COS/DataDl/DataDl.html">
+   Downloading COS Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../COS/ViewData/ViewData.html">
+   Viewing COS Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../COS/AsnFile/AsnFile.html">
+   Modifying or Creating an Association File
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../COS/CalCOS/CalCOS.html">
+   Running the COS Data Pipeline (
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../COS/SplitTag/SplitTag.html">
+   Splitting COS Exposures into sub-exposures with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     splittag
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../COS/DayNight/DayNight.html">
+   Filtering out COS Data taken during the Day or Night
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../COS/LSF/LSF.html">
+   Working with the COS Line Spread Function (LSF)
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../COS/Extract/Extract.html">
+   Editing the extraction boxes in a spectral extraction file (XTRACTAB)
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  DrizzlePac
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../README.html">
+   DrizzlePac Jupyter Notebook Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Initialization/Initialization.html">
+   DrizzlePac Initialization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../align_to_catalogs/align_to_catalogs.html">
+   Aligning HST images to an absolute reference catalog
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../align_multiple_visits/align_multiple_visits.html">
+   Optimizing Image Alignment for Multiple HST Visits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../align_sparse_fields/align_sparse_fields.html">
+   Aligning Deep Exposures of Sparse Fields
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../drizzle_wfpc2/drizzle_wfpc2.html">
+   Drizzling WFPC2 Images to use a Single Zeropoint
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mask_satellite/mask_satellite.html">
+   Satellite Trail Masking Techniques
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Optimizing the Image Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">
+   Using updated astrometry solutions
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  NICMOS
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">
+   Programmatic Replacements for NICMOS Units Conversion Form
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/therealzoidberg/hst_merge/main?urlpath=tree/notebooks/DrizzlePac/optimize_image_sampling/optimize_image_sampling.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://colab.research.google.com/github/therealzoidberg/hst_merge/blob/main/notebooks/DrizzlePac/optimize_image_sampling/optimize_image_sampling.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Colab"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="headerbtn__text-container">Colab</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="initThebeSBT()"
+  class="headerbtn headerbtn-launch-thebe"
+  data-toggle="tooltip"
+data-placement="left"
+title="Launch Thebe"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="headerbtn__text-container">Live Code</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="github.com/therealzoidberg/hst_merge"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="github.com/therealzoidberg/hst_merge/issues/new?title=Issue%20on%20page%20%2Fnotebooks/DrizzlePac/optimize_image_sampling/optimize_image_sampling.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../_sources/notebooks/DrizzlePac/optimize_image_sampling/optimize_image_sampling.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   Introduction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#description-of-the-data">
+   1. Description of the data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dithering">
+   2. Dithering
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#drizzling">
+   3. Drizzling
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#results">
+   4. Results
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#optimizing-the-final-pixfrac-parameter">
+   5. Optimizing the
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     final_pixfrac
+    </span>
+   </code>
+   parameter
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#final-thoughts">
+   6. Final thoughts
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#about-this-notebook">
+   About this Notebook
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Optimizing the Image Sampling</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   Introduction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#description-of-the-data">
+   1. Description of the data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dithering">
+   2. Dithering
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#drizzling">
+   3. Drizzling
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#results">
+   4. Results
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#optimizing-the-final-pixfrac-parameter">
+   5. Optimizing the
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     final_pixfrac
+    </span>
+   </code>
+   parameter
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#final-thoughts">
+   6. Final thoughts
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#about-this-notebook">
+   About this Notebook
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="optimizing-the-image-sampling">
+<h1>Optimizing the Image Sampling<a class="headerlink" href="#optimizing-the-image-sampling" title="Permalink to this headline">#</a></h1>
+<div class="alert-danger">Note: The notebook in this repository 'Initialization.ipynb' goes over many of the basic concepts such as the setup of the environment/package installation and should be read first if you are new to HST images, DrizzlePac, or Astroquery.</div><section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">#</a></h2>
+<p>This example was written to help users better understand the subtleties in improving image sampling for dithered data. One of the powers of the <em>drizzling</em> algorithm is that, given properly dithered images, it can restore much of the information lost due to undersampled images (<a class="reference external" href="http://iopscience.iop.org/article/10.1086/338393/pdf">Fruchter and Hook, 2002</a>).</p>
+<p>This work is based on <a class="reference external" href="http://www.stsci.edu/hst/acs/documents/isrs/isr1501.pdf">ISR ACS 2015-01</a>, which contains a more detailed discussion than presented here.</p>
+<p>In practice, this requires the use of <code class="docutils literal notranslate"><span class="pre">Astrodrizzle</span></code> task within the <em>Drizzlepac</em> package. This example will cover the following topics:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. Description of the Data
+2. Run astrodrizzle several times using different settings for the &#39;final_pixfrac&#39; and &#39;final_scale&#39; parameters
+3. Compare and evaluate results of using different &#39;final_pixfrac&#39; and &#39;final_scale&#39; values
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">LogStretch</span><span class="p">,</span><span class="n">ImageNormalize</span><span class="p">,</span><span class="n">LinearStretch</span>
+<span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">wcs</span>
+<span class="kn">import</span> <span class="nn">drizzlepac</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following task in the stsci.skypac package can be run with TEAL:
+                                    skymatch                                    
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following tasks in the drizzlepac package can be run with TEAL:
+    astrodrizzle       config_testbed      imagefindpars           mapreg       
+       photeq            pixreplace           pixtopix            pixtosky      
+  refimagefindpars       resetbits          runastrodriz          skytopix      
+     tweakback            tweakreg           updatenpol
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="description-of-the-data">
+<h2>1. Description of the data<a class="headerlink" href="#description-of-the-data" title="Permalink to this headline">#</a></h2>
+<p>Four images of the spiral galaxy NGC 3370 (Program 11570) were acquired using the WFC3/IR F160W imaging filter. The <code class="docutils literal notranslate"><span class="pre">WFC3-IR-DITHERBOX-MIN</span></code> dither pattern designed to provide optimal sampling of the PSF was used.</p>
+<p>Data are downloaded using the <code class="docutils literal notranslate"><span class="pre">astroquery</span></code> API to access the <a class="reference external" href="http://archive.stsci.edu">MAST</a> archive. The <code class="docutils literal notranslate"><span class="pre">astroquery.mast</span></code> <a class="reference external" href="http://astroquery.readthedocs.io/en/latest/mast/mast.html">documentation</a> has more examples for how to find and download data from MAST. For this example, the caibrated FLT exposures from visit 19 will be downloaded.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Querying MAST and downloading files.</span>
+<span class="n">obs_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ib1f19010&#39;</span><span class="p">]</span>
+<span class="n">obs_table</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">obs_ids</span><span class="p">,</span> <span class="n">obstype</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+
+<span class="n">download_tab</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">obs_table</span><span class="p">[</span><span class="s1">&#39;obsid&#39;</span><span class="p">],</span> <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;FLT&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_11570_19_wfc3_ir_f160w_ib1f19l6_flt.fits to ./mastDownload/HST/hst_11570_19_wfc3_ir_f160w_ib1f19l6/hst_11570_19_wfc3_ir_f160w_ib1f19l6_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_11570_19_wfc3_ir_f160w_ib1f19l7_flt.fits to ./mastDownload/HST/hst_11570_19_wfc3_ir_f160w_ib1f19l7/hst_11570_19_wfc3_ir_f160w_ib1f19l7_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_11570_19_wfc3_ir_f160w_ib1f19l9_flt.fits to ./mastDownload/HST/hst_11570_19_wfc3_ir_f160w_ib1f19l9/hst_11570_19_wfc3_ir_f160w_ib1f19l9_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_11570_19_wfc3_ir_f160w_ib1f19la_flt.fits to ./mastDownload/HST/hst_11570_19_wfc3_ir_f160w_ib1f19la/hst_11570_19_wfc3_ir_f160w_ib1f19la_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/ib1f19l6q_flt.fits to ./mastDownload/HST/ib1f19l6q/ib1f19l6q_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/ib1f19l7q_flt.fits to ./mastDownload/HST/ib1f19l7q/ib1f19l7q_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/ib1f19l9q_flt.fits to ./mastDownload/HST/ib1f19l9q/ib1f19l9q_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/ib1f19laq_flt.fits to ./mastDownload/HST/ib1f19laq/ib1f19laq_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cleaning up directories after dowloading from MAST</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">download_tab</span><span class="p">[</span><span class="s1">&#39;Local Path&#39;</span><span class="p">]:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+        
+<span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;mastDownload&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="dithering">
+<h2>2. Dithering<a class="headerlink" href="#dithering" title="Permalink to this headline">#</a></h2>
+<p>For the <em>drizzle</em> algorithm to work optimally, observations need to be dithered so that the PSF is optimally sampled. The code below creates plots to show the dithering of each of the images in the association. The plot on the left shows how the images were dithered on the sky (the POSTARG). The plot on the right shows how the offsets translate to pixel phase (e.g. subpixel position).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flt_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*flt.fits&#39;</span><span class="p">)</span>
+
+<span class="n">plate_scale</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">flt_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;idcscale&#39;</span><span class="p">,</span><span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Plate scale: </span><span class="si">{:&gt;6.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plate_scale</span><span class="p">))</span>
+<span class="n">postarg1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">flt_files</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+<span class="n">postarg2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">flt_files</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+<span class="n">x_phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">flt_files</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+<span class="n">y_phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">flt_files</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">im</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">flt_files</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">im</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+        <span class="n">postarg1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;postarg1&#39;</span><span class="p">]</span>
+        <span class="n">postarg2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;postarg2&#39;</span><span class="p">]</span>
+        <span class="n">x_phase</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">modf</span><span class="p">(</span><span class="n">postarg1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">plate_scale</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">y_phase</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">modf</span><span class="p">(</span><span class="n">postarg2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">plate_scale</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">postarg1</span><span class="p">,</span> <span class="n">postarg2</span><span class="p">,</span> <span class="s1">&#39;k+-&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;arcsec&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;large&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;arcsec&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;large&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_phase</span><span class="p">,</span> <span class="n">y_phase</span><span class="p">,</span> <span class="s1">&#39;k+-&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X pixel phase&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;large&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Y pixel phase&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;large&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Plate scale: 0.1283
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span>---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+Cell In[4], line 5
+      3 plate_scale = fits.getval(flt_files[0], &#39;idcscale&#39;,ext=1)
+      4 print(&#39;Plate scale: {:&gt;6.4f}&#39;.format(plate_scale))
+----&gt; 5 postarg1 = np.empty(len(flt_files), dtype=np.float)
+      6 postarg2 = np.empty(len(flt_files), dtype=np.float)
+      7 x_phase = np.empty(len(flt_files), dtype=np.float)
+
+File /usr/share/miniconda/lib/python3.10/site-packages/numpy/__init__.py:305, in __getattr__(attr)
+    300     warnings.warn(
+    301         f&quot;In the future `np.{attr}` will be defined as the &quot;
+    302         &quot;corresponding NumPy scalar.&quot;, FutureWarning, stacklevel=2)
+    304 if attr in __former_attrs__:
+--&gt; 305     raise AttributeError(__former_attrs__[attr])
+    307 # Importing Tester requires importing all of UnitTest which is not a
+    308 # cheap import Since it is mainly used in test suits, we lazy import it
+    309 # here to save on the order of 10 ms of import time for most users
+    310 #
+    311 # The previous way Tester was imported also had a side effect of adding
+    312 # the full `numpy.testing` namespace
+    313 if attr == &#39;testing&#39;:
+
+AttributeError: module &#39;numpy&#39; has no attribute &#39;float&#39;.
+`np.float` was a deprecated alias for the builtin `float`. To avoid this error in existing code, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.
+The aliases was originally deprecated in NumPy 1.20; for more details and guidance see the original release note at:
+    https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="drizzling">
+<h2>3. Drizzling<a class="headerlink" href="#drizzling" title="Permalink to this headline">#</a></h2>
+<p>Before drizzling can be performed, a plate scale for the output image should be chosen. This will usually be dictated by the science needs. In theory, critical sampling of a PSF occurs with 2.355 pixels. The FWHM of the WFC3/IR detector at 1600 nm is ~0.151” (Table 7.5 of <a class="reference external" href="http://www.stsci.edu/hst/wfc3/documents/handbooks/currentIHB/c07_ir07.html">WFC Instrument Handbook</a>). Using these values, a plate scale of 0.065”/pix will be selected for the drizzled output frame, approximately half of the native plate scale (0.1283”/pix).</p>
+<p>The mechanism by which the <em>drizzle</em> algorithm improves sampling in the output image is by shrinking the input pixels before adding them to the output pixel grid (see Figure 2 in <a class="reference external" href="http://iopscience.iop.org/article/10.1086/338393/pdf">Fruchter and Hook (2002)</a>). In practice this process is controlled in the <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> package by adjusting the <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> parameter, which is the fractional size of the pixel to be used.
+Below <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> is called twice. The first time, no changes are made to the plate scale or the size of the drop. In the second call, the plate scale and pixfrac are reduced. For a four point dither stack, a <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value of 0.8 is usually optimal.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">drizzlepac</span><span class="o">.</span><span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">&#39;*flt.fits&#39;</span><span class="p">,</span>
+                                     <span class="n">output</span><span class="o">=</span><span class="s1">&#39;f160w_noopt&#39;</span><span class="p">,</span>
+                                     <span class="n">runfile</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                     <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">build</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                     <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">clean</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                     <span class="n">driz_sep_bits</span><span class="o">=</span><span class="s1">&#39;64,512&#39;</span><span class="p">,</span>
+                                     <span class="n">final_bits</span><span class="o">=</span><span class="s1">&#39;64,512&#39;</span><span class="p">,</span>
+                                     <span class="n">final_wcs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                     <span class="n">final_rot</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+
+<span class="n">drizzlepac</span><span class="o">.</span><span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">&#39;*flt.fits&#39;</span><span class="p">,</span>
+                                     <span class="n">output</span><span class="o">=</span><span class="s1">&#39;f160w_opt&#39;</span><span class="p">,</span>
+                                     <span class="n">runfile</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                     <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">build</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                     <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">clean</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                     <span class="n">driz_sep_bits</span><span class="o">=</span><span class="s1">&#39;64,512&#39;</span><span class="p">,</span>
+                                     <span class="n">final_bits</span><span class="o">=</span><span class="s1">&#39;64,512&#39;</span><span class="p">,</span>
+                                     <span class="n">final_pixfrac</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                                     <span class="n">final_wcs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                     <span class="n">final_rot</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                                     <span class="n">final_scale</span><span class="o">=</span><span class="mf">0.065</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="results">
+<h2>4. Results<a class="headerlink" href="#results" title="Permalink to this headline">#</a></h2>
+<p>The drizzled science and weight images produced from the first call to AstroDrizzle with no optimization of the plate scale and pixfrac are plotted below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;f160w_noopt_drz.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+    <span class="n">im1wcs</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+    <span class="n">sci1</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wht1</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+        
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">ImageNormalize</span><span class="p">(</span><span class="n">sci1</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="n">LogStretch</span><span class="p">())</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;projection&#39;</span><span class="p">:</span><span class="n">im1wcs</span><span class="p">})</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wht1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The drizzled science image is on the left and the associated weight image is on the right, both without optimization of the plate scale and pixfrac.</p>
+<p>To compare, the figure plotted below shows close ups of the same part of the sky from the two drizzled products.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radeclims</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">pixel_to_skycoord</span><span class="p">([</span><span class="mi">825</span><span class="p">,</span> <span class="mi">875</span><span class="p">],</span> <span class="p">[</span><span class="mi">930</span><span class="p">,</span> <span class="mi">980</span><span class="p">],</span> <span class="n">im1wcs</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;f160w_opt_drz.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+    <span class="n">im2wcs</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+    <span class="n">sci2</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wht2</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+<span class="n">norm2</span> <span class="o">=</span> <span class="n">ImageNormalize</span><span class="p">(</span><span class="n">sci2</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="n">LogStretch</span><span class="p">())</span>
+    
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">im1wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im1wcs</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im1wcs</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">im2wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci2</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im2wcs</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im2wcs</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>                  
+</pre></div>
+</div>
+</div>
+</div>
+<p>The image on the left is without improved plate scale and pixfrac, and shows that the detector undersamples the PSF. The image on the right is the image with improved parameters where the resolution is greatly improved.</p>
+</section>
+<section id="optimizing-the-final-pixfrac-parameter">
+<h2>5. Optimizing the <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> parameter<a class="headerlink" href="#optimizing-the-final-pixfrac-parameter" title="Permalink to this headline">#</a></h2>
+<p>While the optimized <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> in the example above was chosen from experience with using a four-point dither, the value that should be used is not known <em>a priori</em>. The value could be different depending on several factors. For example, if the number of images is greater than four, the value used for <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> could be smaller since more images are available to fill in holes in the output grid. On the other hand, it is possible that no dithering was used during the observations. In that case, <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> should be left at 1.0, since shrinking the size of the drop could be detrimental.</p>
+<p>Below, a series of experiments will be run to determine the best <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value for the selected output plate scale, by varying pixfrac in steps of 0.1 over a range of values from 0.1 to 1.0.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pixfracs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">pixfrac</span> <span class="ow">in</span> <span class="n">pixfracs</span><span class="p">:</span>
+    <span class="n">outname</span> <span class="o">=</span> <span class="s1">&#39;f160w_</span><span class="si">{:.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pixfrac</span><span class="p">)</span>
+    <span class="n">drizzlepac</span><span class="o">.</span><span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">&#39;*flt.fits&#39;</span><span class="p">,</span>
+                                         <span class="n">output</span><span class="o">=</span><span class="n">outname</span><span class="p">,</span>
+                                         <span class="n">runfile</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                         <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                         <span class="n">build</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                         <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                         <span class="n">clean</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                         <span class="n">driz_sep_bits</span><span class="o">=</span><span class="s1">&#39;64,512&#39;</span><span class="p">,</span>
+                                         <span class="n">final_bits</span><span class="o">=</span><span class="s1">&#39;64,512&#39;</span><span class="p">,</span>
+                                         <span class="n">final_pixfrac</span><span class="o">=</span><span class="n">pixfrac</span><span class="p">,</span>
+                                         <span class="n">final_wcs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                         <span class="n">final_rot</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                                         <span class="n">final_scale</span><span class="o">=</span><span class="mf">0.065</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>When evaluating what value to use for <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code>, <em>THERE IS NO SINGLE METRIC THAT INDICATES WHAT VALUE TO USE</em>, and several factors should be taken into account. The general philosophy is that the chosen value should improve the resolution of the image as much as possible, without causing any adverse effects.</p>
+<p>The first thing to look for is an excessive number of holes in the science and weight images. The figure below shows the central region of the science and weight images produced by three different <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;f160w_0.1_drz.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu1</span><span class="p">:</span>
+    <span class="n">sci1</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wht1</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;f160w_0.8_drz.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu2</span><span class="p">:</span>
+    <span class="n">sci2</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wht2</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;f160w_1.0_drz.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu3</span><span class="p">:</span>
+    <span class="n">sci3</span> <span class="o">=</span> <span class="n">hdu3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wht3</span> <span class="o">=</span> <span class="n">hdu3</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">norm3</span> <span class="o">=</span> <span class="n">ImageNormalize</span><span class="p">(</span><span class="n">wht2</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="n">LinearStretch</span><span class="p">())</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1640</span><span class="p">,</span> <span class="mi">1920</span><span class="p">,</span> <span class="s1">&#39;final_pixfrac=0.1&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gold&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci2</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1640</span><span class="p">,</span> <span class="mi">1920</span><span class="p">,</span> <span class="s1">&#39;final_pixfrac=0.8&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gold&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci3</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1640</span><span class="p">,</span> <span class="mi">1920</span><span class="p">,</span> <span class="s1">&#39;final_pixfrac=1.0&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gold&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wht1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wht2</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wht3</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im2wcs</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im2wcs</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This figure above shows the central region of the science and weight images produced by <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> values (left to right) of 0.1, 0.8 and 1.0. The top row is the science frame, the bottom is the weight image. The science image with the smallest <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value of 0.1 shows a noisy background and holes in the image where no input pixels fall into the output grid because pixfrac is too small. Inspection of the weight map corresponding to the smallest <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value shows many places with weights of zero, indicating that a <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value of 0.1 is clearly too small and was only included in this example for illustrative purposes.</p>
+<p>Another piece of information that can be useful is the amount of noise in the weight image. As suggested in the <a class="reference external" href="http://www.stsci.edu/hst/HST_overview/documents/dither_handbook">HST Dither Handbook</a> Chapter 5 and in the <a class="reference external" href="http://documents.stsci.edu/hst/HST_overview/documents/DrizzlePac/ch64.html#586267">DrizzlePac Handbook</a> Section 6.3.3, statistics performed on the drizzled weight image should yield a RMS/median value less than ~0.2. This threshold controls the trade-off between improving image resolution versus increasing background noise due to pixel resampling.</p>
+<p>The figure below shows the RMS/median as a function of <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code>. One should take care to use the same region in the weight image as the region where the object of interest is located in the science image. If one is using the entire image for scientific analysis, then one should measure the statistics of the weight image where there is more variance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">whtlist</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;f160w_0.[0-9]*drz.fits&#39;</span><span class="p">)</span>
+
+<span class="n">std_med</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">whtlist</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">fraclist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">whtlist</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">xlims</span> <span class="o">=</span> <span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im1wcs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">ylims</span> <span class="o">=</span> <span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im1wcs</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="c1">#Loop that measures statistics, also some information gathering</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">im</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">whtlist</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">im</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+        <span class="n">hdr</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+        <span class="n">wht</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;TARGNAME&#39;</span><span class="p">]</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;D001SCAL&#39;</span><span class="p">])</span>
+        <span class="n">nimg</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;NDRIZIM&#39;</span><span class="p">]</span>
+    <span class="n">wht_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">wht</span><span class="p">[</span><span class="n">ylims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">ylims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xlims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">xlims</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">wht_med</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">wht</span><span class="p">[</span><span class="n">ylims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">ylims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xlims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">xlims</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">std_med</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">wht_std</span> <span class="o">/</span> <span class="n">wht_med</span>
+    <span class="n">fraclist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;D001PIXF&#39;</span><span class="p">]</span>
+
+<span class="c1">#Plotting commands              </span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">1.025</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.025</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">fraclist</span><span class="p">,</span> <span class="n">std_med</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;pixfrac&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;rms/median&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="s1">&#39;Scale=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">nimg</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; images&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The RMS/median increases steadily up to pixfrac of 0.6, where there is a change in the slope of the function, indicating that something odd might be happening beyond that point. Even though the RMS remains below 20% of the median all the way to <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> of 0.1, the higher slope in the curve combined with the information from inspection of the science images themselvse (the evidence of holes) indicates that the pixfrac should remain &gt;0.6.</p>
+</section>
+<section id="final-thoughts">
+<h2>6. Final thoughts<a class="headerlink" href="#final-thoughts" title="Permalink to this headline">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value has to be small enough to avoid degrading the combined output image, but large enough that when all images are ”dropped” onto the final frame, coverage of the output frame is fairly uniform. In general, <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> should be slightly larger than the final output scale to allow some ”spillover” to adjacent pixels. This will help avoid ”holes” in the final product when a given pixel has been flagged as ”bad” in several frames. As a rule of thumb, statistics performed on the drizzled weight image in the region of interest should yield an RMS value (standard deviation) that is less than 20% of the median value. This threshold is a balance between the benefits of improving the image resolution at the expense of increasing noise in the background.</p>
+</section>
+<section id="about-this-notebook">
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this headline">#</a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Author: R. Avila, STScI ACS Team  
+Updated: December 12, 2018
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "therealzoidberg/hst_merge",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/DrizzlePac/optimize_image_sampling"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../mask_satellite/mask_satellite.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Satellite Trail Masking Techniques</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../using_updated_astrometry_solutions/using_updated_astrometry_solutions.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Using updated astrometry solutions</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By STScI<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

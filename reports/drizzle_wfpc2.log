@@ -1,0 +1,121 @@
+Traceback (most recent call last):
+  File "/usr/share/miniconda/lib/python3.10/site-packages/jupyter_cache/executors/utils.py", line 51, in single_nb_execution
+    executenb(
+  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/usr/share/miniconda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+drz = fits.getdata('final_drz_sci.fits')
+plt.figure(figsize=(15, 15))
+plt.imshow(drz, cmap='gray', vmin=-0.1, vmax=0.5, origin='lower')
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mFileNotFoundError[0m                         Traceback (most recent call last)
+Cell [0;32mIn[9], line 1[0m
+[0;32m----> 1[0m drz [38;5;241m=[39m [43mfits[49m[38;5;241;43m.[39;49m[43mgetdata[49m[43m([49m[38;5;124;43m'[39;49m[38;5;124;43mfinal_drz_sci.fits[39;49m[38;5;124;43m'[39;49m[43m)[49m
+[1;32m      2[0m plt[38;5;241m.[39mfigure(figsize[38;5;241m=[39m([38;5;241m15[39m, [38;5;241m15[39m))
+[1;32m      3[0m plt[38;5;241m.[39mimshow(drz, cmap[38;5;241m=[39m[38;5;124m'[39m[38;5;124mgray[39m[38;5;124m'[39m, vmin[38;5;241m=[39m[38;5;241m-[39m[38;5;241m0.1[39m, vmax[38;5;241m=[39m[38;5;241m0.5[39m, origin[38;5;241m=[39m[38;5;124m'[39m[38;5;124mlower[39m[38;5;124m'[39m)
+
+File [0;32m/usr/share/miniconda/lib/python3.10/site-packages/astropy/io/fits/convenience.py:221[0m, in [0;36mgetdata[0;34m(filename, header, lower, upper, view, *args, **kwargs)[0m
+[1;32m    216[0m extver [38;5;241m=[39m kwargs[38;5;241m.[39mget([38;5;124m"[39m[38;5;124mextver[39m[38;5;124m"[39m)
+[1;32m    217[0m ext_given [38;5;241m=[39m [38;5;129;01mnot[39;00m (
+[1;32m    218[0m     [38;5;28mlen[39m(args) [38;5;241m==[39m [38;5;241m0[39m [38;5;129;01mand[39;00m ext [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m [38;5;129;01mand[39;00m extname [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m [38;5;129;01mand[39;00m extver [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m
+[1;32m    219[0m )
+[0;32m--> 221[0m hdulist, extidx [38;5;241m=[39m [43m_getext[49m[43m([49m[43mfilename[49m[43m,[49m[43m [49m[43mmode[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[43margs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
+[1;32m    222[0m [38;5;28;01mtry[39;00m:
+[1;32m    223[0m     hdu [38;5;241m=[39m hdulist[extidx]
+
+File [0;32m/usr/share/miniconda/lib/python3.10/site-packages/astropy/io/fits/convenience.py:1125[0m, in [0;36m_getext[0;34m(filename, mode, ext, extname, extver, *args, **kwargs)[0m
+[1;32m   1122[0m [38;5;28;01melif[39;00m extver [38;5;129;01mand[39;00m extname [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m:
+[1;32m   1123[0m     [38;5;28;01mraise[39;00m [38;5;167;01mTypeError[39;00m([38;5;124m"[39m[38;5;124mextver alone cannot specify an extension.[39m[38;5;124m"[39m)
+[0;32m-> 1125[0m hdulist [38;5;241m=[39m [43mfitsopen[49m[43m([49m[43mfilename[49m[43m,[49m[43m [49m[43mmode[49m[38;5;241;43m=[39;49m[43mmode[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
+[1;32m   1127[0m [38;5;28;01mreturn[39;00m hdulist, ext
+
+File [0;32m/usr/share/miniconda/lib/python3.10/site-packages/astropy/io/fits/hdu/hdulist.py:214[0m, in [0;36mfitsopen[0;34m(name, mode, memmap, save_backup, cache, lazy_load_hdus, ignore_missing_simple, use_fsspec, fsspec_kwargs, **kwargs)[0m
+[1;32m    211[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m name:
+[1;32m    212[0m     [38;5;28;01mraise[39;00m [38;5;167;01mValueError[39;00m([38;5;124mf[39m[38;5;124m"[39m[38;5;124mEmpty filename: [39m[38;5;132;01m{[39;00mname[38;5;132;01m!r}[39;00m[38;5;124m"[39m)
+[0;32m--> 214[0m [38;5;28;01mreturn[39;00m [43mHDUList[49m[38;5;241;43m.[39;49m[43mfromfile[49m[43m([49m
+[1;32m    215[0m [43m    [49m[43mname[49m[43m,[49m
+[1;32m    216[0m [43m    [49m[43mmode[49m[43m,[49m
+[1;32m    217[0m [43m    [49m[43mmemmap[49m[43m,[49m
+[1;32m    218[0m [43m    [49m[43msave_backup[49m[43m,[49m
+[1;32m    219[0m [43m    [49m[43mcache[49m[43m,[49m
+[1;32m    220[0m [43m    [49m[43mlazy_load_hdus[49m[43m,[49m
+[1;32m    221[0m [43m    [49m[43mignore_missing_simple[49m[43m,[49m
+[1;32m    222[0m [43m    [49m[43muse_fsspec[49m[38;5;241;43m=[39;49m[43muse_fsspec[49m[43m,[49m
+[1;32m    223[0m [43m    [49m[43mfsspec_kwargs[49m[38;5;241;43m=[39;49m[43mfsspec_kwargs[49m[43m,[49m
+[1;32m    224[0m [43m    [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m,[49m
+[1;32m    225[0m [43m[49m[43m)[49m
+
+File [0;32m/usr/share/miniconda/lib/python3.10/site-packages/astropy/io/fits/hdu/hdulist.py:482[0m, in [0;36mHDUList.fromfile[0;34m(cls, fileobj, mode, memmap, save_backup, cache, lazy_load_hdus, ignore_missing_simple, **kwargs)[0m
+[1;32m    462[0m [38;5;129m@classmethod[39m
+[1;32m    463[0m [38;5;28;01mdef[39;00m [38;5;21mfromfile[39m(
+[1;32m    464[0m     [38;5;28mcls[39m,
+[0;32m   (...)[0m
+[1;32m    472[0m     [38;5;241m*[39m[38;5;241m*[39mkwargs,
+[1;32m    473[0m ):
+[1;32m    474[0m [38;5;250m    [39m[38;5;124;03m"""[39;00m
+[1;32m    475[0m [38;5;124;03m    Creates an `HDUList` instance from a file-like object.[39;00m
+[1;32m    476[0m 
+[0;32m   (...)[0m
+[1;32m    479[0m [38;5;124;03m    documentation for details of the parameters accepted by this method).[39;00m
+[1;32m    480[0m [38;5;124;03m    """[39;00m
+[0;32m--> 482[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mcls[39;49m[38;5;241;43m.[39;49m[43m_readfrom[49m[43m([49m
+[1;32m    483[0m [43m        [49m[43mfileobj[49m[38;5;241;43m=[39;49m[43mfileobj[49m[43m,[49m
+[1;32m    484[0m [43m        [49m[43mmode[49m[38;5;241;43m=[39;49m[43mmode[49m[43m,[49m
+[1;32m    485[0m [43m        [49m[43mmemmap[49m[38;5;241;43m=[39;49m[43mmemmap[49m[43m,[49m
+[1;32m    486[0m [43m        [49m[43msave_backup[49m[38;5;241;43m=[39;49m[43msave_backup[49m[43m,[49m
+[1;32m    487[0m [43m        [49m[43mcache[49m[38;5;241;43m=[39;49m[43mcache[49m[43m,[49m
+[1;32m    488[0m [43m        [49m[43mignore_missing_simple[49m[38;5;241;43m=[39;49m[43mignore_missing_simple[49m[43m,[49m
+[1;32m    489[0m [43m        [49m[43mlazy_load_hdus[49m[38;5;241;43m=[39;49m[43mlazy_load_hdus[49m[43m,[49m
+[1;32m    490[0m [43m        [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m,[49m
+[1;32m    491[0m [43m    [49m[43m)[49m
+
+File [0;32m/usr/share/miniconda/lib/python3.10/site-packages/astropy/io/fits/hdu/hdulist.py:1170[0m, in [0;36mHDUList._readfrom[0;34m(cls, fileobj, data, mode, memmap, cache, lazy_load_hdus, ignore_missing_simple, use_fsspec, fsspec_kwargs, **kwargs)[0m
+[1;32m   1167[0m [38;5;28;01mif[39;00m fileobj [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[1;32m   1168[0m     [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m [38;5;28misinstance[39m(fileobj, _File):
+[1;32m   1169[0m         [38;5;66;03m# instantiate a FITS file object (ffo)[39;00m
+[0;32m-> 1170[0m         fileobj [38;5;241m=[39m [43m_File[49m[43m([49m
+[1;32m   1171[0m [43m            [49m[43mfileobj[49m[43m,[49m
+[1;32m   1172[0m [43m            [49m[43mmode[49m[38;5;241;43m=[39;49m[43mmode[49m[43m,[49m
+[1;32m   1173[0m [43m            [49m[43mmemmap[49m[38;5;241;43m=[39;49m[43mmemmap[49m[43m,[49m
+[1;32m   1174[0m [43m            [49m[43mcache[49m[38;5;241;43m=[39;49m[43mcache[49m[43m,[49m
+[1;32m   1175[0m [43m            [49m[43muse_fsspec[49m[38;5;241;43m=[39;49m[43muse_fsspec[49m[43m,[49m
+[1;32m   1176[0m [43m            [49m[43mfsspec_kwargs[49m[38;5;241;43m=[39;49m[43mfsspec_kwargs[49m[43m,[49m
+[1;32m   1177[0m [43m        [49m[43m)[49m
+[1;32m   1178[0m     [38;5;66;03m# The Astropy mode is determined by the _File initializer if the[39;00m
+[1;32m   1179[0m     [38;5;66;03m# supplied mode was None[39;00m
+[1;32m   1180[0m     mode [38;5;241m=[39m fileobj[38;5;241m.[39mmode
+
+File [0;32m/usr/share/miniconda/lib/python3.10/site-packages/astropy/io/fits/file.py:218[0m, in [0;36m_File.__init__[0;34m(self, fileobj, mode, memmap, overwrite, cache, use_fsspec, fsspec_kwargs)[0m
+[1;32m    216[0m     [38;5;28mself[39m[38;5;241m.[39m_open_fileobj(fileobj, mode, overwrite)
+[1;32m    217[0m [38;5;28;01melif[39;00m [38;5;28misinstance[39m(fileobj, ([38;5;28mstr[39m, [38;5;28mbytes[39m)):
+[0;32m--> 218[0m     [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_open_filename[49m[43m([49m[43mfileobj[49m[43m,[49m[43m [49m[43mmode[49m[43m,[49m[43m [49m[43moverwrite[49m[43m)[49m
+[1;32m    219[0m [38;5;28;01melse[39;00m:
+[1;32m    220[0m     [38;5;28mself[39m[38;5;241m.[39m_open_filelike(fileobj, mode, overwrite)
+
+File [0;32m/usr/share/miniconda/lib/python3.10/site-packages/astropy/io/fits/file.py:636[0m, in [0;36m_File._open_filename[0;34m(self, filename, mode, overwrite)[0m
+[1;32m    633[0m ext [38;5;241m=[39m os[38;5;241m.[39mpath[38;5;241m.[39msplitext([38;5;28mself[39m[38;5;241m.[39mname)[[38;5;241m1[39m]
+[1;32m    635[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m [38;5;28mself[39m[38;5;241m.[39m_try_read_compressed([38;5;28mself[39m[38;5;241m.[39mname, magic, mode, ext[38;5;241m=[39mext):
+[0;32m--> 636[0m     [38;5;28mself[39m[38;5;241m.[39m_file [38;5;241m=[39m [38;5;28;43mopen[39;49m[43m([49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mname[49m[43m,[49m[43m [49m[43mIO_FITS_MODES[49m[43m[[49m[43mmode[49m[43m][49m[43m)[49m
+[1;32m    637[0m     [38;5;28mself[39m[38;5;241m.[39mclose_on_error [38;5;241m=[39m [38;5;28;01mTrue[39;00m
+[1;32m    639[0m [38;5;66;03m# Make certain we're back at the beginning of the file[39;00m
+[1;32m    640[0m [38;5;66;03m# BZ2File does not support seek when the file is open for writing, but[39;00m
+[1;32m    641[0m [38;5;66;03m# when opening a file for write, bz2.BZ2File always truncates anyway.[39;00m
+
+[0;31mFileNotFoundError[0m: [Errno 2] No such file or directory: 'final_drz_sci.fits'
+FileNotFoundError: [Errno 2] No such file or directory: 'final_drz_sci.fits'
+
