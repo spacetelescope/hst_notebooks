@@ -1,49 +1,57 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Splitting COS Exposures into sub-exposures with splittag &#8212; HST Notebooks</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../../../_static/styles/theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../_static/styles/bootstrap.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
 
-    
-  <link rel="stylesheet"
-    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2">
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=4ec06e9971c5264fbd345897d5258098f11cc577" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94">
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94">
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
-    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=8bf782fb4ee92b3d3646425e50f299c4e1fd152d"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -51,56 +59,506 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/COS/SplitTag/SplitTag';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Filtering out COS Data taken during the Day or Night" href="../DayNight/DayNight.html" />
     <link rel="prev" title="Running the COS Data Pipeline (CalCOS)" href="../CalCOS/CalCOS.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="light">
 
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+      
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fa-solid fa-bars"></span>
+  </label>
+  <div id="navbar-start">
     
-    <div class="container-fluid" id="banner"></div>
-
     
+  
 
-    <div class="container-xl">
-      <div class="row">
+
+<a class="navbar-brand logo" href="../../../index.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+    <p class="title logo__title">HST Notebooks</p>
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../README.html">
+                        COS Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Setup/Setup.html">
+                        Setting up your computer environment for working with COS data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../DataDl/DataDl.html">
+                        Downloading COS Data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../ViewData/ViewData.html">
+                        Viewing COS Data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../AsnFile/AsnFile.html">
+                        Modifying or Creating an Association File
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../CalCOS/CalCOS.html">
+                        Running the COS Data Pipeline (CalCOS)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        Splitting COS Exposures into sub-exposures with splittag
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../DayNight/DayNight.html">
+                        Filtering out COS Data taken during the Day or Night
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../LSF/LSF.html">
+                        Working with the COS Line Spread Function (LSF)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Extract/Extract.html">
+                        Editing the extraction boxes in a spectral extraction file (XTRACTAB)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/README.html">
+                        DrizzlePac Jupyter Notebook Tutorials
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/Initialization/Initialization.html">
+                        DrizzlePac Initialization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">
+                        Aligning HST images to an absolute reference catalog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">
+                        Optimizing Image Alignment for Multiple HST Visits
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">
+                        Aligning Deep Exposures of Sparse Fields
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">
+                        Drizzling WFPC2 Images to use a Single Zeropoint
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">
+                        Satellite Trail Masking Techniques
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">
+                        Optimizing the Image Sampling
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">
+                        Using updated astrometry solutions
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">
+                        Programmatic Replacements for NICMOS Units Conversion Form
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+        <div class="navbar-end-item navbar-persistent--container">
           
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../../../index.html">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+        </div>
       
       
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
       
-      <h1 class="site-logo" id="site-title">HST Notebooks</h1>
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
       
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    </div>
+  </div>
+
+
+  
+  
+    <div class="navbar-persistent--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+    </div>
+  
+
+  
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../README.html">
+                        COS Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Setup/Setup.html">
+                        Setting up your computer environment for working with COS data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../DataDl/DataDl.html">
+                        Downloading COS Data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../ViewData/ViewData.html">
+                        Viewing COS Data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../AsnFile/AsnFile.html">
+                        Modifying or Creating an Association File
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../CalCOS/CalCOS.html">
+                        Running the COS Data Pipeline (CalCOS)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        Splitting COS Exposures into sub-exposures with splittag
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../DayNight/DayNight.html">
+                        Filtering out COS Data taken during the Day or Night
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../LSF/LSF.html">
+                        Working with the COS Line Spread Function (LSF)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Extract/Extract.html">
+                        Editing the extraction boxes in a spectral extraction file (XTRACTAB)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/README.html">
+                        DrizzlePac Jupyter Notebook Tutorials
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/Initialization/Initialization.html">
+                        DrizzlePac Initialization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">
+                        Aligning HST images to an absolute reference catalog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">
+                        Optimizing Image Alignment for Multiple HST Visits
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">
+                        Aligning Deep Exposures of Sparse Fields
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">
+                        Drizzling WFPC2 Images to use a Single Zeropoint
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">
+                        Satellite Trail Masking Techniques
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">
+                        Optimizing the Image Sampling
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">
+                        Using updated astrometry solutions
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">
+                        Programmatic Replacements for NICMOS Units Conversion Form
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+  <div class="sidebar-start-items sidebar-primary__section">
+    <div class="sidebar-start-items__item">
+  
+
+
+<a class="navbar-brand logo" href="../../../index.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+    <p class="title logo__title">HST Notebooks</p>
+  
+</a>
+    </div>
+    <div class="sidebar-start-items__item">
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+    <div class="sidebar-start-items__item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
@@ -109,614 +567,411 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  COS
- </span>
-</p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../README.html">
-   COS Notebooks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Setup/Setup.html">
-   Setting up your computer environment for working with COS data
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../DataDl/DataDl.html">
-   Downloading COS Data
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../ViewData/ViewData.html">
-   Viewing COS Data
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../AsnFile/AsnFile.html">
-   Modifying or Creating an Association File
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../CalCOS/CalCOS.html">
-   Running the COS Data Pipeline (
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     CalCOS
-    </span>
-   </code>
-   )
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Splitting COS Exposures into sub-exposures with
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     splittag
-    </span>
-   </code>
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../DayNight/DayNight.html">
-   Filtering out COS Data taken during the Day or Night
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../LSF/LSF.html">
-   Working with the COS Line Spread Function (LSF)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Extract/Extract.html">
-   Editing the extraction boxes in a spectral extraction file (XTRACTAB)
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (XTRACTAB)</a></li>
+
+
+
+
+
+
+
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  DrizzlePac
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/README.html">
-   DrizzlePac Jupyter Notebook Tutorials
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/Initialization/Initialization.html">
-   DrizzlePac Initialization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">
-   Aligning HST images to an absolute reference catalog
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">
-   Optimizing Image Alignment for Multiple HST Visits
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">
-   Aligning Deep Exposures of Sparse Fields
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">
-   Drizzling WFPC2 Images to use a Single Zeropoint
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">
-   Satellite Trail Masking Techniques
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">
-   Optimizing the Image Sampling
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">
-   Using updated astrometry solutions
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Jupyter Notebook Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/Initialization/Initialization.html">DrizzlePac Initialization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an absolute reference catalog</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling WFPC2 Images to use a Single Zeropoint</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Using updated astrometry solutions</a></li>
+
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  NICMOS
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">
-   Programmatic Replacements for NICMOS Units Conversion Form
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
 </ul>
 
     </div>
-</nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
+</nav>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
+  </div>
+  
 
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
 
-          
+  
+  <div id="rtd-footer-container"></div>
 
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
+      </div>
+      <main id="main-content" class="bd-main">
         
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
 
 
 
 <div class="col py-1 d-flex header-article-main">
     <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
+        <label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" data-toggle="tooltip" data-placement="right" title="Toggle primary sidebar">
+            <span class="fa-solid fa-bars"></span>
+        </label>
     </div>
     <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/spacetelescope/hst_notebooks/main?urlpath=tree/notebooks/COS/SplitTag/SplitTag.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
-  
-
-<span class="headerbtn__icon-container">
-  
-    <img src="../../../_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/COS/SplitTag/SplitTag.ipynb"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/COS/SplitTag/SplitTag.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Launch on Colab"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   
     <img src="../../../_static/images/logo_colab.png">
   </span>
-<span class="headerbtn__text-container">Colab</span>
+<span class="btn__text-container">Colab</span>
 </a>
-
-      </li>
+</a>
       
       <li>
-        
 <button onclick="initThebeSBT()"
-  class="headerbtn headerbtn-launch-thebe"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
   data-toggle="tooltip"
 data-placement="left"
 title="Launch Thebe"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-play"></i>
   </span>
-<span class="headerbtn__text-container">Live Code</span>
+<span class="btn__text-container">Live Code</span>
 </button>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
+  </ul>
 </div>
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
+  class="btn btn-sm"
   data-toggle="tooltip"
 data-placement="bottom"
 title="Fullscreen mode"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+
+<div class="dropdown dropdown-repository-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/spacetelescope/hst_notebooks"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Source repository"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fab fa-github"></i>
   </span>
-<span class="headerbtn__text-container">repository</span>
+<span class="btn__text-container">repository</span>
 </a>
-
-      </li>
+</a>
       
-      <li>
-        <a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/COS/SplitTag/SplitTag.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/COS/SplitTag/SplitTag.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Open an issue"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-lightbulb"></i>
   </span>
-<span class="headerbtn__text-container">open issue</span>
+<span class="btn__text-container">open issue</span>
 </a>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
+  </ul>
 </div>
 
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../../../_sources/notebooks/COS/SplitTag/SplitTag.ipynb"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="../../../_sources/notebooks/COS/SplitTag/SplitTag.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Download source file"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="headerbtn__text-container">.ipynb</span>
+<span class="btn__text-container">.ipynb</span>
 </a>
-
-      </li>
+</a>
       
       <li>
-        
 <button onclick="printPdf(this)"
-  class="headerbtn"
+  class="btn btn-sm dropdown-item"
   data-toggle="tooltip"
 data-placement="left"
 title="Print to PDF"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file-pdf"></i>
   </span>
-<span class="headerbtn__text-container">.pdf</span>
+<span class="btn__text-container">.pdf</span>
 </button>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
+  </ul>
 </div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary" data-toggle="tooltip" data-placement="left" title="Toggle secondary sidebar">
+            <span class="fa-solid fa-list"></span>
+        </label>
     </div>
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Splitting COS Exposures into sub-exposures with
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     splittag
-    </span>
-   </code>
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#learning-goals">
-   Learning Goals
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#introduction">
-   0. Introduction
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#examining-the-data-to-determine-how-to-split-the-files">
-   1. Examining the data to determine how to split the files
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#using-splittag-to-create-multiple-sub-exposure-files">
-   2. Using
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     splittag
-    </span>
-   </code>
-   to create multiple sub-exposure files
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#fig-2-2">
-     Fig 2.2
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#exercise-1-practice-sub-dividing-with-splittag">
-     Exercise 1:
-     <em>
-      Practice sub-dividing with
-      <code class="docutils literal notranslate">
-       <span class="pre">
-        splittag
-       </span>
-      </code>
-     </em>
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#extracting-spectra-from-the-sub-exposures-using-calcos">
-   3. Extracting spectra from the sub-exposures using
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     CalCOS
-    </span>
-   </code>
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#exercise-2-examining-epoch-1-5">
-     Exercise 2:
-     <em>
-      Examining epoch 1.5
-     </em>
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#congratulations-you-finished-this-notebook">
-     Congratulations! You finished this Notebook!
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#about-this-notebook">
-     About this Notebook
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#citations">
-     Citations
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#exercise-solutions">
-   Exercise Solutions
-  </a>
- </li>
-</ul>
-
-    </nav>
-</div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Splitting COS Exposures into sub-exposures with splittag</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Splitting COS Exposures into sub-exposures with
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     splittag
-    </span>
-   </code>
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#learning-goals">
-   Learning Goals
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#introduction">
-   0. Introduction
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#examining-the-data-to-determine-how-to-split-the-files">
-   1. Examining the data to determine how to split the files
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#using-splittag-to-create-multiple-sub-exposure-files">
-   2. Using
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     splittag
-    </span>
-   </code>
-   to create multiple sub-exposure files
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#fig-2-2">
-     Fig 2.2
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#exercise-1-practice-sub-dividing-with-splittag">
-     Exercise 1:
-     <em>
-      Practice sub-dividing with
-      <code class="docutils literal notranslate">
-       <span class="pre">
-        splittag
-       </span>
-      </code>
-     </em>
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#extracting-spectra-from-the-sub-exposures-using-calcos">
-   3. Extracting spectra from the sub-exposures using
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     CalCOS
-    </span>
-   </code>
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#exercise-2-examining-epoch-1-5">
-     Exercise 2:
-     <em>
-      Examining epoch 1.5
-     </em>
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#congratulations-you-finished-this-notebook">
-     Congratulations! You finished this Notebook!
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#about-this-notebook">
-     About this Notebook
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#citations">
-     Citations
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#exercise-solutions">
-   Exercise Solutions
-  </a>
- </li>
-</ul>
-
-                        </nav>
-                    </div>
-                </div>
             </div>
-            <main id="main-content" role="main">
-                
-              <div>
-                
+            
+            
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Splitting COS Exposures into sub-exposures with splittag</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Splitting COS Exposures into sub-exposures with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     splittag
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#learning-goals">
+   Learning Goals
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   0. Introduction
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#examining-the-data-to-determine-how-to-split-the-files">
+   1. Examining the data to determine how to split the files
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-splittag-to-create-multiple-sub-exposure-files">
+   2. Using
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     splittag
+    </span>
+   </code>
+   to create multiple sub-exposure files
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#fig-2-2">
+     Fig 2.2
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#exercise-1-practice-sub-dividing-with-splittag">
+     Exercise 1:
+     <em>
+      Practice sub-dividing with
+      <code class="docutils literal notranslate">
+       <span class="pre">
+        splittag
+       </span>
+      </code>
+     </em>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#extracting-spectra-from-the-sub-exposures-using-calcos">
+   3. Extracting spectra from the sub-exposures using
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#exercise-2-examining-epoch-1-5">
+     Exercise 2:
+     <em>
+      Examining epoch 1.5
+     </em>
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#congratulations-you-finished-this-notebook">
+     Congratulations! You finished this Notebook!
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#about-this-notebook">
+     About this Notebook
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#citations">
+     Citations
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#exercise-solutions">
+   Exercise Solutions
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+            <article class="bd-article" role="main">
+              
   <p><a id="topSp"></a></p>
 <section class="tex2jax_ignore mathjax_ignore" id="splitting-cos-exposures-into-sub-exposures-with-splittag">
-<h1>Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code><a class="headerlink" href="#splitting-cos-exposures-into-sub-exposures-with-splittag" title="Permalink to this headline">#</a></h1>
+<h1>Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code><a class="headerlink" href="#splitting-cos-exposures-into-sub-exposures-with-splittag" title="Permalink to this heading">#</a></h1>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="learning-goals">
-<h1>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this headline">#</a></h1>
+<h1>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h1>
 <p><font size="4 ">This Notebook is designed to walk the user (<em>you</em>) through:</font><br></p>
 <p><strong>Filtering Cosmic Origins Spectrograph (COS) <code class="docutils literal notranslate"><span class="pre">TIME-TAG</span></code> data using the <code class="docutils literal notranslate"><span class="pre">splittag</span></code> tool</strong> by</p>
-<p><strong>1. <a class="reference external" href="#exSp">Examining the data to determine how to split the files</a></strong></p>
-<p><strong>2. <a class="reference external" href="#SpSp">Using <code class="docutils literal notranslate"><span class="pre">splittag</span></code> to create multiple sub-exposure files</a></strong></p>
-<p><strong>3. <a class="reference external" href="#extractSp">Extracting spectra from the sub-exposures using <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></a></strong></p>
+<p><strong>1. <span class="xref myst">Examining the data to determine how to split the files</span></strong></p>
+<p><strong>2. <span class="xref myst">Using <code class="docutils literal notranslate"><span class="pre">splittag</span></code> to create multiple sub-exposure files</span></strong></p>
+<p><strong>3. <span class="xref myst">Extracting spectra from the sub-exposures using <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></span></strong></p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="introduction">
-<h1>0. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">#</a></h1>
+<h1>0. Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h1>
 <p><strong>The Cosmic Origins Spectrograph (<a class="reference external" href="https://www.nasa.gov/content/hubble-space-telescope-cosmic-origins-spectrograph"><em>COS</em></a>) is an ultraviolet spectrograph on-board the Hubble Space Telescope (<a class="reference external" href="https://www.stsci.edu/hst/about"><em>HST</em></a>) with capabilities in the near ultraviolet (<em>NUV</em>) and far ultraviolet (<em>FUV</em>).</strong></p>
 <p><strong>This tutorial aims to prepare you to work with the COS data of your choice by walking you through filtering <code class="docutils literal notranslate"><span class="pre">TIME-TAG</span></code> datapoints obtained by COS based on arbitrary times.</strong></p>
 <p>COS Data can be taken in <a class="reference external" href="https://hst-docs.stsci.edu/cosdhb/chapter-1-cos-overview/1-1-instrument-capabilities-and-design"><code class="docutils literal notranslate"><span class="pre">TIME-TAG</span></code></a> mode, in which each individual encounter with a photon is recorded with its own metadata such as the time of the encounter. You may wish to split a COS exposure into multiple sub-exposure files. For instance, a transit may occur during your exposure, and you may wish to see the difference between the source’s spectrum before, during, and after the transit. This is possible with <code class="docutils literal notranslate"><span class="pre">TIME-TAG</span></code> data, and the functionality to do this is built into the <a class="reference external" href="https://github.com/spacetelescope/costools"><code class="docutils literal notranslate"><span class="pre">COSTools</span></code> python module</a> with the tool <code class="docutils literal notranslate"><span class="pre">splittag</span></code>.</p>
@@ -736,7 +991,7 @@ title="Print to PDF"
 <li><p><code class="docutils literal notranslate"><span class="pre">astroquery.mast</span> <span class="pre">Mast</span></code> and <code class="docutils literal notranslate"><span class="pre">Observations</span></code> for finding and downloading data from the <a class="reference external" href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST</a> archive</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">warnings</span></code> and <code class="docutils literal notranslate"><span class="pre">astropy.units</span> <span class="pre">Warnings</span></code> for suppressing a warning that is not helpful later on.</p></li>
 </ul>
-<p>New versions of <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> are currently incompatible with astroconda. To create a Python environment capable of running all the data analyses in these COS Notebooks, please see Section 1 of our Notebook tutorial on <a class="reference external" href="https://github.com/spacetelescope/notebooks/blob/master/notebooks/COS/Setup/Setup.ipynb">setting up an environment</a>. Your version of <code class="docutils literal notranslate"><span class="pre">costools</span></code> may display a message on input about <code class="docutils literal notranslate"><span class="pre">TEAL</span></code> support (described <a class="reference external" href="#tealST">here</a>), but you may ignore this as it is largely irrelevant to our discussion.</p>
+<p>New versions of <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> are currently incompatible with astroconda. To create a Python environment capable of running all the data analyses in these COS Notebooks, please see Section 1 of our Notebook tutorial on <a class="reference external" href="https://github.com/spacetelescope/notebooks/blob/master/notebooks/COS/Setup/Setup.ipynb">setting up an environment</a>. Your version of <code class="docutils literal notranslate"><span class="pre">costools</span></code> may display a message on input about <code class="docutils literal notranslate"><span class="pre">TEAL</span></code> support (described <span class="xref myst">here</span>), but you may ignore this as it is largely irrelevant to our discussion.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for array manipulation</span>
@@ -875,7 +1130,7 @@ Found 4 corrtag exposure files from the COS FUV detector (segment A only)
 <p><a id= exSp></a></p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="examining-the-data-to-determine-how-to-split-the-files">
-<h1>1. Examining the data to determine how to split the files<a class="headerlink" href="#examining-the-data-to-determine-how-to-split-the-files" title="Permalink to this headline">#</a></h1>
+<h1>1. Examining the data to determine how to split the files<a class="headerlink" href="#examining-the-data-to-determine-how-to-split-the-files" title="Permalink to this heading">#</a></h1>
 <p>We chose this dataset because of its transit event. However, let’s suppose for a moment that we don’t know which, if any, of our exposures have transits or other time-variable events. We’ll imagine we are simply investigating our data.</p>
 <p><strong>To look for transits and other anomalies, we will create and examine a rough lightcurve of our four exposures.</strong></p>
 <p>A lightcurve is simply a graph of net light or photon counts over time. We can make one by grabbing the time of all recorded photon events from each exposure, and plotting a histogram of the times. There are packages which can create detailed lightcurves, such as <a class="reference external" href="https://github.com/justincely/lightcurve">lightcurve</a>, but we will make these simple lightcurve plots ourselves. We also do not claim to explain every feature of all the lightcurves created. We will focus on any clear transit shapes.</p>
@@ -927,7 +1182,7 @@ Found 4 corrtag exposure files from the COS FUV detector (segment A only)
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/SplitTag_9_0.png" src="../../../_images/SplitTag_9_0.png" />
+<img alt="../../../_images/1b4930ebd997c8fbf428c8b6cebc331e874a08387fa5e17badea41e069876001.png" src="../../../_images/1b4930ebd997c8fbf428c8b6cebc331e874a08387fa5e17badea41e069876001.png" />
 </div>
 </div>
 <p>We can see an apparent transit in the exposure <code class="docutils literal notranslate"><span class="pre">lc1va0zgq</span></code>, occurring from about 450 - 850 seconds into the exposure. We highlight this in figure 1.2 below.</p>
@@ -975,12 +1230,12 @@ Found 4 corrtag exposure files from the COS FUV detector (segment A only)
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The length of the exposure is ~1337 s
 </pre></div>
 </div>
-<img alt="../../../_images/SplitTag_11_1.png" src="../../../_images/SplitTag_11_1.png" />
+<img alt="../../../_images/895700d0973f65cc255fe51976cce5df1a4bddf42f6a26fd99a0d0421ce48f73.png" src="../../../_images/895700d0973f65cc255fe51976cce5df1a4bddf42f6a26fd99a0d0421ce48f73.png" />
 </div>
 </div>
 <p><strong>We now wish to actually split the file into three sub-exposures with the counts gathered during these three windows of time.</strong></p>
 <p>For research purposes, the transit should be measured more carefully than simply looking at this rough lightcurve. However for our purposes, we explicitly and somewhat arbitrarily define the windows, ‘by eye’, as:</p>
-<table class="colwidths-auto table">
+<table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Window</p></th>
 <th class="head"><p>Time Range</p></th>
@@ -1001,10 +1256,10 @@ Found 4 corrtag exposure files from the COS FUV detector (segment A only)
 <p><a id=SpSp></a></p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="using-splittag-to-create-multiple-sub-exposure-files">
-<h1>2. Using <code class="docutils literal notranslate"><span class="pre">splittag</span></code> to create multiple sub-exposure files<a class="headerlink" href="#using-splittag-to-create-multiple-sub-exposure-files" title="Permalink to this headline">#</a></h1>
+<h1>2. Using <code class="docutils literal notranslate"><span class="pre">splittag</span></code> to create multiple sub-exposure files<a class="headerlink" href="#using-splittag-to-create-multiple-sub-exposure-files" title="Permalink to this heading">#</a></h1>
 <p>The next cell creates a directory for the sub-exposure files we’re about to create, and uses <code class="docutils literal notranslate"><span class="pre">splittag</span></code> to split the exposures.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">time_list</span></code> parameter defines the times at which the exposure will be split. Because we pass this parameter the list <code class="docutils literal notranslate"><span class="pre">[0,550,850,&lt;time</span> <span class="pre">of</span> <span class="pre">last</span> <span class="pre">recorded</span> <span class="pre">count&gt;]</span></code>, <code class="docutils literal notranslate"><span class="pre">splittag</span></code> will produce 3 sub-exposure files with data taken from:</p>
-<ol class="simple">
+<ol class="arabic simple">
 <li><p>0-550 seconds</p></li>
 <li><p>550-850 seconds</p></li>
 <li><p>850-1337 seconds (because the <code class="docutils literal notranslate"><span class="pre">&lt;time</span> <span class="pre">of</span> <span class="pre">last</span> <span class="pre">recorded</span> <span class="pre">count&gt;</span></code> for this exposure ~1337 s)</p></li>
@@ -1121,7 +1376,7 @@ The <code class="docutils literal notranslate"><span class="pre">splittag</span>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/SplitTag_18_0.png" src="../../../_images/SplitTag_18_0.png" />
+<img alt="../../../_images/d7203211bbf97716b74488020be8f4156ee065258dcb79c8e05fdaeeb6e5c6de.png" src="../../../_images/d7203211bbf97716b74488020be8f4156ee065258dcb79c8e05fdaeeb6e5c6de.png" />
 </div>
 </div>
 <p><a id=tealST></a>
@@ -1133,11 +1388,11 @@ While not implemented within the Jupyter Notebook framework, you can also run <c
 </pre></div>
 </div>
 <section id="fig-2-2">
-<h2>Fig 2.2<a class="headerlink" href="#fig-2-2" title="Permalink to this headline">#</a></h2>
+<h2>Fig 2.2<a class="headerlink" href="#fig-2-2" title="Permalink to this heading">#</a></h2>
 <center><img src="./figures/TEAL_GUI.png" width ="900" title="TEAL GUI Interface"> </center><p>Now that we have the three sub-exposure files, we can process them into 1-dimensional spectra using the <a class="reference external" href="https://github.com/spacetelescope/calcos">COS Calibration Pipeline: <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></a>.</p>
 </section>
 <section id="exercise-1-practice-sub-dividing-with-splittag">
-<h2>Exercise 1: <em>Practice sub-dividing with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></em><a class="headerlink" href="#exercise-1-practice-sub-dividing-with-splittag" title="Permalink to this headline">#</a></h2>
+<h2>Exercise 1: <em>Practice sub-dividing with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></em><a class="headerlink" href="#exercise-1-practice-sub-dividing-with-splittag" title="Permalink to this heading">#</a></h2>
 <p>Examining Fig 2.1, we see that from approximately 450-550 seconds, there is are in fact 2 drops in flux. Starting from an initial flux similar to that at the start of the exposure, the flux drops first by ~50% at around 450 seconds, and then drops by ~75% at around 550 seconds to its depth for the duration of the transit.</p>
 <p>Separate out the data taken during this initial drop (from ~450-550 seconds) into its own sub-exposure file using <code class="docutils literal notranslate"><span class="pre">splittag</span></code>. Then, demonstrate your split files with a lightcurve like that in Fig 2.1.</p>
 <div class="cell docutils container">
@@ -1151,7 +1406,7 @@ While not implemented within the Jupyter Notebook framework, you can also run <c
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="extracting-spectra-from-the-sub-exposures-using-calcos">
-<h1>3. Extracting spectra from the sub-exposures using <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#extracting-spectra-from-the-sub-exposures-using-calcos" title="Permalink to this headline">#</a></h1>
+<h1>3. Extracting spectra from the sub-exposures using <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#extracting-spectra-from-the-sub-exposures-using-calcos" title="Permalink to this heading">#</a></h1>
 <p>While for most circumstances, <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> is best run on an association file, (a fits table which specifies a series of exposures to calibrate and combine into a spectrum,) the <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> pipeline can usually be run on individual <code class="docutils literal notranslate"><span class="pre">rawtag</span></code> or <code class="docutils literal notranslate"><span class="pre">corrtag</span></code> files.</p>
 <ul class="simple">
 <li><p>More information on running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> can be found in <a class="reference external" href="https://hst-docs.stsci.edu/cosdhb/chapter-3-cos-calibration/3-6-customizing-cos-data-calibration#id-3.6CustomizingCOSDataCalibration-3.6.1MechanicsofTailoredRecalibration">Chapter 3.6 of the COS Instrument Handbook</a></p></li>
@@ -1367,7 +1622,7 @@ In the first region, we see the 1215 Angstrom Lyman-alpha line, much of which is
 <p>Examining Fig 3.3, we first notice that the very low number of counts in a given wavelength region has limited our spectra’s precision. This is especially evidenced by how epoch 2’s flux is visibly quantized to several values, corresponding with the very low numbers of counted photons in each wavelength bin.</p>
 <p>However, we can still detect a significant change in the spectrum during the transit, with certain spectral features absent or suppressed while the transit occurs. During the transit, COS receives almost no photons coming from the source at these spectral features.</p>
 <section id="exercise-2-examining-epoch-1-5">
-<h2>Exercise 2: <em>Examining epoch 1.5</em><a class="headerlink" href="#exercise-2-examining-epoch-1-5" title="Permalink to this headline">#</a></h2>
+<h2>Exercise 2: <em>Examining epoch 1.5</em><a class="headerlink" href="#exercise-2-examining-epoch-1-5" title="Permalink to this heading">#</a></h2>
 <p>From Exercise 1, you have an additional epoch, from 450-550 seconds, which overlaps with the end of epoch 1, and has a flux between epoch 1 and epoch 2.</p>
 <p>We wish to know whether the data taken during epoch 1.5 more closely aligns with that during epoch 1 or 2. To analyze this,</p>
 <ul class="simple">
@@ -1386,13 +1641,13 @@ In the first region, we see the 1215 Angstrom Lyman-alpha line, much of which is
 <p>However, you should now be equipped to use the <code class="docutils literal notranslate"><span class="pre">splittag</span></code> tool to subdivide exposures to look for time-variable phenomena.</p>
 </section>
 <section id="congratulations-you-finished-this-notebook">
-<h2>Congratulations! You finished this Notebook!<a class="headerlink" href="#congratulations-you-finished-this-notebook" title="Permalink to this headline">#</a></h2>
+<h2>Congratulations! You finished this Notebook!<a class="headerlink" href="#congratulations-you-finished-this-notebook" title="Permalink to this heading">#</a></h2>
 <p><font size="5">There are more COS data walkthrough Notebooks on different topics. You can find them <a href="https://spacetelescope.github.io/COS-Notebooks/">here</a>.</font></p>
 </section>
 <hr class="docutils" />
 <section id="about-this-notebook">
-<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this headline">#</a></h2>
-<p><strong>Author:</strong> Nat Kerman: <a class="reference external" href="mailto:nkerman&#37;&#52;&#48;stsci&#46;edu">mailto:nkerman<span>&#64;</span>stsci<span>&#46;</span>edu</a></p>
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
+<p><strong>Author:</strong> Nat Kerman: <a class="reference external" href="mailto:nkerman&#37;&#52;&#48;stsci&#46;edu">nkerman<span>&#64;</span>stsci<span>&#46;</span>edu</a></p>
 <p><strong>Contributors:</strong> This Notebook drew from a previously existing <a class="reference external" href="https://github.com/justincely/AAS224/blob/master/splittag_tutorial.ipynb">Notebook written by Justin Ely</a>.</p>
 <p><strong>Updated On:</strong> 2022-01-04</p>
 <blockquote>
@@ -1400,7 +1655,7 @@ In the first region, we see the 1215 Angstrom Lyman-alpha line, much of which is
 </div></blockquote>
 </section>
 <section id="citations">
-<h2>Citations<a class="headerlink" href="#citations" title="Permalink to this headline">#</a></h2>
+<h2>Citations<a class="headerlink" href="#citations" title="Permalink to this heading">#</a></h2>
 <p>If you use <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, or <code class="docutils literal notranslate"><span class="pre">numpy</span></code> for published research, please cite the
 authors. Follow these links for more information about citations:</p>
 <ul class="simple">
@@ -1410,7 +1665,7 @@ authors. Follow these links for more information about citations:</p>
 <li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
 </ul>
 <hr class="docutils" />
-<p><a class="reference external" href="#topSp">Top of Page</a>
+<p><span class="xref myst">Top of Page</span>
 <img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/></p>
 <p><br></br>
 <br></br>
@@ -1418,7 +1673,7 @@ authors. Follow these links for more information about citations:</p>
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="exercise-solutions">
-<h1>Exercise Solutions<a class="headerlink" href="#exercise-solutions" title="Permalink to this headline">#</a></h1>
+<h1>Exercise Solutions<a class="headerlink" href="#exercise-solutions" title="Permalink to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Exercise 1:</span>
@@ -1542,50 +1797,196 @@ authors. Follow these links for more information about citations:</p>
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
-              
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
+            </article>
+            
+
+            
+            
+            <footer class="bd-footer-article">
+                <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../CalCOS/CalCOS.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="../DayNight/DayNight.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Filtering out COS Data taken during the Day or Night</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
+  <a class='left-prev' id="prev-link" href="../CalCOS/CalCOS.html" title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="../DayNight/DayNight.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Filtering out COS Data taken during the Day or Night</p>
+  </div>
+  <i class="fa-solid fa-angle-right"></i>
+  </a>
 </div>
             </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
+            
+          </div>
+          
+          
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
   
-    By STScI<br/>
-  
-      &copy; Copyright 2022.<br/>
-</p>
-        </footer>
-    </div>
-    
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Splitting COS Exposures into sub-exposures with
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     splittag
+    </span>
+   </code>
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#learning-goals">
+   Learning Goals
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   0. Introduction
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#examining-the-data-to-determine-how-to-split-the-files">
+   1. Examining the data to determine how to split the files
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-splittag-to-create-multiple-sub-exposure-files">
+   2. Using
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     splittag
+    </span>
+   </code>
+   to create multiple sub-exposure files
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#fig-2-2">
+     Fig 2.2
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#exercise-1-practice-sub-dividing-with-splittag">
+     Exercise 1:
+     <em>
+      Practice sub-dividing with
+      <code class="docutils literal notranslate">
+       <span class="pre">
+        splittag
+       </span>
+      </code>
+     </em>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#extracting-spectra-from-the-sub-exposures-using-calcos">
+   3. Extracting spectra from the sub-exposures using
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#exercise-2-examining-epoch-1-5">
+     Exercise 2:
+     <em>
+      Examining epoch 1.5
+     </em>
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#congratulations-you-finished-this-notebook">
+     Congratulations! You finished this Notebook!
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#about-this-notebook">
+     About this Notebook
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#citations">
+     Citations
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#exercise-solutions">
+   Exercise Solutions
+  </a>
+ </li>
+</ul>
+
+</nav>
 </div>
 
-
-      </div>
-    </div>
+            </div>
+          
+          
+        </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+<div class="bd-footer-content__inner container">
   
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
 
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2022.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+Last updated on None.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </div>
+        </footer>
+        
+
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94"></script>
 
   </body>
 </html>

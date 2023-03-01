@@ -1,49 +1,57 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Running the COS Data Pipeline (CalCOS) &#8212; HST Notebooks</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../../../_static/styles/theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../_static/styles/bootstrap.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
 
-    
-  <link rel="stylesheet"
-    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2">
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=4ec06e9971c5264fbd345897d5258098f11cc577" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94">
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94">
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
-    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=8bf782fb4ee92b3d3646425e50f299c4e1fd152d"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -53,56 +61,506 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/COS/CalCOS/CalCOS';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Splitting COS Exposures into sub-exposures with splittag" href="../SplitTag/SplitTag.html" />
     <link rel="prev" title="Modifying or Creating an Association File" href="../AsnFile/AsnFile.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="light">
 
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+      
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fa-solid fa-bars"></span>
+  </label>
+  <div id="navbar-start">
     
-    <div class="container-fluid" id="banner"></div>
-
     
+  
 
-    <div class="container-xl">
-      <div class="row">
+
+<a class="navbar-brand logo" href="../../../index.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+    <p class="title logo__title">HST Notebooks</p>
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../README.html">
+                        COS Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Setup/Setup.html">
+                        Setting up your computer environment for working with COS data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../DataDl/DataDl.html">
+                        Downloading COS Data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../ViewData/ViewData.html">
+                        Viewing COS Data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../AsnFile/AsnFile.html">
+                        Modifying or Creating an Association File
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        Running the COS Data Pipeline (CalCOS)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../SplitTag/SplitTag.html">
+                        Splitting COS Exposures into sub-exposures with splittag
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../DayNight/DayNight.html">
+                        Filtering out COS Data taken during the Day or Night
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../LSF/LSF.html">
+                        Working with the COS Line Spread Function (LSF)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Extract/Extract.html">
+                        Editing the extraction boxes in a spectral extraction file (XTRACTAB)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/README.html">
+                        DrizzlePac Jupyter Notebook Tutorials
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/Initialization/Initialization.html">
+                        DrizzlePac Initialization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">
+                        Aligning HST images to an absolute reference catalog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">
+                        Optimizing Image Alignment for Multiple HST Visits
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">
+                        Aligning Deep Exposures of Sparse Fields
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">
+                        Drizzling WFPC2 Images to use a Single Zeropoint
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">
+                        Satellite Trail Masking Techniques
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">
+                        Optimizing the Image Sampling
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">
+                        Using updated astrometry solutions
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">
+                        Programmatic Replacements for NICMOS Units Conversion Form
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+        <div class="navbar-end-item navbar-persistent--container">
           
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../../../index.html">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+        </div>
       
       
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
       
-      <h1 class="site-logo" id="site-title">HST Notebooks</h1>
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
       
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    </div>
+  </div>
+
+
+  
+  
+    <div class="navbar-persistent--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+    </div>
+  
+
+  
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../README.html">
+                        COS Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Setup/Setup.html">
+                        Setting up your computer environment for working with COS data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../DataDl/DataDl.html">
+                        Downloading COS Data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../ViewData/ViewData.html">
+                        Viewing COS Data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../AsnFile/AsnFile.html">
+                        Modifying or Creating an Association File
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        Running the COS Data Pipeline (CalCOS)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../SplitTag/SplitTag.html">
+                        Splitting COS Exposures into sub-exposures with splittag
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../DayNight/DayNight.html">
+                        Filtering out COS Data taken during the Day or Night
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../LSF/LSF.html">
+                        Working with the COS Line Spread Function (LSF)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Extract/Extract.html">
+                        Editing the extraction boxes in a spectral extraction file (XTRACTAB)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/README.html">
+                        DrizzlePac Jupyter Notebook Tutorials
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/Initialization/Initialization.html">
+                        DrizzlePac Initialization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">
+                        Aligning HST images to an absolute reference catalog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">
+                        Optimizing Image Alignment for Multiple HST Visits
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">
+                        Aligning Deep Exposures of Sparse Fields
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">
+                        Drizzling WFPC2 Images to use a Single Zeropoint
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">
+                        Satellite Trail Masking Techniques
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">
+                        Optimizing the Image Sampling
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">
+                        Using updated astrometry solutions
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">
+                        Programmatic Replacements for NICMOS Units Conversion Form
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+  <div class="sidebar-start-items sidebar-primary__section">
+    <div class="sidebar-start-items__item">
+  
+
+
+<a class="navbar-brand logo" href="../../../index.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+    <p class="title logo__title">HST Notebooks</p>
+  
+</a>
+    </div>
+    <div class="sidebar-start-items__item">
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+    <div class="sidebar-start-items__item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
@@ -111,803 +569,511 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  COS
- </span>
-</p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../README.html">
-   COS Notebooks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Setup/Setup.html">
-   Setting up your computer environment for working with COS data
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../DataDl/DataDl.html">
-   Downloading COS Data
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../ViewData/ViewData.html">
-   Viewing COS Data
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../AsnFile/AsnFile.html">
-   Modifying or Creating an Association File
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Running the COS Data Pipeline (
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     CalCOS
-    </span>
-   </code>
-   )
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../SplitTag/SplitTag.html">
-   Splitting COS Exposures into sub-exposures with
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     splittag
-    </span>
-   </code>
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../DayNight/DayNight.html">
-   Filtering out COS Data taken during the Day or Night
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../LSF/LSF.html">
-   Working with the COS Line Spread Function (LSF)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Extract/Extract.html">
-   Editing the extraction boxes in a spectral extraction file (XTRACTAB)
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (XTRACTAB)</a></li>
+
+
+
+
+
+
+
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  DrizzlePac
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/README.html">
-   DrizzlePac Jupyter Notebook Tutorials
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/Initialization/Initialization.html">
-   DrizzlePac Initialization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">
-   Aligning HST images to an absolute reference catalog
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">
-   Optimizing Image Alignment for Multiple HST Visits
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">
-   Aligning Deep Exposures of Sparse Fields
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">
-   Drizzling WFPC2 Images to use a Single Zeropoint
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">
-   Satellite Trail Masking Techniques
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">
-   Optimizing the Image Sampling
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">
-   Using updated astrometry solutions
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Jupyter Notebook Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/Initialization/Initialization.html">DrizzlePac Initialization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an absolute reference catalog</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling WFPC2 Images to use a Single Zeropoint</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Using updated astrometry solutions</a></li>
+
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  NICMOS
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">
-   Programmatic Replacements for NICMOS Units Conversion Form
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
 </ul>
 
     </div>
-</nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
+</nav>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
+  </div>
+  
 
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
 
-          
+  
+  <div id="rtd-footer-container"></div>
 
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
+      </div>
+      <main id="main-content" class="bd-main">
         
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
 
 
 
 <div class="col py-1 d-flex header-article-main">
     <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
+        <label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" data-toggle="tooltip" data-placement="right" title="Toggle primary sidebar">
+            <span class="fa-solid fa-bars"></span>
+        </label>
     </div>
     <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/spacetelescope/hst_notebooks/main?urlpath=tree/notebooks/COS/CalCOS/CalCOS.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
-  
-
-<span class="headerbtn__icon-container">
-  
-    <img src="../../../_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/COS/CalCOS/CalCOS.ipynb"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/COS/CalCOS/CalCOS.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Launch on Colab"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   
     <img src="../../../_static/images/logo_colab.png">
   </span>
-<span class="headerbtn__text-container">Colab</span>
+<span class="btn__text-container">Colab</span>
 </a>
-
-      </li>
+</a>
       
       <li>
-        
 <button onclick="initThebeSBT()"
-  class="headerbtn headerbtn-launch-thebe"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
   data-toggle="tooltip"
 data-placement="left"
 title="Launch Thebe"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-play"></i>
   </span>
-<span class="headerbtn__text-container">Live Code</span>
+<span class="btn__text-container">Live Code</span>
 </button>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
+  </ul>
 </div>
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
+  class="btn btn-sm"
   data-toggle="tooltip"
 data-placement="bottom"
 title="Fullscreen mode"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+
+<div class="dropdown dropdown-repository-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/spacetelescope/hst_notebooks"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Source repository"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fab fa-github"></i>
   </span>
-<span class="headerbtn__text-container">repository</span>
+<span class="btn__text-container">repository</span>
 </a>
-
-      </li>
+</a>
       
-      <li>
-        <a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/COS/CalCOS/CalCOS.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/COS/CalCOS/CalCOS.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Open an issue"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-lightbulb"></i>
   </span>
-<span class="headerbtn__text-container">open issue</span>
+<span class="btn__text-container">open issue</span>
 </a>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
+  </ul>
 </div>
 
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../../../_sources/notebooks/COS/CalCOS/CalCOS.ipynb"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="../../../_sources/notebooks/COS/CalCOS/CalCOS.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Download source file"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="headerbtn__text-container">.ipynb</span>
+<span class="btn__text-container">.ipynb</span>
 </a>
-
-      </li>
+</a>
       
       <li>
-        
 <button onclick="printPdf(this)"
-  class="headerbtn"
+  class="btn btn-sm dropdown-item"
   data-toggle="tooltip"
 data-placement="left"
 title="Print to PDF"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file-pdf"></i>
   </span>
-<span class="headerbtn__text-container">.pdf</span>
+<span class="btn__text-container">.pdf</span>
 </button>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
+  </ul>
 </div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary" data-toggle="tooltip" data-placement="left" title="Toggle secondary sidebar">
+            <span class="fa-solid fa-list"></span>
+        </label>
     </div>
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Running the COS Data Pipeline (
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     CalCOS
-    </span>
-   </code>
-   )
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#learning-goals">
-   Learning Goals
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#introduction">
-   0. Introduction
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#notes-for-those-new-to-python-jupyter-coding">
-     Notes for those new to Python/Jupyter/Coding:
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#setting-up-the-environment-to-run-calcos">
-   1. Setting up the environment to run
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     CalCOS
-    </span>
-   </code>
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#prerequisites">
-     1.1. Prerequisites
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#create-your-conda-environment">
-     1.2. Create your conda environment
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#imports-and-basic-directories">
-     1.3. Imports and basic directories
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#we-will-also-define-a-few-basic-directories-in-which-to-place-our-inputs-and-outputs">
-       We will also define a few basic directories in which to place our inputs and outputs.
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#set-up-a-reference-file-directory">
-     1.4. Set up a reference file directory
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#gathering-the-data-to-run-calcos">
-   2. Gathering the data to run
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     CalCOS
-    </span>
-   </code>
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#downloading-the-raw-data">
-     2.1. Downloading the raw data
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#gathering-reference-files">
-     2.2. Gathering reference files
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#processing-raw-cos-data-using-calcos">
-   3. Processing raw COS data using
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     CalCOS
-    </span>
-   </code>
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#running-calcos-from-a-python-environment">
-     3.1. Running
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       CalCOS
-      </span>
-     </code>
-     :
-     <em>
-      From a python environment
-     </em>
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#running-calcos-from-the-command-line">
-     3.2. Running
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       CalCOS
-      </span>
-     </code>
-     :
-     <em>
-      From the command line
-     </em>
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#re-processing-cos-data-with-altered-parameters">
-   4. Re-processing COS data with altered parameters
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#altering-the-calibration-switches">
-     4.1. Altering the calibration switches
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#running-calcos-with-a-specific-set-of-switches">
-     4.2. Running
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       CalCOS
-      </span>
-     </code>
-     with a specific set of switches
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#running-calcos-with-a-different-reference-file">
-     4.3. Running
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       CalCOS
-      </span>
-     </code>
-     with a different reference file
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#congratulations-you-finished-this-notebook">
-     Congratulations! You finished this Notebook!
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#there-are-more-cos-data-walkthrough-notebooks-on-different-topics-you-can-find-them-here">
-       There are more COS data walkthrough Notebooks on different topics. You can find them here.
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#about-this-notebook">
-     About this Notebook
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#citations">
-     Citations
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-    </nav>
-</div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Running the COS Data Pipeline (CalCOS)</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Running the COS Data Pipeline (
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     CalCOS
-    </span>
-   </code>
-   )
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#learning-goals">
-   Learning Goals
-  </a>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#introduction">
-   0. Introduction
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#notes-for-those-new-to-python-jupyter-coding">
-     Notes for those new to Python/Jupyter/Coding:
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#setting-up-the-environment-to-run-calcos">
-   1. Setting up the environment to run
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     CalCOS
-    </span>
-   </code>
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#prerequisites">
-     1.1. Prerequisites
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#create-your-conda-environment">
-     1.2. Create your conda environment
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#imports-and-basic-directories">
-     1.3. Imports and basic directories
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#we-will-also-define-a-few-basic-directories-in-which-to-place-our-inputs-and-outputs">
-       We will also define a few basic directories in which to place our inputs and outputs.
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#set-up-a-reference-file-directory">
-     1.4. Set up a reference file directory
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#gathering-the-data-to-run-calcos">
-   2. Gathering the data to run
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     CalCOS
-    </span>
-   </code>
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#downloading-the-raw-data">
-     2.1. Downloading the raw data
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#gathering-reference-files">
-     2.2. Gathering reference files
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#processing-raw-cos-data-using-calcos">
-   3. Processing raw COS data using
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     CalCOS
-    </span>
-   </code>
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#running-calcos-from-a-python-environment">
-     3.1. Running
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       CalCOS
-      </span>
-     </code>
-     :
-     <em>
-      From a python environment
-     </em>
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#running-calcos-from-the-command-line">
-     3.2. Running
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       CalCOS
-      </span>
-     </code>
-     :
-     <em>
-      From the command line
-     </em>
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#re-processing-cos-data-with-altered-parameters">
-   4. Re-processing COS data with altered parameters
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#altering-the-calibration-switches">
-     4.1. Altering the calibration switches
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#running-calcos-with-a-specific-set-of-switches">
-     4.2. Running
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       CalCOS
-      </span>
-     </code>
-     with a specific set of switches
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#running-calcos-with-a-different-reference-file">
-     4.3. Running
-     <code class="docutils literal notranslate">
-      <span class="pre">
-       CalCOS
-      </span>
-     </code>
-     with a different reference file
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#congratulations-you-finished-this-notebook">
-     Congratulations! You finished this Notebook!
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#there-are-more-cos-data-walkthrough-notebooks-on-different-topics-you-can-find-them-here">
-       There are more COS data walkthrough Notebooks on different topics. You can find them here.
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#about-this-notebook">
-     About this Notebook
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#citations">
-     Citations
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-                        </nav>
-                    </div>
-                </div>
             </div>
-            <main id="main-content" role="main">
-                
-              <div>
-                
+            
+            
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Running the COS Data Pipeline (CalCOS)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Running the COS Data Pipeline (
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#learning-goals">
+   Learning Goals
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   0. Introduction
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#notes-for-those-new-to-python-jupyter-coding">
+     Notes for those new to Python/Jupyter/Coding:
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setting-up-the-environment-to-run-calcos">
+   1. Setting up the environment to run
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#prerequisites">
+     1.1. Prerequisites
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-your-conda-environment">
+     1.2. Create your conda environment
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#imports-and-basic-directories">
+     1.3. Imports and basic directories
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#we-will-also-define-a-few-basic-directories-in-which-to-place-our-inputs-and-outputs">
+       We will also define a few basic directories in which to place our inputs and outputs.
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#set-up-a-reference-file-directory">
+     1.4. Set up a reference file directory
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gathering-the-data-to-run-calcos">
+   2. Gathering the data to run
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#downloading-the-raw-data">
+     2.1. Downloading the raw data
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gathering-reference-files">
+     2.2. Gathering reference files
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#processing-raw-cos-data-using-calcos">
+   3. Processing raw COS data using
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-from-a-python-environment">
+     3.1. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     :
+     <em>
+      From a python environment
+     </em>
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-from-the-command-line">
+     3.2. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     :
+     <em>
+      From the command line
+     </em>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#re-processing-cos-data-with-altered-parameters">
+   4. Re-processing COS data with altered parameters
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#altering-the-calibration-switches">
+     4.1. Altering the calibration switches
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-with-a-specific-set-of-switches">
+     4.2. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     with a specific set of switches
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-with-a-different-reference-file">
+     4.3. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     with a different reference file
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#congratulations-you-finished-this-notebook">
+     Congratulations! You finished this Notebook!
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#there-are-more-cos-data-walkthrough-notebooks-on-different-topics-you-can-find-them-here">
+       There are more COS data walkthrough Notebooks on different topics. You can find them here.
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#about-this-notebook">
+     About this Notebook
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#citations">
+     Citations
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+            <article class="bd-article" role="main">
+              
   <p><a id="topC"></a></p>
 <section class="tex2jax_ignore mathjax_ignore" id="running-the-cos-data-pipeline-calcos">
-<h1>Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)<a class="headerlink" href="#running-the-cos-data-pipeline-calcos" title="Permalink to this headline">#</a></h1>
+<h1>Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)<a class="headerlink" href="#running-the-cos-data-pipeline-calcos" title="Permalink to this heading">#</a></h1>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="learning-goals">
-<h1>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this headline">#</a></h1>
+<h1>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h1>
 <p><font size="4 "> This Notebook is designed to walk the user (<em>you</em>) through:</font></p>
-<p><strong>1. <a class="reference external" href="#setupC">Setting up the environment to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></a></strong></p>
-<p>- 1.1. <a class="reference external" href="#prereqC">Prerequisites</a></p>
-<p>- 1.2. <a class="reference external" href="#condaenvC">Create your conda environment</a></p>
-<p>- 1.3. <a class="reference external" href="#impdirC">Imports and basic directories</a></p>
-<p>- 1.4. <a class="reference external" href="#lrefC">Set up a reference file directory</a></p>
-<p><strong>2. <a class="reference external" href="#gatherC">Gathering the data to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></a></strong></p>
-<p>- 2.1. <a class="reference external" href="#datadlC">Downloading the raw data</a></p>
-<p>- 2.2. <a class="reference external" href="#reffileC">Gathering reference files</a></p>
-<p><strong>3. <a class="reference external" href="#runC">Processing raw COS data using <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></a></strong></p>
-<p>- 3.1. <a class="reference external" href="#runpyC">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>: <em>From a python environment</em></a></p>
-<p>- 3.2. <a class="reference external" href="#runcliC">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>: <em>From the command line</em></a></p>
-<p><strong>4. <a class="reference external" href="#rerunC">Re-processing COS data with altered parameters</a></strong></p>
-<p>- 4.1. <a class="reference external" href="#alterswitchC">Altering the calibration switches</a></p>
-<p>- 4.2. <a class="reference external" href="#switchrunC">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a specific set of switches</a></p>
-<p>- 4.3. <a class="reference external" href="#refrunC">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a different reference file</a></p>
+<p><strong>1. <span class="xref myst">Setting up the environment to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></span></strong></p>
+<p>- 1.1. <span class="xref myst">Prerequisites</span></p>
+<p>- 1.2. <span class="xref myst">Create your conda environment</span></p>
+<p>- 1.3. <span class="xref myst">Imports and basic directories</span></p>
+<p>- 1.4. <span class="xref myst">Set up a reference file directory</span></p>
+<p><strong>2. <span class="xref myst">Gathering the data to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></span></strong></p>
+<p>- 2.1. <span class="xref myst">Downloading the raw data</span></p>
+<p>- 2.2. <span class="xref myst">Gathering reference files</span></p>
+<p><strong>3. <span class="xref myst">Processing raw COS data using <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></span></strong></p>
+<p>- 3.1. <span class="xref myst">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>: <em>From a python environment</em></span></p>
+<p>- 3.2. <span class="xref myst">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>: <em>From the command line</em></span></p>
+<p><strong>4. <span class="xref myst">Re-processing COS data with altered parameters</span></strong></p>
+<p>- 4.1. <span class="xref myst">Altering the calibration switches</span></p>
+<p>- 4.2. <span class="xref myst">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a specific set of switches</span></p>
+<p>- 4.3. <span class="xref myst">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a different reference file</span></p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="introduction">
-<h1>0. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">#</a></h1>
+<h1>0. Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h1>
 <p><strong>The Cosmic Origins Spectrograph (<a class="reference external" href="https://www.nasa.gov/content/hubble-space-telescope-cosmic-origins-spectrograph"><em>COS</em></a>) is an ultraviolet spectrograph on-board the Hubble Space Telescope (<a class="reference external" href="https://www.stsci.edu/hst/about"><em>HST</em></a>) with capabilities in the near ultraviolet (<em>NUV</em>) and far ultraviolet (<em>FUV</em>).</strong></p>
 <p><strong><code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></strong> is the data processing pipeline which converts the raw data produced by COS’s detectors onboard HST into usable spectral data. It transforms the data from a list of many individual recorded photon interactions into tables of wavelength and flux at that wavelength.</p>
 <p><strong>This tutorial aims to prepare you run the <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> pipeline to reduce spectral data taken with the COS instrument.</strong> It focuses on COS data taken in <code class="docutils literal notranslate"><span class="pre">TIME-TAG</span></code> mode.
@@ -917,7 +1083,7 @@ title="Print to PDF"
 <li><p>For a detailed overview of the COS instrument, see the <a class="reference external" href="https://hst-docs.stsci.edu/display/COSIHB/">COS Instrument Handbook</a>.</p></li>
 </ul>
 <section id="notes-for-those-new-to-python-jupyter-coding">
-<h2>Notes for those new to Python/Jupyter/Coding:<a class="headerlink" href="#notes-for-those-new-to-python-jupyter-coding" title="Permalink to this headline">#</a></h2>
+<h2>Notes for those new to Python/Jupyter/Coding:<a class="headerlink" href="#notes-for-those-new-to-python-jupyter-coding" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>You will frequently see exclamation points (<strong>!</strong>) or dollar signs (<strong>$</strong>) at the beginning of a line of code. These are not part of the actual commands. The exclamation points tell a jupyter Notebook to pass the following line to the command line, and the dollar sign merely indicates the start of a terminal prompt.</p></li>
 </ul>
@@ -925,17 +1091,17 @@ title="Print to PDF"
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="setting-up-the-environment-to-run-calcos">
-<h1>1. Setting up the environment to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#setting-up-the-environment-to-run-calcos" title="Permalink to this headline">#</a></h1>
+<h1>1. Setting up the environment to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#setting-up-the-environment-to-run-calcos" title="Permalink to this heading">#</a></h1>
 <p>The first step to processing your data is setting up an environment from which to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>.
 <a id = prereqC></a></p>
 <section id="prerequisites">
-<h2>1.1. Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">#</a></h2>
+<h2>1.1. Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h2>
 <p>This tutorial assumes some basic knowledge of the command line and was built using a unix style shell. Those using a Windows computer will likely have the best results if working within the <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">Windows Subsystem for Linux</a>.</p>
 <p>If you do not already have any distribution of the <code class="docutils literal notranslate"><span class="pre">conda</span></code> tool, see <a class="reference external" href="https://astroconda.readthedocs.io/en/latest/getting_started.html#getting-started-jump">this page</a> for instructions, and install either <a class="reference external" href="https://docs.anaconda.com/anaconda/install/"><code class="docutils literal notranslate"><span class="pre">anaconda</span></code> (more beginner friendly, ~ 3 GB, lots of extras you likely won’t use)</a> or <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html"><code class="docutils literal notranslate"><span class="pre">miniconda</span></code> (~ 400 MB, only what you need to make environments)</a>.</p>
 <p><a id = condaenvC></a></p>
 </section>
 <section id="create-your-conda-environment">
-<h2>1.2. Create your conda environment<a class="headerlink" href="#create-your-conda-environment" title="Permalink to this headline">#</a></h2>
+<h2>1.2. Create your conda environment<a class="headerlink" href="#create-your-conda-environment" title="Permalink to this heading">#</a></h2>
 <p>Once you have <code class="docutils literal notranslate"><span class="pre">conda</span></code> installed, you can create an environment.</p>
 <p>Open up your terminal app, likely <code class="docutils literal notranslate"><span class="pre">Terminal</span></code> or <code class="docutils literal notranslate"><span class="pre">iTerm</span></code> on a Mac or <code class="docutils literal notranslate"><span class="pre">Windows</span> <span class="pre">Terminal</span></code> or <code class="docutils literal notranslate"><span class="pre">Powershell</span></code> on Windows.</p>
 <p>First, add the “conda-forge” channel to your computer’s conda channel list. This enables conda to look in the right place to find all the packages we want to install.</p>
@@ -986,7 +1152,7 @@ title="Print to PDF"
 <p><a id=impdirC></a></p>
 </section>
 <section id="imports-and-basic-directories">
-<h2>1.3. Imports and basic directories<a class="headerlink" href="#imports-and-basic-directories" title="Permalink to this headline">#</a></h2>
+<h2>1.3. Imports and basic directories<a class="headerlink" href="#imports-and-basic-directories" title="Permalink to this heading">#</a></h2>
 <p>We will import the following packages:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">calcos</span></code> to run the COS data pipeline</p></li>
@@ -1031,7 +1197,7 @@ title="Print to PDF"
 </div>
 </div>
 <section id="we-will-also-define-a-few-basic-directories-in-which-to-place-our-inputs-and-outputs">
-<h3>We will also define a few basic directories in which to place our inputs and outputs.<a class="headerlink" href="#we-will-also-define-a-few-basic-directories-in-which-to-place-our-inputs-and-outputs" title="Permalink to this headline">#</a></h3>
+<h3>We will also define a few basic directories in which to place our inputs and outputs.<a class="headerlink" href="#we-will-also-define-a-few-basic-directories-in-which-to-place-our-inputs-and-outputs" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># These will be important directories for the Notebook</span>
@@ -1049,15 +1215,15 @@ title="Print to PDF"
 </section>
 </section>
 <section id="set-up-a-reference-file-directory">
-<h2>1.4. Set up a reference file directory<a class="headerlink" href="#set-up-a-reference-file-directory" title="Permalink to this headline">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> needs to be able to find all your reference files, (flat field image, bad pixel table, etc.), and the best way to enable that is to create a central directory of all the calibration files you’ll need. We refer to this directory  as “lref” by convention, and set a system variable <code class="docutils literal notranslate"><span class="pre">lref</span></code> to the location of the directory. In this section, we will create the <code class="docutils literal notranslate"><span class="pre">lref</span></code> environment variable; however, we need to populate the <code class="docutils literal notranslate"><span class="pre">lref</span></code> folder with the actual reference files. We do this in <a class="reference external" href="#reffileC">Section 2.2</a>. If you have already downloaded the set of COS reference files you need to use into an existing lref directory, you should instead set <code class="docutils literal notranslate"><span class="pre">lref</span></code> to the path to this directory.</p>
+<h2>1.4. Set up a reference file directory<a class="headerlink" href="#set-up-a-reference-file-directory" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> needs to be able to find all your reference files, (flat field image, bad pixel table, etc.), and the best way to enable that is to create a central directory of all the calibration files you’ll need. We refer to this directory  as “lref” by convention, and set a system variable <code class="docutils literal notranslate"><span class="pre">lref</span></code> to the location of the directory. In this section, we will create the <code class="docutils literal notranslate"><span class="pre">lref</span></code> environment variable; however, we need to populate the <code class="docutils literal notranslate"><span class="pre">lref</span></code> folder with the actual reference files. We do this in <span class="xref myst">Section 2.2</span>. If you have already downloaded the set of COS reference files you need to use into an existing lref directory, you should instead set <code class="docutils literal notranslate"><span class="pre">lref</span></code> to the path to this directory.</p>
 <p>We can assign a system variable in three different ways, depending on whether we are working from:</p>
-<ol class="simple">
+<ol class="arabic simple">
 <li><p>The command line</p></li>
 <li><p>A python environment</p></li>
 <li><p>A Jupyter Notebook</p></li>
 </ol>
-<table class="colwidths-auto table">
+<table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Unix-style Command Line</p></th>
 <th class="head"><p>Python</p></th>
@@ -1093,14 +1259,14 @@ title="Print to PDF"
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="gathering-the-data-to-run-calcos">
-<h1>2. Gathering the data to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#gathering-the-data-to-run-calcos" title="Permalink to this headline">#</a></h1>
+<h1>2. Gathering the data to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#gathering-the-data-to-run-calcos" title="Permalink to this heading">#</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> pipeline can be run either from a python environment, or directly from a Unix-style command line. The two use the same underlying machinery but can differ in syntax. For specifics on the keywords to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with specific behaviors and arguments, see <a class="reference external" href="https://hst-docs.stsci.edu/cosdhb/chapter-3-cos-calibration/3-6-customizing-cos-data-calibration">Table 3.2: Arguments for Running CalCOS in Python</a> and <a class="reference external" href="https://hst-docs.stsci.edu/cosdhb/chapter-3-cos-calibration/3-6-customizing-cos-data-calibration">Table 3.3: Command-line Options for Running CalCOS in Unix/Linux/Mac</a>.</p>
 <p><a id = datadlC></a></p>
 <section id="downloading-the-raw-data">
-<h2>2.1. Downloading the raw data<a class="headerlink" href="#downloading-the-raw-data" title="Permalink to this headline">#</a></h2>
+<h2>2.1. Downloading the raw data<a class="headerlink" href="#downloading-the-raw-data" title="Permalink to this heading">#</a></h2>
 <p>First, we need to make sure we have all of our data ready and in the right spot. If you are unfamiliar with searching the archive for data, we recommend that you view our <a class="reference external" href="https://github.com/spacetelescope/COS-Notebooks">tutorial on downloading COS data</a>. This Notebook will largely gloss over downloading the data.</p>
 <p>To run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>, we will need the following files:</p>
-<ol class="simple">
+<ol class="arabic simple">
 <li><p>All the <strong>raw data</strong> from separate exposures we wish to combine as <code class="docutils literal notranslate"><span class="pre">_rawtag</span></code> fits files</p></li>
 <li><p>The <strong>association</strong> file telling <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> which files to combine as a <code class="docutils literal notranslate"><span class="pre">_asn</span></code> fits file.</p></li>
 </ol>
@@ -1153,7 +1319,7 @@ title="Print to PDF"
 <p><a id = reffileC></a></p>
 </section>
 <section id="gathering-reference-files">
-<h2>2.2. Gathering reference files<a class="headerlink" href="#gathering-reference-files" title="Permalink to this headline">#</a></h2>
+<h2>2.2. Gathering reference files<a class="headerlink" href="#gathering-reference-files" title="Permalink to this heading">#</a></h2>
 <p>The following process of gathering reference files is given a detailed explanation in Section 3 of our <a class="reference external" href="https://github.com/spacetelescope/notebooks/blob/master/notebooks/COS/Setup/Setup.ipynb">Notebook on Setting up an environment to work with COS data</a>. Your process will be somewhat simpler and quicker if you have already downloaded the reference files.</p>
 <p>Each data file has an associated set of calibration files which are needed to run the associated correction with (i.e. you need the <code class="docutils literal notranslate"><span class="pre">FLATFILE</span></code> to flat field correct the data.) These reference files must be located in the <code class="docutils literal notranslate"><span class="pre">$lref</span></code> directory to run the pipeline.</p>
 <p>The Space Telescope Science Institute (STScI) team is regularly producing new calibration files in an effort to keep improving data reduction. Periodically the pipeline is re-run on all COS data.
@@ -1173,22 +1339,22 @@ To determine which reference files were used most recently by STScI to calibrate
 <p>The value of this keyword in the header is a <code class="docutils literal notranslate"><span class="pre">.pmap</span></code> or observatory context file which tells the CRDS calibration data distribution program which files to distribute. You can also find the newest “operational” context on the <a class="reference external" href="https://hst-crds.stsci.edu">HST CRDS website</a>.</p>
 <p>To download the reference files specified by a context file, we use the <code class="docutils literal notranslate"><span class="pre">crds</span></code> tool we installed earlier.</p>
 <hr class="docutils" />
-<p><strong>If you haven’t already downloaded up-to-date reference files,</strong> (as in Section 3 of “Setup.ipynb”,) <a class="reference external" href="#skipcellC">click to skip this cell and begin downloading the files!</a></p>
+<p><strong>If you haven’t already downloaded up-to-date reference files,</strong> (as in Section 3 of “Setup.ipynb”,) <span class="xref myst">click to skip this cell and begin downloading the files!</span></p>
 <p><strong>If you have recently downloaded COS reference files,</strong> (i.e. if you ran Section 3 of the “Setup” Notebook,) you likely do not have to download more reference files. Instead, follow the instructions in this cell and then skip to Section 3.</p>
 <p>If you already downloaded the files, you can simply point the pipeline to the ones you downloaded, using the <code class="docutils literal notranslate"><span class="pre">crds</span> <span class="pre">bestrefs</span></code> command, as shown in the following three steps. Run these steps from your command line if you already have the reference files in a local cache. <em>Note</em> also that there may be newer reference files available. To make sure you are always using the most up-to-date reference files, we advise you familiarize yourself with the newest files and documentation at the <a class="reference external" href="https://hst-crds.stsci.edu">CRDS homepage</a>.</p>
-<ol class="simple">
+<ol class="arabic simple">
 <li><p>The following sets the environment variable for crds to look for the reference data online:</p></li>
 </ol>
 <p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">export</span> <span class="pre">CRDS_SERVER_URL=https://hst-crds.stsci.edu</span></code></p>
-<ol class="simple">
+<ol class="arabic simple" start="2">
 <li><p>The following tells crds where to save the files it downloads - set this to the directory where you saved the crds_cache, i.e. in <a class="reference external" href="https://spacetelescope.github.io/COS-Notebooks/Setup.html#crdsS">Section 3 of our Notebook on “Setup”</a>:</p></li>
 </ol>
 <p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">export</span> <span class="pre">CRDS_PATH=${HOME}/crds_cache</span></code></p>
-<ol class="simple">
+<ol class="arabic simple" start="3">
 <li><p>The following will update the data files you downloaded so that they will be processed with the reference files you previously downloaded:</p></li>
 </ol>
 <p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">crds</span> <span class="pre">bestrefs</span> <span class="pre">--files</span> <span class="pre">data/*raw*.fits</span> <span class="pre">--update-bestrefs</span> <span class="pre">--new-context</span> <span class="pre">'&lt;the</span> <span class="pre">imap</span> <span class="pre">or</span> <span class="pre">pmap</span> <span class="pre">file</span> <span class="pre">you</span> <span class="pre">used</span> <span class="pre">to</span> <span class="pre">download</span> <span class="pre">the</span> <span class="pre">reference</span> <span class="pre">files&gt;'</span></code></p>
-<p><strong>Assuming everything ran successfully, you can now <a class="reference external" href="#runC">skip to Section 3</a>.</strong></p>
+<p><strong>Assuming everything ran successfully, you can now <span class="xref myst">skip to Section 3</span>.</strong></p>
 <hr class="docutils" />
 <p><a id=skipcellC></a></p>
 <p><font size="4 "> If you have not yet downloaded the reference files, you will need to do so, as shown below:</font></p>
@@ -1196,7 +1362,7 @@ To determine which reference files were used most recently by STScI to calibrate
 <img src= ./figures/warning.png width ="60" title="CAUTION!"> 
 <p><em>Note</em> that as of the time of this Notebook’s last update, the pipeline context used below was <strong><code class="docutils literal notranslate"><span class="pre">hst_0989.pmap</span></code></strong>, but this changes over time. You are running this in the future, and there is certainly a newer context you would be better off working with. Take a minute to consider this, and check the <a class="reference external" href="http://hst-crds.stsci.edu/">HST Calibration Reference Data System webpage</a> to determine what the <strong>current operational pmap file</strong> is.</p>
 <p>Unless we are connected to the STScI network, or already have the reference files on our machine, we will need to download the reference files and tell the pipeline where to look for the flat files, bad-pixel files, etc.</p>
-<p>The process in the following two cells can take a long time and strain network resources. If you have already downloaded <em>up-to-date</em> COS reference files, we recommend that you avoid doing so again. Instead, keep these crds files in an accessible location, and point an environment variable <code class="docutils literal notranslate"><span class="pre">lref</span></code> to this directory. For instance, if your <code class="docutils literal notranslate"><span class="pre">lref</span></code> files are on your username’s home directory in a subdirectory called <code class="docutils literal notranslate"><span class="pre">crds_cache</span></code>, give Jupyter the following command then skip to <a class="reference external" href="#runpyC">Section 2.3</a>:</p>
+<p>The process in the following two cells can take a long time and strain network resources. If you have already downloaded <em>up-to-date</em> COS reference files, we recommend that you avoid doing so again. Instead, keep these crds files in an accessible location, and point an environment variable <code class="docutils literal notranslate"><span class="pre">lref</span></code> to this directory. For instance, if your <code class="docutils literal notranslate"><span class="pre">lref</span></code> files are on your username’s home directory in a subdirectory called <code class="docutils literal notranslate"><span class="pre">crds_cache</span></code>, give Jupyter the following command then skip to <span class="xref myst">Section 2.3</span>:</p>
 <p><code class="docutils literal notranslate"><span class="pre">%env</span> <span class="pre">lref</span> <span class="pre">/Users/&lt;your</span> <span class="pre">username&gt;/crds_cache/references/hst/cos/</span></code></p>
 <p>If you have an older cache of reference files, you may also simply update your cached reference files. Please see the <a class="reference external" href="https://hst-crds.stsci.edu/static/users_guide/index.html">CRDS Guide</a> for more information.</p>
 <p>Assuming you have not yet downloaded these files, in the next two cells, we will setup an environment of reference files, download the files, and save the output of the crds download process in a log file:</p>
@@ -1264,13 +1430,13 @@ To determine which reference files were used most recently by STScI to calibrate
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="processing-raw-cos-data-using-calcos">
-<h1>3. Processing raw COS data using <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#processing-raw-cos-data-using-calcos" title="Permalink to this headline">#</a></h1>
+<h1>3. Processing raw COS data using <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#processing-raw-cos-data-using-calcos" title="Permalink to this heading">#</a></h1>
 <p><strong>Now we have all the reference files we need to  run the pipeline on our data.</strong></p>
 <p>This following cells which run the pipeline can take a while, sometimes more than <strong>10 minutes</strong>, so you may choose to not run the remaining cells of this Notebook on the example data. You may, instead, wish to simply look at the rendered output in the <a class="reference external" href="https://spacetelescope.github.io/COS-Notebooks/Calcos.html">html version of this Notebook</a>.</p>
 <p>By default, the pipeline also outputs hundreds of lines of text - we will suppress the printing of this text and instead save it to a text file.</p>
 <p><a id = runpyC></a></p>
 <section id="running-calcos-from-a-python-environment">
-<h2>3.1. Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>: <em>From a python environment</em><a class="headerlink" href="#running-calcos-from-a-python-environment" title="Permalink to this headline">#</a></h2>
+<h2>3.1. Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>: <em>From a python environment</em><a class="headerlink" href="#running-calcos-from-a-python-environment" title="Permalink to this heading">#</a></h2>
 <p><strong>Now, we can run the pipeline program:</strong></p>
 <p>Note that generally, <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> should be run on an association (<code class="docutils literal notranslate"><span class="pre">_asn</span></code>) file (in this case: <code class="docutils literal notranslate"><span class="pre">./data/lcxv13040_asn.fits</span></code>). You <em>may</em> run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> directly on <code class="docutils literal notranslate"><span class="pre">_rawtag</span></code> or <code class="docutils literal notranslate"><span class="pre">_corrtag</span></code> exposure files, but this will not produce an <code class="docutils literal notranslate"><span class="pre">_x1dsum</span></code> file and can result in errors for data taken at certain lifetime positions. No matter what type of files you run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> on, you should only specify the FUVA segment’s file, i.e. the <code class="docutils literal notranslate"><span class="pre">_rawtag_a</span></code> file. If a <code class="docutils literal notranslate"><span class="pre">rawtag_b</span></code> file is in the same directory, <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> will find both segments’ files.</p>
 <p>In this example, we also specify that <code class="docutils literal notranslate"><span class="pre">verbosity</span></code> = 2, resulting in a <strong>very</strong> verbose output, and we specify a directory to put all the output files in: <code class="docutils literal notranslate"><span class="pre">output/calcos_processed_1</span></code>. To avoid polluting this Notebook with more than a thousand lines of the output, we again capture the output of the next cell and save it to <code class="docutils literal notranslate"><span class="pre">output/output_calcos_1.txt</span></code> in the cell below.</p>
@@ -1318,7 +1484,7 @@ To determine which reference files were used most recently by STScI to calibrate
 <p><a id = runcliC></a></p>
 </section>
 <section id="running-calcos-from-the-command-line">
-<h2>3.2. Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>: <em>From the command line</em><a class="headerlink" href="#running-calcos-from-the-command-line" title="Permalink to this headline">#</a></h2>
+<h2>3.2. Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>: <em>From the command line</em><a class="headerlink" href="#running-calcos-from-the-command-line" title="Permalink to this heading">#</a></h2>
 <p>The syntax for running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> from the command line is very similar. Assuming your data files, <code class="docutils literal notranslate"><span class="pre">lref</span></code> directory, and reference files are all where you’ve told <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> to look, you can simply run:</p>
 <p><code class="docutils literal notranslate"><span class="pre">calcos</span> <span class="pre">--outdir</span> <span class="pre">directory_to_save_outputs_in</span> <span class="pre">filename_asn.fits</span></code></p>
 <p><em>or, if you want to save a very verbose output to a log file <code class="docutils literal notranslate"><span class="pre">log.txt</span></code></em>:</p>
@@ -1335,13 +1501,13 @@ To determine which reference files were used most recently by STScI to calibrate
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="re-processing-cos-data-with-altered-parameters">
-<h1>4. Re-processing COS data with altered parameters<a class="headerlink" href="#re-processing-cos-data-with-altered-parameters" title="Permalink to this headline">#</a></h1>
+<h1>4. Re-processing COS data with altered parameters<a class="headerlink" href="#re-processing-cos-data-with-altered-parameters" title="Permalink to this heading">#</a></h1>
 <p><a id = alterswitchC></a></p>
 <section id="altering-the-calibration-switches">
-<h2>4.1. Altering the calibration switches<a class="headerlink" href="#altering-the-calibration-switches" title="Permalink to this headline">#</a></h2>
+<h2>4.1. Altering the calibration switches<a class="headerlink" href="#altering-the-calibration-switches" title="Permalink to this heading">#</a></h2>
 <p>The way to alter how <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> runs - i.e. which calibrations it performs - is with the <strong>calibration switches</strong> contained in the fits headers.</p>
 <p>The switches (with the exception of “XTRACTALG”), can be set to the values in the following table:</p>
-<table class="colwidths-auto table">
+<table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p><em><strong>Value:</strong></em></p></th>
 <th class="head"><p>“PERFORM”</p></th>
@@ -1407,7 +1573,7 @@ To determine which reference files were used most recently by STScI to calibrate
 <p><a id = switchrunC></a></p>
 </section>
 <section id="running-calcos-with-a-specific-set-of-switches">
-<h2>4.2. Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a specific set of switches<a class="headerlink" href="#running-calcos-with-a-specific-set-of-switches" title="Permalink to this headline">#</a></h2>
+<h2>4.2. Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a specific set of switches<a class="headerlink" href="#running-calcos-with-a-specific-set-of-switches" title="Permalink to this heading">#</a></h2>
 <p>Now, let’s set a single switch to “PERFORM”, and just run a flat-field correction (“FLATCORR”) and a pulse-height filter correction (“PHACORR”). Set verbosity = 1 or 2 to learn more about how <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> is working.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1449,7 +1615,7 @@ To determine which reference files were used most recently by STScI to calibrate
 <p><a id = refrunC></a></p>
 </section>
 <section id="running-calcos-with-a-different-reference-file">
-<h2>4.3. Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a different reference file<a class="headerlink" href="#running-calcos-with-a-different-reference-file" title="Permalink to this headline">#</a></h2>
+<h2>4.3. Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a different reference file<a class="headerlink" href="#running-calcos-with-a-different-reference-file" title="Permalink to this heading">#</a></h2>
 <p>You may wish to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a specific flat file, bad pixel table, or any other reference file. <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> offers the ability to do just this on a file-by-file basis, by changing the CALIBRATION REFERENCE FILES values in the header of your data.</p>
 <p>As an example, we check which calibration files are selected for one of our rawtag files.</p>
 <div class="cell docutils container">
@@ -1556,22 +1722,22 @@ The two should agree very well. Small differences may be expected, given that th
 </div>
 </section>
 <section id="congratulations-you-finished-this-notebook">
-<h2>Congratulations! You finished this Notebook!<a class="headerlink" href="#congratulations-you-finished-this-notebook" title="Permalink to this headline">#</a></h2>
+<h2>Congratulations! You finished this Notebook!<a class="headerlink" href="#congratulations-you-finished-this-notebook" title="Permalink to this heading">#</a></h2>
 <section id="there-are-more-cos-data-walkthrough-notebooks-on-different-topics-you-can-find-them-here">
-<h3>There are more COS data walkthrough Notebooks on different topics. You can find them <a class="reference external" href="https://spacetelescope.github.io/COS-Notebooks/">here</a>.<a class="headerlink" href="#there-are-more-cos-data-walkthrough-notebooks-on-different-topics-you-can-find-them-here" title="Permalink to this headline">#</a></h3>
+<h3>There are more COS data walkthrough Notebooks on different topics. You can find them <a class="reference external" href="https://spacetelescope.github.io/COS-Notebooks/">here</a>.<a class="headerlink" href="#there-are-more-cos-data-walkthrough-notebooks-on-different-topics-you-can-find-them-here" title="Permalink to this heading">#</a></h3>
 </section>
 </section>
 <hr class="docutils" />
 <section id="about-this-notebook">
-<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this headline">#</a></h2>
-<p><strong>Author:</strong> Nat Kerman - <a class="reference external" href="mailto:nkerman&#37;&#52;&#48;stsci&#46;edu">mailto:nkerman<span>&#64;</span>stsci<span>&#46;</span>edu</a></p>
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
+<p><strong>Author:</strong> Nat Kerman - <a class="reference external" href="mailto:nkerman&#37;&#52;&#48;stsci&#46;edu">nkerman<span>&#64;</span>stsci<span>&#46;</span>edu</a></p>
 <p><strong>Updated On:</strong> 2022-03-24</p>
 <blockquote>
 <div><p><em>This tutorial was generated to be in compliance with the <a class="reference external" href="https://github.com/spacetelescope/style-guides">STScI style guides</a> and would like to cite the <a class="reference external" href="https://github.com/spacetelescope/style-guides/blob/master/templates/example_notebook.ipynb">Jupyter guide</a> in particular.</em></p>
 </div></blockquote>
 </section>
 <section id="citations">
-<h2>Citations<a class="headerlink" href="#citations" title="Permalink to this headline">#</a></h2>
+<h2>Citations<a class="headerlink" href="#citations" title="Permalink to this heading">#</a></h2>
 <p>If you use <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, or <code class="docutils literal notranslate"><span class="pre">numpy</span></code> for published research, please cite the
 authors. Follow these links for more information about citations:</p>
 <ul class="simple">
@@ -1579,7 +1745,7 @@ authors. Follow these links for more information about citations:</p>
 <li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
 </ul>
 <hr class="docutils" />
-<p><a class="reference external" href="#topC">Top of Page</a>
+<p><span class="xref myst">Top of Page</span>
 <img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/></p>
 <p><br></br>
 <br></br>
@@ -1607,50 +1773,285 @@ authors. Follow these links for more information about citations:</p>
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
-              
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
+            </article>
+            
+
+            
+            
+            <footer class="bd-footer-article">
+                <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../AsnFile/AsnFile.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Modifying or Creating an Association File</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="../SplitTag/SplitTag.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
+  <a class='left-prev' id="prev-link" href="../AsnFile/AsnFile.html" title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Modifying or Creating an Association File</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="../SplitTag/SplitTag.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></p>
+  </div>
+  <i class="fa-solid fa-angle-right"></i>
+  </a>
 </div>
             </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
+            
+          </div>
+          
+          
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
   
-    By STScI<br/>
-  
-      &copy; Copyright 2022.<br/>
-</p>
-        </footer>
-    </div>
-    
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Running the COS Data Pipeline (
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#learning-goals">
+   Learning Goals
+  </a>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   0. Introduction
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#notes-for-those-new-to-python-jupyter-coding">
+     Notes for those new to Python/Jupyter/Coding:
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setting-up-the-environment-to-run-calcos">
+   1. Setting up the environment to run
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#prerequisites">
+     1.1. Prerequisites
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-your-conda-environment">
+     1.2. Create your conda environment
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#imports-and-basic-directories">
+     1.3. Imports and basic directories
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#we-will-also-define-a-few-basic-directories-in-which-to-place-our-inputs-and-outputs">
+       We will also define a few basic directories in which to place our inputs and outputs.
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#set-up-a-reference-file-directory">
+     1.4. Set up a reference file directory
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gathering-the-data-to-run-calcos">
+   2. Gathering the data to run
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#downloading-the-raw-data">
+     2.1. Downloading the raw data
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gathering-reference-files">
+     2.2. Gathering reference files
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#processing-raw-cos-data-using-calcos">
+   3. Processing raw COS data using
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     CalCOS
+    </span>
+   </code>
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-from-a-python-environment">
+     3.1. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     :
+     <em>
+      From a python environment
+     </em>
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-from-the-command-line">
+     3.2. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     :
+     <em>
+      From the command line
+     </em>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#re-processing-cos-data-with-altered-parameters">
+   4. Re-processing COS data with altered parameters
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#altering-the-calibration-switches">
+     4.1. Altering the calibration switches
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-with-a-specific-set-of-switches">
+     4.2. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     with a specific set of switches
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#running-calcos-with-a-different-reference-file">
+     4.3. Running
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       CalCOS
+      </span>
+     </code>
+     with a different reference file
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#congratulations-you-finished-this-notebook">
+     Congratulations! You finished this Notebook!
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#there-are-more-cos-data-walkthrough-notebooks-on-different-topics-you-can-find-them-here">
+       There are more COS data walkthrough Notebooks on different topics. You can find them here.
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#about-this-notebook">
+     About this Notebook
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#citations">
+     Citations
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
 </div>
 
-
-      </div>
-    </div>
+            </div>
+          
+          
+        </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+<div class="bd-footer-content__inner container">
   
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
 
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2022.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+Last updated on None.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </div>
+        </footer>
+        
+
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94"></script>
 
   </body>
 </html>

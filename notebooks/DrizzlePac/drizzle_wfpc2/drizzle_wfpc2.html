@@ -1,49 +1,57 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Drizzling WFPC2 Images to use a Single Zeropoint &#8212; HST Notebooks</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../../../_static/styles/theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../_static/styles/bootstrap.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
 
-    
-  <link rel="stylesheet"
-    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2">
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=4ec06e9971c5264fbd345897d5258098f11cc577" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94">
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94">
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
-    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=8bf782fb4ee92b3d3646425e50f299c4e1fd152d"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -51,56 +59,506 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/DrizzlePac/drizzle_wfpc2/drizzle_wfpc2';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Satellite Trail Masking Techniques" href="../mask_satellite/mask_satellite.html" />
     <link rel="prev" title="Aligning Deep Exposures of Sparse Fields" href="../align_sparse_fields/align_sparse_fields.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="light">
 
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+      
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fa-solid fa-bars"></span>
+  </label>
+  <div id="navbar-start">
     
-    <div class="container-fluid" id="banner"></div>
-
     
+  
 
-    <div class="container-xl">
-      <div class="row">
+
+<a class="navbar-brand logo" href="../../../index.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+    <p class="title logo__title">HST Notebooks</p>
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/README.html">
+                        COS Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/Setup/Setup.html">
+                        Setting up your computer environment for working with COS data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/DataDl/DataDl.html">
+                        Downloading COS Data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/ViewData/ViewData.html">
+                        Viewing COS Data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/AsnFile/AsnFile.html">
+                        Modifying or Creating an Association File
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/CalCOS/CalCOS.html">
+                        Running the COS Data Pipeline (CalCOS)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/SplitTag/SplitTag.html">
+                        Splitting COS Exposures into sub-exposures with splittag
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/DayNight/DayNight.html">
+                        Filtering out COS Data taken during the Day or Night
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/LSF/LSF.html">
+                        Working with the COS Line Spread Function (LSF)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/Extract/Extract.html">
+                        Editing the extraction boxes in a spectral extraction file (XTRACTAB)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../README.html">
+                        DrizzlePac Jupyter Notebook Tutorials
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Initialization/Initialization.html">
+                        DrizzlePac Initialization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../align_to_catalogs/align_to_catalogs.html">
+                        Aligning HST images to an absolute reference catalog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../align_multiple_visits/align_multiple_visits.html">
+                        Optimizing Image Alignment for Multiple HST Visits
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../align_sparse_fields/align_sparse_fields.html">
+                        Aligning Deep Exposures of Sparse Fields
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        Drizzling WFPC2 Images to use a Single Zeropoint
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../mask_satellite/mask_satellite.html">
+                        Satellite Trail Masking Techniques
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../optimize_image_sampling/optimize_image_sampling.html">
+                        Optimizing the Image Sampling
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">
+                        Using updated astrometry solutions
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">
+                        Programmatic Replacements for NICMOS Units Conversion Form
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+        <div class="navbar-end-item navbar-persistent--container">
           
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../../../index.html">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+        </div>
       
       
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
       
-      <h1 class="site-logo" id="site-title">HST Notebooks</h1>
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
       
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    </div>
+  </div>
+
+
+  
+  
+    <div class="navbar-persistent--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+    </div>
+  
+
+  
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/README.html">
+                        COS Notebooks
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/Setup/Setup.html">
+                        Setting up your computer environment for working with COS data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/DataDl/DataDl.html">
+                        Downloading COS Data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/ViewData/ViewData.html">
+                        Viewing COS Data
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/AsnFile/AsnFile.html">
+                        Modifying or Creating an Association File
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/CalCOS/CalCOS.html">
+                        Running the COS Data Pipeline (CalCOS)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/SplitTag/SplitTag.html">
+                        Splitting COS Exposures into sub-exposures with splittag
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/DayNight/DayNight.html">
+                        Filtering out COS Data taken during the Day or Night
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/LSF/LSF.html">
+                        Working with the COS Line Spread Function (LSF)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../COS/Extract/Extract.html">
+                        Editing the extraction boxes in a spectral extraction file (XTRACTAB)
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../README.html">
+                        DrizzlePac Jupyter Notebook Tutorials
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Initialization/Initialization.html">
+                        DrizzlePac Initialization
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../align_to_catalogs/align_to_catalogs.html">
+                        Aligning HST images to an absolute reference catalog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../align_multiple_visits/align_multiple_visits.html">
+                        Optimizing Image Alignment for Multiple HST Visits
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../align_sparse_fields/align_sparse_fields.html">
+                        Aligning Deep Exposures of Sparse Fields
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        Drizzling WFPC2 Images to use a Single Zeropoint
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../mask_satellite/mask_satellite.html">
+                        Satellite Trail Masking Techniques
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../optimize_image_sampling/optimize_image_sampling.html">
+                        Optimizing the Image Sampling
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">
+                        Using updated astrometry solutions
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">
+                        Programmatic Replacements for NICMOS Units Conversion Form
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+    </ul>
+</nav>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+  <div class="sidebar-start-items sidebar-primary__section">
+    <div class="sidebar-start-items__item">
+  
+
+
+<a class="navbar-brand logo" href="../../../index.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+    <p class="title logo__title">HST Notebooks</p>
+  
+</a>
+    </div>
+    <div class="sidebar-start-items__item">
+<form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+    <div class="sidebar-start-items__item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
@@ -109,554 +567,376 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  COS
- </span>
-</p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../COS/README.html">
-   COS Notebooks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../COS/Setup/Setup.html">
-   Setting up your computer environment for working with COS data
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../COS/DataDl/DataDl.html">
-   Downloading COS Data
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../COS/ViewData/ViewData.html">
-   Viewing COS Data
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../COS/AsnFile/AsnFile.html">
-   Modifying or Creating an Association File
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../COS/CalCOS/CalCOS.html">
-   Running the COS Data Pipeline (
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     CalCOS
-    </span>
-   </code>
-   )
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../COS/SplitTag/SplitTag.html">
-   Splitting COS Exposures into sub-exposures with
-   <code class="docutils literal notranslate">
-    <span class="pre">
-     splittag
-    </span>
-   </code>
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../COS/DayNight/DayNight.html">
-   Filtering out COS Data taken during the Day or Night
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../COS/LSF/LSF.html">
-   Working with the COS Line Spread Function (LSF)
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../COS/Extract/Extract.html">
-   Editing the extraction boxes in a spectral extraction file (XTRACTAB)
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (XTRACTAB)</a></li>
+
+
+
+
+
+
+
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  DrizzlePac
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../README.html">
-   DrizzlePac Jupyter Notebook Tutorials
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Initialization/Initialization.html">
-   DrizzlePac Initialization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../align_to_catalogs/align_to_catalogs.html">
-   Aligning HST images to an absolute reference catalog
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../align_multiple_visits/align_multiple_visits.html">
-   Optimizing Image Alignment for Multiple HST Visits
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../align_sparse_fields/align_sparse_fields.html">
-   Aligning Deep Exposures of Sparse Fields
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Drizzling WFPC2 Images to use a Single Zeropoint
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../mask_satellite/mask_satellite.html">
-   Satellite Trail Masking Techniques
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../optimize_image_sampling/optimize_image_sampling.html">
-   Optimizing the Image Sampling
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">
-   Using updated astrometry solutions
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">DrizzlePac Jupyter Notebook Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Initialization/Initialization.html">DrizzlePac Initialization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../align_to_catalogs/align_to_catalogs.html">Aligning HST images to an absolute reference catalog</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Drizzling WFPC2 Images to use a Single Zeropoint</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Using updated astrometry solutions</a></li>
+
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  NICMOS
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">
-   Programmatic Replacements for NICMOS Units Conversion Form
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
 </ul>
 
     </div>
-</nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
+</nav>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
+  </div>
+  
 
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
 
-          
+  
+  <div id="rtd-footer-container"></div>
 
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
+      </div>
+      <main id="main-content" class="bd-main">
         
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
 
 
 
 <div class="col py-1 d-flex header-article-main">
     <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
+        <label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" data-toggle="tooltip" data-placement="right" title="Toggle primary sidebar">
+            <span class="fa-solid fa-bars"></span>
+        </label>
     </div>
     <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/spacetelescope/hst_notebooks/main?urlpath=tree/notebooks/DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
-  
-
-<span class="headerbtn__icon-container">
-  
-    <img src="../../../_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.ipynb"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Launch on Colab"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   
     <img src="../../../_static/images/logo_colab.png">
   </span>
-<span class="headerbtn__text-container">Colab</span>
+<span class="btn__text-container">Colab</span>
 </a>
-
-      </li>
+</a>
       
       <li>
-        
 <button onclick="initThebeSBT()"
-  class="headerbtn headerbtn-launch-thebe"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
   data-toggle="tooltip"
 data-placement="left"
 title="Launch Thebe"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-play"></i>
   </span>
-<span class="headerbtn__text-container">Live Code</span>
+<span class="btn__text-container">Live Code</span>
 </button>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
+  </ul>
 </div>
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
+  class="btn btn-sm"
   data-toggle="tooltip"
 data-placement="bottom"
 title="Fullscreen mode"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+
+<div class="dropdown dropdown-repository-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/spacetelescope/hst_notebooks"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Source repository"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fab fa-github"></i>
   </span>
-<span class="headerbtn__text-container">repository</span>
+<span class="btn__text-container">repository</span>
 </a>
-
-      </li>
+</a>
       
-      <li>
-        <a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Open an issue"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-lightbulb"></i>
   </span>
-<span class="headerbtn__text-container">open issue</span>
+<span class="btn__text-container">open issue</span>
 </a>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
+  </ul>
 </div>
 
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../../../_sources/notebooks/DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.ipynb"
-   class="headerbtn"
+  <ul class="dropdown-menu">
+      <li><a href="../../../_sources/notebooks/DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
    data-toggle="tooltip"
 data-placement="left"
 title="Download source file"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="headerbtn__text-container">.ipynb</span>
+<span class="btn__text-container">.ipynb</span>
 </a>
-
-      </li>
+</a>
       
       <li>
-        
 <button onclick="printPdf(this)"
-  class="headerbtn"
+  class="btn btn-sm dropdown-item"
   data-toggle="tooltip"
 data-placement="left"
 title="Print to PDF"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file-pdf"></i>
   </span>
-<span class="headerbtn__text-container">.pdf</span>
+<span class="btn__text-container">.pdf</span>
 </button>
-
-      </li>
+</a>
       
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
-
-    </div>
-</div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Drizzling WFPC2 Images to use a Single Zeropoint
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#introduction">
-     Introduction
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#download-the-data">
-     1. Download the Data
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#update-the-wcs">
-     2. Update the WCS
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#backup-an-image">
-       Backup an Image
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#align-the-images">
-     3. Align the Images
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#equalize-the-chip-sensitivities">
-     4. Equalize the chip sensitivities
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#drizzle-combine-the-images">
-     5. Drizzle-combine the images
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#illustration-of-the-effects-of-sensitivity-variation-on-drizzling">
-     6. Illustration of the Effects of Sensitivity Variation on Drizzling
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#simulate-an-image-of-constant-blank-sky-background">
-       Simulate an Image of Constant “Blank Sky” Background
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#drizzle-the-original-simulated-image-and-the-equalized-image">
-       Drizzle the Original Simulated Image and the Equalized Image
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#display-the-results-of-the-simulation-side-by-side">
-       Display The Results of the Simulation Side-by-Side
-      </a>
-     </li>
-    </ul>
-   </li>
   </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#about-this-notebook">
-   About this Notebook
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary" data-toggle="tooltip" data-placement="left" title="Toggle secondary sidebar">
+            <span class="fa-solid fa-list"></span>
+        </label>
     </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Drizzling WFPC2 Images to use a Single Zeropoint</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Drizzling WFPC2 Images to use a Single Zeropoint
-  </a>
-  <ul class="visible nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#introduction">
-     Introduction
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#download-the-data">
-     1. Download the Data
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#update-the-wcs">
-     2. Update the WCS
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#backup-an-image">
-       Backup an Image
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#align-the-images">
-     3. Align the Images
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#equalize-the-chip-sensitivities">
-     4. Equalize the chip sensitivities
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#drizzle-combine-the-images">
-     5. Drizzle-combine the images
-    </a>
-   </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#illustration-of-the-effects-of-sensitivity-variation-on-drizzling">
-     6. Illustration of the Effects of Sensitivity Variation on Drizzling
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#simulate-an-image-of-constant-blank-sky-background">
-       Simulate an Image of Constant “Blank Sky” Background
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#drizzle-the-original-simulated-image-and-the-equalized-image">
-       Drizzle the Original Simulated Image and the Equalized Image
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#display-the-results-of-the-simulation-side-by-side">
-       Display The Results of the Simulation Side-by-Side
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#about-this-notebook">
-   About this Notebook
-  </a>
- </li>
-</ul>
-
-                        </nav>
-                    </div>
-                </div>
+</div>
             </div>
-            <main id="main-content" role="main">
-                
-              <div>
-                
+            
+            
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Drizzling WFPC2 Images to use a Single Zeropoint</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Drizzling WFPC2 Images to use a Single Zeropoint
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#introduction">
+     Introduction
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#download-the-data">
+     1. Download the Data
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#update-the-wcs">
+     2. Update the WCS
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#backup-an-image">
+       Backup an Image
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#align-the-images">
+     3. Align the Images
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#equalize-the-chip-sensitivities">
+     4. Equalize the chip sensitivities
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#drizzle-combine-the-images">
+     5. Drizzle-combine the images
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#illustration-of-the-effects-of-sensitivity-variation-on-drizzling">
+     6. Illustration of the Effects of Sensitivity Variation on Drizzling
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#simulate-an-image-of-constant-blank-sky-background">
+       Simulate an Image of Constant “Blank Sky” Background
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#drizzle-the-original-simulated-image-and-the-equalized-image">
+       Drizzle the Original Simulated Image and the Equalized Image
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#display-the-results-of-the-simulation-side-by-side">
+       Display The Results of the Simulation Side-by-Side
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#about-this-notebook">
+   About this Notebook
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+            <article class="bd-article" role="main">
+              
   <section class="tex2jax_ignore mathjax_ignore" id="drizzling-wfpc2-images-to-use-a-single-zeropoint">
-<h1>Drizzling WFPC2 Images to use a Single Zeropoint<a class="headerlink" href="#drizzling-wfpc2-images-to-use-a-single-zeropoint" title="Permalink to this headline">#</a></h1>
+<h1>Drizzling WFPC2 Images to use a Single Zeropoint<a class="headerlink" href="#drizzling-wfpc2-images-to-use-a-single-zeropoint" title="Permalink to this heading">#</a></h1>
 <div class="alert-danger">Note: The notebook in this repository 'Initialization.ipynb' goes over many of the basic concepts such as the setup of the environment/package installation and should be read first if you are new to HST images, DrizzlePac, or Astroquery.</div><section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">#</a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
 <p>Extra care must be taken when using <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> to combine observations from detectors comprised of multiple chips of varying sensitivity. <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> works with calibrated images in units of counts (electrons or Data Numbers) or count rates and not in units of flux. It assumes that all input frames can be converted to physical flux units using a single inverse-sensitivity factor, recorded in the FITS image headers as <code class="docutils literal notranslate"><span class="pre">PHOTFLAM</span></code>, and the output drizzled product simply copies the <code class="docutils literal notranslate"><span class="pre">PHOTFLAM</span></code> keyword value from the first input image. When this occurs, the inverse-sensitivity will vary across the final drizzled product, and users will need to keep track of which sources fell on which chip when doing photometry. Moreover, varying detector sensitivities will affect the cosmic-ray rejection algorithm used by <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code>, and this may result in the misidentification of some good pixels as cosmic rays.</p>
 <p>This is a typical situation when drizzle-combining images from HST instruments with different chip sensitivities, e.g. Wide Field and Planetary Camera 2 (WFPC2). For more detail, see the section on <a class="reference external" href="http://www.stsci.edu/instruments/wfpc2/Wfpc2_dhb/wfpc2_ch53.html">Gain Variation</a> under ‘Position-Dependent Photometric Corrections’ in the WFPC2 Data Handbook. As a result, each of the four chips requires a <a class="reference external" href="http://www.stsci.edu/instruments/wfpc2/Wfpc2_dhb/wfpc2_ch52.html#1933986">unique PHOTFLAM</a> header keyword value. A similar situation may occur when drizzle-combining observations taken over a span of several years as detector’s sensitivity declines over time, see e.g. <a class="reference external" href="https://doi.org/10.3847/0004-6256/152/3/60">ACS ISR 2016-03</a>.</p>
 <p>One approach is to rescale the input data so that <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> can properly assume the images/chips have the same sensitivity; that is, a single <code class="docutils literal notranslate"><span class="pre">PHOTFLAM</span></code> value can be used to convert re-scaled image counts (or count-rates) to physical <em>integrated</em> flux units. The <code class="docutils literal notranslate"><span class="pre">photeq</span></code> task in <code class="docutils literal notranslate"><span class="pre">Drizzlepac</span></code> automates this image intensity rescaling to a single inverse-sensitivity factor <code class="docutils literal notranslate"><span class="pre">PHOTFLAM</span></code>.</p>
@@ -705,7 +985,7 @@ title="Print to PDF"
 </div>
 </section>
 <section id="download-the-data">
-<h2>1. Download the Data<a class="headerlink" href="#download-the-data" title="Permalink to this headline">#</a></h2>
+<h2>1. Download the Data<a class="headerlink" href="#download-the-data" title="Permalink to this heading">#</a></h2>
 <p>This example uses WFPC2 observations of Messier 2 in the F814W filter. The data come from GO proposal <a class="reference external" href="http://www.stsci.edu/cgi-bin/get-proposal-info?id=11100&amp;observatory=HST">11100</a> <em>“Two new ‘bullets’ for MOND: revealing the properties of dark matter in massive merging clusters”</em>. Four images were acquired using a 4-pt dither box pattern, followed by two images offset with a dither-line pattern.</p>
 <p>The data are downloaded using the <code class="docutils literal notranslate"><span class="pre">astroquery</span></code> API to access the <a class="reference external" href="http://archive.stsci.edu">MAST</a> archive. The <code class="docutils literal notranslate"><span class="pre">astroquery.mast</span></code> <a class="reference external" href="http://astroquery.readthedocs.io/en/latest/mast/mast.html">documentation</a> has more examples for how to find and download data from MAST.</p>
 <div class="cell docutils container">
@@ -810,7 +1090,7 @@ title="Print to PDF"
 </div>
 </section>
 <section id="update-the-wcs">
-<h2>2. Update the WCS<a class="headerlink" href="#update-the-wcs" title="Permalink to this headline">#</a></h2>
+<h2>2. Update the WCS<a class="headerlink" href="#update-the-wcs" title="Permalink to this heading">#</a></h2>
 <p>WFPC2 images downloaded from the archive contain World Coordinate System (WCS) information based on an older-style description of image distortions. Before these images can be processed with <code class="docutils literal notranslate"><span class="pre">drizzlepac</span></code>, their WCS must be converted to a new format. This can be achieved using <code class="docutils literal notranslate"><span class="pre">updatewcs()</span></code> function from the <code class="docutils literal notranslate"><span class="pre">stwcs</span></code> package. More details may be found here: <a class="reference external" href="http://documents.stsci.edu/hst/HST_overview/documents/DrizzlePac/ch45.html#601857">‘Making WFPC2 Images Compatible with AstroDrizzle’</a>. Note that <code class="docutils literal notranslate"><span class="pre">updatewcs</span></code> is no longer a parameter in AstroDrizzle or TweakReg and must be run separately before processing the data.</p>
 <p>First we download the reference files from the CRDS website. See the initialization notebook in this repository for more information.</p>
 <div class="cell docutils container">
@@ -1124,7 +1404,9 @@ Updating astrometry for ua060502m
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing new WCSCORR table for  ua060502m_c0m.fits
-Processing ua060502m_c0m.fits[&#39;SCI&#39;,1]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing ua060502m_c0m.fits[&#39;SCI&#39;,1]
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Updating header for ua060502m_c0m.fits[1]
@@ -1205,7 +1487,9 @@ Updating astrometry for ua06050am
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing new WCSCORR table for  ua06050am_c0m.fits
-Processing ua06050am_c0m.fits[&#39;SCI&#39;,1]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing ua06050am_c0m.fits[&#39;SCI&#39;,1]
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Updating header for ua06050am_c0m.fits[1]
@@ -1249,9 +1533,7 @@ Processing ua06050am_c0m.fits[&#39;SCI&#39;,1]
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- IDCTAB: Distortion model from row 454 for chip 3 : F814W
 - OFFTAB: Offset interpolated from rows 31 and 35
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- IDCTAB: Distortion model from row 122 for chip 1 : F814W
+- IDCTAB: Distortion model from row 122 for chip 1 : F814W
 - OFFTAB: Offset interpolated from rows 29 and 33
 - IDCTAB: Distortion model from row 288 for chip 2 : F814W
 - OFFTAB: Offset interpolated from rows 30 and 34
@@ -1286,7 +1568,9 @@ Updating astrometry for ua060506m
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing new WCSCORR table for  ua060506m_c0m.fits
-Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Updating header for ua060506m_c0m.fits[1]
@@ -1339,7 +1623,7 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 </div>
 </div>
 <section id="backup-an-image">
-<h3>Backup an Image<a class="headerlink" href="#backup-an-image" title="Permalink to this headline">#</a></h3>
+<h3>Backup an Image<a class="headerlink" href="#backup-an-image" title="Permalink to this heading">#</a></h3>
 <p>In a later section we will generate simulated data to illustrate the effects of drizzling WFPC2 images without sensitivity equalization. For that purpose we will need a copy of an original image that has the original inverse-sensitivity values (<code class="docutils literal notranslate"><span class="pre">PHOTFLAM</span></code>) in their headers. Here we create a backup copy of the first image.</p>
 <p><strong>NOTE:</strong> This step is needed for illustration purpose in this notebook only. It is not needed when processing data.</p>
 <div class="cell docutils container">
@@ -1361,7 +1645,7 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 </section>
 </section>
 <section id="align-the-images">
-<h2>3. Align the Images<a class="headerlink" href="#align-the-images" title="Permalink to this headline">#</a></h2>
+<h2>3. Align the Images<a class="headerlink" href="#align-the-images" title="Permalink to this heading">#</a></h2>
 <p>Due to small pointing errors, the image header WCS typically needs to be updated in order to achieve the best drizzle-combined products. The expected pointing accuracy for various observing scenerios is summarized in the DrizzlePac Handbook <a class="reference external" href="http://documents.stsci.edu/hst/HST_overview/documents/DrizzlePac/AppendixB2.html">Appendix B</a>. Input images must first be aligned so that when the coordinates of a given object (in detector space) are converted to sky coordinates (using the WCS), that object’s sky coordinates must be approximately equal in each frame.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">DrizzlePac</span></code> task <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> may be used to correct for any errors in the image header WCS. First, <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> finds sources in each image, matches sources in common across images, and finds a separate linear transformation to align each image. <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> then computes a new WCS for each image based on this linear transformation.</p>
 <p>Here we show a basic image alignment procedure. For a more detailed illustration of image alignment, please refer to other example notebooks such as the mosaic example in this repository.</p>
@@ -1376,7 +1660,7 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Setting up logfile :  tweakreg.log
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TweakReg Version 3.5.1 started at: 20:59:25.962 (24/02/2023) 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TweakReg Version 3.5.1 started at: 16:36:24.438 (01/03/2023) 
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -1433,25 +1717,25 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ua06050cm_c0m.fits&#39;:
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050cm_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:59:26.221 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050cm_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 16:36:24.701 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 30 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050cm_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 20:59:26.290 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050cm_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 16:36:24.767 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 67 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050cm_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 3) started at: 20:59:26.360 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050cm_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 3) started at: 16:36:24.835 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 512 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050cm_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 4) started at: 20:59:26.475 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050cm_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 4) started at: 16:36:24.950 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 282 objects.
@@ -1466,25 +1750,25 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ua060504m_c0m.fits&#39;:
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060504m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:59:28.152 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060504m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 16:36:26.417 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 13 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060504m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 20:59:28.223 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060504m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 16:36:26.4 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 75 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060504m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 3) started at: 20:59:28.298 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060504m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 3) started at: 16:36:26.549 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 407 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060504m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 4) started at: 20:59:28.402 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060504m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 4) started at: 16:36:26.651 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 237 objects.
@@ -1499,25 +1783,25 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ua060508m_c0m.fits&#39;:
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060508m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:59:30.1 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060508m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 16:36:28.136 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 15 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060508m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 20:59:30.177 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060508m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 16:36:28.202 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 130 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060508m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 3) started at: 20:59:30.251 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060508m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 3) started at: 16:36:28.272 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 280 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060508m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 4) started at: 20:59:30.35 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060508m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 4) started at: 16:36:28.377 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 411 objects.
@@ -1532,25 +1816,25 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ua060502m_c0m.fits&#39;:
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060502m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:59:31.836 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060502m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 16:36:29.667 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 14 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060502m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 20:59:31.903 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060502m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 16:36:29.7 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 83 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060502m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 3) started at: 20:59:31.977 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060502m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 3) started at: 16:36:29.800 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 304 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060502m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 4) started at: 20:59:32.064 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060502m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 4) started at: 16:36:29.88 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 116 objects.
@@ -1565,25 +1849,25 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ua06050am_c0m.fits&#39;:
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050am_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:59:33.398 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050am_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 16:36:31.045 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 26 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050am_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 20:59:33.465 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050am_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 16:36:31.111 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 187 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050am_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 3) started at: 20:59:33.544 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050am_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 3) started at: 16:36:31.184 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 301 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050am_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 4) started at: 20:59:33.629 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua06050am_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 4) started at: 16:36:31.26 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 130 objects.
@@ -1598,25 +1882,25 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ua060506m_c0m.fits&#39;:
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060506m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:59:35.079 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060506m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 16:36:32.526 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 19 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060506m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 20:59:35.144 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060506m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 16:36:32.593 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 76 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060506m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 3) started at: 20:59:35.218 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060506m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 3) started at: 16:36:32.661 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 241 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060506m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 4) started at: 20:59:35.325 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ua060506m_c0m.fits&#39;, EXT=(&#39;SCI&#39;, 4) started at: 16:36:32.764 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 105 objects.
@@ -3017,14 +3301,14 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Trailer file written to:  tweakreg.log
 </pre></div>
 </div>
-<img alt="../../../_images/drizzle_wfpc2_13_548.png" src="../../../_images/drizzle_wfpc2_13_548.png" />
-<img alt="../../../_images/drizzle_wfpc2_13_549.png" src="../../../_images/drizzle_wfpc2_13_549.png" />
-<img alt="../../../_images/drizzle_wfpc2_13_550.png" src="../../../_images/drizzle_wfpc2_13_550.png" />
+<img alt="../../../_images/8f189429988423580259fad9ea25eade37fe2e993a10e786c4764a36ecd9b268.png" src="../../../_images/8f189429988423580259fad9ea25eade37fe2e993a10e786c4764a36ecd9b268.png" />
+<img alt="../../../_images/851a03b0440779dd720f1063fbf12c7d4591eef72757ccab144ecb33ae6c064b.png" src="../../../_images/851a03b0440779dd720f1063fbf12c7d4591eef72757ccab144ecb33ae6c064b.png" />
+<img alt="../../../_images/50e66dab4858b4f9f0cd2f193e5d79307145eb9edab9caeb17424a0776b8ef5f.png" src="../../../_images/50e66dab4858b4f9f0cd2f193e5d79307145eb9edab9caeb17424a0776b8ef5f.png" />
 </div>
 </div>
 </section>
 <section id="equalize-the-chip-sensitivities">
-<h2>4. Equalize the chip sensitivities<a class="headerlink" href="#equalize-the-chip-sensitivities" title="Permalink to this headline">#</a></h2>
+<h2>4. Equalize the chip sensitivities<a class="headerlink" href="#equalize-the-chip-sensitivities" title="Permalink to this heading">#</a></h2>
 <p>This step adjusts image data values so that all images and chips appear (to <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code>) to have a single inverse sensitivity (<code class="docutils literal notranslate"><span class="pre">PHOTFLAM</span></code>). This can be achieved using the <code class="docutils literal notranslate"><span class="pre">photeq</span></code> task in <code class="docutils literal notranslate"><span class="pre">Drizzlepac</span></code>. This task adjusts image data so that when these data are multiplied by the same single <code class="docutils literal notranslate"><span class="pre">PHOTFLAM</span></code> value, the correct flux is obtained.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3033,7 +3317,7 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>***** photeq started on 2023-02-24 20:59:44.219024
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>***** photeq started on 2023-03-01 16:36:41.740932
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>      Version 3.5.1 
@@ -3388,7 +3672,7 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <p>Upon the completion, <code class="docutils literal notranslate"><span class="pre">photeq</span></code> will not only adjust image data but also update <code class="docutils literal notranslate"><span class="pre">PHOTFLAM</span></code> values for all chips to this specific reference value.</p>
 </section>
 <section id="drizzle-combine-the-images">
-<h2>5. Drizzle-combine the images<a class="headerlink" href="#drizzle-combine-the-images" title="Permalink to this headline">#</a></h2>
+<h2>5. Drizzle-combine the images<a class="headerlink" href="#drizzle-combine-the-images" title="Permalink to this heading">#</a></h2>
 <p>All four chips are now drizzled together with an output pixel scale set to that of the WF chips:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -3414,13 +3698,13 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle log file: astrodrizzle.log
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.5.1 started at: 20:59:44.596 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.5.1 started at: 16:36:42.106 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Initialization  started at  20:59:44.598 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Initialization  started at  16:36:42.107 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -3477,25 +3761,25 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>********************************************************************************
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Initialization finished at 20:59:46.928 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Initialization finished at 16:36:44.483 (01/03/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  20:59:46.930 (24/02/2023)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 20:59:47.377 (24/02/2023)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  20:59:47.379 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  16:36:44.484 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>***** skymatch started on 2023-02-24 20:59:48.847465
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 16:36:44.887 (01/03/2023)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  16:36:44.89 (01/03/2023)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>***** skymatch started on 2023-03-01 16:36:46.420141
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>      Version 1.0.9
@@ -4122,16 +4406,16 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>      - EXT = &#39;SCI&#39;,4   delta(MDRIZSKY) = -1.04354   NEW MDRIZSKY = -1.04354
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>***** skymatch ended on 2023-02-24 20:59:51.236107
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>***** skymatch ended on 2023-03-01 16:36:48.537566
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TOTAL RUN TIME: 0:00:02.388642
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TOTAL RUN TIME: 0:00:02.117425
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 20:59:51.391 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 16:36:48.705 (01/03/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  20:59:51.393 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  16:36:48.708 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -4170,12 +4454,12 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-Generating simple FITS output: ua060504m_c0m_single_sci.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ua060502m_c0m_single_sci.fits
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ua060504m_c0m_single_sci.fits
 </pre></div>
 </div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ua060502m_c0m_single_sci.fits
+</pre></div>
+</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Deleted all instances of WCS with key A in extensions [0]
 </pre></div>
 </div>
@@ -4186,12 +4470,12 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Deleted all instances of WCS with key B in extensions [0]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ua060502m_c0m_single_wht.fits
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ua060504m_c0m_single_wht.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ua060502m_c0m_single_wht.fits
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-Generating simple FITS output: ua060506m_c0m_single_sci.fits
@@ -4224,16 +4508,16 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ua060508m_c0m_single_wht.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-Generating simple FITS output: ua06050am_c0m_single_sci.fits
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-Generating simple FITS output: ua06050cm_c0m_single_sci.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ua06050am_c0m_single_sci.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-Generating simple FITS output: ua06050am_c0m_single_sci.fits
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ua06050cm_c0m_single_sci.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ua06050am_c0m_single_sci.fits
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Deleted all instances of WCS with key A in extensions [0]
@@ -4254,10 +4538,10 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ua06050am_c0m_single_wht.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 20:59:55.444 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 16:36:53.973 (01/03/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  20:59:55.447 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  16:36:53.976 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -4284,10 +4568,10 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saving output median image to: &#39;final_drw_med.fits&#39;
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Create Median finished at 20:59:56.176 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Create Median finished at 16:36:54.697 (01/03/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  20:59:56.178 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  16:36:54.698 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -4581,10 +4865,10 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ua06050cm_c0m_sci4_blt.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 21:00:01.656 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 16:37:00.401 (01/03/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  21:00:01.657 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  16:37:00.403 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -4662,10 +4946,10 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Creating output: ua06050cm_c0m_sci4_crmask.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Driz_CR finished at 21:00:04.902 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Driz_CR finished at 16:37:03.661 (01/03/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  21:00:04.913 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  16:37:03.676 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -4722,13 +5006,13 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: final_drw_ctx.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Final Drizzle finished at 21:00:14.912 (24/02/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Final Drizzle finished at 16:37:13.732 (01/03/2023)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.5.1 is finished processing at 21:00:14.915 (24/02/2023).
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.5.1 is finished processing at 16:37:13.735 (01/03/2023).
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -4752,34 +5036,34 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>         Initialization          2.3292 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>         Initialization          2.3756 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>            Static Mask          0.4475 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>            Static Mask          0.4030 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>           Subtract Sky          4.0129 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>           Subtract Sky          3.8155 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Separate Drizzle          4.0509 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Separate Drizzle          5.2657 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          Create Median          0.7294 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          Create Median          0.7209 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                   Blot          5.4778 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                   Blot          5.7031 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                Driz_CR          3.2448 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                Driz_CR          3.2583 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          Final Drizzle          9.9988 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          Final Drizzle          10.0560 sec.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ====================          ====================
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                  Total          30.2913 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                  Total          31.5980 sec.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -4900,11 +5184,11 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 </div>
 </section>
 <section id="illustration-of-the-effects-of-sensitivity-variation-on-drizzling">
-<h2>6. Illustration of the Effects of Sensitivity Variation on Drizzling<a class="headerlink" href="#illustration-of-the-effects-of-sensitivity-variation-on-drizzling" title="Permalink to this headline">#</a></h2>
+<h2>6. Illustration of the Effects of Sensitivity Variation on Drizzling<a class="headerlink" href="#illustration-of-the-effects-of-sensitivity-variation-on-drizzling" title="Permalink to this heading">#</a></h2>
 <p>The effect of drizzling images with different detector sensitivies, while tangible, is sometimes difficult to <em>visualize</em> in noisy data, especially when drizzling multiple dithered images that can blur the borders between chips.</p>
 <p>In this section we produce a simple simulation of observing a constant intensity “blank sky”. We then make a copy of this image and apply sensitivity equalization to it. Finally we drizzle both images and compare them side-by-side.</p>
 <section id="simulate-an-image-of-constant-blank-sky-background">
-<h3>Simulate an Image of Constant “Blank Sky” Background<a class="headerlink" href="#simulate-an-image-of-constant-blank-sky-background" title="Permalink to this headline">#</a></h3>
+<h3>Simulate an Image of Constant “Blank Sky” Background<a class="headerlink" href="#simulate-an-image-of-constant-blank-sky-background" title="Permalink to this heading">#</a></h3>
 <p>In this simple simulation we assume only Poisson noise.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -4964,7 +5248,7 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 </div>
 </section>
 <section id="drizzle-the-original-simulated-image-and-the-equalized-image">
-<h3>Drizzle the Original Simulated Image and the Equalized Image<a class="headerlink" href="#drizzle-the-original-simulated-image-and-the-equalized-image" title="Permalink to this headline">#</a></h3>
+<h3>Drizzle the Original Simulated Image and the Equalized Image<a class="headerlink" href="#drizzle-the-original-simulated-image-and-the-equalized-image" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span>
@@ -5010,7 +5294,7 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 </div>
 </section>
 <section id="display-the-results-of-the-simulation-side-by-side">
-<h3>Display The Results of the Simulation Side-by-Side<a class="headerlink" href="#display-the-results-of-the-simulation-side-by-side" title="Permalink to this headline">#</a></h3>
+<h3>Display The Results of the Simulation Side-by-Side<a class="headerlink" href="#display-the-results-of-the-simulation-side-by-side" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">drz_noneq</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;nonequalized_sci.fits&#39;</span><span class="p">)</span>
@@ -5034,7 +5318,7 @@ Processing ua060506m_c0m.fits[&#39;SCI&#39;,1]
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="about-this-notebook">
-<h1>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this headline">#</a></h1>
+<h1>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h1>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Author: M. Cara, STScI Data Analysis Tools Branch
 Updated: December 14, 2018
 </pre></div>
@@ -5061,50 +5345,171 @@ Updated: December 14, 2018
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
-              
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
+            </article>
+            
+
+            
+            
+            <footer class="bd-footer-article">
+                <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../align_sparse_fields/align_sparse_fields.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Aligning Deep Exposures of Sparse Fields</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="../mask_satellite/mask_satellite.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Satellite Trail Masking Techniques</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
+  <a class='left-prev' id="prev-link" href="../align_sparse_fields/align_sparse_fields.html" title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Aligning Deep Exposures of Sparse Fields</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="../mask_satellite/mask_satellite.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Satellite Trail Masking Techniques</p>
+  </div>
+  <i class="fa-solid fa-angle-right"></i>
+  </a>
 </div>
             </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
+            
+          </div>
+          
+          
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
   
-    By STScI<br/>
-  
-      &copy; Copyright 2022.<br/>
-</p>
-        </footer>
-    </div>
-    
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#">
+   Drizzling WFPC2 Images to use a Single Zeropoint
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#introduction">
+     Introduction
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#download-the-data">
+     1. Download the Data
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#update-the-wcs">
+     2. Update the WCS
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#backup-an-image">
+       Backup an Image
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#align-the-images">
+     3. Align the Images
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#equalize-the-chip-sensitivities">
+     4. Equalize the chip sensitivities
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#drizzle-combine-the-images">
+     5. Drizzle-combine the images
+    </a>
+   </li>
+   <li class="toc-h2 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#illustration-of-the-effects-of-sensitivity-variation-on-drizzling">
+     6. Illustration of the Effects of Sensitivity Variation on Drizzling
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#simulate-an-image-of-constant-blank-sky-background">
+       Simulate an Image of Constant “Blank Sky” Background
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#drizzle-the-original-simulated-image-and-the-equalized-image">
+       Drizzle the Original Simulated Image and the Equalized Image
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#display-the-results-of-the-simulation-side-by-side">
+       Display The Results of the Simulation Side-by-Side
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h1 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#about-this-notebook">
+   About this Notebook
+  </a>
+ </li>
+</ul>
+
+</nav>
 </div>
 
-
-      </div>
-    </div>
+            </div>
+          
+          
+        </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+<div class="bd-footer-content__inner container">
   
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
 
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2022.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+Last updated on None.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </div>
+        </footer>
+        
+
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94"></script>
 
   </body>
 </html>
