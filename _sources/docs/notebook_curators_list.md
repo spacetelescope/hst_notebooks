@@ -7,4 +7,4 @@ NOTE: This information has not been finalized yet.
   - NICMOS: TBD 
   - STIS: [Joleen Carlberg](mailto:jcarlberg@stsci.edu)
   - WFC3: [Sylvia Baggett](mailto:sbaggett@stsci.edu)
-  - DrizzlePac: TBD
+  - DrizzlePac: [Ben Kuhn](mailto:bkuhn@stsci.edu) (primary) and [Fred Dauphin](mailto:fdauphin@stsci.edu) (backup)
