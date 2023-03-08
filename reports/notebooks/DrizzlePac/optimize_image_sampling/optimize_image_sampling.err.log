@@ -17,64 +17,21 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-flt_files = glob.glob('*flt.fits')
-
-plate_scale = fits.getval(flt_files[0], 'idcscale',ext=1)
-print('Plate scale: {:>6.4f}'.format(plate_scale))
-postarg1 = np.empty(len(flt_files), dtype=np.float)
-postarg2 = np.empty(len(flt_files), dtype=np.float)
-x_phase = np.empty(len(flt_files), dtype=np.float)
-y_phase = np.empty(len(flt_files), dtype=np.float)
-
-for i, im in enumerate(flt_files):
-    with fits.open(im) as hdu:
-        postarg1[i] = hdu[0].header['postarg1']
-        postarg2[i] = hdu[0].header['postarg2']
-        x_phase[i] = abs(np.modf(postarg1[i] / plate_scale)[0])
-        y_phase[i] = abs(np.modf(postarg2[i] / plate_scale)[0])
+# Cleaning up directories after dowloading from MAST
+for file in download_tab['Local Path']:
+    os.rename(file, os.path.basename(file))
         
-fig, ax = plt.subplots(1, 2, figsize=(12, 6))
-
-ax[0].plot(postarg1, postarg2, 'k+-', ms=15, lw=1)
-ax[0].set_xlabel('arcsec', fontsize='large')
-ax[0].set_ylabel('arcsec', fontsize='large')
-
-ax[1].plot(x_phase, y_phase, 'k+-', ms=15, lw=1)
-ax[1].set_xlim(-0.05, 1)
-ax[1].set_ylim(-0.05, 1)
-ax[1].set_xlabel('X pixel phase', fontsize='large')
-ax[1].set_ylabel('Y pixel phase', fontsize='large')
+shutil.rmtree('mastDownload')
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mAttributeError[0m                            Traceback (most recent call last)
-Cell [0;32mIn[4], line 5[0m
-[1;32m      3[0m plate_scale [38;5;241m=[39m fits[38;5;241m.[39mgetval(flt_files[[38;5;241m0[39m], [38;5;124m'[39m[38;5;124midcscale[39m[38;5;124m'[39m,ext[38;5;241m=[39m[38;5;241m1[39m)
-[1;32m      4[0m [38;5;28mprint[39m([38;5;124m'[39m[38;5;124mPlate scale: [39m[38;5;132;01m{:>6.4f}[39;00m[38;5;124m'[39m[38;5;241m.[39mformat(plate_scale))
-[0;32m----> 5[0m postarg1 [38;5;241m=[39m np[38;5;241m.[39mempty([38;5;28mlen[39m(flt_files), dtype[38;5;241m=[39m[43mnp[49m[38;5;241;43m.[39;49m[43mfloat[49m)
-[1;32m      6[0m postarg2 [38;5;241m=[39m np[38;5;241m.[39mempty([38;5;28mlen[39m(flt_files), dtype[38;5;241m=[39mnp[38;5;241m.[39mfloat)
-[1;32m      7[0m x_phase [38;5;241m=[39m np[38;5;241m.[39mempty([38;5;28mlen[39m(flt_files), dtype[38;5;241m=[39mnp[38;5;241m.[39mfloat)
+[0;31mFileNotFoundError[0m                         Traceback (most recent call last)
+Cell [0;32mIn[3], line 3[0m
+[1;32m      1[0m [38;5;66;03m# Cleaning up directories after dowloading from MAST[39;00m
+[1;32m      2[0m [38;5;28;01mfor[39;00m file [38;5;129;01min[39;00m download_tab[[38;5;124m'[39m[38;5;124mLocal Path[39m[38;5;124m'[39m]:
+[0;32m----> 3[0m     [43mos[49m[38;5;241;43m.[39;49m[43mrename[49m[43m([49m[43mfile[49m[43m,[49m[43m [49m[43mos[49m[38;5;241;43m.[39;49m[43mpath[49m[38;5;241;43m.[39;49m[43mbasename[49m[43m([49m[43mfile[49m[43m)[49m[43m)[49m
+[1;32m      5[0m shutil[38;5;241m.[39mrmtree([38;5;124m'[39m[38;5;124mmastDownload[39m[38;5;124m'[39m)
 
-File [0;32m/usr/share/miniconda/lib/python3.10/site-packages/numpy/__init__.py:305[0m, in [0;36m__getattr__[0;34m(attr)[0m
-[1;32m    300[0m     warnings[38;5;241m.[39mwarn(
-[1;32m    301[0m         [38;5;124mf[39m[38;5;124m"[39m[38;5;124mIn the future `np.[39m[38;5;132;01m{[39;00mattr[38;5;132;01m}[39;00m[38;5;124m` will be defined as the [39m[38;5;124m"[39m
-[1;32m    302[0m         [38;5;124m"[39m[38;5;124mcorresponding NumPy scalar.[39m[38;5;124m"[39m, [38;5;167;01mFutureWarning[39;00m, stacklevel[38;5;241m=[39m[38;5;241m2[39m)
-[1;32m    304[0m [38;5;28;01mif[39;00m attr [38;5;129;01min[39;00m __former_attrs__:
-[0;32m--> 305[0m     [38;5;28;01mraise[39;00m [38;5;167;01mAttributeError[39;00m(__former_attrs__[attr])
-[1;32m    307[0m [38;5;66;03m# Importing Tester requires importing all of UnitTest which is not a[39;00m
-[1;32m    308[0m [38;5;66;03m# cheap import Since it is mainly used in test suits, we lazy import it[39;00m
-[1;32m    309[0m [38;5;66;03m# here to save on the order of 10 ms of import time for most users[39;00m
-[1;32m    310[0m [38;5;66;03m#[39;00m
-[1;32m    311[0m [38;5;66;03m# The previous way Tester was imported also had a side effect of adding[39;00m
-[1;32m    312[0m [38;5;66;03m# the full `numpy.testing` namespace[39;00m
-[1;32m    313[0m [38;5;28;01mif[39;00m attr [38;5;241m==[39m [38;5;124m'[39m[38;5;124mtesting[39m[38;5;124m'[39m:
-
-[0;31mAttributeError[0m: module 'numpy' has no attribute 'float'.
-`np.float` was a deprecated alias for the builtin `float`. To avoid this error in existing code, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.
-The aliases was originally deprecated in NumPy 1.20; for more details and guidance see the original release note at:
-    https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations
-AttributeError: module 'numpy' has no attribute 'float'.
-`np.float` was a deprecated alias for the builtin `float`. To avoid this error in existing code, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.
-The aliases was originally deprecated in NumPy 1.20; for more details and guidance see the original release note at:
-    https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations
+[0;31mFileNotFoundError[0m: [Errno 2] No such file or directory: './mastDownload/HST/ib1f19laq/ib1f19laq_flt.fits' -> 'ib1f19laq_flt.fits'
+FileNotFoundError: [Errno 2] No such file or directory: './mastDownload/HST/ib1f19laq/ib1f19laq_flt.fits' -> 'ib1f19laq_flt.fits'
 
