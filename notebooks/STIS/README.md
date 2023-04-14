@@ -15,11 +15,11 @@ The tutorial introduces handling STIS Data extensions, including examining Data 
 An introductory Jupyter Notebook that provides background for the different calibration steps for the CCD from the raw fits file to the flat fielded (flt) file.  This also shows why there is often negative counts (or flux) values in STIS data.  The six calibration steps shown are initializing the data quality array, large scale bias and overscale subtraction, small scale bias subtraction, cosmic ray correction, dark signal subtraction, and flat field correction.
 ### 1D extraction
 An introductory Jupyter Notebook that shows how to visualize the 1-D extraction. This is useful for cases where a user may want to do a custom extraction or background subtraction.  It shows how to find the important keywords and plot the extraction and background regions used for the extraction to generate x1d data.  The notebook contains an example with a first order spectrum and with echelle data.
-### Acquisition
+### Imaging Acquisition
 An introductory Jupyter Notebook that shows how to visualize and obtain information about a target acquisition. It provides examples for a successful acquisition and several typical failure cases.
-### Correlation
+### Cross-Correlation
 A complementary Jupyter Notebook to the Acquisition Notebook, that shows how to find and correct the zero point spectral shift using cross-correlation.
-### Darks
+### Custom CCD Darks
 An introductory Jupyter Notebook showing how to create a custom CCD dark reference file by making the baseline dark and then the week dark using the refstis package.
 
 Each folder has a HTML file that can be opened in a browser after cloning this repository. The HTML file is identical to the notebook, except they contain output plots and tables.
