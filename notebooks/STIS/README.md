@@ -5,9 +5,9 @@ The [Space Telescope Imaging Spectrograph](https://www.stsci.edu/hst/instrumenta
 
 The current operational notebooks with a short description:
 
-### STIS Coronagraphic Visualization Tool
+### STIS Coronagraphic Visualization Tool (CoronagraphyViz)
 Jupyter Notebook that assists users in planning and preparing STIS coronagraphic observations.
-### STIS DrizzlePac Tutorial
+### STIS DrizzlePac Tutorial (drizpac_notebook)
 Jupyter Notebook for aligning and combining STIS images with [DrizzlePac](https://www.stsci.edu/scientific-community/software/drizzlepac.html). 
 ### Viewing STIS Data (view_data)
 The tutorial introduces handling STIS Data extensions, including examining Data Quality Flags. Several strategies explore how to visually examine STIS Data within a notebook to reproduce plots and tables. A section on using TIME-TAG mode data shows how to construct a flux plot and generate ACCUM images from TIME-TAG data with the stistools with the int_tag tool. A section on the STIS Gratings Echelle mode data shows how to display the echelle image and plot echelles by spectral order.
