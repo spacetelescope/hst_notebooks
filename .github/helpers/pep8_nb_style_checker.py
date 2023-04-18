@@ -1,7 +1,12 @@
+"""
+This script uses flake8 to perform a PEP8 style check on the python code embedded in a jupyter notebook.
+Based on jdat_notebooks/notebook-pep8-check.yml.
+"""
 import argparse
 import copy
 import json
 import numpy as np
+import os
 import pathlib
 import pytz
 import re
@@ -14,6 +19,11 @@ from datetime import datetime as dt
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--file', type=str,
                     help='The notebook file to be checked')
+parser.add_argument('-u', '--update_notebook', required=False, action='store_true',
+                    help='If this option is turned on and PEP8 issues are found, the notebook will be '
+                         'updated with details of the PEP8 issue or issues. Details of each PEP8 issue will '
+                         'be inserted directly below the code cell containing the offending code. If this '
+                         'option is not turned on, details of any errors will be displayed on-screen.')
 args = parser.parse_args()
 
 nb_ext = '.ipynb'
@@ -143,6 +153,16 @@ for script_line in warns:
     # print(f"code_cell_num {code_cell_num}, line_in_cell {line_in_cell}, "
     #       f"all_cell_num {all_cell_num}")
 
+    if not args.update_notebook:
+        # Print PEP 8 issues
+        col_num = int(wrn.split(":")[2])
+        out_msg = "PE8 error found in code cell {} (Notebook cell {})".format(code_cell_num+1, all_cell_num+1)
+        out_msg = "{} {}".format(out_msg, "at code cell line {}, column {}".format(line_in_cell, col_num))
+        print(out_msg)
+        print(script[(int(wrn.split(":")[1])) - 1].strip()) # print line of code with PEP8 error
+        print(" "*(col_num - 1)+"\u25B2") # point to error
+        print(wrn.split(":")[3].strip()+"\n")
+
     # only keep line/column info and warning from original flake8 text.
     # prepend it with the customized string chosen earlier
     nu_msg = pre + re.sub(r':\d+(?=:)', line_in_cell, wrn, count=1)
@@ -152,31 +172,46 @@ for script_line in warns:
                                          'output_type': 'stream'})
     nu_output_dict[all_cell_num]['text'].append(nu_msg)
 
-# use the defaultdict's keys to learn which cells require warnings
-cells_to_edit = list(nu_output_dict.keys())
-injected_nb = copy.deepcopy(og_nb)
+if args.update_notebook:
+    # use the defaultdict's keys to learn which cells require warnings
+    cells_to_edit = list(nu_output_dict.keys())
+    injected_nb = copy.deepcopy(og_nb)
 
-for num, cell in enumerate(injected_nb['cells']):
-    # clear any cell output, regardless of PEP8 status
-    if cell.get('execution_count'):
-        cell['execution_count'] = None
-    if cell.get('outputs'):
-        cell['outputs'] = []
+    for num, cell in enumerate(injected_nb['cells']):
+        # clear any cell output, regardless of PEP8 status
+        if cell.get('execution_count'):
+            cell['execution_count'] = None
+        if cell.get('outputs'):
+            cell['outputs'] = []
 
-    # inject PEP8 warnings into cells marked earlier
-    if num in cells_to_edit:
-        cell['outputs'] = [nu_output_dict[num]]
+        # inject PEP8 warnings into cells marked earlier
+        if num in cells_to_edit:
+            cell['outputs'] = [nu_output_dict[num]]
 
-# insert cells for enabling interactive PEP8 feedback just above first code cell
-# if they aren't already present
-with open(nb_magic_file) as nmf:
-  flake8_magic_cells = json.load(nmf)['cells']
+    # insert cells for enabling interactive PEP8 feedback just above first code cell
+    # if they aren't already present
+    with open(nb_magic_file) as nmf:
+      flake8_magic_cells = json.load(nmf)['cells']
 
-if all([og_nb['cells'][i].get('source') != flake8_magic_cells[0]['source']
-        for i in code_cells]):
-  injected_nb['cells'][code_cells[0]:code_cells[0]] = flake8_magic_cells
+    if all([og_nb['cells'][i].get('source') != flake8_magic_cells[0]['source']
+            for i in code_cells]):
+      injected_nb['cells'][code_cells[0]:code_cells[0]] = flake8_magic_cells
 
-# save the edited notebook
-with open(nb_file, 'w') as file:
-    json.dump(injected_nb, file, indent=1, ensure_ascii=False)
-    file.write("\n") # end with new line since json.dump doesn't
+    # save the edited notebook
+    with open(nb_file, 'w') as file:
+        json.dump(injected_nb, file, indent=1, ensure_ascii=False)
+        file.write("\n") # end with new line since json.dump doesn't
+
+    # remove temp files created earlier in run
+    if os.path.exists(code_file):
+        os.remove(code_file)
+    if os.path.exists(warn_file):
+        os.remove(warn_file)
+else:
+    # remove temp files created earlier in run
+    if os.path.exists(code_file):
+        os.remove(code_file)
+    if os.path.exists(warn_file):
+        os.remove(warn_file)
+    sys.exit(99) #exit with code 99 to tell the workflow to throw an error
+

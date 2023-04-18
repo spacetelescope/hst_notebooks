@@ -1,15 +1,22 @@
-name: Python Style Checker
+## This workflow performs PEP8 style checks on the python code in notebook code cells.
+name: PEP8 Notebook Style Check Execution
 
-on: 
+on:
    pull_request:
     branches:
       - main
     paths:
       - 'notebooks/**.ipynb'
       - '*.yml'
-      
+
 jobs:
   gather-notebooks:
+    # below logic will only allow workflow to trigger under specific conditions
+    if: |
+      contains(github.event.pull_request.labels.*.name, 'Technical Review') &&
+      github.event.pull_request.head.user.login != 'github-actions[bot]' &&
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.state == 'open'
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -23,14 +30,14 @@ jobs:
         separator: ","
         files: |
           **/*.ipynb
-    ## convert the list of files to an array and push them into the matrix as a json object      
+    ## convert the list of files to an array and push them into the matrix as a json object
     - name: set-matrix
       id: set-matrix
       run: |
         IFS=',' read -r -a array <<< "${{steps.get-changed-files.outputs.all_changed_files}}"
         echo "{$array}"
         echo "matrix=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${array[@]}")" >> $GITHUB_OUTPUT
-        
+
   notebook-style-checks:
     needs: gather-notebooks
     environment: ci_env
@@ -40,7 +47,7 @@ jobs:
         matrix:
             notebooks: ${{ fromJson(needs.gather-notebooks.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v3  
+      - uses: actions/checkout@v3
       - name: Set up Python 3.8.12
         uses: actions/setup-python@v4 ## needed for caching
         with:
@@ -52,7 +59,9 @@ jobs:
           echo $CONDA/bin >> $GITHUB_PATH
       - name: Install dependencies
         run: |
-          pip install pycodestyle
-      - name: Python Style Checker
-        run: | 
-          pycodestyle --show-source "${{ matrix.notebooks }}"
+          pip install flake8
+          pip install numpy
+          pip install pytz
+      - name: Run PEP8 style check
+        run: |
+          python .github/helpers/pep8_nb_style_checker.py -f ${{ matrix.notebooks }}
