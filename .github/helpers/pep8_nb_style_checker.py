@@ -1,4 +1,7 @@
-# This script uses flake8 to perform a PEP8 style check on the python code embedded in a jupyter notebook.
+"""
+This script uses flake8 to perform a PEP8 style check on the python code embedded in a jupyter notebook.
+Based on jdat_notebooks/notebook-pep8-check.yml.
+"""
 import argparse
 import copy
 import json
