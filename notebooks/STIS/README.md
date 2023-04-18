@@ -5,16 +5,23 @@ The [Space Telescope Imaging Spectrograph](https://www.stsci.edu/hst/instrumenta
 
 The current operational notebooks with a short description:
 
-### STIS Coronagraphic Visualization Tool
+### STIS Coronagraphic Visualization Tool (CoronagraphyViz)
 Jupyter Notebook that assists users in planning and preparing STIS coronagraphic observations.
-### STIS DrizzlePac Tutorial
+### STIS DrizzlePac Tutorial (drizpac_notebook)
 Jupyter Notebook for aligning and combining STIS images with [DrizzlePac](https://www.stsci.edu/scientific-community/software/drizzlepac.html). 
-### View data
+### Viewing STIS Data (view_data)
 The tutorial introduces handling STIS Data extensions, including examining Data Quality Flags. Several strategies explore how to visually examine STIS Data within a notebook to reproduce plots and tables. A section on using TIME-TAG mode data shows how to construct a flux plot and generate ACCUM images from TIME-TAG data with the stistools with the int_tag tool. A section on the STIS Gratings Echelle mode data shows how to display the echelle image and plot echelles by spectral order.
-### Calstis 2D CCD
-An introductory Jupyter Notebook that provides background for the different calibration steps for the CCD from the raw fits file to the flat fielded (flt) file.  This also shows why there is often negative counts (or flux) values in STIS data.  The six calibration steps shown are initializing the data quality array, large scale bias and overscale subtraction, small scale bias subtraction, cosmic ray correction, dark signal subtraction, and flat field correction.
-### 1D extraction
+### 1D Spectra Extraction (extraction)
 An introductory Jupyter Notebook that shows how to visualize the 1-D extraction. This is useful for cases where a user may want to do a custom extraction or background subtraction.  It shows how to find the important keywords and plot the extraction and background regions used for the extraction to generate x1d data.  The notebook contains an example with a first order spectrum and with echelle data.
+###  Calstis 2D CCD Calibration Steps (calstis)
+An introductory Jupyter Notebook that provides background for the different calibration steps for the CCD from the raw fits file to the flat fielded (flt) file.  This also shows why there is often negative counts (or flux) values in STIS data.  The six calibration steps shown are initializing the data quality array, large scale bias and overscale subtraction, small scale bias subtraction, cosmic ray correction, dark signal subtraction, and flat field correction.
+### Custom CCD Darks (custom_ccd_darks)
+An introductory Jupyter Notebook showing how to create a custom CCD dark reference file by making the baseline dark and then the week dark using the refstis package.
+### Evaluating STIS Target Acquisitions (target_acquisition)
+An introductory Jupyter Notebook that shows how to visualize and obtain information about a target acquisition. It provides examples for a successful acquisition and several typical failure cases.
+### Correcting for Missing Wavecals with Cross-Correlation (cross-correlation)
+A complementary Jupyter Notebook to the Acquisition Notebook, that shows how to find and correct the zero point spectral shift using cross-correlation.
+
 
 Each folder has a HTML file that can be opened in a browser after cloning this repository. The HTML file is identical to the notebook, except they contain output plots and tables.
 
