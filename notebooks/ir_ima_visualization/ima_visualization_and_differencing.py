@@ -12,7 +12,7 @@ def read_wfc3(filename):
     Parameters
     ----------
     filename : str
-        Path to a RAW full-frame IR image fits file
+        Path to a RAW full-frame IR image fits file.
 
     Returns
     -------
