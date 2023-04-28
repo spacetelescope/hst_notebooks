@@ -12,7 +12,7 @@ def read_wfc3(filename):
     Parameters
     ----------
     filename : str
-        Path to a RAW full-frame IR image fits file
+        Path to a RAW full-frame IR image fits file.
 
     Returns
     -------
@@ -113,22 +113,6 @@ def get_median_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
         The median signal of the right side of each read. 
     '''
     
-    #medlvl = []
-    #lhs = []
-    #rhs = [] 
-    
-    #for img in range(cube.shape[2]):
-    #    medlvl.append(np.nanmedian(cube[:,:,img]))
-    #    lhs.append(np.nanmedian(cube[lhs_region['y0']:lhs_region['y1'],
-    #                                                     lhs_region['x0']:lhs_region['x1'],img]))
-    #    rhs.append(np.nanmedian(cube[rhs_region['y0']:rhs_region['y1'],
-    #                                                     rhs_region['x0']:rhs_region['x1'],img]))
-    #    
-    #
-    #    
-    #median_full_frame = np.array(medlvl)
-    #median_lhs = np.array(lhs)
-    #median_rhs = np.array(rhs)
     
     median_full_frame = np.nanmedian(cube, axis = (0,1))
     median_lhs = np.nanmedian(cube[lhs_region['y0']:lhs_region['y1'],
@@ -170,20 +154,6 @@ def get_median_std_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
         The standard deviation of the median signal of the right side of each read. 
     '''
     
-    #lstd = []
-    #ffstd = []
-    #rstd = []
-    
-    #for img in range(cube.shape[2]):
-    #    ffstd.append(np.nanstd(cube[:,:,img]))
-    #    lstd.append(np.nanstd(cube[lhs_region['y0']:lhs_region['y1'],
-    #                                             lhs_region['x0']:lhs_region['x1'],img]))
-    #    rstd.append(np.nanstd(cube[rhs_region['y0']:rhs_region['y1'],
-    #                                             rhs_region['x0']:rhs_region['x1'],img]))
-    #    
-    #standard_dev_fullframe = np.array(ffstd)
-    #standard_dev_lhs = np.array(lstd)
-    #standard_dev_rhs = np.array(rstd)   
     
     standard_dev_fullframe = np.nanstd(cube, axis = (0,1))
     standard_dev_lhs = np.nanstd(cube[lhs_region['y0']:lhs_region['y1'],
