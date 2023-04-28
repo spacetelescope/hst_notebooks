@@ -45,4 +45,4 @@
     <DEST REPO> $ git merge branch-source --allow-unrelated-histories
 ```
 ...and that's it. The result is the the _stuff_to_move_ directory sitting in the top level of \<DEST REPO> retaining it's pre-migration directory structure. The revision history 
-      of all the migrated items has been inserted into \<DEST REPO>'s history.
+      of all the migrated items has been inserted into \<DEST REPO>'s history. Commit/push/merge and you are done.
