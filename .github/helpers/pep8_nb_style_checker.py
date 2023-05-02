@@ -84,6 +84,7 @@ with open(nb_file) as nf:
                 for ln in cl['source']:
                     # comment out lines with IPython magic commands
                     line = ln if ln[0] != '%' else '# ' + ln
+                    line = ln if ln[0] != '!' else '# ' + ln
 
                     # insert noqa comment if needed (with care for newline char)
                     if (noqa_comment and not line.startswith('#')
