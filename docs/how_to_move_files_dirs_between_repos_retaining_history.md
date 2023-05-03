@@ -35,7 +35,7 @@
 
 6: Remote add and fetch the source repository
 ```
-  <DEST REPO> $ git remote add repo-source ../STIS-Notebooks
+  <DEST REPO> $ git remote add repo-source ../<SOURCE REPO>
   <DEST REPO> $ git fetch repo-source
 ```
 
