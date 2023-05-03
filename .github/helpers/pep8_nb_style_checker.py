@@ -16,6 +16,43 @@ import sys
 from collections import defaultdict
 from datetime import datetime as dt
 
+
+def remove_temp_files(code_file, warn_file):
+    """Removes temp files created to perform pep8 style check
+
+    Parameters
+    ----------
+    code_file : str
+        name of the temp file containing the code to be pep8 checked
+
+    warn_file : str
+        name of the temp file containing the resulting pep8 warnings
+
+    Returns
+    -------
+    Nothing!
+    """
+    if os.path.exists(code_file):
+        os.remove(code_file)
+    if os.path.exists(warn_file):
+        os.remove(warn_file)
+
+def check_cell_content(source):
+    """Verify that a cell contains any content besides whitespace or newlines
+
+    Parameters
+    ----------
+    source : str
+        Notebook code cell content to check
+
+    Returns : Bool
+        Boolean 'True' if a cell contains any content besides whitespace or newlines
+    """
+    for line in source:
+        if re.search('^(?!(?:\\n)$)', line):
+            # a "negative lookahead" for any characters in "non-capturing group"
+            return True
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--file', type=str,
                     help='The notebook file to be checked')
@@ -52,13 +89,6 @@ buffer_lines = 3  # sections must end with >2 blank lines to avoid E302
 code_file = pathlib.Path(f"{nb_file.stem}_scripted.py")
 warn_file = pathlib.Path(f"{nb_file.stem}_pep8.txt")
 nb_magic_file = pathlib.Path(".github/helpers/nb_flake8_magic.json")
-
-def check_cell_content(source):
-    """Verify that a cell contains any content besides whitespace or newlines"""
-    for line in source:
-        if re.search('^(?!(?:\\n)$)', line):
-            # a "negative lookahead" for any characters in "non-capturing group"
-            return True
 
 # save code cell contents to a script divided into blocks with the separator
 code_cells = []
@@ -110,6 +140,7 @@ with open(warn_file) as wf:
 # if there are none, QUIT while we're ahead
 if not warns:
     print(f"{nb_file} is clean!")
+    remove_temp_files(code_file, warn_file)
     sys.exit()
 
 # else, read in the script and find the lines that function as cell borders
@@ -204,15 +235,8 @@ if args.update_notebook:
         file.write("\n") # end with new line since json.dump doesn't
 
     # remove temp files created earlier in run
-    if os.path.exists(code_file):
-        os.remove(code_file)
-    if os.path.exists(warn_file):
-        os.remove(warn_file)
+    remove_temp_files(code_file, warn_file)
 else:
     # remove temp files created earlier in run
-    if os.path.exists(code_file):
-        os.remove(code_file)
-    if os.path.exists(warn_file):
-        os.remove(warn_file)
+    remove_temp_files(code_file, warn_file)
     sys.exit(99) #exit with code 99 to tell the workflow to throw an error
-
