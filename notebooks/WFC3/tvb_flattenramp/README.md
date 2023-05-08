@@ -1,0 +1,3 @@
+This Jupyter Notebook demonstrates different ways to identify IR exposures with time-variable Helium (1.083 micron) line emission background, and how to correct for it using the "flatten-ramp" technique described in [WFC3 ISR 2016-16](https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2016/WFC3-2016-16.pdf). This method can be used to correct images affected by a sky background that does not vary across the field of view.
+
+Questions or concerns should be sent to the [HST Help Desk](https://stsci.service-now.com/hst).
