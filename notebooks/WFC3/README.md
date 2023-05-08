@@ -23,6 +23,7 @@ repository contains the complementary notebooks mentioned in the
 - Processing WFC3/UVIS Data with `calwf3` Using the v1.0 CTE-Correction
 - Exception Report Checklist - WFC3
 - WFC3/UVIS Pixel Area Map Corrections for Subarrays
+- Correcting for Helium Line Emission Background in WFC3/IR Exposures using the "Flatten-Ramp" Technique
 
 Each folder in `notebooks` has an individual `README.md` with further 
 details and a HTML file that can be opened in a browser after cloning this 
