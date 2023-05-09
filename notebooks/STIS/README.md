@@ -26,7 +26,7 @@ A complementary Jupyter Notebook to the Acquisition Notebook, that shows how to 
 Each folder has a HTML file that can be opened in a browser after cloning this repository. The HTML file is identical to the notebook, except they contain output plots and tables.
 
 ## Basic Requirements
-The following sections are based on and have been adapted from the [COS-Notebooks README](https://github.com/spacetelescope/notebooks/blob/master/notebooks/COS/README.md).
+The following sections are based on and have been adapted from the [COS-Notebooks README](https://github.com/spacetelescope/hst_notebooks/blob/main/notebooks/COS/README.md).
 
 ### Computer requirements
 These Notebooks have been tested primarily on `Unix` and `Unix`-`like` systems, (i.e. **MacOS**). As such **Users may encounter issues when run on Windows computers**. If you are unable to run a particular Notebook from a Windows device, please reach out to us (see [Getting Help](#ch4)) and we will work to fix the problem. The first solution to try if the Notebooks are failing because of a Windows incompatibility is using the [Windows Sub-System for Linux](https://docs.microsoft.com/en-us/windows/wsl/) (WSL), which will allow you to run a Linux computer environment from your Windows device.
@@ -37,7 +37,7 @@ These Notebooks have been tested primarily on `Unix` and `Unix`-`like` systems, 
 Users can run most of the Notebooks with only the `ipynb` file downloaded, or clone the repository. To clone (which means download, in the language of `git`,) the repository with all the STIS-Notebooks, run the following command from a terminal in the directory where you would like to download the Notebook repository. 
 
 ```bash
-git clone https://github.com/spacetelescope/STIS-Notebooks.git
+git clone https://github.com/spacetelescope/hst_notebooks.git
 ```
 
 ### Using Jupyter Notebooks
@@ -73,7 +73,7 @@ From a new terminal (*make sure that the current working directory encompasses y
 
 Either of the previous commands should open up a new window in your default web browser (with an address like `localhost:8888/`). From there you can navigate to a Notebook and open it.
 
-If you don't have experience installing packages, you should begin with the **COS introductory Notebook** [Setup.ipynb](https://github.com/spacetelescope/notebooks/blob/master/notebooks/COS/Setup/Setup.ipynb) on setting up an environment for running astronomical Python code. If you do not yet have Jupyter up-and-running, you can read the pre-rendered (`.html`) version [here](https://spacetelescope.github.io/COS-Notebooks/Setup.html).
+If you don't have experience installing packages, you should begin with the **COS introductory Notebook** [Setup.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/Setup/Setup.ipynb) on setting up an environment for running astronomical Python code. If you do not yet have Jupyter up-and-running, you can read the pre-rendered (`.html`) version [here](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/Setup/Setup.html).
 
 <a id=ch3></a>
 ## Notes for those new to `Python`/`Jupyter`/Coding:
