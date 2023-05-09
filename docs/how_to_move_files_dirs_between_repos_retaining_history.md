@@ -44,5 +44,10 @@
     <DEST REPO> $ git branch branch-source remotes/repo-source/main
     <DEST REPO> $ git merge branch-source --allow-unrelated-histories
 ```
+
+8: Push the _filter-target_ branch to remote _origin_
+```
+    git push -u origin filter-target
+```
 ...and that's it. The result is the the _stuff_to_move_ directory sitting in the top level of \<DEST REPO> retaining it's pre-migration directory structure. The revision history 
-      of all the migrated items has been inserted into \<DEST REPO>'s history. Commit/push/merge and you are done.
+      of all the migrated items has been inserted into \<DEST REPO>'s history. The _filter-target_ branch is stored in remote _origin_ ready for more changes.
