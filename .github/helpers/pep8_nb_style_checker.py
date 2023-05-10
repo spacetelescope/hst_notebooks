@@ -164,7 +164,8 @@ stderr_shared = {'name': 'stderr', 'output_type': 'stream'}
 nu_output_dict = defaultdict(lambda: defaultdict(list))
 
 # match the warnings' line numbers to the notebook's cells with regex and math
-for script_line in warns:
+n_warns = len(warns)
+for warn_num, script_line in enumerate(warns, 1):
     # get this warning's line number in the script
     wrn = script_line[re.match(code_file.name, script_line).end():]
     script_line_num = int(re.search(r'(?<=:)\d+(?=:)', wrn).group())
@@ -190,10 +191,11 @@ for script_line in warns:
     if not args.update_notebook:
         # Print PEP 8 issues
         col_num = int(wrn.split(":")[2])
-        out_msg = "PE8 error found in code cell {} (Notebook cell {})".format(code_cell_num+1, all_cell_num+1)
+        print("PEP8 error {} of {}".format(warn_num, n_warns))
+        out_msg = "PEP8 error found in code cell {} (Notebook cell {})".format(code_cell_num+1, all_cell_num+1)
         out_msg = "{} {}".format(out_msg, "at code cell line {}, column {}".format(line_in_cell, col_num))
         print(out_msg)
-        print(script[(int(wrn.split(":")[1])) - 1].strip()) # print line of code with PEP8 error
+        print(script[(int(wrn.split(":")[1])) - 1].replace("\n", "")) # print line of code with PEP8 error
         print(" "*(col_num - 1)+"\u25B2") # point to error
         print(wrn.split(":")[3].strip()+"\n")
 
