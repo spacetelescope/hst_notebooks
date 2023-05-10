@@ -88,7 +88,7 @@ buffer_lines = 3  # sections must end with >2 blank lines to avoid E302
 # save relevant file paths
 code_file = pathlib.Path(f"{nb_file.stem}_scripted.py")
 warn_file = pathlib.Path(f"{nb_file.stem}_pep8.txt")
-nb_magic_file = pathlib.Path(".github/helpers/nb_flake8_magic.json")
+nb_magic_file = pathlib.Path(os.path.dirname(__file__) + "/nb_flake8_magic.json")
 
 # save code cell contents to a script divided into blocks with the separator
 code_cells = []
