@@ -22,9 +22,9 @@ def read_wfc3(filename):
         where NSAMP is the number of samples taken.
   
     integ_time : array-like
-        Integration times associated with the datacube in ascending order.
-        
+        Integration times associated with the datacube in ascending order.    
     '''
+    
     with fits.open(filename) as f:
         hdr = f[0].header
         NSAMP = hdr['NSAMP']
@@ -65,7 +65,6 @@ def compute_diff_imas(cube, integ_time, diff_method):
     diff : array-like
         1024x1024x(NSAMP-1) datacube of the differebce between IR IMA reads in ascending time order, 
         where NSAMP is the number of samples taken.
-        
     '''
     
     if diff_method == 'instantaneous':
@@ -190,7 +189,6 @@ def plot_ramp(ima, integ_time, median_diff_fullframe, median_diff_lhs, median_di
 
     median_diff_rhs: array-like
         The median difference in signal between the right side of each read.
-
     '''
     
     plt.plot(integ_time[2:], median_diff_fullframe[1:], 's', markersize = 25, label = 'Full Frame',  color = 'black')
@@ -277,7 +275,7 @@ def panel_plot(cube, integ_time, median_diff_full_frame, median_diff_lhs, median
             vmin,vmax = zscale(diff_i)
             im = ax.imshow(np.abs(diff_i), cmap='Greys_r', origin='lower',
                            vmin = vmin, vmax = vmax)
-            ax.set_title(f'$\mu = ${np.nanmedian(diff[i]):.2f}±{standard_dev_fullframe[i]:.2f} e-/s', fontsize = 30)
+            ax.set_title(f'$\mu = ${np.nanmedian(diff_i):.2f}±{standard_dev_fullframe[i]:.2f} e-/s', fontsize = 30)
             
             text = ax.text(50, 500, f'{median_diff_lhs[i]:.3f}\n±\n{standard_dev_lhs[i]:.3f}', color='Orange', fontsize=30)
             text.set_path_effects([path_effects.Stroke(linewidth=15, foreground='black'),
@@ -321,10 +319,9 @@ def plot_ima_subplots(ima_filename, vmin, vmax):
         Minimum magnitude for scaling the data range that the colormap covers.
     
     vmax: float
-        Maximum magnitude for scaling the data range that the colormap covers.     
-        
+        Maximum magnitude for scaling the data range that the colormap covers.      
     '''
-    ima_filename
+    
     path, filename = os.path.split(ima_filename)
 
     cube, integ_time = read_wfc3(ima_filename)
@@ -367,8 +364,13 @@ def plot_ramp_subplots(ima_files, difference_method, ylims, exclude_sources, lhs
         upper y-axis limit.
         
     exclude_sources: bool
-        Set to True to exclude any sources (such as stars) and isolate the background counts.
+        Set to True to exclude any sources (such as stars) and isolate the background counts. 
         
+    lhs_region:  dict
+       The four corners (x0, x1, y0, y1) of the left hand region.
+
+    rhs_region : dict
+       The four corners (x0, x1, y0, y1) of the right hand region.
     '''
     
     fig = plt.figure(figsize = (50, 20))
@@ -402,7 +404,7 @@ def plot_ramp_subplots(ima_files, difference_method, ylims, exclude_sources, lhs
         
 def plot_ima_difference_subplots(ima_filename, difference_method, lhs_region, rhs_region):
     '''
-    Wrapper function to build a complex panel plot of the difference between individual IMA reads.
+    Build a complex panel plot of the difference between individual IMA reads.
     The median difference $\mu$ in the count rate over the entire image is printed above each panel. Below each panel, 
     The IMSET difference, along with the time interval between the two IMSETs, is printed below.
     The statistics in orange (on the left and right side of each panel) give the median rate and 
@@ -418,10 +420,15 @@ def plot_ima_difference_subplots(ima_filename, difference_method, lhs_region, rh
     difference_method: str
        The method of finding the difference between reads. 
        Either "instantaneous" or "cumulative".    
-        
+       
+    lhs_region:  dict
+       The four corners (x0, x1, y0, y1) of the left hand region.
+
+    rhs_region : dict
+       The four corners (x0, x1, y0, y1) of the right hand region.
+       
     '''
 
-    ima_filename
     path,filename = os.path.split(ima_filename)
 
     cube, integ_time = read_wfc3(ima_filename)
