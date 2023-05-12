@@ -22,9 +22,9 @@ def read_wfc3(filename):
         where NSAMP is the number of samples taken.
   
     integ_time : array-like
-        Integration times associated with the datacube in ascending order.
-        
+        Integration times associated with the datacube in ascending order.    
     '''
+    
     with fits.open(filename) as f:
         hdr = f[0].header
         NSAMP = hdr['NSAMP']
@@ -65,7 +65,6 @@ def compute_diff_imas(cube, integ_time, diff_method):
     diff : array-like
         1024x1024x(NSAMP-1) datacube of the differebce between IR IMA reads in ascending time order, 
         where NSAMP is the number of samples taken.
-        
     '''
     
     if diff_method == 'instantaneous':
@@ -116,7 +115,7 @@ def get_median_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
     '''
     
     
-    median_full_frame = np.nanmedian(cube, axis = (0,1))
+    median_full_frame = np.nanmedian(cube[5:-5,5:-5,:], axis = (0,1))
     median_lhs = np.nanmedian(cube[lhs_region['y0']:lhs_region['y1'],
                                       lhs_region['x0']:lhs_region['x1'],:], axis = (0,1))
     median_rhs = np.nanmedian(cube[rhs_region['y0']:rhs_region['y1'],
@@ -157,7 +156,7 @@ def get_std_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
     '''
     
     
-    standard_dev_fullframe = np.nanstd(cube, axis = (0,1))
+    standard_dev_fullframe = np.nanstd(cube[5:-5,5:-5,:], axis = (0,1))
     standard_dev_lhs = np.nanstd(cube[lhs_region['y0']:lhs_region['y1'],
                                       lhs_region['x0']:lhs_region['x1'],:], axis = (0,1))
     standard_dev_rhs = np.nanstd(cube[rhs_region['y0']:rhs_region['y1'],
@@ -190,7 +189,6 @@ def plot_ramp(ima, integ_time, median_diff_fullframe, median_diff_lhs, median_di
 
     median_diff_rhs: array-like
         The median difference in signal between the right side of each read.
-
     '''
     
     plt.plot(integ_time[2:], median_diff_fullframe[1:], 's', markersize = 25, label = 'Full Frame',  color = 'black')
@@ -268,17 +266,16 @@ def panel_plot(cube, integ_time, median_diff_full_frame, median_diff_lhs, median
     
     diff = compute_diff_imas(cube, integ_time, diff_method = diff_method)
  
-    vmin,vmax = zscale(diff[:,:,3])
     
     for i, ax in enumerate(axarr.reshape(-1)):
         if (i < cube.shape[-1]-2):
             i=i+1
             
             diff_i = diff[:,:,i]
-            
+            vmin,vmax = zscale(diff_i)
             im = ax.imshow(np.abs(diff_i), cmap='Greys_r', origin='lower',
                            vmin = vmin, vmax = vmax)
-            ax.set_title(f'$\mu = ${np.nanmedian(diff[i]):.2f}±{standard_dev_fullframe[i]:.2f} e-/s', fontsize = 30)
+            ax.set_title(f'$\mu = ${np.nanmedian(diff_i):.2f}±{standard_dev_fullframe[i]:.2f} e-/s', fontsize = 30)
             
             text = ax.text(50, 500, f'{median_diff_lhs[i]:.3f}\n±\n{standard_dev_lhs[i]:.3f}', color='Orange', fontsize=30)
             text.set_path_effects([path_effects.Stroke(linewidth=15, foreground='black'),
@@ -307,4 +304,3 @@ def panel_plot(cube, integ_time, median_diff_full_frame, median_diff_lhs, median
             ax.set_axis_off()
     
     return fig
-        
