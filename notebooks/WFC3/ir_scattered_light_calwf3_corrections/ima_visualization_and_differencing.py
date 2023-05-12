@@ -105,7 +105,7 @@ def get_median_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
     Returns
     -------
     median_full_frame : array of floats
-        The median signal of the full frame of each read.
+        The median signal of the full frame of each read, clipping by 5 pixels along the edge to exclude bad pixels.
         
     median_lhs : array of floats
         The median signal of the left side of each read.
@@ -146,7 +146,7 @@ def get_std_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
     Returns
     -------
     standard_dev_fullframe : array of floats
-        The standard deviation of the signal of the full frame of each read.
+        The standard deviation of the signal of the full frame of each read, clipping by 5 pixels along the edge to exclude bad pixels.
         
     standard_dev_lhs : array of floats
         The standard deviation of the signal of the left side of each read.
