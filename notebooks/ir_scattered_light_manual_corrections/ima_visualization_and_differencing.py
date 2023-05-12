@@ -156,7 +156,7 @@ def get_std_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
     '''
     
     
-    standard_dev_fullframe = np.nanstd(cube[5:-5,5:-5,:5], axis = (0,1))
+    standard_dev_fullframe = np.nanstd(cube[5:-5,5:-5,:], axis = (0,1))
     standard_dev_lhs = np.nanstd(cube[lhs_region['y0']:lhs_region['y1'],
                                       lhs_region['x0']:lhs_region['x1'],:], axis = (0,1))
     standard_dev_rhs = np.nanstd(cube[rhs_region['y0']:rhs_region['y1'],
