@@ -72,6 +72,9 @@ To activate `wfc3_env`, run this line in a terminal window:
 
     conda activate wfc3_env
 
+You can also create and activate `wfc3_env_no_builds`, which is `wfc3_env` 
+but without the build specifications to avoid platform specific conflicts.
+
 Please read the individual `README.md` files in `notebooks` for further 
 installation instructions.
 
