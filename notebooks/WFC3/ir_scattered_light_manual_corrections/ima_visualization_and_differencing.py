@@ -101,11 +101,11 @@ def get_median_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
 
     rhs_region : dict
        The four corners (x0, x1, y0, y1) of the right hand region.
-           
+       
     Returns
     -------
     median_full_frame : array of floats
-        The median signal of the full frame of each read.
+        The median signal of the full frame of each read, clipping by 5 pixels along the edge to exclude bad pixels.
         
     median_lhs : array of floats
         The median signal of the left side of each read.
@@ -113,9 +113,9 @@ def get_median_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
     median_rhs : array of floats
         The median signal of the right side of each read. 
     '''
-    
-    
-    median_full_frame = np.nanmedian(cube, axis = (0,1))
+
+
+    median_full_frame = np.nanmedian(cube[5:-5,5:-5,:], axis = (0,1))
     median_lhs = np.nanmedian(cube[lhs_region['y0']:lhs_region['y1'],
                                       lhs_region['x0']:lhs_region['x1'],:], axis = (0,1))
     median_rhs = np.nanmedian(cube[rhs_region['y0']:rhs_region['y1'],
@@ -143,10 +143,11 @@ def get_std_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
        The four corners (x0, x1, y0, y1) of the right hand region.
 
 
-    Returns
+     Returns
     -------
     standard_dev_fullframe : array of floats
-        The standard deviation of the signal of the full frame of each read.
+        The standard deviation of the signal of the full frame of each read,
+        clipping by 5 pixels along the edge to exclude bad pixels.
         
     standard_dev_lhs : array of floats
         The standard deviation of the signal of the left side of each read.
@@ -154,8 +155,8 @@ def get_std_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
     standard_dev_rhs : array of floats
         The standard deviation of the signal of the right side of each read. 
     '''
-    
-    
+
+
     standard_dev_fullframe = np.nanstd(cube[5:-5,5:-5,:], axis = (0,1))
     standard_dev_lhs = np.nanstd(cube[lhs_region['y0']:lhs_region['y1'],
                                       lhs_region['x0']:lhs_region['x1'],:], axis = (0,1))
