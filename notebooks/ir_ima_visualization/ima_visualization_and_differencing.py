@@ -105,7 +105,7 @@ def get_median_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
     Returns
     -------
     median_full_frame : array of floats
-        The median signal of the full frame of each read.
+        The median signal of the full frame of each read, clipped by 5 pixels around the border to exclude any bad pixel regions.
         
     median_lhs : array of floats
         The median signal of the left side of each read.
@@ -115,7 +115,7 @@ def get_median_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
     '''
     
     
-    median_full_frame = np.nanmedian(cube, axis = (0,1))
+    median_full_frame = np.nanmedian(cube[5:-5,5:-5,:], axis = (0,1))
     median_lhs = np.nanmedian(cube[lhs_region['y0']:lhs_region['y1'],
                                       lhs_region['x0']:lhs_region['x1'],:], axis = (0,1))
     median_rhs = np.nanmedian(cube[rhs_region['y0']:rhs_region['y1'],
@@ -146,7 +146,7 @@ def get_std_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
     Returns
     -------
     standard_dev_fullframe : array of floats
-        The standard deviation of the signal of the full frame of each read.
+        The standard deviation of the signal of the full frame of each read, clipped by 5 pixels around the border to exclude any bad pixel regions.
         
     standard_dev_lhs : array of floats
         The standard deviation of the signal of the left side of each read.
@@ -156,7 +156,7 @@ def get_std_fullframe_lhs_rhs(cube, lhs_region, rhs_region):
     '''
     
     
-    standard_dev_fullframe = np.nanstd(cube, axis = (0,1))
+    standard_dev_fullframe = np.nanstd(cube[5:-5,5:-5,:], axis = (0,1))
     standard_dev_lhs = np.nanstd(cube[lhs_region['y0']:lhs_region['y1'],
                                       lhs_region['x0']:lhs_region['x1'],:], axis = (0,1))
     standard_dev_rhs = np.nanstd(cube[rhs_region['y0']:rhs_region['y1'],
@@ -275,7 +275,7 @@ def panel_plot(cube, integ_time, median_diff_full_frame, median_diff_lhs, median
             vmin,vmax = zscale(diff_i)
             im = ax.imshow(np.abs(diff_i), cmap='Greys_r', origin='lower',
                            vmin = vmin, vmax = vmax)
-            ax.set_title(f'$\mu = ${np.nanmedian(diff_i):.2f}±{standard_dev_fullframe[i]:.2f} e-/s', fontsize = 30)
+            ax.set_title(f'$\mu = ${median_diff_full_frame[i]:.2f}±{standard_dev_fullframe[i]:.2f} e-/s', fontsize = 30)
             
             text = ax.text(50, 500, f'{median_diff_lhs[i]:.3f}\n±\n{standard_dev_lhs[i]:.3f}', color='Orange', fontsize=30)
             text.set_path_effects([path_effects.Stroke(linewidth=15, foreground='black'),
