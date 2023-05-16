@@ -6,8 +6,8 @@ This notebook walks through the following:
 - Correcting a single exposure in which the first few reads are affected by scattered light by subtracting those "bad" reads from the final IMA read.
 - Comparing the original FLT to the reprocessed FLT image.
 
-Please note that the FLT products in this notebook are really 'corrected IMA' files and therefore do not include the 'ramp fitting' step in calwf3. The final images will therefore still contain cosmic rays, and these artifacts may be removed using software such as AstroDrizzle when combining multiple exposures.
+Please note that the FLT products in this notebook are really 'corrected IMA' files and therefore do not include the 'ramp fitting' step in `calwf3`. The final images will therefore still contain cosmic rays, and these artifacts may be removed using software such as AstroDrizzle when combining multiple exposures.
 
 Installation Instructions:
 
-Please refer to the instructions found on the main WFC3 Library github page. No other installations are required.
+Please refer to the instructions found on the main [WFC3 Library github](https://github.com/spacetelescope/WFC3Library) page. No other installations are required.
