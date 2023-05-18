@@ -7,4 +7,4 @@ This tutorial is a walkthrough of the following:
 - Comparing the original FLT to the reprocessed FLT image.
 
 Installation Instructions:
-- Please refer to the instructions found on the main WFC3 Library github page. No other installations are required.
+- Please refer to the instructions found on the main [WFC3 Library GitHub page](https://github.com/spacetelescope/WFC3Library). No other installations are required.
