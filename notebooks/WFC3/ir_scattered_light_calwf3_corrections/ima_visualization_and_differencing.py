@@ -272,7 +272,8 @@ def panel_plot(cube, integ_time, median_diff_full_frame, median_diff_lhs, median
             i=i+1
             
             diff_i = diff[:,:,i]
-            vmin,vmax = zscale(diff_i)
+            vmin = 0
+            vmax = 2
             im = ax.imshow(np.abs(diff_i), cmap='Greys_r', origin='lower',
                            vmin = vmin, vmax = vmax)
             ax.set_title(f'$\mu = ${median_diff_full_frame[i]:.2f}±{standard_dev_fullframe[i]:.2f} e-/s', fontsize = 30)
