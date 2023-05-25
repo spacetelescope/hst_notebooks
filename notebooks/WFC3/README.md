@@ -24,6 +24,8 @@ WFC3/IR Time Variable Background (TVB):
 - WFC3/IR IMA Visualization Tools with an Example of Time Variable Background
 - Manual Recalibration of Images using `calwf3`: Turning off the WFC3/IR Linear Ramp Fit
 - Correcting for Helium Line Emission Background in WFC3/IR Exposures using the "Flatten-Ramp" Technique
+- Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads
+- Correcting for Scattered Light in WFC3/IR Exposures: Using `calwf3` to Mask Bad Reads
 
 Photometry:
 - WFC3/UVIS Filter Transformations with `stsynphot`
