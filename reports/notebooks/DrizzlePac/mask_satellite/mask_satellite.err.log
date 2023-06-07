@@ -1,36 +1,46 @@
 Traceback (most recent call last):
   File "/usr/share/miniconda/lib/python3.10/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
     executenb(
-  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/client.py", line 1204, in execute
+  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/client.py", line 1305, in execute
     return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
-  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/util.py", line 84, in wrapped
-    return just_run(coro(*args, **kwargs))
-  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/util.py", line 62, in just_run
-    return loop.run_until_complete(coro)
+  File "/usr/share/miniconda/lib/python3.10/site-packages/jupyter_core/utils/__init__.py", line 166, in wrapped
+    return loop.run_until_complete(inner)
   File "/usr/share/miniconda/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
     return future.result()
-  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/client.py", line 663, in async_execute
+  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/client.py", line 705, in async_execute
     await self.async_execute_cell(
-  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/client.py", line 965, in async_execute_cell
+  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/client.py", line 1058, in async_execute_cell
     await self._check_raise_for_error(cell, cell_index, exec_reply)
-  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+  File "/usr/share/miniconda/lib/python3.10/site-packages/nbclient/client.py", line 914, in _check_raise_for_error
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-trail_coords = results[('jc8mb7tcq_flc.fits', 4)]
-trail_segment = trail_coords[0]
-trail_segment
-mask = make_mask('jc8mb7tcq_flc.fits', 4, trail_segment, plot=True, verbose=True)
-update_dq('jc8mb7tcq_flc.fits', 6, mask, verbose=True)
+import os
+import shutil
+
+from astropy.io import fits
+from astroquery.mast import Observations
+from astropy.visualization import astropy_mpl_style,LogStretch,ImageNormalize,LinearStretch
+from IPython.display import Image
+import matplotlib.pyplot as plt
+import pyregion
+
+import acstools
+from acstools.satdet import detsat, make_mask, update_dq
+from drizzlepac.astrodrizzle import AstroDrizzle as adriz
+
+%matplotlib inline
 ------------------
 
-[0;31m---------------------------------------------------------------------------[0m
-[0;31mKeyError[0m                                  Traceback (most recent call last)
-Cell [0;32mIn[7], line 1[0m
-[0;32m----> 1[0m trail_coords [38;5;241m=[39m [43mresults[49m[43m[[49m[43m([49m[38;5;124;43m'[39;49m[38;5;124;43mjc8mb7tcq_flc.fits[39;49m[38;5;124;43m'[39;49m[43m,[49m[43m [49m[38;5;241;43m4[39;49m[43m)[49m[43m][49m
-[1;32m      2[0m trail_segment [38;5;241m=[39m trail_coords[[38;5;241m0[39m]
-[1;32m      3[0m trail_segment
 
-[0;31mKeyError[0m: ('jc8mb7tcq_flc.fits', 4)
-KeyError: ('jc8mb7tcq_flc.fits', 4)
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mImportError[0m                               Traceback (most recent call last)
+Cell [0;32mIn[1], line 12[0m
+[1;32m      9[0m [38;5;28;01mimport[39;00m [38;5;21;01mpyregion[39;00m
+[1;32m     11[0m [38;5;28;01mimport[39;00m [38;5;21;01macstools[39;00m
+[0;32m---> 12[0m [38;5;28;01mfrom[39;00m [38;5;21;01macstools[39;00m[38;5;21;01m.[39;00m[38;5;21;01msatdet[39;00m [38;5;28;01mimport[39;00m detsat, make_mask, update_dq
+[1;32m     13[0m [38;5;28;01mfrom[39;00m [38;5;21;01mdrizzlepac[39;00m[38;5;21;01m.[39;00m[38;5;21;01mastrodrizzle[39;00m [38;5;28;01mimport[39;00m AstroDrizzle [38;5;28;01mas[39;00m adriz
+[1;32m     15[0m get_ipython()[38;5;241m.[39mrun_line_magic([38;5;124m'[39m[38;5;124mmatplotlib[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124minline[39m[38;5;124m'[39m)
+
+[0;31mImportError[0m: cannot import name 'update_dq' from 'acstools.satdet' (/usr/share/miniconda/lib/python3.10/site-packages/acstools/satdet.py)
 
