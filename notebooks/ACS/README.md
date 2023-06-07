@@ -12,11 +12,15 @@ If you have questions about HST data analysis, calibration software, instrument 
 
 # Getting Started
 
-To download the notebooks in this repository, simply open a terminal, go to the directory where you would like the notebooks to be, and type
-```
-git clone https://github.com/spacetelescope/acs-notebook.git
-```
-which will create a new acs-notebook/ directory containing the contents of this repository.
+[//]: # (To download the notebooks in this repository, simply open a terminal, go to the directory where you would like the notebooks to be, and type)
+
+[//]: # (```)
+
+[//]: # (git clone https://github.com/spacetelescope/acs-notebook.git)
+
+[//]: # (```)
+
+[//]: # (which will create a new acs-notebook/ directory containing the contents of this repository.)
  
 ___Warning:___ Before running these examples, you must install or update to the latest version of [stenv](https://stenv.readthedocs.io/en/latest/).
 
