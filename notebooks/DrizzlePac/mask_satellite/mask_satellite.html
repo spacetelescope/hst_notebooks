@@ -162,6 +162,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
 
 
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
 <ul class="nav bd-sidenav">
@@ -203,12 +204,8 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 
+
 <li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
-
-
-
-
-
 <li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
 
 
@@ -249,6 +246,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Satellite Trail Masking Techniques</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Using updated astrometry solutions</a></li>
+
 
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
@@ -530,13 +528,13 @@ document.write(`
 
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
 <span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
-<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">astropy_mpl_style</span><span class="p">,</span><span class="n">LogStretch</span><span class="p">,</span><span class="n">ImageNormalize</span><span class="p">,</span><span class="n">LinearStretch</span>
+<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">astropy_mpl_style</span><span class="p">,</span> <span class="n">ImageNormalize</span><span class="p">,</span> <span class="n">LinearStretch</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pyregion</span>
 
-<span class="kn">import</span> <span class="nn">acstools</span>
-<span class="kn">from</span> <span class="nn">acstools.satdet</span> <span class="kn">import</span> <span class="n">detsat</span><span class="p">,</span> <span class="n">make_mask</span><span class="p">,</span> <span class="n">update_dq</span>
+<span class="kn">from</span> <span class="nn">acstools.satdet</span> <span class="kn">import</span> <span class="n">detsat</span><span class="p">,</span> <span class="n">make_mask</span>
+<span class="kn">from</span> <span class="nn">acstools.utils_findsat_mrt</span> <span class="kn">import</span> <span class="n">update_dq</span>
 <span class="kn">from</span> <span class="nn">drizzlepac.astrodrizzle</span> <span class="kn">import</span> <span class="n">AstroDrizzle</span> <span class="k">as</span> <span class="n">adriz</span>
 
 <span class="o">%</span><span class="k">matplotlib</span> inline
@@ -544,16 +542,15 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ImportError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">12</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="kn">import</span> <span class="nn">pyregion</span>
-<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="kn">import</span> <span class="nn">acstools</span>
-<span class="ne">---&gt; </span><span class="mi">12</span> <span class="kn">from</span> <span class="nn">acstools.satdet</span> <span class="kn">import</span> <span class="n">detsat</span><span class="p">,</span> <span class="n">make_mask</span><span class="p">,</span> <span class="n">update_dq</span>
-<span class="g g-Whitespace">     </span><span class="mi">13</span> <span class="kn">from</span> <span class="nn">drizzlepac.astrodrizzle</span> <span class="kn">import</span> <span class="n">AstroDrizzle</span> <span class="k">as</span> <span class="n">adriz</span>
-<span class="g g-Whitespace">     </span><span class="mi">15</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="s1">&#39;inline&#39;</span><span class="p">)</span>
-
-<span class="ne">ImportError</span>: cannot import name &#39;update_dq&#39; from &#39;acstools.satdet&#39; (/usr/share/miniconda/lib/python3.10/site-packages/acstools/satdet.py)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following task in the stsci.skypac package can be run with TEAL:
+                                    skymatch                                    
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following tasks in the drizzlepac package can be run with TEAL:
+    astrodrizzle       config_testbed      imagefindpars           mapreg       
+       photeq            pixreplace           pixtopix            pixtosky      
+  refimagefindpars       resetbits          runastrodriz          skytopix      
+     tweakback            tweakreg           updatenpol
 </pre></div>
 </div>
 </div>
@@ -565,12 +562,186 @@ document.write(`
 <p>There are four dithered exposures in the association to be downloaded.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Searching for the observsation</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Searching for the observsation</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="s1">&#39;JC8MB7020&#39;</span><span class="p">,</span> <span class="n">obstype</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
 
-<span class="c1">#Downloading previews and FLC files</span>
+<span class="c1"># Downloading previews and FLC files</span>
 <span class="n">jpg_download</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;obsid&#39;</span><span class="p">],</span> <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;jpg&#39;</span><span class="p">])</span>
 <span class="n">flc_download</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;obsid&#39;</span><span class="p">],</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;FLC&#39;</span><span class="p">],</span> <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:py.warnings:/usr/share/miniconda/lib/python3.10/site-packages/astroquery/mast/discovery_portal.py:410: InputWarning: Filter obstype does not exist. This filter will be skipped.
+  warnings.warn(&quot;Filter {} does not exist. This filter will be skipped.&quot;.format(colname), InputWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_13498_b7_acs_wfc_f814w_jc8mb7_drc.jpg to ./mastDownload/HST/hst_13498_b7_acs_wfc_f814w_jc8mb7/hst_13498_b7_acs_wfc_f814w_jc8mb7_drc.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_13498_b7_acs_wfc_f814w_jc8mb7sq_drc.jpg to ./mastDownload/HST/hst_13498_b7_acs_wfc_f814w_jc8mb7sq/hst_13498_b7_acs_wfc_f814w_jc8mb7sq_drc.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_13498_b7_acs_wfc_f814w_jc8mb7sx_drc.jpg to ./mastDownload/HST/hst_13498_b7_acs_wfc_f814w_jc8mb7sx/hst_13498_b7_acs_wfc_f814w_jc8mb7sx_drc.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_13498_b7_acs_wfc_f814w_jc8mb7t5_drc.jpg to ./mastDownload/HST/hst_13498_b7_acs_wfc_f814w_jc8mb7t5/hst_13498_b7_acs_wfc_f814w_jc8mb7t5_drc.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_13498_b7_acs_wfc_f814w_jc8mb7tc_drc.jpg to ./mastDownload/HST/hst_13498_b7_acs_wfc_f814w_jc8mb7tc/hst_13498_b7_acs_wfc_f814w_jc8mb7tc_drc.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_13498_b7_acs_wfc_total_jc8mb7_drc.jpg to ./mastDownload/HST/hst_13498_b7_acs_wfc_total_jc8mb7/hst_13498_b7_acs_wfc_total_jc8mb7_drc.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7020_drc.jpg to ./mastDownload/HST/jc8mb7020/jc8mb7020_drc.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7020_drz.jpg to ./mastDownload/HST/jc8mb7020/jc8mb7020_drz.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7sqq_raw.jpg to ./mastDownload/HST/jc8mb7sqq/jc8mb7sqq_raw.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7sqq_flc.jpg to ./mastDownload/HST/jc8mb7sqq/jc8mb7sqq_flc.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7sqq_flt.jpg to ./mastDownload/HST/jc8mb7sqq/jc8mb7sqq_flt.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7sxq_raw.jpg to ./mastDownload/HST/jc8mb7sxq/jc8mb7sxq_raw.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7sxq_flc.jpg to ./mastDownload/HST/jc8mb7sxq/jc8mb7sxq_flc.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7sxq_flt.jpg to ./mastDownload/HST/jc8mb7sxq/jc8mb7sxq_flt.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7t5q_raw.jpg to ./mastDownload/HST/jc8mb7t5q/jc8mb7t5q_raw.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7t5q_flc.jpg to ./mastDownload/HST/jc8mb7t5q/jc8mb7t5q_flc.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7t5q_flt.jpg to ./mastDownload/HST/jc8mb7t5q/jc8mb7t5q_flt.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7tcq_raw.jpg to ./mastDownload/HST/jc8mb7tcq/jc8mb7tcq_raw.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7tcq_flc.jpg to ./mastDownload/HST/jc8mb7tcq/jc8mb7tcq_flc.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7tcq_flt.jpg to ./mastDownload/HST/jc8mb7tcq/jc8mb7tcq_flt.jpg ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_13498_b7_acs_wfc_f814w_jc8mb7sq_flc.fits to ./mastDownload/HST/hst_13498_b7_acs_wfc_f814w_jc8mb7sq/hst_13498_b7_acs_wfc_f814w_jc8mb7sq_flc.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_13498_b7_acs_wfc_f814w_jc8mb7sx_flc.fits to ./mastDownload/HST/hst_13498_b7_acs_wfc_f814w_jc8mb7sx/hst_13498_b7_acs_wfc_f814w_jc8mb7sx_flc.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_13498_b7_acs_wfc_f814w_jc8mb7t5_flc.fits to ./mastDownload/HST/hst_13498_b7_acs_wfc_f814w_jc8mb7t5/hst_13498_b7_acs_wfc_f814w_jc8mb7t5_flc.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_13498_b7_acs_wfc_f814w_jc8mb7tc_flc.fits to ./mastDownload/HST/hst_13498_b7_acs_wfc_f814w_jc8mb7tc/hst_13498_b7_acs_wfc_f814w_jc8mb7tc_flc.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7sqq_flc.fits to ./mastDownload/HST/jc8mb7sqq/jc8mb7sqq_flc.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7sxq_flc.fits to ./mastDownload/HST/jc8mb7sxq/jc8mb7sxq_flc.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7t5q_flc.fits to ./mastDownload/HST/jc8mb7t5q/jc8mb7t5q_flc.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8mb7tcq_flc.fits to ./mastDownload/HST/jc8mb7tcq/jc8mb7tcq_flc.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
 </div>
@@ -578,14 +749,18 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cleaning up directories after downloading from MAST</span>
-<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">jpg_download</span><span class="p">[</span><span class="s1">&#39;Local Path&#39;</span><span class="p">]:</span>
-    <span class="k">if</span> <span class="s1">&#39;drc&#39;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;mastDownload&#39;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">jpg_download</span><span class="p">[</span><span class="s1">&#39;Local Path&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="s1">&#39;drc&#39;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">flc_download</span><span class="p">[</span><span class="s1">&#39;Local Path&#39;</span><span class="p">]:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
-        
-<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">flc_download</span><span class="p">[</span><span class="s1">&#39;Local Path&#39;</span><span class="p">]:</span>
-       <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
-        
-<span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;mastDownload&#39;</span><span class="p">)</span>
+
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;mastDownload&#39;</span><span class="p">)</span>
+
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">pass</span>
 </pre></div>
 </div>
 </div>
@@ -593,9 +768,12 @@ document.write(`
 <p>The image below shows the combined drizzled image from this association. The satellite trail can be seen going across the image from left to right, just above the center of the image.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;jc8mb7020_drc.jpg&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;jc8mb7020_drc.jpg&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/e1c1755bc1bbace67779d143b7537e12c012952df5fa8acddc74a1cdfcf38fb4.jpg" src="../../../_images/e1c1755bc1bbace67779d143b7537e12c012952df5fa8acddc74a1cdfcf38fb4.jpg" />
 </div>
 </div>
 <p>The bright satellite trail that caused this came from the image <em>jc8mb7cq_flc.fits</em>. The figure below shows the top chip which is referred to as SCI,2 (or extension 4).</p>
@@ -610,6 +788,12 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x7f6064403df0&gt;
+</pre></div>
+</div>
+<img alt="../../../_images/def9a362ec775eb7cd52ebd46fc57f457ce355cd9bac95601a98d6a8f6920ee0.png" src="../../../_images/def9a362ec775eb7cd52ebd46fc57f457ce355cd9bac95601a98d6a8f6920ee0.png" />
 </div>
 </div>
 </section>
@@ -638,6 +822,18 @@ document.write(`
 <span class="n">trail_segment</span>
 <span class="n">mask</span> <span class="o">=</span> <span class="n">make_mask</span><span class="p">(</span><span class="s1">&#39;jc8mb7tcq_flc.fits&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">trail_segment</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">update_dq</span><span class="p">(</span><span class="s1">&#39;jc8mb7tcq_flc.fits&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyError</span><span class="g g-Whitespace">                                  </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">trail_coords</span> <span class="o">=</span> <span class="n">results</span><span class="p">[(</span><span class="s1">&#39;jc8mb7tcq_flc.fits&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">trail_segment</span> <span class="o">=</span> <span class="n">trail_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">trail_segment</span>
+
+<span class="ne">KeyError</span>: (&#39;jc8mb7tcq_flc.fits&#39;, 4)
 </pre></div>
 </div>
 </div>
@@ -704,7 +900,7 @@ document.write(`
 <span class="c1"># Making mask out of region file and masking DQ array</span>
 <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;jc8mb7t5q_flc.fits&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
 
-    <span class="n">dq</span>  <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">dq</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">reg_file</span><span class="o">.</span><span class="n">get_mask</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">dq</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="n">dq</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">|=</span> <span class="mi">16384</span>      
         
@@ -752,6 +948,7 @@ document.write(`
 <h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Author: R. Avila, STScI ACS Team  
 Updated: December 14, 2018
+Updated: June 12, 2023 by A. O&#39;Connor, STScI WFC3 Team 
 </pre></div>
 </div>
 </section>
