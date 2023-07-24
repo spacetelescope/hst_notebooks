@@ -32,4 +32,3 @@ def triple_pam_plot(flt_file, pam_file, figtitle):
     ax3.set_title('Raw x Pixel Area Map')
 
     plt.subplots_adjust(wspace=0.05)
-    return
