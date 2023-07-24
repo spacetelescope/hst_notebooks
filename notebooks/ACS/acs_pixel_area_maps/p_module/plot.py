@@ -9,7 +9,6 @@ def ds9_imitate(ax,image):
                           stretch=LinearStretch())
 
     ax.imshow(image, cmap='bone', norm=norm, origin = 'lower')
-    return
 
 def triple_pam_plot(flt_file, pam_file, figtitle):
     fl_img = fits.getdata(flt_file, ext=1)
