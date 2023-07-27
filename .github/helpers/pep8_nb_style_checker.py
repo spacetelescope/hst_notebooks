@@ -1,6 +1,7 @@
 """
 This script uses flake8 to perform a PEP8 style check on the python code embedded in a jupyter notebook.
 Based on jdat_notebooks/notebook-pep8-check.yml.
+REQUIRES file .github/helpers/nb_flake8_magic.json
 """
 import argparse
 import copy
@@ -139,6 +140,22 @@ with open(warn_file, 'w') as wf:
 with open(warn_file) as wf:
     warns = wf.readlines()
 
+# read in list of PEP8 codes to ignore
+with open(nb_magic_file) as nmf:
+    flake8_magic_cells = json.load(nmf)['cells']
+    codes_to_ignore = flake8_magic_cells[2]['source'][2].strip().split()[-1].split(",")
+
+# Ignore lines with PEP 8 codes on ignore list
+lines_to_ignore = []
+for item in enumerate(warns):
+    line_num = item[0]
+    warn_line = item[1]
+    pep8_code = warn_line.split(":")[3].split(" ")[1]
+    if pep8_code in codes_to_ignore:
+        lines_to_ignore.append(line_num)
+if len(lines_to_ignore) > 0:
+    warns = [i for j, i in enumerate(warns) if j not in lines_to_ignore]
+
 # if there are none, QUIT while we're ahead
 if not warns:
     print(f"{nb_file} is clean!")
@@ -242,5 +259,5 @@ if args.update_notebook:
     remove_temp_files(code_file, warn_file)
 else:
     # remove temp files created earlier in run
-    remove_temp_files(code_file, warn_file)
+    # remove_temp_files(code_file, warn_file)
     sys.exit(99) #exit with code 99 to tell the workflow to throw an error
