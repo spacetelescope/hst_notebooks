@@ -1,0 +1,1700 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>ACS Image Reduction for Subarray Data &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/ACS/acs_subarrays/acs_subarrays';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="SBC Dark Analysis" href="../acs_sbc_dark_analysis/acs_sbc_dark_analysis.html" />
+    <link rel="prev" title="ACS Notebooks" href="../README.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI Notebook Repository Template
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">ACS Notebooks</a></li>
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_pixel_area_maps/acs_pixel_area_maps.html">Obtaining Pixel Area Maps for ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (XTRACTAB)</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Jupyter Notebook Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/Initialization/Initialization.html">DrizzlePac Initialization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an absolute reference catalog</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling WFPC2 Images to use a Single Zeropoint</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Using updated astrometry solutions</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/README.html">STIS-Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/ACS/acs_subarrays/acs_subarrays.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/ACS/acs_subarrays/acs_subarrays.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/ACS/acs_subarrays/acs_subarrays.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>ACS Image Reduction for Subarray Data</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#this-tutorial-will-show-you-how-to-handle">This tutorial will show you how to handle…</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#post-sm4-subarray-data"><span class="xref myst">Post-SM4 Subarray Data</span></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-subarray-data"><span class="xref myst">Custom Subarray Data</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-data">Download the Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#go-proposal-14511-acs-ccd-stability-monitor">GO Proposal 14511: “ACS CCD Stability Monitor”</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#go-proposal-10206-what-drives-the-outflows-in-powerful-radio-galaxies">GO Proposal 10206: “What drives the outflows in powerful radio galaxies?”</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#file-information">File Information</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#raw-files">Raw Files</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#spt-files">SPT Files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#de-striping-and-cte-correction-of-post-sm4-subarray-observations-a-id-postsm4-a">De-striping and CTE Correction of Post-SM4 Subarray Observations<a id="_postsm4"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-calibration-files-update-header-keywords">Download Calibration Files: Update Header Keywords</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-calibration-files">Download Calibration Files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clean-subarray-images">Clean Subarray Images</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correct-the-wcs">Correct the WCS</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reducing-custom-subarray-data-a-id-custom-a">Reducing Custom Subarray Data<a id="_custom"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Download Calibration Files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#access-oscn-table">Access OSCN Table</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-the-bias-prescan-information">Get the Bias Prescan Information</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#update-oscntab">Update OSCNTAB</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#for-more-help">For more help:</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <div class="alert alert-block alert-warning">
+<b>REQUIREMENT:</b>
+    Before proceeding, install or update your
+    <b><a class="divlink" href="https://stenv.readthedocs.io/en/latest/">
+    stenv
+    </a></b>
+    distribution. <b>stenv</b> is the replacement for AstroConda, which is unsupported as of February 2023.
+</div><section class="tex2jax_ignore mathjax_ignore" id="acs-image-reduction-for-subarray-data">
+<h1>ACS Image Reduction for Subarray Data<a class="headerlink" href="#acs-image-reduction-for-subarray-data" title="Permalink to this heading">#</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<hr class="docutils" />
+<p>Subarray data requires different considerations than working with full frame images. This notebook will guide you through working with standard post-SM4 subarray data and custom subarray data.</p>
+<p>After Servicing Mission 4 (SM4; May 2009), the installation of the ASIC during the repair of ACS introduced <span class="math notranslate nohighlight">\(1/f\)</span> noise in all ACS images. In the calacs pipeline, only full-frame data have this striping removed. To correct subarray data, the alternative acs_destripe_plus pipeline must be used, which will apply all of calibration steps normally performed by calacs in addition to de-striping for subarray data. De-striping is only possible for 2K subarrays after SM4 until Cycle 24, after which a change to the flight software makes all subarrays eligible for de-striping.</div></p>
+<section id="this-tutorial-will-show-you-how-to-handle">
+<h3>This tutorial will show you how to handle…<a class="headerlink" href="#this-tutorial-will-show-you-how-to-handle" title="Permalink to this heading">#</a></h3>
+<section id="post-sm4-subarray-data">
+<h4><span class="xref myst">Post-SM4 Subarray Data</span><a class="headerlink" href="#post-sm4-subarray-data" title="Permalink to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Update header keywords.</p></li>
+<li><p>Clean Subarray images with the option to correct CTE losses.</p></li>
+<li><p>Update WCS solution.</p></li>
+</ul>
+</section>
+<section id="custom-subarray-data">
+<h4><span class="xref myst">Custom Subarray Data</span><a class="headerlink" href="#custom-subarray-data" title="Permalink to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> with ASN files to combine images.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<hr class="docutils" />
+<p>Here we list the Python packages used in this notebook. Links to the documentation for each module is provided for convenience.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Package Name</p></th>
+<th class="head text-left"><p>module</p></th>
+<th class="head text-center"><p>docs</p></th>
+<th class="head text-left"><p>used for</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">os</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">system</span></code></p></td>
+<td class="text-center"><p><a class="divlink" href="https://docs.python.org/2/library/os.html#os.system">link</a></p></td>
+<td class="text-left"><p>command line input</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">os</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">environ</span></code></p></td>
+<td class="text-center"><p><a class="divlink" href="https://docs.python.org/2/library/os.html#os.environ">link</a></p></td>
+<td class="text-left"><p>setting environments</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">shutil</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">rmtree</span></code></p></td>
+<td class="text-center"><p><a class="divlink" href="https://docs.python.org/2/library/shutil.html#shutil.rmtree">link</a></p></td>
+<td class="text-left"><p>remove directory tree</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">glob</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">glob</span></code></p></td>
+<td class="text-center"><p><a class="divlink" href="https://docs.python.org/2/library/glob.html#glob.glob">link</a></p></td>
+<td class="text-left"><p>search for files based on Unix shell rules</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">astroquery.mast</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">Observations</span></code></p></td>
+<td class="text-center"><p><a class="divlink" href="https://astroquery.readthedocs.io/en/latest/mast/mast.html">link</a></p></td>
+<td class="text-left"><p>download data from MAST</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">astropy.io</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">fits</span></code></p></td>
+<td class="text-center"><p><a class="divlink" href="http://docs.astropy.org/en/stable/io/fits/">link</a></p></td>
+<td class="text-left"><p>access and update fits files</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">astropy.table</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">Table</span></code></p></td>
+<td class="text-center"><p><a class="divlink" href="http://docs.astropy.org/en/stable/table/">link</a></p></td>
+<td class="text-left"><p>constructing and editing in a tabular format</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">stwcs</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">updatewcs</span></code></p></td>
+<td class="text-center"><p><a class="divlink" href="https://stwcs.readthedocs.io/en/latest/updatewcs_ui.html">link</a></p></td>
+<td class="text-left"><p>update wcs solution</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">acstools</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">acs_destripe_plus</span></code></p></td>
+<td class="text-center"><p><a class="divlink" href="https://acstools.readthedocs.io/en/latest/api/acstools.acs_destripe_plus.destripe_plus.html">link</a></p></td>
+<td class="text-left"><p>destripe acs images and optionally CTE correct</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">acstools</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">utils_calib</span></code></p></td>
+<td class="text-center"><p><a class="divlink" href="https://acstools.readthedocs.io/en/stable/utils_calib.html">link</a></p></td>
+<td class="text-left"><p>check for settings in oscntab</p></td>
+</tr>
+</tbody>
+</table>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
+
+<span class="kn">from</span> <span class="nn">stwcs</span> <span class="kn">import</span> <span class="n">updatewcs</span>
+<span class="kn">from</span> <span class="nn">acstools</span> <span class="kn">import</span> <span class="p">(</span><span class="n">acs_destripe_plus</span><span class="p">,</span> <span class="n">utils_calib</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here we set environment variables for later use with the Calibration Reference Data System (CRDS).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;jref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache/references/hst/acs/&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="download-the-data">
+<h2>Download the Data<a class="headerlink" href="#download-the-data" title="Permalink to this heading">#</a></h2>
+<hr class="docutils" />
+<p>Here we download all of the data required for this notebook. This is an important step! Some of the image processing steps require all relevant files to be in the working directory. We recommend working with a brand new directory for every new set of data.</p>
+<section id="go-proposal-14511-acs-ccd-stability-monitor">
+<h3><a class="reference external" href="https://stdatu.stsci.edu/proposal_search.php?mission=hst&amp;id=14511">GO Proposal 14511</a>: “ACS CCD Stability Monitor”<a class="headerlink" href="#go-proposal-14511-acs-ccd-stability-monitor" title="Permalink to this heading">#</a></h3>
+<p>Our data for the first example comes from a routine calibration program of two images using the post-Cycle 24 WFC1A-1K 1024 x 2072 subarray. We will only use the data associated with the observation id <code class="docutils literal notranslate"><span class="pre">JD5702JWQ</span></code>.</p>
+<p>Using the python package <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, we can download files from the <a class="reference external" href="http://archive.stsci.edu">MAST</a> archive.</p>
+<div class="alert alert-danger">
+<b>MAY CHANGE:</b> The argument "mrp_only" stands for "minimum recommended products only". It currently needs to be set to False, although in the future, False is intended to be set as the default and can be left out.
+</div><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs_table</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">proposal_id</span><span class="o">=</span><span class="mi">14511</span><span class="p">,</span> <span class="n">obs_id</span><span class="o">=</span><span class="s1">&#39;JD5702JWQ&#39;</span><span class="p">)</span>
+
+<span class="n">dl_table</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">obs_table</span><span class="p">[</span><span class="s1">&#39;obsid&#39;</span><span class="p">],</span>
+                                          <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RAW&#39;</span><span class="p">],</span>
+                                          <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jd5702jwq_raw.fits to ./mastDownload/HST/jd5702jwq/jd5702jwq_raw.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’ll use the package <code class="docutils literal notranslate"><span class="pre">os</span></code> to put all of these files in our working directory for convenience.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dl_table</span><span class="p">:</span>
+    <span class="n">oldfname</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Local Path&#39;</span><span class="p">]</span>
+    <span class="n">newfname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">oldfname</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">oldfname</span><span class="p">,</span> <span class="n">newfname</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="go-proposal-10206-what-drives-the-outflows-in-powerful-radio-galaxies">
+<h3><a class="reference external" href="https://stdatu.stsci.edu/proposal_search.php?mission=hst&amp;id=10206">GO Proposal 10206</a>: “What drives the outflows in powerful radio galaxies?”<a class="headerlink" href="#go-proposal-10206-what-drives-the-outflows-in-powerful-radio-galaxies" title="Permalink to this heading">#</a></h3>
+<p>For the second example, we will use a ramp filter observation of the galaxy PLS1345+12 (<em>HST</em> proposal 10206). The association name is J92SA0010, and we will only use one image in the association: J92SA0W6Q.</p>
+<p>Again, we use <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, to download files from the <a class="reference external" href="http://archive.stsci.edu">MAST</a> archive. Along with the raw images, we will also need the spt (telemetry) files to reduce our custom subarray data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs_table</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">proposal_id</span><span class="o">=</span><span class="mi">10206</span><span class="p">,</span> <span class="n">obs_id</span><span class="o">=</span><span class="s1">&#39;J92SA0010&#39;</span><span class="p">)</span>
+
+<span class="n">dl_table</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">obs_table</span><span class="p">[</span><span class="s1">&#39;obsid&#39;</span><span class="p">],</span>
+                                          <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RAW&#39;</span><span class="p">,</span> <span class="s1">&#39;SPT&#39;</span><span class="p">],</span>
+                                          <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/j92sa0010_spt.fits to ./mastDownload/HST/j92sa0010/j92sa0010_spt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/j92sa0w6q_spt.fits to ./mastDownload/HST/j92sa0w6q/j92sa0w6q_spt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/j92sa0w6q_raw.fits to ./mastDownload/HST/j92sa0w6q/j92sa0w6q_raw.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/j92sa0w7q_spt.fits to ./mastDownload/HST/j92sa0w7q/j92sa0w7q_spt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/j92sa0w7q_raw.fits to ./mastDownload/HST/j92sa0w7q/j92sa0w7q_raw.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/j92sa0w8q_spt.fits to ./mastDownload/HST/j92sa0w8q/j92sa0w8q_spt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/j92sa0w8q_raw.fits to ./mastDownload/HST/j92sa0w8q/j92sa0w8q_raw.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/j92sa0w9q_spt.fits to ./mastDownload/HST/j92sa0w9q/j92sa0w9q_spt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/j92sa0w9q_raw.fits to ./mastDownload/HST/j92sa0w9q/j92sa0w9q_raw.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Again, we’ll use the package <code class="docutils literal notranslate"><span class="pre">os</span></code> to put all of these files in our working directory for convenience.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dl_table</span><span class="p">:</span>
+    <span class="n">oldfname</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Local Path&#39;</span><span class="p">]</span>
+    <span class="n">newfname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">oldfname</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">oldfname</span><span class="p">,</span> <span class="n">newfname</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now that all of our files are in the current working directory, we delete the leftover MAST file structure.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;mastDownload&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="file-information">
+<h3>File Information<a class="headerlink" href="#file-information" title="Permalink to this heading">#</a></h3>
+<p>The structure of the fits files from ACS may be different depending on what kind of observation was made. For more information, refer to Section 2.2 of the <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB">ACS Data Handbook</a>.</p>
+<section id="raw-files">
+<h4>Raw Files<a class="headerlink" href="#raw-files" title="Permalink to this heading">#</a></h4>
+<p>A standard raw image file from a subarray has the same structure as you’d expect from full frame observation from ACS/WCS.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Ext</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head text-left"><p>Contains</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><b>0</b></p></td>
+<td><p>PRIMARY</p></td>
+<td><p>(PrimaryHDU)</p></td>
+<td class="text-left"><p>Meta-data related to the entire file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><b>1</b></p></td>
+<td><p>SCI (Image)</p></td>
+<td><p>(ImageHDU)</p></td>
+<td class="text-left"><p>Raw image data.</p></td>
+</tr>
+<tr class="row-even"><td><p><b>2</b></p></td>
+<td><p>ERR (Error)</p></td>
+<td><p>(ImageHDU)</p></td>
+<td class="text-left"><p>Error array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><b>3</b></p></td>
+<td><p>DQ (Data Quality)</p></td>
+<td><p>(ImageHDU)</p></td>
+<td class="text-left"><p>Data quality array.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="spt-files">
+<h4>SPT Files<a class="headerlink" href="#spt-files" title="Permalink to this heading">#</a></h4>
+<p>SPT files contain telemetry and engineering data from the telescope.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Ext</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head text-left"><p>Contains</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><b>0</b></p></td>
+<td><p>PRIMARY</p></td>
+<td><p>(PrimaryHDU)</p></td>
+<td class="text-left"><p>Meta-data related to the entire file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><b>1</b></p></td>
+<td><p>UDL (Image)</p></td>
+<td><p>(ImageHDU)</p></td>
+<td class="text-left"><p>Raw image data.</p></td>
+</tr>
+</tbody>
+</table>
+<p>You can always use <code class="docutils literal notranslate"><span class="pre">.info()</span></code> on an HDUlist for an overview of the structure</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;j92sa0w6q_raw.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
+    <span class="n">hdulist</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+    
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;j92sa0w6q_spt.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
+    <span class="n">hdulist</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Filename: j92sa0w6q_raw.fits
+No.    Name      Ver    Type      Cards   Dimensions   Format
+  0  PRIMARY       1 PrimaryHDU     216   ()      
+  1  SCI           1 ImageHDU        97   (1180, 1200)   int16 (rescales to uint16)   
+  2  ERR           1 ImageHDU        49   ()      
+  3  DQ            1 ImageHDU        43   ()      
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Filename: j92sa0w6q_spt.fits
+No.    Name      Ver    Type      Cards   Dimensions   Format
+  0  PRIMARY       1 PrimaryHDU     341   ()      
+  1  UDL           1 ImageHDU       305   (965,)   int16   
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="de-striping-and-cte-correction-of-post-sm4-subarray-observations-a-id-postsm4-a">
+<h2>De-striping and CTE Correction of Post-SM4 Subarray Observations<a id="_postsm4"></a><a class="headerlink" href="#de-striping-and-cte-correction-of-post-sm4-subarray-observations-a-id-postsm4-a" title="Permalink to this heading">#</a></h2>
+<hr class="docutils" />
+<section id="download-calibration-files-update-header-keywords">
+<h3>Download Calibration Files: Update Header Keywords<a class="headerlink" href="#download-calibration-files-update-header-keywords" title="Permalink to this heading">#</a></h3>
+<p>We can call the <a class="reference external" href="https://hst-crds.stsci.edu/">Calibration Reference Data System</a> (CRDS) to get the associated calibration files for this image.</p>
+<p>First we will need to turn on the CTE correction switch in the primary header. Turning on this switch will notify the <a class="reference external" href="https://hst-crds.stsci.edu">CRDS</a> <code class="docutils literal notranslate"><span class="pre">bestrefs</span></code> tool to add the names of the CTE correction parameters table ‘<code class="docutils literal notranslate"><span class="pre">PCTETAB</span></code>’ and CTE-corrected dark current image ‘<code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code>’ reference files to the header.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sbc_fits</span> <span class="o">=</span> <span class="s1">&#39;jd5702jwq_raw.fits&#39;</span>
+
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">sbc_fits</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
+    <span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PCTECORR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;PERFORM&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="download-calibration-files">
+<h3>Download Calibration Files<a class="headerlink" href="#download-calibration-files" title="Permalink to this heading">#</a></h3>
+<p>The CRDS program can be run from the terminal to download the files specific to your observation. This program is packaged with astroconda.</p>
+<p>The command line input to download our files for <code class="docutils literal notranslate"><span class="pre">jd5702jwq_raw.fits</span></code> is as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>crds bestrefs --files jd5702jwq_raw.fits --sync-references=1 --update-bestrefs
+</pre></div>
+</div>
+<p>Here, we use the python package <code class="docutils literal notranslate"><span class="pre">os</span></code> to run this command.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmd_input</span> <span class="o">=</span> <span class="s1">&#39;crds bestrefs --files </span><span class="si">{:}</span><span class="s1"> --sync-references=1 --update-bestrefs&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sbc_fits</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd_input</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfpc2_wf4tfile_0250.rmap       678 bytes  (1 / 140 files) (0 / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfpc2_shadfile_0250.rmap       977 bytes  (2 / 140 files) (678 / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfpc2_offtab_0250.rmap         642 bytes  (3 / 140 files) (1.7 K / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfpc2_maskfile_0250.rmap       685 bytes  (4 / 140 files) (2.3 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfpc2_idctab_0250.rmap         696 bytes  (5 / 140 files) (3.0 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfpc2_flatfile_0250.rmap    30.0 K bytes  (6 / 140 files) (3.7 K / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfpc2_dgeofile_0250.rmap       801 bytes  (7 / 140 files) (33.7 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfpc2_darkfile_0250.rmap   178.4 K bytes  (8 / 140 files) (34.5 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfpc2_biasfile_0250.rmap     3.3 K bytes  (9 / 140 files) (212.8 K / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfpc2_atodfile_0250.rmap       874 bytes  (10 / 140 files) (216.1 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfpc2_0250.imap                782 bytes  (11 / 140 files) (217.0 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_snkcfile_0003.rmap        681 bytes  (12 / 140 files) (217.8 K / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_pfltfile_0253.rmap     34.2 K bytes  (13 / 140 files) (218.5 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_pctetab_0004.rmap         698 bytes  (14 / 140 files) (252.6 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_oscntab_0250.rmap         747 bytes  (15 / 140 files) (253.3 K / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_npolfile_0254.rmap      4.0 K bytes  (16 / 140 files) (254.1 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_nlinfile_0250.rmap        726 bytes  (17 / 140 files) (258.1 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_mdriztab_0254.rmap        845 bytes  (18 / 140 files) (258.9 K / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_imphttab_0256.rmap        683 bytes  (19 / 140 files) (259.7 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_idctab_0254.rmap          661 bytes  (20 / 140 files) (260.4 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_flshfile_0255.rmap      5.6 K bytes  (21 / 140 files) (261.0 K / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_drkcfile_0171.rmap    219.8 K bytes  (22 / 140 files) (266.6 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_dfltfile_0002.rmap     17.1 K bytes  (23 / 140 files) (486.4 K / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_darkfile_0469.rmap    261.0 K bytes  (24 / 140 files) (503.5 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_d2imfile_0251.rmap        605 bytes  (25 / 140 files) (764.4 K / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_crrejtab_0250.rmap        803 bytes  (26 / 140 files) (765.0 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_ccdtab_0250.rmap          799 bytes  (27 / 140 files) (765.8 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_bpixtab_0299.rmap      10.5 K bytes  (28 / 140 files) (766.6 K / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_biasfile_0267.rmap     23.4 K bytes  (29 / 140 files) (777.1 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_biacfile_0003.rmap        692 bytes  (30 / 140 files) (800.5 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_atodtab_0250.rmap         651 bytes  (31 / 140 files) (801.2 K / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_0560.imap               1.2 K bytes  (32 / 140 files) (801.8 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_synphot_tmttab_0002.rmap       745 bytes  (33 / 140 files) (803.1 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_synphot_tmgtab_0010.rmap       767 bytes  (34 / 140 files) (803.8 K / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_synphot_tmctab_0043.rmap       743 bytes  (35 / 140 files) (804.6 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_synphot_thruput_0047.rmap  329.6 K bytes  (36 / 140 files) (805.3 K / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_synphot_thermal_0003.rmap   20.4 K bytes  (37 / 140 files) (1.1 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_synphot_obsmodes_0004.rmap      743 bytes  (38 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_synphot_0057.imap              579 bytes  (39 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_xtractab_0250.rmap        815 bytes  (40 / 140 files) (1.2 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_wcptab_0251.rmap          578 bytes  (41 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_teltab_0250.rmap          745 bytes  (42 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_tdstab_0253.rmap          921 bytes  (43 / 140 files) (1.2 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_tdctab_0251.rmap          650 bytes  (44 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_srwtab_0250.rmap          745 bytes  (45 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_sptrctab_0251.rmap        895 bytes  (46 / 140 files) (1.2 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_sdctab_0251.rmap          889 bytes  (47 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_riptab_0254.rmap          877 bytes  (48 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_phottab_0258.rmap       1.6 K bytes  (49 / 140 files) (1.2 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_pfltfile_0250.rmap     23.7 K bytes  (50 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_pctab_0250.rmap         3.1 K bytes  (51 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_mofftab_0250.rmap         747 bytes  (52 / 140 files) (1.2 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_mlintab_0250.rmap         601 bytes  (53 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_lfltfile_0250.rmap     11.8 K bytes  (54 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_lamptab_0250.rmap         610 bytes  (55 / 140 files) (1.2 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_inangtab_0250.rmap        815 bytes  (56 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_imphttab_0252.rmap        616 bytes  (57 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_idctab_0251.rmap          775 bytes  (58 / 140 files) (1.2 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_halotab_0250.rmap         747 bytes  (59 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_gactab_0250.rmap          651 bytes  (60 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_exstab_0250.rmap          745 bytes  (61 / 140 files) (1.2 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_echsctab_0250.rmap        749 bytes  (62 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_disptab_0250.rmap         813 bytes  (63 / 140 files) (1.2 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_darkfile_0341.rmap     56.9 K bytes  (64 / 140 files) (1.2 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_crrejtab_0250.rmap        711 bytes  (65 / 140 files) (1.3 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_cdstab_0250.rmap          745 bytes  (66 / 140 files) (1.3 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_ccdtab_0252.rmap          893 bytes  (67 / 140 files) (1.3 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_bpixtab_0250.rmap         845 bytes  (68 / 140 files) (1.3 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_biasfile_0343.rmap    115.3 K bytes  (69 / 140 files) (1.3 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_apertab_0250.rmap         588 bytes  (70 / 140 files) (1.4 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_apdestab_0252.rmap        636 bytes  (71 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_0355.imap               1.7 K bytes  (72 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_zprattab_0250.rmap      646 bytes  (73 / 140 files) (1.4 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_tempfile_0250.rmap    1.1 K bytes  (74 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_tdffile_0250.rmap     8.9 K bytes  (75 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_saadfile_0250.rmap      771 bytes  (76 / 140 files) (1.4 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_saacntab_0250.rmap      594 bytes  (77 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_rnlcortb_0250.rmap      771 bytes  (78 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_pmskfile_0250.rmap      603 bytes  (79 / 140 files) (1.4 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_pmodfile_0250.rmap      603 bytes  (80 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_phottab_0250.rmap       862 bytes  (81 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_pedsbtab_0250.rmap      594 bytes  (82 / 140 files) (1.4 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_noisfile_0250.rmap    2.6 K bytes  (83 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_nlinfile_0250.rmap    1.7 K bytes  (84 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_maskfile_0250.rmap    1.2 K bytes  (85 / 140 files) (1.4 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_illmfile_0250.rmap    5.8 K bytes  (86 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_idctab_0250.rmap        767 bytes  (87 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_flatfile_0250.rmap   11.0 K bytes  (88 / 140 files) (1.4 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_darkfile_0250.rmap   14.9 K bytes  (89 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_0250.imap             1.1 K bytes  (90 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_ywlkfile_0002.rmap         922 bytes  (91 / 140 files) (1.4 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_xwlkfile_0002.rmap         922 bytes  (92 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_xtractab_0269.rmap       1.6 K bytes  (93 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_wcptab_0257.rmap         1.3 K bytes  (94 / 140 files) (1.4 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_twozxtab_0277.rmap         990 bytes  (95 / 140 files) (1.4 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_tracetab_0276.rmap         998 bytes  (96 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_tdstab_0266.rmap           803 bytes  (97 / 140 files) (1.5 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_spwcstab_0255.rmap       1.1 K bytes  (98 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_spottab_0006.rmap          766 bytes  (99 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_proftab_0276.rmap        1.0 K bytes  (100 / 140 files) (1.5 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_phatab_0250.rmap           668 bytes  (101 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_lamptab_0264.rmap        1.4 K bytes  (102 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_hvtab_0259.rmap            567 bytes  (103 / 140 files) (1.5 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_gsagtab_0259.rmap          712 bytes  (104 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_geofile_0250.rmap          670 bytes  (105 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_fluxtab_0278.rmap        1.7 K bytes  (106 / 140 files) (1.5 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_flatfile_0264.rmap       1.8 K bytes  (107 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_disptab_0276.rmap        1.7 K bytes  (108 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_dgeofile_0002.rmap         909 bytes  (109 / 140 files) (1.5 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_deadtab_0250.rmap          711 bytes  (110 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_brsttab_0250.rmap          696 bytes  (111 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_brftab_0250.rmap           614 bytes  (112 / 140 files) (1.5 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_bpixtab_0260.rmap          773 bytes  (113 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_badttab_0250.rmap          695 bytes  (114 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_0348.imap                1.4 K bytes  (115 / 140 files) (1.5 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_spottab_0251.rmap          641 bytes  (116 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_snkcfile_0083.rmap       6.6 K bytes  (117 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_shadfile_0251.rmap         531 bytes  (118 / 140 files) (1.5 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_satufile_0002.rmap       1.2 K bytes  (119 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_pfltfile_0253.rmap      69.2 K bytes  (120 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_pctetab_0253.rmap          615 bytes  (121 / 140 files) (1.5 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_oscntab_0251.rmap          781 bytes  (122 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_npolfile_0253.rmap       3.2 K bytes  (123 / 140 files) (1.5 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_mlintab_0250.rmap          646 bytes  (124 / 140 files) (1.6 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_mdriztab_0253.rmap         769 bytes  (125 / 140 files) (1.6 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_imphttab_0259.rmap         769 bytes  (126 / 140 files) (1.6 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_idctab_0256.rmap         1.5 K bytes  (127 / 140 files) (1.6 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_flshfile_0267.rmap       3.4 K bytes  (128 / 140 files) (1.6 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_drkcfile_0432.rmap      14.3 K bytes  (129 / 140 files) (1.6 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_dgeofile_0250.rmap       3.2 K bytes  (130 / 140 files) (1.6 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_darkfile_0421.rmap      86.2 K bytes  (131 / 140 files) (1.6 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_d2imfile_0253.rmap         601 bytes  (132 / 140 files) (1.7 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_crrejtab_0251.rmap         945 bytes  (133 / 140 files) (1.7 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_cfltfile_0250.rmap       1.2 K bytes  (134 / 140 files) (1.7 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_ccdtab_0256.rmap         1.4 K bytes  (135 / 140 files) (1.7 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_bpixtab_0252.rmap        1.0 K bytes  (136 / 140 files) (1.7 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_biasfile_0423.rmap      56.2 K bytes  (137 / 140 files) (1.7 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_atodtab_0251.rmap          528 bytes  (138 / 140 files) (1.7 M / 1.7 M bytes)
+CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_0518.imap                1.3 K bytes  (139 / 140 files) (1.7 M / 1.7 M bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_1089.pmap                      495 bytes  (140 / 140 files) (1.7 M / 1.7 M bytes)
+CRDS - INFO -  No comparison context or source comparison requested.
+CRDS - INFO -  ===&gt; Processing jd5702jwq_raw.fits
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/17717071j_osc.fits        17.3 K bytes  (1 / 16 files) (0 / 1.0 G bytes)
+CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/19i16323j_cte.fits         8.6 M bytes  (2 / 16 files) (17.3 K / 1.0 G bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/25e1542jj_snk.fits        68.6 M bytes  (3 / 16 files) (8.7 M / 1.0 G bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/25g1256nj_bpx.fits        23.0 K bytes  (4 / 16 files) (77.2 M / 1.0 G bytes)
+CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/37g1550cj_mdz.fits       247.7 K bytes  (5 / 16 files) (77.3 M / 1.0 G bytes)
+CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/4af1559ij_imp.fits       953.3 K bytes  (6 / 16 files) (77.5 M / 1.0 G bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/4b70011hj_drk.fits       151.1 M bytes  (7 / 16 files) (78.5 M / 1.0 G bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/4b70014gj_dkc.fits       151.1 M bytes  (8 / 16 files) (229.5 M / 1.0 G bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/4bb1536ej_npl.fits        51.8 K bytes  (9 / 16 files) (380.6 M / 1.0 G bytes)
+CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/4bb1536mj_idc.fits       285.1 K bytes  (10 / 16 files) (380.6 M / 1.0 G bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/4bb15371j_d2i.fits        51.8 K bytes  (11 / 16 files) (380.9 M / 1.0 G bytes)
+CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/5331917aj_sat.fits       171.4 M bytes  (12 / 16 files) (381.0 M / 1.0 G bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/6641832dj_bia.fits       171.5 M bytes  (13 / 16 files) (552.4 M / 1.0 G bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/72m1821dj_ccd.fits        49.0 K bytes  (14 / 16 files) (723.8 M / 1.0 G bytes)
+CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/qb12257sj_pfl.fits       167.8 M bytes  (15 / 16 files) (723.9 M / 1.0 G bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/references/hst/acs/qbu16424j_dxy.fits       134.3 M bytes  (16 / 16 files) (891.7 M / 1.0 G bytes)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  0 errors
+CRDS - INFO -  0 warnings
+CRDS - INFO -  158 infos
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="clean-subarray-images">
+<h3>Clean Subarray Images<a class="headerlink" href="#clean-subarray-images" title="Permalink to this heading">#</a></h3>
+<p>Next we will run the <a class="reference external" href="http://acstools.readthedocs.io/en/stable/acs_destripe_plus.html">acs_destripe_plus</a> code on our image. This will execute all of the calibration steps that are set to ‘PERFORM’ in the primary header of the FITS file.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">acs_destripe_plus</span></code> code will produce the FLT file is the calibrated output product from <code class="docutils literal notranslate"><span class="pre">CALACS</span></code>, <code class="docutils literal notranslate"><span class="pre">jd5702jmq_flt.fits</span></code>. With the CTE correction turned on, an FLC file will also be produced, which is the same as the FLT file but with the CTE correction applied.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">acs_destripe_plus</span><span class="o">.</span><span class="n">destripe_plus</span><span class="p">(</span><span class="n">sbc_fits</span><span class="p">,</span> <span class="n">cte_correct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">acs_destripe_plus</span><span class="o">.</span><span class="n">destripe_plus</span><span class="p">(</span><span class="n">sbc_fits</span><span class="p">,</span> <span class="n">cte_correct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.11/site-packages/acstools/acs_destripe_plus.py:373,</span> in <span class="ni">destripe_plus</span><span class="nt">(inputfile, suffix, stat, maxiter, sigrej, lower, upper, binwidth, scimask1, scimask2, dqbits, rpt_clean, atol, cte_correct, keep_intermediate_files, clobber, verbose)</span>
+<span class="g g-Whitespace">    </span><span class="mi">367</span> <span class="k">if</span> <span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CCDAMP&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ABCD&#39;</span> <span class="ow">and</span>
+<span class="g g-Whitespace">    </span><span class="mi">368</span>         <span class="p">((</span><span class="n">scimask1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">scimask2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span>
+<span class="g g-Whitespace">    </span><span class="mi">369</span>          <span class="p">(</span><span class="n">scimask1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">scimask2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">))):</span>
+<span class="g g-Whitespace">    </span><span class="mi">370</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Both &#39;scimask1&#39; and &#39;scimask2&#39; must be specified &quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">371</span>                      <span class="s2">&quot;or not specified together.&quot;</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">373</span> <span class="n">calacs_str</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s1">&#39;calacs.e&#39;</span><span class="p">,</span> <span class="s1">&#39;--version&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># nosec # noqa</span>
+<span class="g g-Whitespace">    </span><span class="mi">374</span> <span class="n">calacs_ver</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">calacs_str</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)]</span>
+<span class="g g-Whitespace">    </span><span class="mi">375</span> <span class="k">if</span> <span class="n">calacs_ver</span> <span class="o">&lt;</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.11/subprocess.py:466,</span> in <span class="ni">check_output</span><span class="nt">(timeout, *popenargs, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">463</span>         <span class="n">empty</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+<span class="g g-Whitespace">    </span><span class="mi">464</span>     <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">empty</span>
+<span class="ne">--&gt; </span><span class="mi">466</span> <span class="k">return</span> <span class="n">run</span><span class="p">(</span><span class="o">*</span><span class="n">popenargs</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">467</span>            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.11/subprocess.py:548,</span> in <span class="ni">run</span><span class="nt">(input, capture_output, timeout, check, *popenargs, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">545</span>     <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;stdout&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">PIPE</span>
+<span class="g g-Whitespace">    </span><span class="mi">546</span>     <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;stderr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">PIPE</span>
+<span class="ne">--&gt; </span><span class="mi">548</span> <span class="k">with</span> <span class="n">Popen</span><span class="p">(</span><span class="o">*</span><span class="n">popenargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">process</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">549</span>     <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">550</span>         <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.11/subprocess.py:1026,</span> in <span class="ni">Popen.__init__</span><span class="nt">(self, args, bufsize, executable, stdin, stdout, stderr, preexec_fn, close_fds, shell, cwd, env, universal_newlines, startupinfo, creationflags, restore_signals, start_new_session, pass_fds, user, group, extra_groups, encoding, errors, text, umask, pipesize, process_group)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1022</span>         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_mode</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1023</span>             <span class="bp">self</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">TextIOWrapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1024</span>                     <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">1026</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_execute_child</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">executable</span><span class="p">,</span> <span class="n">preexec_fn</span><span class="p">,</span> <span class="n">close_fds</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1027</span>                         <span class="n">pass_fds</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1028</span>                         <span class="n">startupinfo</span><span class="p">,</span> <span class="n">creationflags</span><span class="p">,</span> <span class="n">shell</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1029</span>                         <span class="n">p2cread</span><span class="p">,</span> <span class="n">p2cwrite</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1030</span>                         <span class="n">c2pread</span><span class="p">,</span> <span class="n">c2pwrite</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1031</span>                         <span class="n">errread</span><span class="p">,</span> <span class="n">errwrite</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1032</span>                         <span class="n">restore_signals</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1033</span>                         <span class="n">gid</span><span class="p">,</span> <span class="n">gids</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">umask</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1034</span>                         <span class="n">start_new_session</span><span class="p">,</span> <span class="n">process_group</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1035</span> <span class="k">except</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1036</span>     <span class="c1"># Cleanup if the child failed starting.</span>
+<span class="g g-Whitespace">   </span><span class="mi">1037</span>     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stdin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stderr</span><span class="p">)):</span>
+
+<span class="nn">File /usr/share/miniconda/lib/python3.11/subprocess.py:1950,</span> in <span class="ni">Popen._execute_child</span><span class="nt">(self, args, executable, preexec_fn, close_fds, pass_fds, cwd, env, startupinfo, creationflags, shell, p2cread, p2cwrite, c2pread, c2pwrite, errread, errwrite, restore_signals, gid, gids, uid, umask, start_new_session, process_group)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1948</span>     <span class="k">if</span> <span class="n">errno_num</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1949</span>         <span class="n">err_msg</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">strerror</span><span class="p">(</span><span class="n">errno_num</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">1950</span>     <span class="k">raise</span> <span class="n">child_exception_type</span><span class="p">(</span><span class="n">errno_num</span><span class="p">,</span> <span class="n">err_msg</span><span class="p">,</span> <span class="n">err_filename</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1951</span> <span class="k">raise</span> <span class="n">child_exception_type</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+
+<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;calacs.e&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="correct-the-wcs">
+<h3>Correct the WCS<a class="headerlink" href="#correct-the-wcs" title="Permalink to this heading">#</a></h3>
+<p>The subarray products produced by this process do not have the proper WCS information in the header. The WCS is normally updated by the pipeline via an additional call to AstroDrizzle. Here, we can manually update the WCS of our FLC product using <code class="docutils literal notranslate"><span class="pre">stwcs.updatewcs</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">updatewcs</span><span class="o">.</span><span class="n">updatewcs</span><span class="p">(</span><span class="s1">&#39;jd5702jwq_flc.fits&#39;</span><span class="p">,</span> <span class="n">use_db</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="reducing-custom-subarray-data-a-id-custom-a">
+<h2>Reducing Custom Subarray Data<a id="_custom"></a><a class="headerlink" href="#reducing-custom-subarray-data-a-id-custom-a" title="Permalink to this heading">#</a></h2>
+<hr class="docutils" />
+<section id="id1">
+<h3>Download Calibration Files<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<p>Like before, we can use CRDS to get the associated calibration files for this image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sbc_fits</span> <span class="o">=</span> <span class="s1">&#39;j92sa0w6q_raw.fits&#39;</span>
+<span class="n">cmd_input</span> <span class="o">=</span> <span class="s1">&#39;crds bestrefs --files </span><span class="si">{:}</span><span class="s1"> --sync-references=1 --update-bestrefs&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sbc_fits</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd_input</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="access-oscn-table">
+<h3>Access OSCN Table<a class="headerlink" href="#access-oscn-table" title="Permalink to this heading">#</a></h3>
+<p>The name in the header is of the format ‘<font face='courier'>ref\<span class="math notranslate nohighlight">\(oscn_name.fits&lt;/font&gt;', therefore we need to split the string on the '\)</span>’ character.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prihdr</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">sbc_fits</span><span class="p">)</span>
+<span class="n">scihdr</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">sbc_fits</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We also want to retrieve the <code class="docutils literal notranslate"><span class="pre">OSCNTAB</span></code> reference file from the JREF directory. We can get the name of the file from the primary header of the image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">oscn_name</span> <span class="o">=</span> <span class="n">prihdr</span><span class="p">[</span><span class="s1">&#39;OSCNTAB&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">path_to_oscn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;jref&#39;</span><span class="p">],</span> <span class="n">oscn_name</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">path_to_oscn</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">utils_calib.check_oscntab</span></code> from <a class="reference external" href="http://acstools.readthedocs.io">acstools</a> checks the <code class="docutils literal notranslate"><span class="pre">OSCNTAB</span></code> file if any entry matches the combination of readout amplifier, image size, and number of bias prescan columns for a given subarray observation. We will need to use several header keyword values to test if a subarray is in <code class="docutils literal notranslate"><span class="pre">OSCNTAB</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">oscnrec</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">path_to_oscn</span><span class="p">)</span>
+<span class="n">oscnhdr</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">path_to_oscn</span><span class="p">)</span>
+
+<span class="n">oscntable</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">oscnrec</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The raw image has 1180 columns and 1200 rows, which does not correspond to any entry in the <code class="docutils literal notranslate"><span class="pre">OSCNTAB</span></code> file, but a visual examination of the image shows that it contains bias prescan columns.</p>
+</section>
+<section id="get-the-bias-prescan-information">
+<h3>Get the Bias Prescan Information<a class="headerlink" href="#get-the-bias-prescan-information" title="Permalink to this heading">#</a></h3>
+<p>From the science image PRI and SCI extension headers that we opened earlier, we can get the information about the readout amplifier and dimensions of the image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">amp</span> <span class="o">=</span> <span class="n">prihdr</span><span class="p">[</span><span class="s1">&#39;CCDAMP&#39;</span><span class="p">]</span>
+<span class="n">xsize</span> <span class="o">=</span> <span class="n">scihdr</span><span class="p">[</span><span class="s1">&#39;NAXIS1&#39;</span><span class="p">]</span>
+<span class="n">ysize</span> <span class="o">=</span> <span class="n">scihdr</span><span class="p">[</span><span class="s1">&#39;NAXIS2&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">xsize</span><span class="p">,</span> <span class="n">ysize</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>To get information on the number of prescan columns (if any), we need to access the SPT first extension header.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spthdr</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="s1">&#39;j92sa0w6q_spt.fits&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">leading</span> <span class="o">=</span> <span class="n">spthdr</span><span class="p">[</span><span class="s1">&#39;OVERSCNA&#39;</span><span class="p">]</span>
+<span class="n">trailing</span> <span class="o">=</span> <span class="n">spthdr</span><span class="p">[</span><span class="s1">&#39;OVERSCNB&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we check if this subarray definition is in the OSCNTAB file. The code returns a boolean result, which we have saved as the variable supported, to describe this.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">supported</span> <span class="o">=</span> <span class="n">utils_calib</span><span class="o">.</span><span class="n">check_oscntab</span><span class="p">(</span><span class="n">path_to_oscn</span><span class="p">,</span> <span class="n">amp</span><span class="p">,</span> <span class="n">xsize</span><span class="p">,</span> <span class="n">ysize</span><span class="p">,</span> <span class="n">leading</span><span class="p">,</span> <span class="n">trailing</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">supported</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="update-oscntab">
+<h3>Update OSCNTAB<a class="headerlink" href="#update-oscntab" title="Permalink to this heading">#</a></h3>
+<p>Now that we have confirmed that the <code class="docutils literal notranslate"><span class="pre">OSCNTAB</span></code> file does not contain information about our subarray data, we need to add a new row to the table with our definitions. Let’s first view the first few rows of <code class="docutils literal notranslate"><span class="pre">OSCNTAB</span></code> to see what our new entry needs to look like.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">oscntable</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also choose to just view all of the columns names</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">oscntable</span><span class="o">.</span><span class="n">colnames</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Several column names are obvious, but here we define the less obvious ones.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Column Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>BINX, BINY</p></td>
+<td><p>Binning in X and Y. ACS data are never binned, so these will always be 1.</p></td>
+</tr>
+<tr class="row-odd"><td><p>TRIMXn</p></td>
+<td><p>Number of prescan columns on the left (1) and right (2) sides of the image to remove.</p></td>
+</tr>
+<tr class="row-even"><td><p>TRIMYn</p></td>
+<td><p>Number of virtual rows on the bottom (1) and top (2) sides of the image to remove. For subarray data, these are always 0.</p></td>
+</tr>
+<tr class="row-odd"><td><p>BIASSECTAn</p></td>
+<td><p>Start and end columns to use for the bias level estimation on the left (A) side of the image.</p></td>
+</tr>
+<tr class="row-even"><td><p>BIASSECTBn</p></td>
+<td><p>Start and end columns to use for the bias level estimation on the right (B) side of the image.</p></td>
+</tr>
+<tr class="row-odd"><td><p>VXn, VYn</p></td>
+<td><p>The coordinates of the bottom-left (VX1, VY1) and top-right (VX2, VY2) corners of the virtual overscan region</p></td>
+</tr>
+</tbody>
+</table>
+<p>The following line sets <code class="docutils literal notranslate"><span class="pre">chip</span></code> to 1 if the subarray is on WFC1, and 2 if the subarray is on WFC2.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chip</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">amp</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>For the BIASSECTAn and BIASSECTBn values, we want to use the six columns of prescan nearest the exposed area of the CCD.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bias_a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">leading</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">bias_a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">leading</span>
+    <span class="n">bias_a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">leading</span><span class="o">-</span><span class="mi">5</span> <span class="k">if</span> <span class="n">leading</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="k">else</span> <span class="mi">0</span>
+        
+<span class="n">bias_b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">trailing</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">bias_b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">xsize</span><span class="o">+</span><span class="mi">1</span>
+    <span class="n">bias_b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">xsize</span><span class="o">+</span><span class="mi">5</span> <span class="k">if</span> <span class="n">trailing</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="k">else</span> <span class="n">xsize</span><span class="o">+</span><span class="n">trailing</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can define a new row for our settings. For subarray data, as there is no virtual overscan, the VXn and VYn values will always be 0. Here we use a dictionary to explicitly define the new values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_row</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;CCDAMP&#39;</span><span class="p">:</span> <span class="n">amp</span><span class="p">,</span>
+           <span class="s1">&#39;CCDCHIP&#39;</span><span class="p">:</span> <span class="n">chip</span><span class="p">,</span> 
+           <span class="s1">&#39;BINX&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> 
+           <span class="s1">&#39;BINY&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> 
+           <span class="s1">&#39;NX&#39;</span><span class="p">:</span> <span class="n">xsize</span><span class="p">,</span>
+           <span class="s1">&#39;NY&#39;</span><span class="p">:</span> <span class="n">ysize</span><span class="p">,</span> 
+           <span class="s1">&#39;TRIMX1&#39;</span><span class="p">:</span> <span class="n">leading</span><span class="p">,</span> 
+           <span class="s1">&#39;TRIMX2&#39;</span><span class="p">:</span> <span class="n">trailing</span><span class="p">,</span> 
+           <span class="s1">&#39;TRIMY1&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> 
+           <span class="s1">&#39;TRIMY2&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> 
+           <span class="s1">&#39;BIASSECTA1&#39;</span><span class="p">:</span> <span class="n">bias_a</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> 
+           <span class="s1">&#39;BIASSECTA2&#39;</span><span class="p">:</span> <span class="n">bias_a</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
+           <span class="s1">&#39;BIASSECTB1&#39;</span><span class="p">:</span> <span class="n">bias_b</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> 
+           <span class="s1">&#39;BIASSECTB2&#39;</span><span class="p">:</span> <span class="n">bias_b</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
+           <span class="s1">&#39;DESCRIPTION&#39;</span><span class="p">:</span> <span class="s1">&#39;Custom OSCN&#39;</span><span class="p">,</span> 
+           <span class="s1">&#39;VX1&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> 
+           <span class="s1">&#39;VX2&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> 
+           <span class="s1">&#39;VY1&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> 
+           <span class="s1">&#39;VY2&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we need to open the custom <code class="docutils literal notranslate"><span class="pre">OSCTNAB</span></code> file and update the table to have our new definition. We will also need to update the raw FITS file to point to the new custom <code class="docutils literal notranslate"><span class="pre">OSCNTAB</span></code> reference file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">oscntable</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">new_row</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">oscntable</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we have an idential FITS rec table, but with an additional row for our new information.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">oscnrec_new</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">FITS_rec</span><span class="o">.</span><span class="n">from_columns</span><span class="p">(</span><span class="n">oscnrec</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> 
+                                         <span class="n">nrows</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">oscntable</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Table</span><span class="p">(</span><span class="n">oscnrec_new</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s populate that last row with our new data!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">oscnrec_new</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">oscntable</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Reprint the table and check that we have entered it correctly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">Table</span><span class="p">(</span><span class="n">oscnrec_new</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can open up our oscn table and replace the old fits rec with our new one</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path_to_oscn</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+    <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">oscnrec_new</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Using the same check we did earlier, we can use <code class="docutils literal notranslate"><span class="pre">check_oscntab</span></code> to see if our settings are defined. If everything was done correctly, the following line should print “True”!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">supported</span> <span class="o">=</span> <span class="n">utils_calib</span><span class="o">.</span><span class="n">check_oscntab</span><span class="p">(</span><span class="n">path_to_oscn</span><span class="p">,</span> <span class="n">amp</span><span class="p">,</span> <span class="n">xsize</span><span class="p">,</span> <span class="n">ysize</span><span class="p">,</span> <span class="n">leading</span><span class="p">,</span> <span class="n">trailing</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Defined in OSCNTAB? </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">supported</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="for-more-help">
+<h3>For more help:<a class="headerlink" href="#for-more-help" title="Permalink to this heading">#</a></h3>
+<p>More details may be found on the <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/acs">ACS website</a> and in the <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB">ACS Instrument</a> and <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/other-documents/_documents/acs_dhb.pdf">Data Handbooks</a>.</p>
+<p>Please visit the <a class="reference external" href="http://hsthelp.stsci.edu">HST Help Desk</a>. Through the help desk portal, you can explore the <em>HST</em> Knowledge Base and request additional help from experts.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/ACS/acs_subarrays"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../README.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">ACS Notebooks</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../acs_sbc_dark_analysis/acs_sbc_dark_analysis.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">SBC Dark Analysis</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#this-tutorial-will-show-you-how-to-handle">This tutorial will show you how to handle…</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#post-sm4-subarray-data"><span class="xref myst">Post-SM4 Subarray Data</span></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-subarray-data"><span class="xref myst">Custom Subarray Data</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-data">Download the Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#go-proposal-14511-acs-ccd-stability-monitor">GO Proposal 14511: “ACS CCD Stability Monitor”</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#go-proposal-10206-what-drives-the-outflows-in-powerful-radio-galaxies">GO Proposal 10206: “What drives the outflows in powerful radio galaxies?”</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#file-information">File Information</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#raw-files">Raw Files</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#spt-files">SPT Files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#de-striping-and-cte-correction-of-post-sm4-subarray-observations-a-id-postsm4-a">De-striping and CTE Correction of Post-SM4 Subarray Observations<a id="_postsm4"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-calibration-files-update-header-keywords">Download Calibration Files: Update Header Keywords</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-calibration-files">Download Calibration Files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clean-subarray-images">Clean Subarray Images</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correct-the-wcs">Correct the WCS</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reducing-custom-subarray-data-a-id-custom-a">Reducing Custom Subarray Data<a id="_custom"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Download Calibration Files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#access-oscn-table">Access OSCN Table</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-the-bias-prescan-information">Get the Bias Prescan Information</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#update-oscntab">Update OSCNTAB</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#for-more-help">For more help:</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
