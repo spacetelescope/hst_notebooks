@@ -9,7 +9,7 @@ def ds9_imitate(ax, image, extent=None):
                           stretch=LinearStretch())
 
     ax.imshow(image, cmap='bone', norm=norm, origin='lower', extent=extent)
-    return
+
 
 def triple_pam_plot(flt_file, pam_file, figtitle):
     fl_img = fits.getdata(flt_file, ext=1)
@@ -31,9 +31,9 @@ def triple_pam_plot(flt_file, pam_file, figtitle):
     ax3 = fig.add_subplot(1, 3, 3, yticks=[])
     ds9_imitate(ax3, pamd_img)
     ax3.set_title('Raw x Pixel Area Map')
-
+  
     plt.subplots_adjust(wspace=0.05)
-    return
+
 
 def calib_compare_plot(raw_image, cal_image):
     fig = plt.figure(figsize=(14,14))
@@ -46,4 +46,3 @@ def calib_compare_plot(raw_image, cal_image):
     ds9_imitate(ax2, cal_image)
     ax2.set_title('Flat-Fielded')
 
-    return
