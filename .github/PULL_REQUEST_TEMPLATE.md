@@ -1,4 +1,4 @@
-This notebook checklist has been made available to us by the [the Notebooks For All team](https://github.com/Iota-School/notebooks-for-all/blob/main/resources/event-hackathon/notebook-authoring-checklist.md).
+This notebook checklist has been made available to us by the [Notebooks For All team](https://github.com/Iota-School/notebooks-for-all/blob/main/resources/event-hackathon/notebook-authoring-checklist.md).
 Its purpose is to serve as a guide for both the notebook author and the technical reviewer highlighting critical aspects to consider when striving to develop an accessible and effective notebook.
 
 ### The First Cell
