@@ -12,11 +12,7 @@ on:
 jobs:
   gather-notebooks:
     # below logic will only allow workflow to trigger under specific conditions
-    if: |
-      contains(github.event.pull_request.labels.*.name, 'Technical Review') &&
-      github.event.pull_request.head.user.login != 'github-actions[bot]' &&
-      github.event.pull_request.draft == false &&
-      github.event.pull_request.state == 'open'
+    if: github.event.pull_request.state == 'open'
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
