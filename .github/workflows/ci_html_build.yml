@@ -6,7 +6,11 @@ on:
    types: [closed]
 
   workflow_dispatch:
-
+  
+permissions:
+  contents: write
+  
 jobs:
-  GenerateHTML:
-   uses: spacetelescope/notebook-ci-actions/.github/workflows/ci_builder.yml@main
+  if_merged:
+    if: github.event.pull_request.merged == true
+    uses: spacetelescope/notebook-ci-actions/.github/workflows/ci_builder.yml@v2
