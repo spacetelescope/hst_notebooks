@@ -65,6 +65,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Calstis 2-D CCD Data Reduction" href="../calstis/calstis_2d_ccd.html" />
+    <link rel="prev" title="STIS-Notebooks" href="../README.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -254,8 +256,9 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../README.html">STIS-Notebooks</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">STIS Coronagraphy Visualization Tool (v2)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../view_data/view_data.html">Viewing STIS Data</a></li>
@@ -502,10 +505,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-stis-coronagraphy-planning-and-occulters">Introduction: STIS Coronagraphy Planning and Occulters</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#postions-of-stis-supported-coronagraphic-apertures-including-the-two-wedges-and-two-bars-note-that-the-full-stis-field-of-view-is-50-x-50">Postions of STIS supported coronagraphic apertures, including the two WEDGEs and two BARs. Note that the full STIS field of view is 50” x 50”.</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-stis-coronagraphy-planning-and-occulters">Introduction: STIS Coronagraphy Planning and Occulters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#guide-to-usage">Guide to Usage</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#some-additional-notes">Some additional notes:</a></li>
 </ul>
@@ -531,7 +532,36 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="cell docutils container">
+  <p><a id=header></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="stis-coronagraphy-visualization-tool-v2">
+<h1>STIS Coronagraphy Visualization Tool (v2)<a class="headerlink" href="#stis-coronagraphy-visualization-tool-v2" title="Permalink to this heading">#</a></h1>
+<p>Developed by K. Ward-Duong (<a class="reference external" href="mailto:kwduong&#37;&#52;&#48;stsci&#46;edu">kwduong<span>&#64;</span>stsci<span>&#46;</span>edu</a>), last revision 2023-08-29</p>
+<section id="introduction-stis-coronagraphy-planning-and-occulters">
+<h2>Introduction: STIS Coronagraphy Planning and Occulters<a class="headerlink" href="#introduction-stis-coronagraphy-planning-and-occulters" title="Permalink to this heading">#</a></h2>
+<p>Some of the most important steps in planning and preparing coronagraphic observations with STIS involve:</p>
+<ul class="simple">
+<li><ol class="arabic simple">
+<li><p>selecting the appropriate occulter position (from the various supported fiducial apertures, visualized in the figure below on an on-orbit lamp flatfield)</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="2">
+<li><p>determining the appropriate orientation of the observatory to conduct science observations, often at multiple telescope roll angles to provide angular diversity of imaging for the purposes of post-processing.</p></li>
+</ol>
+</li>
+</ul>
+<p>Considerations for these decisions include avoiding the locations of the central star’s diffraction spikes relative to any scientific feature(s) of interest, and verifying the true north angle of the CCD detector to understand where a given companion or disk feature might be located.</p>
+<p>To this end, the functions and examples in this notebook are meant to be an illustrative guide to visualizing possible aperture+companion+orientation configurations.</p>
+<img src="c12_special12.1.png" alt="Positions of STIS supported coronagraphic apertures, including the two WEDGEs and two BARs." style="width: 500px;"/>
+<p><span style="font-size: larger; font-weight:bold">Positions of STIS supported coronagraphic apertures, including the two WEDGEs and two BARs. Note that the full STIS field of view is 50” x 50”.</span></p>
+</section>
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<p><strong>We will import the following packages:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> for plotting data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> to handle array functions</p></li>
+</ul>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -542,25 +572,7 @@ document.write(`
 </div>
 </div>
 </div>
-<section class="tex2jax_ignore mathjax_ignore" id="stis-coronagraphy-visualization-tool-v2">
-<h1>STIS Coronagraphy Visualization Tool (v2)<a class="headerlink" href="#stis-coronagraphy-visualization-tool-v2" title="Permalink to this heading">#</a></h1>
-<p>Developed by K. Ward-Duong (<a class="reference external" href="mailto:kwduong&#37;&#52;&#48;stsci&#46;edu">kwduong<span>&#64;</span>stsci<span>&#46;</span>edu</a>), last revision 2021-03-22</p>
-<hr class="docutils" />
-<section id="introduction-stis-coronagraphy-planning-and-occulters">
-<h2>Introduction: STIS Coronagraphy Planning and Occulters<a class="headerlink" href="#introduction-stis-coronagraphy-planning-and-occulters" title="Permalink to this heading">#</a></h2>
-<p>Some of the most important steps in planning and preparing coronagraphic observations with STIS involve:</p>
-<ol class="arabic simple">
-<li><p>selecting the appropriate occulter position (from the various supported fiducial apertures, visualized in the figure below on an on-orbit lamp flatfield)</p></li>
-<li><p>determining the appropriate orientation of the observatory to conduct science observations, often at multiple telescope roll angles to provide angular diversity of imaging for the purposes of post-processing.</p></li>
-</ol>
-<p>Considerations for these decisions include avoiding the locations of the central star’s diffraction spikes relative to any scientific feature(s) of interest, and verifying the true north angle of the CCD detector to understand where a given companion or disk feature might be located.</p>
-<p>To this end, the functions and examples in this notebook are meant to be an illustrative guide to visualizing possible aperture+companion+orientation configurations.</p>
-<img src="c12_special12.1.png" alt="Drawing" style="width: 500px;"/>
-<section id="postions-of-stis-supported-coronagraphic-apertures-including-the-two-wedges-and-two-bars-note-that-the-full-stis-field-of-view-is-50-x-50">
-<h3>Postions of STIS supported coronagraphic apertures, including the two WEDGEs and two BARs. Note that the full STIS field of view is 50” x 50”.<a class="headerlink" href="#postions-of-stis-supported-coronagraphic-apertures-including-the-two-wedges-and-two-bars-note-that-the-full-stis-field-of-view-is-50-x-50" title="Permalink to this heading">#</a></h3>
 </section>
-</section>
-<hr class="docutils" />
 <section id="guide-to-usage">
 <h2>Guide to Usage<a class="headerlink" href="#guide-to-usage" title="Permalink to this heading">#</a></h2>
 <p>The purpose of this notebook is to provide a function to visualize the STIS detector orientation for various astrophysical scenes and instrumental/telescope configurations. Examples below include a simple star+companion scene, and a star+disk scene, in order to determine the visibility of the scientific feature of interest relative to the STIS occulter of choice, stellar diffraction spikes, and true north angle.</p>
@@ -846,7 +858,6 @@ disk_width    : (float) semimajor axis of the disk in arcsec
 </div>
 </div>
 </section>
-<hr class="docutils" />
 <section id="example-1-star-with-a-companion-visible">
 <h2>Example #1: Star with a companion (visible)<a class="headerlink" href="#example-1-star-with-a-companion-visible" title="Permalink to this heading">#</a></h2>
 <section id="in-the-example-below-the-properties-of-the-point-source-companion-are-defined-in-line-in-the-function-call-directly-the-resulting-image-shows-the-following-features">
@@ -873,7 +884,6 @@ disk_width    : (float) semimajor axis of the disk in arcsec
 </div>
 </section>
 </section>
-<hr class="docutils" />
 <section id="example-2-star-with-a-companion-obscured">
 <h2>Example #2: Star with a companion (obscured)<a class="headerlink" href="#example-2-star-with-a-companion-obscured" title="Permalink to this heading">#</a></h2>
 <section id="in-this-example-the-set-up-is-the-same-as-in-example-1-and-the-only-changed-parameter-is-the-orient-angle-resulting-in-an-obscured-companion-behind-the-bar10-occulter">
@@ -909,13 +919,18 @@ disk_width    : (float) semimajor axis of the disk in arcsec
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_1861/490500715.py:229: MatplotlibDeprecationWarning: Passing the angle parameter of __init__() positionally is deprecated since Matplotlib 3.6; the parameter will become keyword-only two minor releases later.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_1867/490500715.py:229: MatplotlibDeprecationWarning: Passing the angle parameter of __init__() positionally is deprecated since Matplotlib 3.6; the parameter will become keyword-only two minor releases later.
   el = Ellipse((0, 0), kwargs[&#39;disk_width&#39;], kwargs[&#39;disk_height&#39;], -orient-45+featurepa, fill=0, fc=None, lw=5, ec=&#39;magenta&#39;) # angle was incorrectly featurepa+90
 </pre></div>
 </div>
 <img alt="../../../_images/10296f00ba7b8f27f381742e1c952ae2381eddb471bfd0d8ef0ae0a38ec02e8b.png" src="../../../_images/10296f00ba7b8f27f381742e1c952ae2381eddb471bfd0d8ef0ae0a38ec02e8b.png" />
 </div>
 </div>
+<hr class="docutils" />
+<p><span class="xref myst">Top of Page</span>
+<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/>
+<br></br>
+<br></br></p>
 </section>
 </section>
 
@@ -950,6 +965,24 @@ disk_width    : (float) semimajor axis of the disk in arcsec
   
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="../README.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">STIS-Notebooks</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../calstis/calstis_2d_ccd.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Calstis 2-D CCD Data Reduction <a class="tocSkip"></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div></div>
   
 </div>
@@ -968,10 +1001,8 @@ disk_width    : (float) semimajor axis of the disk in arcsec
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-stis-coronagraphy-planning-and-occulters">Introduction: STIS Coronagraphy Planning and Occulters</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#postions-of-stis-supported-coronagraphic-apertures-including-the-two-wedges-and-two-bars-note-that-the-full-stis-field-of-view-is-50-x-50">Postions of STIS supported coronagraphic apertures, including the two WEDGEs and two BARs. Note that the full STIS field of view is 50” x 50”.</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-stis-coronagraphy-planning-and-occulters">Introduction: STIS Coronagraphy Planning and Occulters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#guide-to-usage">Guide to Usage</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#some-additional-notes">Some additional notes:</a></li>
 </ul>
