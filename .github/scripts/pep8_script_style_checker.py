@@ -4,18 +4,11 @@ Based on https://github.com/spacetelescope/jdat_notebooks/blob/main/.github/help
 
 """
 import argparse
-import json
-import numpy as np
 import os
-import pdb
 import pathlib
-import pytz
-import re
 import subprocess
 import sys
 
-from collections import defaultdict
-from datetime import datetime as dt
 
 def remove_temp_files(warn_file):
     """Removes temp files created to perform pep8 style check
@@ -31,6 +24,7 @@ def remove_temp_files(warn_file):
     """
     if os.path.exists(warn_file):
         os.remove(warn_file)
+
 
 def script_style_checker(py_file):
     """Use flake8 to perform a PEP8 style check on python scripts
@@ -87,7 +81,7 @@ def script_style_checker(py_file):
     for warn_num, script_line in enumerate(warns, 1):
         wrn = script_line.replace("{}".format(py_file), "")
         # Print PEP 8 issues
-        line_num =  int(wrn.split(":")[1])
+        line_num = int(wrn.split(":")[1])
         col_num = int(wrn.split(":")[2])
         print("PEP8 error {} of {}".format(warn_num, n_warns))
         print("PEP8 error found at line {}, column {}".format(line_num, col_num))
@@ -99,9 +93,10 @@ def script_style_checker(py_file):
     remove_temp_files(warn_file)
     return 99
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument( 'script_filename', type=str, help='The filename of the notebook to be checked')
+    parser.add_argument('script_filename', type=str, help='The filename of the notebook to be checked')
     args = parser.parse_args()
 
     py_ext = '.py'
