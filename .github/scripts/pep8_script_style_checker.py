@@ -1,5 +1,5 @@
 """
-This script uses flake8 to perform a PEP8 style check on the python code embedded in a jupyter notebook.
+This script uses flake8 to perform a PEP8 style check on python scripts
 Based on https://github.com/spacetelescope/jdat_notebooks/blob/main/.github/helpers/pep8_nb_checker.py.
 
 """
