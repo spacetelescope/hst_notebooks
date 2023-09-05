@@ -1,0 +1,64 @@
+## This workflow performs PEP8 style checks on python scripts.
+name: PEP8 Script Style Check Execution
+
+on:
+   pull_request:
+    branches:
+      - main
+    paths:
+      - 'notebooks/**.py'
+      - '*.yml'
+
+jobs:
+  gather-scripts:
+    # below logic will only allow workflow to trigger under specific conditions
+    if: github.event.pull_request.state == 'open'
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - uses: actions/checkout@v3
+    ## routine to gather only the changed python files and supply them to the matrix
+    - name: changed-files
+      id: get-changed-files
+      uses: tj-actions/changed-files@v35
+      with:
+        separator: ","
+        files: |
+          **/*.py
+    ## convert the list of files to an array and push them into the matrix as a json object
+    - name: set-matrix
+      id: set-matrix
+      run: |
+        IFS=',' read -r -a array <<< "${{steps.get-changed-files.outputs.all_changed_files}}"
+        echo "{$array}"
+        echo "matrix=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${array[@]}")" >> $GITHUB_OUTPUT
+
+  script-style-checks:
+    needs: gather-scripts
+    environment: ci_env
+    runs-on: ubuntu-latest
+    strategy:
+        fail-fast: false
+        matrix:
+            scripts: ${{ fromJson(needs.gather-scripts.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.8.12
+        uses: actions/setup-python@v4 ## needed for caching
+        with:
+          python-version: 3.8.12
+          cache: 'pip'
+      - name: Add conda to system path
+        run: |
+          # $CONDA is an environment variable pointing to the root of the miniconda directory
+          echo $CONDA/bin >> $GITHUB_PATH
+      - name: Install dependencies
+        run: |
+          pip install flake8
+          pip install numpy
+          pip install pytz
+      - name: Run PEP8 style check
+        run: |
+          echo "Python script ${{ matrix.scripts }} was changed."
+#          python .github/helpers/pep8_nb_style_checker.py -f ${{ matrix.scripts }}
