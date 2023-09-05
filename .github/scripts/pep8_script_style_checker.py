@@ -85,7 +85,7 @@ def script_style_checker(py_file):
     n_warns = len(warns)
 
     for warn_num, script_line in enumerate(warns, 1):
-        wrn = script_line[re.match(py_file.name, script_line).end():]
+        wrn = script_line.replace("{}".format(py_file), "")
         # Print PEP 8 issues
         line_num =  int(wrn.split(":")[1])
         col_num = int(wrn.split(":")[2])
