@@ -6,24 +6,34 @@ Field Camera 3 (WFC3) on the Hubble Space Telescope (HST). For our primary WFC3
 user-support tools, see [wfc3tools](https://github.com/spacetelescope/wfc3tools) and 
 [WFC3 Software Tools](https://www.stsci.edu/hst/instrumentation/wfc3/software-tools).
 
-WFC3Library is the primary repository for new notebooks, including color 
-correction, photometric tools, spectroscopic tools, and other analyses. This 
-repository contains the complementary notebooks mentioned in the 
-[WFC3 Data Handbook](https://hst-docs.stsci.edu/wfc3dhb). These notebooks include:
+WFC3Library is the primary repository for Jupyter notebooks, including general tools, 
+WFC3/IR, time variable background (TVB), and photometry. This repository contains the 
+complementary notebooks mentioned in the [WFC3 Data Handbook](https://hst-docs.stsci.edu/wfc3dhb). 
+These notebooks include:
 
-- Manual Recalibration of Images using CALWF3
-- WFC3/UVIS Filter Transformations with stsynphot
-- Flux Unit Conversions with synphot and stsynphot
-- Synthetic Photometry Examples for WFC3
-- WFC3/UVIS Time-dependent Photometry
-- Calculating WFC3 Zeropoints with STSynphot
+General Tools:
 - WFC3 Image Displayer and Analyzer
+- Exception Report Checklist - WFC3
+- Processing WFC3/UVIS Data with `calwf3` Using the v1.0 CTE-Correction
+
+WFC3/IR:
 - Masking Persistence in WFC3/IR Images
 - How to use `wfc3_dash` on DASH data
-- Processing WFC3/UVIS Data with `calwf3` Using the v1.0 CTE-Correction
-- Exception Report Checklist - WFC3
-- WFC3/UVIS Pixel Area Map Corrections for Subarrays
+
+WFC3/IR Time Variable Background (TVB):
+- WFC3/IR IMA Visualization Tools with an Example of Time Variable Background
+- Manual Recalibration of Images using `calwf3`: Turning off the WFC3/IR Linear Ramp Fit
 - Correcting for Helium Line Emission Background in WFC3/IR Exposures using the "Flatten-Ramp" Technique
+- Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads
+- Correcting for Scattered Light in WFC3/IR Exposures: Using `calwf3` to Mask Bad Reads
+
+Photometry:
+- WFC3/UVIS Filter Transformations with `stsynphot`
+- Flux Unit Conversions with `synphot` and `stsynphot`
+- Synthetic Photometry Examples for WFC3
+- WFC3/UVIS Time-dependent Photometry
+- Calculating WFC3 Zeropoints with `stsynphot`
+- WFC3/UVIS Pixel Area Map Corrections for Subarrays
 
 Each folder in `notebooks` has an individual `README.md` with further 
 details and a HTML file that can be opened in a browser after cloning this 
@@ -63,6 +73,9 @@ window:
 To activate `wfc3_env`, run this line in a terminal window:
 
     conda activate wfc3_env
+
+You can also create and activate `wfc3_env_no_builds`, which is `wfc3_env` 
+but without the build specifications to avoid platform specific conflicts.
 
 Please read the individual `README.md` files in `notebooks` for further 
 installation instructions.
