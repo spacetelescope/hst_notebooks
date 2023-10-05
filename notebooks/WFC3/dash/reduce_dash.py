@@ -884,3 +884,4 @@ def main(ima_file_name = None, flt_file_name = None,
                  updatehdr=updatehdr, updatewcs=updatewcs, cat_file=cat_file,
                  searchrad=searchrad,
                  astrodriz=astrodriz)
+
