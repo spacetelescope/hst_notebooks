@@ -1,0 +1,1043 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Masking Persistence in WFC3/IR Images &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/WFC3/persistence/wfc3_ir_persistence';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Synthetic Photometry Examples for WFC3" href="../photometry_examples/phot_examples.html" />
+    <link rel="prev" title="Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads" href="../ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">Obtaining Pixel Area Maps for ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Jupyter Notebook Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/Initialization/Initialization.html">DrizzlePac Initialization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an absolute reference catalog</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling WFPC2 Images to use a Single Zeropoint</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Using updated astrometry solutions</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/README.html">STIS-Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">WFC3Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dash/dash.html">How to use <code class="docutils literal notranslate"><span class="pre">wfc3_dash</span></code> on DASH data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/WFC3/persistence/wfc3_ir_persistence.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/WFC3/persistence/wfc3_ir_persistence.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/WFC3/persistence/wfc3_ir_persistence.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Masking Persistence in WFC3/IR Images</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-a-id-intro-a">Introduction <a id="intro"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-a-id-import-a">1. Imports <a id="import"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-a-id-data-a">2. Data <a id="data"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-wfc3-ir-observations-from-mast-a-id-images-a">2.1 Download the WFC3/IR observations from MAST <a id="images"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-persistence-model-products-a-id-model-a">2.2 Download the Persistence Model Products  <a id="model"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis-a-id-analysis-a">3. Analysis <a id="analysis"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#display-the-images-a-id-display-a">3.1 Display the images  <a id="display"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-the-persistence-model-to-add-dq-flags-a-id-flag-a">3.2 Use the persistence model to add DQ flags  <a id="flag"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#redrizzle-the-flt-data-and-apply-the-new-dq-flags-a-id-drizzle-a">3.3 Redrizzle the FLT data and apply the new DQ flags  <a id="drizzle"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-the-original-and-corrected-drz-files-a-id-compare-a">3.4 Compare the original and corrected DRZ files  <a id="compare"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-the-original-and-corrected-wht-files-a-id-weight-a">3.5 Compare the original and corrected WHT files  <a id="weight"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions-a-id-conclusions-a">4. Conclusions <a id="conclusions"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources-a-id-add-a">Additional Resources <a id="add"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook-a-id-about-a">About this Notebook <a id="about"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations-a-id-cite-a">Citations <a id="cite"></a></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <p><a id="top"></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="masking-persistence-in-wfc3-ir-images">
+<h1>Masking Persistence in WFC3/IR Images<a class="headerlink" href="#masking-persistence-in-wfc3-ir-images" title="Permalink to this heading">#</a></h1>
+<hr class="docutils" />
+<section id="learning-goals">
+<h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h2>
+<p>This notebook shows how to use the Hubble Space Telescope WFC3/IR persistence model to flag pixels affected by persistence in the calibrated (FLT) science images. When the images are sufficiently dithered to step over the observed persistence artifacts, AstroDrizzle may be used to exclude those flagged pixels when combining the FLT frames.</p>
+<p>By the end of this tutorial, you will:</p>
+<ul class="simple">
+<li><p>Download images and persistence products from MAST.</p></li>
+<li><p>Flag affected pixels in the data quality arrays of the FLT images.</p></li>
+<li><p>Redrizzle the FLT images to produce a “clean” DRZ combined product.</p></li>
+</ul>
+</section>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
+<p><span class="xref myst">Introduction</span> <br>
+<span class="xref myst">1. Imports</span> <br>
+<span class="xref myst">2. Data</span> <br></p>
+<ul class="simple">
+<li><p><span class="xref myst">2.1 Download the WFC3/IR observations from MAST</span> <br></p></li>
+<li><p><span class="xref myst">2.2 Download the persistence model products</span> <br></p></li>
+</ul>
+<p><span class="xref myst">3. Analysis</span> <br></p>
+<ul class="simple">
+<li><p><span class="xref myst">3.1 Display the images</span> <br></p></li>
+<li><p><span class="xref myst">3.2 Use the persistence model to add DQ flags</span> <br></p></li>
+<li><p><span class="xref myst">3.3 Redrizzle the FLT data and apply the new DQ flags</span> <br></p></li>
+<li><p><span class="xref myst">3.4 Compare the original and corrected DRZ files</span> <br></p></li>
+<li><p><span class="xref myst">3.5 Compare the original and corrected WHT files</span> <br></p></li>
+</ul>
+<p><span class="xref myst">4. Conclusions</span> <br>
+<span class="xref myst">Additional Resources</span> <br>
+<span class="xref myst">About this Notebook</span> <br>
+<span class="xref myst">Citations</span> <br></p>
+</section>
+<section id="introduction-a-id-intro-a">
+<h2>Introduction <a id="intro"></a><a class="headerlink" href="#introduction-a-id-intro-a" title="Permalink to this heading">#</a></h2>
+<p>Image persistence in the IR array occurs whenever a pixel is exposed to light that exceeds more than about half of the full well of a pixel in the array. Persistence can occur within a single visit, as the different exposures in a visit are dithered. Persistence also occurs from observations in a previous visit of completely different fields.</p>
+<p>Image persistence is seen in a small, but non-negligible fraction of WFC3/IR exposures. Its properties are discussed in in <a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb/chapter-5-wfc3-detector-characteristics-and-performance/5-7-ir-detector-characteristics-and-performance#id-5.7IRDetectorCharacteristicsandPerformance-5.7.95.7.9ImagePersistence">Section 5.7.9</a> of the WFC3 Instrument Handbook and in <a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb/chapter-8-persistence-in-wfc3-ir">Chapter 8</a> of the WFC3 Data Handbook. Persistence is primarily a function of the degree to which a pixel is filled (in electrons) and the time since this occurred. Additional information is available from the <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3/data-analysis/ir-persistence">WFC3 Persistence Webpage</a>.</p>
+<p>As described in <a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb/chapter-8-persistence-in-wfc3-ir/8-3-mitigating-the-effects-of-persistence">Section 8.3</a> of the Data Handbook, there are two possible ways to mitigate persistence: 1.) exclude the affected pixels from the analysis or 2.) subtract the persistence model directly from the image.</p>
+<p>This notebook illustrates the first method and shows how to use model to flag affected pixels in the data quality (DQ) array of each FLT image. When the images are sufficiently dithered, affected regions of the detector may be replaced with ‘good’ pixels from other exposures in the visit when combining the exposures with AstroDrizzle. Note that this reduces the effective exposure time in those regions of the combined image.</p>
+<p>In the second method, the persistence-corrected FLT frames, downloaded in <span class="xref myst">Section 2.2</span> of this notebook, may be used directly for analysis or a scaled version of the persistence model may be subtracted from each FLT image until an adequate correction is achieved. In this case, flagging the affected pixels in the DQ arrays would not be required.</p>
+</section>
+<section id="imports-a-id-import-a">
+<h2>1. Imports <a id="import"></a><a class="headerlink" href="#imports-a-id-import-a" title="Permalink to this heading">#</a></h2>
+<p>This notebook assumes you have created the virtual environment in <a class="reference external" href="https://github.com/spacetelescope/WFC3Library">WFC3 Library’s</a> installation instructions.</p>
+<p>We import:</p>
+<ul class="simple">
+<li><p><em>os</em> for setting environment variables</p></li>
+<li><p><em>glob</em> for finding lists of files</p></li>
+<li><p><em>shutil</em> for managing directories</p></li>
+<li><p><em>numpy</em> for handling array functions</p></li>
+<li><p><em>matplotlib.pyplot</em> for plotting data</p></li>
+<li><p><em><a class="reference external" href="http://astropy.io">astropy.io</a> fits</em> for accessing FITS files</p></li>
+<li><p><em>ccdproc</em> for querying keyword values in the FITS headers</p></li>
+<li><p><em>astroquery</em> for downloading data from MAST</p></li>
+<li><p><em>urllib</em> for obtaining the Persistence products from MAST</p></li>
+<li><p><em>drizzlepac astrodrizzle</em> for combining images</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span> 
+<span class="kn">import</span> <span class="nn">glob</span> 
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+
+<span class="kn">from</span> <span class="nn">ccdproc</span> <span class="kn">import</span> <span class="n">ImageFileCollection</span>
+<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">from</span> <span class="nn">drizzlepac</span> <span class="kn">import</span> <span class="n">astrodrizzle</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-a-id-data-a">
+<h2>2. Data <a id="data"></a><a class="headerlink" href="#data-a-id-data-a" title="Permalink to this heading">#</a></h2>
+<section id="download-the-wfc3-ir-observations-from-mast-a-id-images-a">
+<h3>2.1 Download the WFC3/IR observations from MAST <a id="images"></a><a class="headerlink" href="#download-the-wfc3-ir-observations-from-mast-a-id-images-a" title="Permalink to this heading">#</a></h3>
+<p>Here, we obtain WFC3/IR observations from GLASS program 13459, Visit 29 in the F140W filter. These exposures were impacted by persistence from grism G102 exposures obtained just prior to these.</p>
+<p>The following commands query MAST and then download the FLT and DRZ data products to the current directory.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="s1">&#39;ica529*&#39;</span><span class="p">,</span><span class="n">filters</span><span class="o">=</span><span class="s1">&#39;F140W&#39;</span><span class="p">)</span>
+
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">data_list</span><span class="p">[</span><span class="s1">&#39;obsid&#39;</span><span class="p">],</span><span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">download_dir</span><span class="o">=</span><span class="s1">&#39;./data&#39;</span><span class="p">,</span>
+                               <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;FLT&#39;</span><span class="p">,</span><span class="s1">&#39;DRZ&#39;</span><span class="p">])</span>
+
+<span class="n">science_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;data/mastDownload/HST/*/*fits&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">science_files</span><span class="p">:</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="s1">&#39;./&#39;</span><span class="o">+</span><span class="n">root</span><span class="p">)</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;data/&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This Visit contains 4 consecutive dithered FLT exposures in the F140W filter, which are obtained in a single orbit. The following commands print the values of keywords describing those data, where the POSTARG* values represent the commanded x-axis and y-axis offsets in arcseconds.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">collec</span> <span class="o">=</span> <span class="n">ImageFileCollection</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">,</span>
+                             <span class="n">keywords</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;asn_id&quot;</span><span class="p">,</span><span class="s2">&quot;targname&quot;</span><span class="p">,</span><span class="s2">&quot;filter&quot;</span><span class="p">,</span><span class="s2">&quot;samp_seq&quot;</span><span class="p">,</span><span class="s2">&quot;nsamp&quot;</span><span class="p">,</span><span class="s2">&quot;exptime&quot;</span><span class="p">,</span>
+                             <span class="s2">&quot;postarg1&quot;</span><span class="p">,</span><span class="s2">&quot;postarg2&quot;</span><span class="p">,</span><span class="s2">&quot;date-obs&quot;</span><span class="p">,</span><span class="s2">&quot;time-obs&quot;</span><span class="p">,],</span> <span class="n">glob_include</span><span class="o">=</span><span class="s2">&quot;ica529*flt.fits&quot;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">out_table</span> <span class="o">=</span> <span class="n">collec</span><span class="o">.</span><span class="n">summary</span>
+<span class="n">out_table</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="download-the-persistence-model-products-a-id-model-a">
+<h3>2.2 Download the Persistence Model Products  <a id="model"></a><a class="headerlink" href="#download-the-persistence-model-products-a-id-model-a" title="Permalink to this heading">#</a></h3>
+<p>To find the URL of the tar file containing the persistence fits files, visit the <a class="reference external" href="https://archive.stsci.edu/prepds/persist/search.php">PERSIST Search Form</a> and search for dataset=’ica529*’.</p>
+<p>You may hover over the link in the Visit column to get the URL to the gzipped tar file for Visit 29. This URL is called in the Python code below. The persistence model data products we will use to create a mask are named ‘rootname_persist.fits’ and contain any contributions from either external or internal persistence.</p>
+<p>External persistence is defined as residual signal that is generated by an earlier visit, and internal persistence as that generated within the same visit as the image in question. External persistence typically comes from a prior scheduled WFC3/IR program and is not within the control of the observer. Internal persistence can be mitigated by the observer by dithering the exposures within a given visit.</p>
+<p>This cell may take several minutes to complete, as it will download persistence products for all images in the visit, and not just those for the F140W filter.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">request</span><span class="o">=</span><span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="s1">&#39;https://archive.stsci.edu/pub/wfc3_persist/13459/Visit29/13459.Visit29.tar.gz&#39;</span><span class="p">)</span>
+
+<span class="n">tar</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;13459.Visit29.tar.gz&#39;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">gzfile</span><span class="p">:</span>
+    <span class="n">gzfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">tar</span><span class="p">)</span>
+
+<span class="o">!</span>tar<span class="w"> </span>-zxvf<span class="w"> </span><span class="m">13459</span>.Visit29.tar.gz
+
+<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;13459.Visit29.tar.gz&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This creates a subdirectory named 13459.Visit29/ in the working directory with the following products for each calibrated ‘flt.fits’ image:</p>
+<ul class="simple">
+<li><p>persist.fits:  The persistence model, including both internal and external persistence</p></li>
+<li><p>extper.fits:   The persistence model, including only external persistence</p></li>
+<li><p>flt_corr.fits: The corrected FLT image, equal to the difference between the image and the model (‘flt.fits’ - ‘persist.fits’).</p></li>
+</ul>
+<p>Note that limitations in the accuracy of the model can result in corrected FLT images in which persistence is not properly removed. This is especially true when prior observations were obtained in scanning mode, where the model significantly underestimates the level of persistence. In this case the model may be iteratively scaled and subtracted from the FLT frame until the residual signal is fully removed.</p>
+<p>Alternately, this notebook shows how the user can flag the impacted pixels in the FLT data quality array then reprocess with AstroDrizzle to improve the combined image.</p>
+</section>
+</section>
+<section id="analysis-a-id-analysis-a">
+<h2>3. Analysis <a id="analysis"></a><a class="headerlink" href="#analysis-a-id-analysis-a" title="Permalink to this heading">#</a></h2>
+<section id="display-the-images-a-id-display-a">
+<h3>3.1 Display the images  <a id="display"></a><a class="headerlink" href="#display-the-images-a-id-display-a" title="Permalink to this heading">#</a></h3>
+<p>The DRZ product combines the 4 individual FLT exposures and shows faint residual persistence from grism observations obtained just prior to these data.  An example of the ‘Persistence Removal Evaluation’ for the first dataset ica529rmq may be found <a class="reference external" href="https://archive.stsci.edu/pub/wfc3_persist/13459/Visit29/ica529rmq_persist.html">here</a>.</p>
+<p>The DRZ pipeline product is shown on the left, and we can see that the persistence was partially, but not completely, removed by the cosmic-ray rejection functionality in AstroDrizzle. The persistence model for the first FLT dataset is shown on the right.  A pair of red boxes are overplotted on each image to highlight regions of the detector with the most visible grism persistence in the combined DRZ image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">drz</span> <span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;ica529030_drz.fits&#39;</span><span class="p">,</span><span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">per1</span><span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;13459.Visit29/ica529rsq_persist.fits&#39;</span><span class="p">,</span><span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">drz</span><span class="p">,</span>  <span class="n">vmin</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mf">1.4</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">per1</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ica529030_drz.fits (Drizzled Product = 4 FLTs)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ica529rsq_persist.fits (Model for a single FLT)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">280</span><span class="p">,</span><span class="mi">280</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">250</span><span class="p">,</span><span class="mi">250</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">250</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">280</span><span class="p">,</span><span class="mi">280</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">250</span><span class="p">,</span><span class="mi">250</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">250</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span><span class="mi">480</span><span class="p">,</span><span class="mi">480</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">],[</span><span class="mi">360</span><span class="p">,</span><span class="mi">360</span><span class="p">,</span><span class="mi">460</span><span class="p">,</span><span class="mi">460</span><span class="p">,</span><span class="mi">360</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span><span class="mi">480</span><span class="p">,</span><span class="mi">480</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">],[</span><span class="mi">360</span><span class="p">,</span><span class="mi">360</span><span class="p">,</span><span class="mi">460</span><span class="p">,</span><span class="mi">460</span><span class="p">,</span><span class="mi">360</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="use-the-persistence-model-to-add-dq-flags-a-id-flag-a">
+<h3>3.2 Use the persistence model to add DQ flags  <a id="flag"></a><a class="headerlink" href="#use-the-persistence-model-to-add-dq-flags-a-id-flag-a" title="Permalink to this heading">#</a></h3>
+<p>For any pixels in the model with a signal greater than 0.005 e-/sec, we add a flag of 16384 to the current DQ array values in each FLT frame. This threshold is flexible and should be determined empirically by the user based on the science objective and the fraction of pixels impacted. Note that the IR dark rate is 0.049 e-/s, so a threshold of 0.05 e-/s or 0.01 e-/s may be a more reasonable starting value in order to avoid flagging more pixels than can be filled in with the associated dithered FLT frames.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flt1_dq</span><span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;ica529rmq_flt.fits&#39;</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
+<span class="n">per1</span>   <span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;13459.Visit29/ica529rmq_persist.fits&#39;</span><span class="p">,</span><span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">flt2_dq</span><span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;ica529rsq_flt.fits&#39;</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
+<span class="n">per2</span>   <span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;13459.Visit29/ica529rsq_persist.fits&#39;</span><span class="p">,</span><span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">flt3_dq</span><span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;ica529s0q_flt.fits&#39;</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
+<span class="n">per3</span>   <span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;13459.Visit29/ica529s0q_persist.fits&#39;</span><span class="p">,</span><span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">flt4_dq</span><span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;ica529s6q_flt.fits&#39;</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
+<span class="n">per4</span>   <span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;13459.Visit29/ica529s6q_persist.fits&#39;</span><span class="p">,</span><span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">flt1_dq</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">per1</span> <span class="o">&gt;</span> <span class="mf">0.005</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">16384</span>
+<span class="n">flt2_dq</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">per2</span> <span class="o">&gt;</span> <span class="mf">0.005</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">16384</span>
+<span class="n">flt3_dq</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">per3</span> <span class="o">&gt;</span> <span class="mf">0.005</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">16384</span>
+<span class="n">flt4_dq</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">per4</span> <span class="o">&gt;</span> <span class="mf">0.005</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">16384</span>
+
+<span class="n">flt1_dq</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">flt2_dq</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">flt3_dq</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">flt4_dq</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="redrizzle-the-flt-data-and-apply-the-new-dq-flags-a-id-drizzle-a">
+<h3>3.3 Redrizzle the FLT data and apply the new DQ flags  <a id="drizzle"></a><a class="headerlink" href="#redrizzle-the-flt-data-and-apply-the-new-dq-flags-a-id-drizzle-a" title="Permalink to this heading">#</a></h3>
+<p>Now, we recombine the FLT data with AstroDrizzle using the updated DQ arrays and compare with the pipeline DRZ data products. The following cell uses the default parameter values recommended for the IR detector, where <code class="docutils literal notranslate"><span class="pre">final_bits</span></code> tells AstroDrizzle which DQ flags to ignore (e.g. to treat as good data). All other flagged (non-zero) values will be treated as bad pixels and excluded from the combined image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">&#39;ica529*flt.fits&#39;</span><span class="p">,</span><span class="n">output</span><span class="o">=</span><span class="s1">&#39;ica529030_pcorr&#39;</span><span class="p">,</span>
+                          <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">build</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+                          <span class="n">skymethod</span><span class="o">=</span><span class="s1">&#39;match&#39;</span><span class="p">,</span> <span class="n">sky_bits</span><span class="o">=</span><span class="s1">&#39;16&#39;</span><span class="p">,</span>
+                          <span class="n">driz_sep_bits</span><span class="o">=</span><span class="s1">&#39;512,16&#39;</span><span class="p">,</span> <span class="n">combine_type</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span>
+                          <span class="n">driz_cr_snr</span><span class="o">=</span><span class="s1">&#39;5.0 4.0&#39;</span><span class="p">,</span> <span class="n">driz_cr_scale</span><span class="o">=</span><span class="s1">&#39;3.0 2.4&#39;</span><span class="p">,</span> 
+                          <span class="n">final_bits</span><span class="o">=</span><span class="s1">&#39;512,16&#39;</span><span class="p">,</span> <span class="n">num_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="compare-the-original-and-corrected-drz-files-a-id-compare-a">
+<h3>3.4 Compare the original and corrected DRZ files  <a id="compare"></a><a class="headerlink" href="#compare-the-original-and-corrected-drz-files-a-id-compare-a" title="Permalink to this heading">#</a></h3>
+<p>Here, we display the drizzled image from the pipeline and the reprocessed drizzled image with persistence masked.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">drz</span>      <span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;ica529030_drz.fits&#39;</span><span class="p">,</span><span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">drz_corr</span> <span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;ica529030_pcorr_drz.fits&#39;</span><span class="p">,</span><span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">drz</span><span class="p">,</span>      <span class="n">vmin</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mf">1.4</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">drz_corr</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mf">1.4</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ica529030_drz.fits (Pipeline SCI)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ica529030_pcorr_drz.fits (Corrected SCI)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">280</span><span class="p">,</span><span class="mi">280</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">250</span><span class="p">,</span><span class="mi">250</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">250</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">280</span><span class="p">,</span><span class="mi">280</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">250</span><span class="p">,</span><span class="mi">250</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">250</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span><span class="mi">480</span><span class="p">,</span><span class="mi">480</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">],[</span><span class="mi">360</span><span class="p">,</span><span class="mi">360</span><span class="p">,</span><span class="mi">460</span><span class="p">,</span><span class="mi">460</span><span class="p">,</span><span class="mi">360</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span><span class="mi">480</span><span class="p">,</span><span class="mi">480</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">],[</span><span class="mi">360</span><span class="p">,</span><span class="mi">360</span><span class="p">,</span><span class="mi">460</span><span class="p">,</span><span class="mi">460</span><span class="p">,</span><span class="mi">360</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="compare-the-original-and-corrected-wht-files-a-id-weight-a">
+<h3>3.5 Compare the original and corrected WHT files  <a id="weight"></a><a class="headerlink" href="#compare-the-original-and-corrected-wht-files-a-id-weight-a" title="Permalink to this heading">#</a></h3>
+<p>When <code class="docutils literal notranslate"><span class="pre">final_wht_type='EXP'</span></code>, the drizzled WHT images provide an effective exposure time map of the combined array.</p>
+<p>In the plots below, we can see that the pipeline products have lower weight in the region impacted by the grism, but that only a single frame was flagged and rejected by the cosmic ray algorithm. The grey horizontal bars have a weight ~500 seconds compared to the total exposure ~700 seconds.</p>
+<p>In the redrizzled ‘corrected’ WHT image, only a single exposure contributed to the darkest horizontal bars which have a value of ~200 seconds. The adjacent grey bars have a weight ~500 seconds and the rest of the WHT image is ~700 seconds. Users will need to experiment with the persistence masking thresholds and consider the size of the dithers in their individual datasets to determine the best masking strategy.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wht</span>      <span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;ica529030_drz.fits&#39;</span><span class="p">,</span><span class="n">ext</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">wht_corr</span> <span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;ica529030_pcorr_drz.fits&#39;</span><span class="p">,</span><span class="n">ext</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wht</span><span class="p">,</span>     <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wht_corr</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ica529030_drz.fits (Pipeline WHT)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ica529030_pcorr_drz.fits (Corrected WHT)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">250</span><span class="p">,</span><span class="mi">250</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">250</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">250</span><span class="p">,</span><span class="mi">250</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">250</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span><span class="mi">480</span><span class="p">,</span><span class="mi">480</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">],[</span><span class="mi">360</span><span class="p">,</span><span class="mi">360</span><span class="p">,</span><span class="mi">460</span><span class="p">,</span><span class="mi">460</span><span class="p">,</span><span class="mi">360</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span><span class="mi">480</span><span class="p">,</span><span class="mi">480</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">],[</span><span class="mi">360</span><span class="p">,</span><span class="mi">360</span><span class="p">,</span><span class="mi">460</span><span class="p">,</span><span class="mi">460</span><span class="p">,</span><span class="mi">360</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="conclusions-a-id-conclusions-a">
+<h2>4. Conclusions <a id="conclusions"></a><a class="headerlink" href="#conclusions-a-id-conclusions-a" title="Permalink to this heading">#</a></h2>
+<p>Thank you for walking through this notebook. Now with WFC3 data, you should be familiar with:</p>
+<ul class="simple">
+<li><p>Examining the persistence models for a given dataset.</p></li>
+<li><p>Defining a threshold to use for masking pixels in the DQ array of FLT science frames.</p></li>
+<li><p>Reprocessing dithered frames with the new DQ flags to produce an improved combined DRZ image.</p></li>
+</ul>
+<p><strong>Congratulations, you have completed the notebook.</strong></p>
+</section>
+<section id="additional-resources-a-id-add-a">
+<h2>Additional Resources <a id="add"></a><a class="headerlink" href="#additional-resources-a-id-add-a" title="Permalink to this heading">#</a></h2>
+<p>Below are some additional resources that may be helpful. Please send any questions through the <a class="reference external" href="https://stsci.service-now.com/hst">HST Helpdesk</a>.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3">WFC3 Website</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb">WFC3 Instrument Handbook</a></p>
+<ul>
+<li><p>see Sections 5.7.9 and 7.9.4 for a discussion of IR persistence</p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb">WFC3 Data Handbook</a></p>
+<ul>
+<li><p>see Section 8.1 for a discussion of IR persistence</p></li>
+<li><p>see Section 8.2 for evaluating the amount of persistence in science images</p></li>
+<li><p>see Section 8.3 for a discussion methods for mitigating persistence</p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/drizzpac">DrizzlePac Handbook</a></p></li>
+</ul>
+</section>
+<section id="about-this-notebook-a-id-about-a">
+<h2>About this Notebook <a id="about"></a><a class="headerlink" href="#about-this-notebook-a-id-about-a" title="Permalink to this heading">#</a></h2>
+<p><strong>Author:</strong> Jennifer Mack, WFC3 Instrument Team</p>
+<p><strong>Updated On:</strong> 2021-09-28</p>
+</section>
+<section id="citations-a-id-cite-a">
+<h2>Citations <a id="cite"></a><a class="headerlink" href="#citations-a-id-cite-a" title="Permalink to this heading">#</a></h2>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, <code class="docutils literal notranslate"><span class="pre">wfc3tools</span></code>, or <code class="docutils literal notranslate"><span class="pre">drizzlepac</span></code> for published research, please cite the
+authors. Follow these links for more information about citing the libraries below:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/license.html">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
+<li><p><a class="reference external" href="https://wfc3tools.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">wfc3tools</span></code></a></p></li>
+<li><p><a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/LICENSE.html">Citing <code class="docutils literal notranslate"><span class="pre">drizzlepac</span></code></a></p></li>
+</ul>
+<hr class="docutils" />
+<p><span class="xref myst">Top of Page</span>
+<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/WFC3/persistence"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../photometry_examples/phot_examples.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Synthetic Photometry Examples for WFC3</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-a-id-intro-a">Introduction <a id="intro"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-a-id-import-a">1. Imports <a id="import"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-a-id-data-a">2. Data <a id="data"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-wfc3-ir-observations-from-mast-a-id-images-a">2.1 Download the WFC3/IR observations from MAST <a id="images"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-persistence-model-products-a-id-model-a">2.2 Download the Persistence Model Products  <a id="model"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis-a-id-analysis-a">3. Analysis <a id="analysis"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#display-the-images-a-id-display-a">3.1 Display the images  <a id="display"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-the-persistence-model-to-add-dq-flags-a-id-flag-a">3.2 Use the persistence model to add DQ flags  <a id="flag"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#redrizzle-the-flt-data-and-apply-the-new-dq-flags-a-id-drizzle-a">3.3 Redrizzle the FLT data and apply the new DQ flags  <a id="drizzle"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-the-original-and-corrected-drz-files-a-id-compare-a">3.4 Compare the original and corrected DRZ files  <a id="compare"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-the-original-and-corrected-wht-files-a-id-weight-a">3.5 Compare the original and corrected WHT files  <a id="weight"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions-a-id-conclusions-a">4. Conclusions <a id="conclusions"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources-a-id-add-a">Additional Resources <a id="add"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook-a-id-about-a">About this Notebook <a id="about"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations-a-id-cite-a">Citations <a id="cite"></a></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

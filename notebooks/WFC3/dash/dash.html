@@ -1,0 +1,1234 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>How to use wfc3_dash on DASH data &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/WFC3/dash/dash';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Exception Report Checklist - WFC3" href="../exception_report/wfc3_exception_report.html" />
+    <link rel="prev" title="Processing WFC3/UVIS Data with calwf3 Using the v1.0 CTE-Correction" href="../calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">Obtaining Pixel Area Maps for ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Jupyter Notebook Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/Initialization/Initialization.html">DrizzlePac Initialization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an absolute reference catalog</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling WFPC2 Images to use a Single Zeropoint</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Using updated astrometry solutions</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/README.html">STIS-Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">WFC3Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">How to use <code class="docutils literal notranslate"><span class="pre">wfc3_dash</span></code> on DASH data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/WFC3/dash/dash.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/WFC3/dash/dash.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/WFC3/dash/dash.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>How to use wfc3_dash on DASH data</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">1. Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-relevant-data">2. Download relevant data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query-crds-for-reference-files">Query CRDS for reference files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-dash">3. Run DASH</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-dashdata-object">3.1 Create DashData object</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-difference-files-from-reads">3.2 Create difference files from reads</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-an-association-table">3.3 Create an association table</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-segmentation-map">3.4 Create a segmentation map</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subtract-background-from-difference-files">3.5 Subtract background from difference files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fix-cosmic-rays">3.6 Fix cosmic rays</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#align-reads-to-each-other">3.7 Align reads to each other</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-original-ima-and-dash-pipeline-science-result">4. Plot original IMA and DASH pipeline science result</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">5. Conclusions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <p><a id="title"></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="how-to-use-wfc3-dash-on-dash-data">
+<h1>How to use <code class="docutils literal notranslate"><span class="pre">wfc3_dash</span></code> on DASH data<a class="headerlink" href="#how-to-use-wfc3-dash-on-dash-data" title="Permalink to this heading">#</a></h1>
+<hr class="docutils" />
+<section id="learning-goals">
+<h2>Learning Goals:<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h2>
+<p>By the end of this tutorial, you will:</p>
+<ul class="simple">
+<li><p>Create difference files, association tables, and segmentation maps using <code class="docutils literal notranslate"><span class="pre">wfc3_dash</span></code>.</p></li>
+<li><p>Subtract background and fix cosmic rays from newly generated FLTs.</p></li>
+<li><p>Align reads to each other for a final product.</p></li>
+</ul>
+</section>
+<section id="table-of-contents">
+<h2>Table of Contents:<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
+<p><span class="xref myst">Introduction</span> <br>
+<span class="xref myst">1. Imports</span> <br>
+<span class="xref myst">2. Download relevant data</span> <br>
+<span class="xref myst">3. Run DASH</span> <br></p>
+<ul class="simple">
+<li><p><span class="xref myst">3.1 Create DashData object</span> <br></p></li>
+<li><p><span class="xref myst">3.2 Create difference files from reads</span> <br></p></li>
+<li><p><span class="xref myst">3.3 Create an association table</span> <br></p></li>
+<li><p><span class="xref myst">3.4 Create a segmentation map</span> <br></p></li>
+<li><p><span class="xref myst">3.5 Subtract background from the difference files</span> <br></p></li>
+<li><p><span class="xref myst">3.6 Fix cosmic rays</span> <br></p></li>
+<li><p><span class="xref myst">3.7 Align reads to each other</span> <br></p></li>
+</ul>
+<p><span class="xref myst">4. Plot original IMA vs. DASH pipeline science result</span> <br>
+<span class="xref myst">5. Conclusions</span> <br>
+<span class="xref myst">Additional Resources</span> <br>
+<span class="xref myst">About the Notebook</span> <br>
+<span class="xref myst">Citations</span> <br></p>
+<p><a id='introduction'></a></p>
+</section>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>This notebook is the first in a new Drift And SHift (DASH) pipeline workflow developed to ease the process of reducing DASH data. The pipeline is customizable, able to be changed according to scientific goals of the user, and this first tutorial walks the user from data download to a finished product ready for science analysis. For more information, see <a class="reference external" href="https://arxiv.org/pdf/1603.00465.pdf">Momcheva et. al 2016</a> and <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2021/2021-02.pdf">WFC3 ISR 2021-01</a>.</p>
+<p><a id='imports'></a></p>
+</section>
+<section id="imports">
+<h2>1. Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<p>This notebook assumes you have created the virtual environment in <a class="reference external" href="https://github.com/spacetelescope/WFC3Library">WFC3 Library’s</a> installation instructions.</p>
+<p>We import:</p>
+<ul class="simple">
+<li><p><em>os</em> for setting environment variables</p></li>
+<li><p><em>glob</em> for querying through directories</p></li>
+<li><p><em>numpy</em> for handling array functions</p></li>
+<li><p><em>matplotlib.pyplot</em> for plotting data</p></li>
+<li><p><em>astropy</em> for astronomy related functions</p></li>
+<li><p><em>astroquery.Observations</em> for downloading data</p></li>
+<li><p><em>drizzlepac.astrodrizzle</em> for combining images</p></li>
+<li><p><em>reduce_dash</em> for reducing DASH data</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> notebook
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span> 
+
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span> 
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">ascii</span>
+<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+
+<span class="kn">from</span> <span class="nn">drizzlepac</span> <span class="kn">import</span> <span class="n">astrodrizzle</span> 
+
+<span class="kn">from</span> <span class="nn">reduce_dash</span> <span class="kn">import</span> <span class="n">DashData</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='downloads'></a></p>
+</section>
+<section id="download-relevant-data">
+<h2>2. Download relevant data<a class="headerlink" href="#download-relevant-data" title="Permalink to this heading">#</a></h2>
+<p>Retrieve the table of observations associated with 15238.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsTable</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">proposal_id</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;15238&#39;</span><span class="p">],</span> <span class="n">obs_id</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;IDNM0J030&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Get the full list of products associated to the table and restrict the list to IMA files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">product_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">obsTable</span><span class="p">)</span>
+<span class="n">BM</span> <span class="o">=</span> <span class="p">(</span><span class="n">product_list</span><span class="p">[</span><span class="s1">&#39;productSubGroupDescription&#39;</span><span class="p">]</span>  <span class="o">==</span> <span class="s1">&#39;IMA&#39;</span><span class="p">)</span> 
+<span class="n">product_list</span> <span class="o">=</span> <span class="n">product_list</span><span class="p">[</span><span class="n">BM</span><span class="p">]</span>
+
+<span class="n">product_list</span><span class="o">.</span><span class="n">show_in_notebook</span><span class="p">(</span><span class="n">display_length</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Choose a single exposure file to work on. In this example, we choose the first exposure. To create usable data, you will have to follow this work flow on all individual IMA files in your dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myID</span> <span class="o">=</span> <span class="n">product_list</span><span class="p">[</span><span class="s1">&#39;obsID&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Download the IMA and FLT files for that exposure. The standard pipeline-FLT will be used for comparison with the detrended final product.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">download</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">myID</span><span class="p">,</span><span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;IMA&#39;</span><span class="p">,</span><span class="s1">&#39;FLT&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Display the results of the download operation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">download</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Read the files that were just downloaded locally. In addition, have the path be just the rootname, i.e. without the file extension.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">localpathtofile</span> <span class="o">=</span> <span class="n">download</span><span class="p">[</span><span class="s1">&#39;Local Path&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">8</span><span class="p">]</span>
+<span class="n">localpathtofile</span>
+
+<span class="n">original_ima</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">localpathtofile</span><span class="o">+</span><span class="s1">&#39;ima.fits&#39;</span><span class="p">)</span>
+<span class="n">original_flt</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">localpathtofile</span><span class="o">+</span><span class="s1">&#39;flt.fits&#39;</span><span class="p">)</span>
+<span class="n">original_ima</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Print the number of samples and plot the individual reads of the IMA file.</p>
+<p><strong>Note: the individual ‘SCI’ extensions are stored in reverse order, with ‘SCI’, 1 corresponding to the last read.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nsamp</span> <span class="o">=</span> <span class="n">original_ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;NSAMP&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NSAMP&#39;</span><span class="p">,</span><span class="n">nsamp</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span><span class="n">axarr</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">((</span><span class="n">nsamp</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">3</span><span class="o">*</span><span class="p">((</span><span class="n">nsamp</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span><span class="p">)))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="p">((</span><span class="n">nsamp</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+
+    <span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="k">4</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">nsamp</span><span class="p">):</span>
+        <span class="n">immed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">original_ima</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">stdev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">(</span><span class="n">original_ima</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">original_ima</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">clim</span><span class="o">=</span><span class="p">[</span><span class="n">immed</span><span class="o">-</span><span class="mf">.3</span><span class="o">*</span><span class="n">stdev</span><span class="p">,</span><span class="n">immed</span><span class="o">+</span><span class="mf">.5</span><span class="o">*</span><span class="n">stdev</span><span class="p">],</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+        <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;SCI &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span> 
+        <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span> 
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">delaxes</span><span class="p">(</span><span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">])</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="query"></a></p>
+</section>
+<section id="query-crds-for-reference-files">
+<h2>Query CRDS for reference files<a class="headerlink" href="#query-crds-for-reference-files" title="Permalink to this heading">#</a></h2>
+<p>Before running <code class="docutils literal notranslate"><span class="pre">reduce_dash</span></code>, we need to set some environment variables for several subsequent calibration tasks.</p>
+<p>We will point to a subdirectory called <code class="docutils literal notranslate"><span class="pre">crds_cache/</span></code> using the IREF environment variable. The IREF variable is used for WFC3 reference files. Other instruments use other variables, e.g., JREF for ACS.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;iref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;iref/&#39;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;iref&#39;</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;iref&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The code block below will query CRDS for the best reference files currently available for these datasets and update the header keywords to point to these new files. We will use the Python package <code class="docutils literal notranslate"><span class="pre">os</span></code> to run terminal commands. In the terminal, the line would be:</p>
+<p><code class="docutils literal notranslate"><span class="pre">crds</span> <span class="pre">bestrefs</span> <span class="pre">--files</span> <span class="pre">[filename]</span> <span class="pre">--sync-references=1</span> <span class="pre">--update-bestrefs</span></code></p>
+<p>…where ‘filename’ is the name of your fits file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ima_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*_ima.fits&#39;</span><span class="p">)</span> 
+
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">ima_files</span><span class="p">:</span>
+    <span class="n">command_line_input</span> <span class="o">=</span> <span class="s1">&#39;crds bestrefs --files </span><span class="si">{:}</span><span class="s1"> --sync-references=1 --update-bestrefs&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">command_line_input</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='DASH'></a></p>
+</section>
+<section id="run-dash">
+<h2>3. Run DASH<a class="headerlink" href="#run-dash" title="Permalink to this heading">#</a></h2>
+<p>Run the DASH pipeline for a single exposure. This procedure showcases the capabilities and customization options of the DASH pipeline.</p>
+<p><strong>Note: the following will only work if you are using the notebooks inside of the Notebook directory. <code class="docutils literal notranslate"><span class="pre">wfc3_dash</span></code> submodule will be properly packaged and installed within the <code class="docutils literal notranslate"><span class="pre">wfc3_tools</span></code> module sometime in the future.</strong></p>
+<p>If you move the notebooks and want to use them elsewhere, you can still provide a <code class="docutils literal notranslate"><span class="pre">temp_path</span></code> to the dash codes and remove the comments below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#import sys</span>
+
+<span class="c1">#module_path = os.path.abspath(os.path.join(&#39;..&#39;))</span>
+<span class="c1">#if module_path not in sys.path:</span>
+<span class="c1">#    sys.path.append(module_path)</span>
+
+<span class="c1">#tmp_path = &quot;.../wfc3_dash/wfc3_dash&quot;</span>
+<span class="c1">#if tmp_path not in sys.path:</span>
+<span class="c1">#    sys.path.append(tmp_path)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='object'></a></p>
+<section id="create-dashdata-object">
+<h3>3.1 Create DashData object<a class="headerlink" href="#create-dashdata-object" title="Permalink to this heading">#</a></h3>
+<p>We use the both IMA and FLT extensions of our local image to create a DashData object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myDash</span> <span class="o">=</span> <span class="n">DashData</span><span class="p">(</span><span class="n">localpathtofile</span><span class="o">+</span><span class="s1">&#39;ima.fits&#39;</span><span class="p">,</span> <span class="n">flt_file_name</span><span class="o">=</span><span class="n">localpathtofile</span><span class="o">+</span><span class="s1">&#39;flt.fits&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">myDash</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='diff_files'></a></p>
+</section>
+<section id="create-difference-files-from-reads">
+<h3>3.2 Create difference files from reads<a class="headerlink" href="#create-difference-files-from-reads" title="Permalink to this heading">#</a></h3>
+<p>A difference (diff) file contains the counts accumulated between two reads of the IMA file. The diff files are written to disk in a directory named <code class="docutils literal notranslate"><span class="pre">./diff</span></code> under the current working directory (cwd). In creating diff files from the readouts of the IMA, the first difference, between the 1-st and 0-th read is ignored because of its very short exposure time of 2.9 seconds, resulting in a noisy image.</p>
+<p>In order to create the best possible results, the <code class="docutils literal notranslate"><span class="pre">split_ima()</span></code> method uses the <code class="docutils literal notranslate"><span class="pre">bestrefs</span></code> function from <a class="reference external" href="https://hst-crds.stsci.edu/">CRDS</a> to ensure all reference files are up to date and available.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myDash</span><span class="o">.</span><span class="n">split_ima</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Print the number of diff files and plot the diff files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ndiff</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">myDash</span><span class="o">.</span><span class="n">diff_files_list</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of diff files&#39;</span><span class="p">,</span><span class="n">ndiff</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">ndiff</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span> 
+    <span class="n">fig</span><span class="p">,</span><span class="n">axarr</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">((</span><span class="n">ndiff</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">3</span><span class="o">*</span><span class="p">((</span><span class="n">ndiff</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="p">((</span><span class="n">ndiff</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span><span class="p">)):</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">%</span><span class="k">4</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">ndiff</span><span class="p">):</span>
+            <span class="n">diff_i</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">myDash</span><span class="o">.</span><span class="n">diff_files_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_diff.fits&#39;</span><span class="p">)</span>
+            <span class="n">immed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">diff_i</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">stdev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">(</span><span class="n">diff_i</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">diff_i</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">clim</span><span class="o">=</span><span class="p">[</span><span class="n">immed</span><span class="o">-</span><span class="mf">.3</span><span class="o">*</span><span class="n">stdev</span><span class="p">,</span><span class="n">immed</span><span class="o">+</span><span class="mf">.5</span><span class="o">*</span><span class="n">stdev</span><span class="p">],</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+            <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Diff:&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span> 
+            <span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">delaxes</span><span class="p">(</span><span class="n">axarr</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">])</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">fig</span><span class="p">,</span><span class="n">axarr</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">ndiff</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndiff</span><span class="p">):</span>
+        <span class="n">immed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">diff_i</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">stdev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">(</span><span class="n">diff_i</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">diff_i</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">myDash</span><span class="o">.</span><span class="n">diff_files_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_diff.fits&#39;</span><span class="p">)</span>
+        <span class="n">axarr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">diff_i</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">clim</span><span class="o">=</span><span class="p">[</span><span class="n">immed</span><span class="o">-</span><span class="mf">.3</span><span class="o">*</span><span class="n">stdev</span><span class="p">,</span><span class="n">immed</span><span class="o">+</span><span class="mf">.5</span><span class="o">*</span><span class="n">stdev</span><span class="p">],</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+        <span class="n">axarr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Diff:&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">axarr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span> 
+        <span class="n">axarr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span> 
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='asn_table'></a></p>
+</section>
+<section id="create-an-association-table">
+<h3>3.3 Create an association table<a class="headerlink" href="#create-an-association-table" title="Permalink to this heading">#</a></h3>
+<p>This file mimics a typical association file for dithered exposures, which is used by AstroDrizzle to align and stack multiple exposures taken at the same sky position with small dithers.</p>
+<p>We exploit the fact that a WFC3/IR exposure taken under gyro control can be effectively split into individual pseudo-exposures (the diff images we created in <span class="xref myst">Section 3.2</span>). From there, AstroDrizzle can treat such pseudo-expsoures as individual dithers, and combine them into a single exposure.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myDash</span><span class="o">.</span><span class="n">make_pointing_asn</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Show the content of the asn file, which was created in <code class="docutils literal notranslate"><span class="pre">./diff</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">asn_filename</span> <span class="o">=</span> <span class="s1">&#39;diff/</span><span class="si">{}</span><span class="s1">_asn.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myDash</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+<span class="n">asn_table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">asn_filename</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">asn_table</span><span class="o">.</span><span class="n">show_in_notebook</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="seg_map"></a></p>
+</section>
+<section id="create-a-segmentation-map">
+<h3>3.4 Create a segmentation map<a class="headerlink" href="#create-a-segmentation-map" title="Permalink to this heading">#</a></h3>
+<p>Create segmentation map from original FLT image to assist with background subtraction and fixing of cosmic ray flags using <code class="docutils literal notranslate"><span class="pre">create_seg_map()</span></code>. This method makes a directory called <code class="docutils literal notranslate"><span class="pre">./segmentation_maps</span></code>, which holds the outputs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myDash</span><span class="o">.</span><span class="n">create_seg_map</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Plot segmentation map.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rootname</span> <span class="o">=</span> <span class="n">myDash</span><span class="o">.</span><span class="n">root</span>
+<span class="n">segmap_name</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;segmentation_maps/&#39;</span><span class="o">+</span> <span class="n">rootname</span> <span class="o">+</span> <span class="s1">&#39;_seg.fits&#39;</span><span class="p">)</span>
+<span class="n">segmap</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">segmap_name</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">segmap_name</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">segmap</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Print and read source list.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sourcelist_name</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;segmentation_maps/&#39;</span> <span class="o">+</span> <span class="n">rootname</span> <span class="o">+</span> <span class="s1">&#39;_source_list.dat&#39;</span><span class="p">)</span>
+<span class="n">sourcelist</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">sourcelist_name</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sourcelist</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s create a segmentation map and source list from the difference files. We need to make source lists from our difference files created from the IMA so that <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> can better align these difference files to catalogs, each other, etc.</p>
+<p>First, generate a list of difference files that contain the full path name.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diffpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;diff/</span><span class="si">{}</span><span class="s1">_*_diff.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rootname</span><span class="p">)))</span>
+<span class="n">cat_images</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;diff/</span><span class="si">{}</span><span class="s1">_*_diff.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rootname</span><span class="p">))])</span>
+<span class="n">sc_diff_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">diffpath</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">cat_images</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then, create a difference segmentation map using <code class="docutils literal notranslate"><span class="pre">diff_seg_map()</span></code> and the diff files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myDash</span><span class="o">.</span><span class="n">diff_seg_map</span><span class="p">(</span><span class="n">cat_images</span><span class="o">=</span><span class="n">sc_diff_files</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Plot the segmentation map from a diffrence files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">segmap_name</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;segmentation_maps/&#39;</span> <span class="o">+</span> <span class="n">rootname</span> <span class="o">+</span> <span class="s1">&#39;_01_diff_seg.fits&#39;</span><span class="p">)</span>
+<span class="n">segmap</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">segmap_name</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">segmap_name</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">segmap</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='subtract_ext'></a></p>
+</section>
+<section id="subtract-background-from-difference-files">
+<h3>3.5 Subtract background from difference files<a class="headerlink" href="#subtract-background-from-difference-files" title="Permalink to this heading">#</a></h3>
+<p>Subtract background from the individual reads taken from the original IMA file using the DRZ and SEG images produced in the background subtraction of the original FLT.</p>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">subtract_background_reads()</span></code> will subtract the background and write it to the header. By setting <code class="docutils literal notranslate"><span class="pre">subtract=False</span></code>, the background will not be subtracted and will only be written to the header. In addition, setting <code class="docutils literal notranslate"><span class="pre">reset_stars_dq=True</span></code> will reset cosmic rays within objects to 0 since the centers of the stars are flagged.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myDash</span><span class="o">.</span><span class="n">subtract_background_reads</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='cosmic_rays'></a></p>
+</section>
+<section id="fix-cosmic-rays">
+<h3>3.6 Fix cosmic rays<a class="headerlink" href="#fix-cosmic-rays" title="Permalink to this heading">#</a></h3>
+<p>Now, we can use <code class="docutils literal notranslate"><span class="pre">fix_cosmic_rays()</span></code> to reset cosmic rays within the segmentation maps of objects and use <a class="reference external" href="https://arxiv.org/pdf/astro-ph/0108003.pdf">L.A.Cosmic</a> to find them again.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myDash</span><span class="o">.</span><span class="n">fix_cosmic_rays</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='align_each_other'></a></p>
+</section>
+<section id="align-reads-to-each-other">
+<h3>3.7 Align reads to each other<a class="headerlink" href="#align-reads-to-each-other" title="Permalink to this heading">#</a></h3>
+<p>Align reads from the IMA to one another by aligning each difference file to the first diff file.</p>
+<p>Listed below are all the parameters available to <code class="docutils literal notranslate"><span class="pre">myDash.align()</span></code>. <code class="docutils literal notranslate"><span class="pre">align()</span></code> uses <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> to update the WCS information in the headers of the diff files, then drizzles the images together using <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code>. There are more parameters available to users when working with <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> and <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> that could be an integral part of the workflow for users of DASH. The example below lists the default values set for every input:</p>
+<p><code class="docutils literal notranslate"><span class="pre">myDash.align(self,</span> <span class="pre">subtract_background</span> <span class="pre">=</span> <span class="pre">True,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">align_method</span> <span class="pre">=</span> <span class="pre">None,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">ref_catalog</span> <span class="pre">=</span> <span class="pre">None,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">create_diff_source_lists</span> <span class="pre">=</span> <span class="pre">True,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">updatehdr</span> <span class="pre">=</span> <span class="pre">True,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">updatewcs</span> <span class="pre">=</span> <span class="pre">True,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">wcsname</span> <span class="pre">=</span> <span class="pre">'DASH',</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">threshold</span> <span class="pre">=</span> <span class="pre">50.,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">cw</span> <span class="pre">=</span> <span class="pre">3.5,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">searchrad</span> <span class="pre">=</span> <span class="pre">20.,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">astrodriz</span> <span class="pre">=</span> <span class="pre">True,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">cat_file</span> <span class="pre">=</span> <span class="pre">'catalogs/diff_catfile.cat',</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">drz_output</span> <span class="pre">=</span> <span class="pre">None,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">move_files</span> <span class="pre">=</span> <span class="pre">False)</span></code></p>
+<p>Refer to documentation to customize parameters for <a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/tweakreg.html">TweakReg</a> and <a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/astrodrizzle.html">AstroDrizzle</a>.</p>
+<p>Note: the error <code class="docutils literal notranslate"><span class="pre">UnboundLocalError:</span> <span class="pre">local</span> <span class="pre">variable</span> <span class="pre">'sig'</span> <span class="pre">referenced</span> <span class="pre">before</span> <span class="pre">assignment</span></code> can be solved by lowering threshold parameter.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myDash</span><span class="o">.</span><span class="n">align</span><span class="p">(</span><span class="n">updatehdr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">updatewcs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">astrodriz</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Print the shifts file to analyze how well the alignment went. Do not update header until shifts, as seen in the <code class="docutils literal notranslate"><span class="pre">xrms</span></code> and <code class="docutils literal notranslate"><span class="pre">yrms</span></code> columns, are satisfactory. Further information about the outputs in the shift file and what is ‘satisfactory’ can be found in the <a class="reference external" href="https://hst-docs.stsci.edu/drizzpac">Drizzlepac Handbook</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shift_file</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;shifts/shifts_*.txt&#39;</span><span class="p">)</span>
+<span class="n">shift_file_name</span> <span class="o">=</span> <span class="n">shift_file</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="n">shift_tab</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">shift_file_name</span><span class="p">,</span>
+                       <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.no_header&#39;</span><span class="p">,</span>
+                       <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">,</span><span class="s1">&#39;dx&#39;</span><span class="p">,</span><span class="s1">&#39;dy&#39;</span><span class="p">,</span><span class="s1">&#39;rot&#39;</span><span class="p">,</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span><span class="s1">&#39;xrms&#39;</span><span class="p">,</span><span class="s1">&#39;yrms&#39;</span><span class="p">])</span>
+
+<span class="n">formats</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="s1">&#39;.3f&#39;</span><span class="p">,</span> <span class="s1">&#39;.5f&#39;</span><span class="p">,</span> <span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="s1">&#39;.2f&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shift_tab</span><span class="o">.</span><span class="n">colnames</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+    <span class="n">shift_tab</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">formats</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">shift_tab</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s align our images with a threshold of 20, and update the headers and WCS information.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myDash</span><span class="o">.</span><span class="n">align</span><span class="p">(</span><span class="n">threshold</span> <span class="o">=</span> <span class="mf">20.</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='plot'></a></p>
+</section>
+</section>
+<section id="plot-original-ima-and-dash-pipeline-science-result">
+<h2>4. Plot original IMA and DASH pipeline science result<a class="headerlink" href="#plot-original-ima-and-dash-pipeline-science-result" title="Permalink to this heading">#</a></h2>
+<p>Plot the final DRZ image and compare to the original IMA.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sci_name</span> <span class="o">=</span> <span class="n">myDash</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="s1">&#39;_drz_sci.fits&#39;</span>
+<span class="n">og_flt_name</span> <span class="o">=</span> <span class="s1">&#39;mastDownload/HST/&#39;</span> <span class="o">+</span> <span class="n">myDash</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">myDash</span><span class="o">.</span><span class="n">root</span> <span class="o">+</span> <span class="s1">&#39;_ima.fits&#39;</span>
+<span class="n">sci</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">sci_name</span><span class="p">)</span>
+<span class="n">og_flt</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">og_flt_name</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;DASH Pipeline Reduced Science File&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Original IMA (not reduced using pipeline)&#39;</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">1120</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">1120</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">1050</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">1050</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">og_flt</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="conclusions"></a></p>
+</section>
+<section id="conclusions">
+<h2>5. Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this heading">#</a></h2>
+<p>Thank you for walking through this notebook. Now using WFC3 data, you should be more familiar with:</p>
+<ul class="simple">
+<li><p>Creating difference files, association tables, and segmentation maps using <code class="docutils literal notranslate"><span class="pre">wfc3_dash</span></code>.</p></li>
+<li><p>Subtracting background and fixing cosmic rays from newly generated FLTs.</p></li>
+<li><p>Aligning reads to each other for a final product.</p></li>
+</ul>
+<p>Congratulations, you have completed the notebook!</p>
+<p><a id="resources"></a></p>
+</section>
+<section id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this heading">#</a></h2>
+<p>Below are some additional resources that may be helpful. Please send any questions through the <a class="reference external" href="https://stsci.service-now.com/hst">HST Helpdesk</a>.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3">WFC3 Website</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb">WFC3 Instrument Handbook</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb">WFC3 Data Handbook</a></p>
+<ul>
+<li><p>see sections 9.5.4 for reference to this notebook</p></li>
+</ul>
+</li>
+</ul>
+<p><a id="about"></a></p>
+</section>
+<section id="about-this-notebook">
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
+<p><strong>Authors:</strong> Catherine Martlin; WFC3 Instrument Team</p>
+<p><strong>Updated on:</strong> 2023-01-25</p>
+<p><a id="cite"></a></p>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Permalink to this heading">#</a></h2>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, <code class="docutils literal notranslate"><span class="pre">photutils</span></code>, or <code class="docutils literal notranslate"><span class="pre">drizzlepac</span></code> for published research, please cite the authors. Follow these links for more information about citing the libraries below:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/users/project/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/license.html">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
+<li><p><a class="reference external" href="https://photutils.readthedocs.io/en/stable/citation.html">Citing <code class="docutils literal notranslate"><span class="pre">photutils</span></code></a></p></li>
+<li><p><a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/LICENSE.html">Citing <code class="docutils literal notranslate"><span class="pre">drizzlepac</span></code></a></p></li>
+</ul>
+<hr class="docutils" />
+<p><span class="xref myst">Top of Page</span>
+<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/WFC3/dash"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../exception_report/wfc3_exception_report.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Exception Report Checklist - WFC3</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">1. Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-relevant-data">2. Download relevant data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query-crds-for-reference-files">Query CRDS for reference files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-dash">3. Run DASH</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-dashdata-object">3.1 Create DashData object</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-difference-files-from-reads">3.2 Create difference files from reads</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-an-association-table">3.3 Create an association table</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-segmentation-map">3.4 Create a segmentation map</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subtract-background-from-difference-files">3.5 Subtract background from difference files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fix-cosmic-rays">3.6 Fix cosmic rays</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#align-reads-to-each-other">3.7 Align reads to each other</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-original-ima-and-dash-pipeline-science-result">4. Plot original IMA and DASH pipeline science result</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">5. Conclusions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

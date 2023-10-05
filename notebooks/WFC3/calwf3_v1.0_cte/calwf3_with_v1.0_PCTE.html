@@ -1,0 +1,1446 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Processing WFC3/UVIS Data with calwf3 Using the v1.0 CTE-Correction &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="How to use wfc3_dash on DASH data" href="../dash/dash.html" />
+    <link rel="prev" title="Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit" href="../calwf3_recalibration/calwf3_recal_tvb.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">Obtaining Pixel Area Maps for ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Jupyter Notebook Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/Initialization/Initialization.html">DrizzlePac Initialization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an absolute reference catalog</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling WFPC2 Images to use a Single Zeropoint</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Using updated astrometry solutions</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/README.html">STIS-Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">WFC3Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dash/dash.html">How to use <code class="docutils literal notranslate"><span class="pre">wfc3_dash</span></code> on DASH data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Processing WFC3/UVIS Data with calwf3 Using the v1.0 CTE-Correction</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">1. Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-archived-drkcfiles-txt-is-in-cwd">2. Verify <code class="docutils literal notranslate"><span class="pre">archived_drkcfiles.txt</span></code> is in CWD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-that-calwf3-version-is-v3-5-2">3. Check that <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Version is <code class="docutils literal notranslate"><span class="pre">v3.5.2</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query-mast-and-download-a-wfc3-raw-fits-image">4. Query MAST and Download a WFC3 <code class="docutils literal notranslate"><span class="pre">raw.fits</span></code> Image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-image-header">4.1 Inspect Image Header</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#find-the-correct-drkcfile">5. Find the Correct <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modify-image-header">6. Modify Image Header</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#drkcfile">6.1 <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pctetab">6.2 <code class="docutils literal notranslate"><span class="pre">PCTETAB</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#re-inspect-image-header">7. Re-Inspect Image Header</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-environment-variables">8. Set Environment Variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-calwf3">9. Run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-flc-image-header">10. Inspect FLC Image Header</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#investigate-v1-0-and-v2-0-differences">11. Investigate v1.0 and v2.0 Differences</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-v2-0-flc-file">11.1 Download the v2.0 FLC File</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open-files">11.2 Open Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#display-50x50-pixel-background-subsection">11.3 Display 50x50 Pixel Background Subsection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pixel-distribution-of-background-subsections">11.3.1 Pixel Distribution of Background Subsections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#display-image-subsection">11.4 Display Image Subsection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aperture-photometry">11.5 Aperture Photometry</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">12. Conclusions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#congratulations-you-have-completed-the-notebook">Congratulations, you have completed the notebook!</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <p><a id="top"></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="processing-wfc3-uvis-data-with-calwf3-using-the-v1-0-cte-correction">
+<h1>Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction<a class="headerlink" href="#processing-wfc3-uvis-data-with-calwf3-using-the-v1-0-cte-correction" title="Permalink to this heading">#</a></h1>
+<hr class="docutils" />
+<section id="learning-goals">
+<h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h2>
+<p>This notebook explains how to calibrate <code class="docutils literal notranslate"><span class="pre">raw</span></code> WFC3/UVIS data with the v1.0 pixel-based CTE correction within <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>.
+<br></p>
+<p>By the end of this tutorial, you will:</p>
+<ul class="simple">
+<li><p>Download a raw WFC3 image from MAST.</p></li>
+<li><p>Find the necessary reference files needed for calibration.</p></li>
+<li><p>Edit header keywords.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> <code class="docutils literal notranslate"><span class="pre">v3.5.2</span></code> to calibrate the raw image with the v1.0 pixel based CTE-correction.</p></li>
+<li><p>Compare v1.0 and v2.0 products.</p></li>
+</ul>
+<p>Please make sure you have read the <code class="docutils literal notranslate"><span class="pre">README.md</span></code> file before continuing.</p>
+</section>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
+<p><span class="xref myst">Introduction</span><br></p>
+<p><span class="xref myst">1. Imports</span> <br>
+<span class="xref myst">2. Verify <code class="docutils literal notranslate"><span class="pre">archived_drkcfiles.txt</span></code> is in CWD</span><br>
+<span class="xref myst">3. Check that <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Version is <code class="docutils literal notranslate"><span class="pre">v3.5.2</span></code></span><br>
+<span class="xref myst">4. Query MAST and Download a WFC3 <code class="docutils literal notranslate"><span class="pre">raw.fits</span></code> Image</span> <br>
+      <span class="xref myst">4.1 Inspect Image Headers</span> <br>
+<span class="xref myst">5. Find the Correct <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code></span> <br>
+<span class="xref myst">6  Modify Image Header</span> <br>
+      <span class="xref myst">6.1 <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code></span> <br>
+      <span class="xref myst">6.2 <code class="docutils literal notranslate"><span class="pre">PCTETAB</span></code></span> <br>
+<span class="xref myst">7. Re-Inspect Image Header</span> <br>
+<span class="xref myst">8. Set Environment Variables</span> <br>
+<span class="xref myst">9. Run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code></span> <br>
+<span class="xref myst">10. Inspect <code class="docutils literal notranslate"><span class="pre">FLC</span></code> Image Header</span> <br>
+<span class="xref myst">11. Investigate v1.0 and v2.0 Differences</span> <br>
+      <span class="xref myst">11.1 Download the v2.0 FLC File</span><br>
+      <span class="xref myst">11.2 Open Files</span> <br>
+      <span class="xref myst">11.3 Display 50x50 Pixel Background Subsection</span> <br>
+            <span class="xref myst">11.3.1 Pixel Distribution of Background Subsections</span> <br>
+      <span class="xref myst">11.4 Display Image Subsection</span> <br>
+      <span class="xref myst">11.5 Aperture Photometry</span> <br>
+<span class="xref myst">12. Conclusions</span> <br></p>
+<p><span class="xref myst">Additional Resources</span> <br>
+<span class="xref myst">About the Notebook</span> <br>
+<span class="xref myst">Citations</span></p>
+<p><a id="intro"></a></p>
+</section>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>The v1.0 pixel-based Charge Transfer Efficiency (CTE) correction was first implemented into <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> <code class="docutils literal notranslate"><span class="pre">v3.3</span></code> in 2016 (<a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2016wfc..rept....1R/abstract">Ryan et al. 2016</a>,<br> <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2010PASP..122.1035A/abstract">Anderson &amp; Bedin 2010</a>, <a class="reference external" href="https://github.com/spacetelescope/hstcal/releases/tag/1.0.0">HSTCAL release notes</a>). This also marked the first time users could directly download CTE-corrected <code class="docutils literal notranslate"><span class="pre">flc</span> <span class="pre">&amp;</span> <span class="pre">drc</span></code> <br> files from <a class="reference external" href="https://mast.stsci.edu/search/hst/ui/#/">MAST</a>.  While the v1.0 correction was sufficient  for many years, the degradation of CTE over time reduced the efficacy of the model <br> in treating low-level pixels. The v1.0 correction adversely impacts (overcorrects) both the image background and faint sources. In April 2021 <br> the v2.0 pixel-based CTE correction was implemented in <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> <code class="docutils literal notranslate"><span class="pre">v3.6.0</span></code> (<a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2021wfc..rept....9A/abstract">Anderson et al. 2021</a>, <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2021wfc..rept....6K/abstract">Kuhn &amp; Anderson 2021</a>,  <a class="reference external" href="https://github.com/spacetelescope/hstcal/releases/tag/2.7.0">HSTCAL release <br>notes</a>). Since MAST uses the latest release of <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> for calibration, any WFC3/UVIS CTE corrected data retrieved from MAST, regardless of <br> observation date, will be calibrated with the v2.0 pixel-based CTE correction. Although v1.0 pixel-based CTE-corrected <code class="docutils literal notranslate"><span class="pre">flc</span> <span class="pre">&amp;</span> <span class="pre">drc</span></code> files are <br> no longer accessable through MAST, this notebook steps through the procedure required to calibrate WFC3/UVIS images using the v1.0 CTE <br> correction. <br></p>
+<p>One of the limiting factors of using the v1.0 CTE correction are the CTE corrected dark current reference files (<code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code>). These dark <br> reference files are delivered to MAST by the WFC3 team and use the same pixel-based CTE correction within <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>. Now that we <br> have switched to the v2.0 CTE correction there is a cut off for dark current reference files that use the v1.0 correction. Observations taken <br> after February 2021 will not have
+CTE corrected dark files using the v1.0 algorithm, which means <strong>applying the v1.0 CTE correction works <br> best for observations taken between May 2009 - February 2021.</strong> If the observation being calibrated was taken after February 2021 there <br> are two options: <strong>1)</strong> use the last v1.0 CTE corrected dark reference file from February 2021 or <strong>2)</strong> use the v2.0 CTE corrected dark with the <br> most appropriate <code class="docutils literal notranslate"><span class="pre">USEAFTER</span></code> for the science exposure’s observation date.</p>
+<p><a id="imports"></a></p>
+</section>
+<section id="imports">
+<h2>1. Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<p>This notebook assumes you have created the virtual environment in <a class="reference external" href="https://github.com/spacetelescope/WFC3Library">WFC3 Library’s</a> installation instructions.</p>
+<p>We import: <br>
+<br>
+<strong>•</strong> <em>glob</em> for creating list of files  <br>
+<strong>•</strong> <em>matplotlib.pyplot</em> for plotting and displaying images <br>
+<strong>•</strong> <em>numpy</em> for finding indices and concatenating arrays <br>
+<strong>•</strong> <em>os</em> for setting environment variables <br>
+<strong>•</strong> <em>shutil</em> removing an empty directory <br></p>
+<p><strong>•</strong> <em>astropy.io.fits</em> for opening and modifying fits files <br>
+<strong>•</strong> <em>astroquery.mast.Observations</em> for downloading data from MAST <br>
+<strong>•</strong> <em>astropy.table.Table</em> for creating and manipulating data tables<br>
+<strong>•</strong> <em>astropy.time.Time</em> for converting between time formats<br>
+<strong>•</strong> <em>ginga.util.zscale</em> for finding scale limits when displaying images <br>
+<strong>•</strong> <em>photutils.aperture.aperture_photometry</em> for performing aperture photometry<br>
+<strong>•</strong> <em>photutils.aperture.CircularAperture</em> for creating circular apertures <br>
+<strong>•</strong> <em>photutils.aperture.CircularAnnulus</em> for creating circular annuli <br>
+<strong>•</strong> <em>wfc3tools.calwf3</em> for verifying the version and running pipeline <br></p>
+<p><strong>•</strong> <em>background_median.aperture_stats_tbl</em> for measuring background values within annuli <br></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span> <span class="nn">astropy.time</span> <span class="kn">import</span> <span class="n">Time</span>
+<span class="kn">from</span> <span class="nn">ginga.util</span> <span class="kn">import</span> <span class="n">zscale</span>
+<span class="kn">from</span> <span class="nn">photutils.aperture</span> <span class="kn">import</span> <span class="n">aperture_photometry</span><span class="p">,</span> <span class="n">CircularAperture</span><span class="p">,</span> <span class="n">CircularAnnulus</span>
+<span class="kn">from</span> <span class="nn">wfc3tools</span> <span class="kn">import</span> <span class="n">calwf3</span>
+
+<span class="kn">from</span> <span class="nn">example.background_median</span> <span class="kn">import</span> <span class="n">aperture_stats_tbl</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="txtfile"></a></p>
+</section>
+<section id="verify-archived-drkcfiles-txt-is-in-cwd">
+<h2>2. Verify <code class="docutils literal notranslate"><span class="pre">archived_drkcfiles.txt</span></code> is in CWD<a class="headerlink" href="#verify-archived-drkcfiles-txt-is-in-cwd" title="Permalink to this heading">#</a></h2>
+<p>When you cloned/downloaded this notebook from <a class="reference external" href="https://github.com/spacetelescope/WFC3Library">WFC3 Library</a>, a .txt file should have been included. The file name is <br> <code class="docutils literal notranslate"><span class="pre">archived_drkcfiles.txt</span></code> and it is used later on in the notebook. This .txt file includes the file name, delivery date, activation <br> date, and USEAFTER date for every v1.0 CTE corrected dark reference file between May 2009 - February 2021. Below, we will use <br> this file in conjunction with the observation date of the file(s) being calibrated to pick out the most appropriate v1.0 CTE corrected <br> dark reference file(s).<br></p>
+<p>Please make sure the file is in the current working directory before continuing.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># list cwd to verify txt file is there</span>
+<span class="o">!</span>ls<span class="w"> </span>-l<span class="w"> </span>archived_drkcfiles.txt
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="checkcalver"></a></p>
+</section>
+<section id="check-that-calwf3-version-is-v3-5-2">
+<h2>3. Check that <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Version is <code class="docutils literal notranslate"><span class="pre">v3.5.2</span></code><a class="headerlink" href="#check-that-calwf3-version-is-v3-5-2" title="Permalink to this heading">#</a></h2>
+<p>In April 2021, a new <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> version was released that contains the v2.0 CTE-correction.
+If you would like to use the v1.0 correction, your <br> current environment must be using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> versions equal to or between <code class="docutils literal notranslate"><span class="pre">3.3</span></code> - <code class="docutils literal notranslate"><span class="pre">3.5.2</span></code>. However, in order to get the best v1.0 calibrated <br>images we must use <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> <code class="docutils literal notranslate"><span class="pre">v3.5.2</span></code>. This version of <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> includes the recent (<a class="reference external" href="https://github.com/spacetelescope/hstcal/releases/tag/2.5.0">~Jan 2021</a>) update that added MJD as a parameterized <br> variable for the <code class="docutils literal notranslate"><span class="pre">PHOTMODE</span></code> keyword, which enables a time-dependent photometric correction and zeropoint.  If your version is <code class="docutils literal notranslate"><span class="pre">3.6.0</span></code> or higher, <br> you must downgrade the <a class="reference external" href="https://github.com/spacetelescope/hstcal"><code class="docutils literal notranslate"><span class="pre">hstcal</span></code> package</a>. The safer option, however, is to create a new environment such as: <br></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">config</span> <span class="pre">--add</span> <span class="pre">channels</span> <span class="pre">http://ssb.stsci.edu/astroconda</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">create</span> <span class="pre">-n</span> <span class="pre">v1_PCTE</span> <span class="pre">hstcal==2.5.0</span> <span class="pre">python=3.7</span> <span class="pre">ginga</span> <span class="pre">stsci-hst</span> <span class="pre">notebook</span></code></p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">hstcal</span></code> <code class="docutils literal notranslate"><span class="pre">v2.5.0</span></code> provides version <code class="docutils literal notranslate"><span class="pre">3.5.2</span></code> of <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>, which is the last version that offers the v1.0 pixel-based CTE correction.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># print calwf3 version to make sure its equal to or between 3.3 and 3.5.2 </span>
+<span class="o">!</span>calwf3.e<span class="w"> </span>--version
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="download"></a></p>
+</section>
+<section id="query-mast-and-download-a-wfc3-raw-fits-image">
+<h2>4. Query MAST and Download a WFC3 <code class="docutils literal notranslate"><span class="pre">raw.fits</span></code> Image<a class="headerlink" href="#query-mast-and-download-a-wfc3-raw-fits-image" title="Permalink to this heading">#</a></h2>
+<p>Here, we download our image via <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>. For more information, please look at the documentation for <a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Astroquery</a>,
+<a class="reference external" href="https://astroquery.readthedocs.io/en/latest/mast/mast.html">Astroquery.mast</a>, and <br>
+<a class="reference external" href="https://mast.stsci.edu/api/v0/_c_a_o_mfields.html">CAOM Field Descriptions</a>, which is used for the <code class="docutils literal notranslate"><span class="pre">obs_table</span></code> variable below. Additionally, you may download the data from MAST using either <br> the <a class="reference external" href="https://mast.stsci.edu/search/hst/ui/#/">HST MAST Search Engine</a> or the more general <a class="reference external" href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST Portal</a>.</p>
+<p>We download a <code class="docutils literal notranslate"><span class="pre">raw</span></code> image of star cluster 47 Tucanae (47Tuc, NGC 104), offset from the core, from CAL proposal <a class="reference external" href="https://www.stsci.edu/cgi-bin/get-proposal-info?id=15576&amp;submit=Go&amp;observatory=HST">15576</a> (July 2019).<br>
+After downloading the image, we move it to the current working directory (cwd).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Edit this cell&#39;s first line if you would to download your own file(s)</span>
+<span class="c1"># Get the observation records</span>
+<span class="n">obs_table</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="s1">&#39;idv404axq*&#39;</span><span class="p">,</span><span class="n">proposal_id</span><span class="o">=</span><span class="mi">15576</span><span class="p">)</span>
+
+<span class="c1"># Get the listing of data products</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">obs_table</span><span class="p">)</span>
+
+<span class="c1"># Filter the products for the RAW files</span>
+<span class="n">filtered_products</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">filter_products</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="s1">&#39;RAW&#39;</span><span class="p">)</span>
+
+<span class="c1"># Download all the images above</span>
+<span class="n">download_table</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">filtered_products</span><span class="p">,</span> <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># For convenience move raws to cwd and remove empty download dir</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">download_table</span><span class="p">[</span><span class="s1">&#39;Local Path&#39;</span><span class="p">]:</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;mastDownload/HST/&#39;</span><span class="o">+</span><span class="n">filename</span><span class="p">[:</span><span class="mi">9</span><span class="p">])</span>
+        
+<span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;mastDownload/HST/&#39;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;mastDownload/&#39;</span><span class="p">)</span>
+    
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># show list of current dir to verify fits file is there</span>
+<span class="o">!</span>ls<span class="w"> </span>-l<span class="w"> </span>*raw.fits
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="imageheaders"></a></p>
+</section>
+<section id="inspect-image-header">
+<h2>4.1 Inspect Image Header<a class="headerlink" href="#inspect-image-header" title="Permalink to this heading">#</a></h2>
+<p>When processing a raw file through <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> ,  the pipeline uses a few different header keywords to initiate and run the pixel-based CTE <br> correction. Here, we inspect the important header keywords from the raw file just downloaded.<br>
+At this step, you should see: <br></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pctetab</span></code> set to <code class="docutils literal notranslate"><span class="pre">iref$54l1347ei_cte.fits</span></code><br></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">drkcfile</span></code> set to <code class="docutils literal notranslate"><span class="pre">iref$54n2022fi_dkc.fits</span></code><br></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pctecorr</span></code> set to <code class="docutils literal notranslate"><span class="pre">PERFORM</span></code>.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Collect header keyword info from raw file</span>
+<span class="n">file</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">expstart</span><span class="p">,</span> <span class="n">pctetab</span><span class="p">,</span> <span class="n">drkcfile</span><span class="p">,</span> <span class="n">pctecorr</span> <span class="o">=</span> <span class="p">[],[],[],[],[],[]</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*raw.fits&#39;</span><span class="p">):</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">])</span>
+    <span class="n">date</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;date-obs&#39;</span><span class="p">])</span>
+    <span class="n">expstart</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;expstart&#39;</span><span class="p">])</span>
+    <span class="n">pctetab</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;pctetab&#39;</span><span class="p">])</span>
+    <span class="n">drkcfile</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;drkcfile&#39;</span><span class="p">])</span>
+    <span class="n">pctecorr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;pctecorr&#39;</span><span class="p">])</span>
+
+<span class="n">image_table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">([</span><span class="n">file</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">expstart</span><span class="p">,</span> <span class="n">pctetab</span><span class="p">,</span> <span class="n">drkcfile</span><span class="p">,</span> <span class="n">pctecorr</span><span class="p">],</span>
+                    <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">,</span><span class="s1">&#39;date-obs&#39;</span><span class="p">,</span> <span class="s1">&#39;expstart&#39;</span><span class="p">,</span> <span class="s1">&#39;pctetab&#39;</span><span class="p">,</span> <span class="s1">&#39;drkcfile&#39;</span><span class="p">,</span> <span class="s1">&#39;pctecorr&#39;</span><span class="p">))</span>
+<span class="n">image_table</span><span class="p">[</span><span class="s1">&#39;expstart&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;5.6f&#39;</span>
+
+<span class="c1"># Sort and display the table</span>
+<span class="n">image_table</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s1">&#39;expstart&#39;</span><span class="p">)</span>
+<span class="n">image_table</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="finddark"></a></p>
+</section>
+<section id="find-the-correct-drkcfile">
+<h2>5. Find the Correct <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code><a class="headerlink" href="#find-the-correct-drkcfile" title="Permalink to this heading">#</a></h2>
+<p>Below, we open the .txt file containing a list of all the <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code> reference files created with the v1.0 pixel-based CTE correction. <br><code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code> reference files are CTE corrected files used by the pipeline to perform the dark current subtraction during the generation <br> of the <code class="docutils literal notranslate"><span class="pre">flc</span></code> file. The <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code> files listed in <code class="docutils literal notranslate"><span class="pre">archived_drkcfiles.txt</span></code> have been archived on the CRDS database and while <br> they are still accessible for use and download, they are not being actively used by MAST. <br></p>
+<p>In the first cell, we generate an <code class="docutils literal notranslate"><span class="pre">astropy.Table</span></code> ( <code class="docutils literal notranslate"><span class="pre">drkc_table</span></code> ) using the data from the file <code class="docutils literal notranslate"><span class="pre">archived_drkcfiles.txt</span></code>, mentioned <br> in <span class="xref myst">Section 2</span>, and create empty lists for the final table. Then, in the second cell, we index the <code class="docutils literal notranslate"><span class="pre">drkc_table</span></code> table for the best <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code> <br> that corresponds to the <code class="docutils literal notranslate"><span class="pre">DATE-OBS</span></code>  of the <code class="docutils literal notranslate"><span class="pre">raw</span></code> file being calibrated. Lastly, in the third cell, we create and display the final <code class="docutils literal notranslate"><span class="pre">astropy.table</span></code> <br>that contains just the necessary <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code>.<br></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate astropy table from `archived_drkcfiles.txt`</span>
+<span class="n">drkc_table</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;archived_drkcfiles.txt&#39;</span><span class="p">,</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.commented_header&#39;</span><span class="p">)</span>
+
+<span class="c1"># Create empty lists for final astropy table</span>
+<span class="n">rawfiles</span><span class="p">,</span> <span class="n">obsdates</span><span class="p">,</span> <span class="n">dkcfiles</span><span class="p">,</span> <span class="n">uafters</span><span class="p">,</span> <span class="n">active_dates</span> <span class="o">=</span> <span class="p">[],[],[],[],</span> <span class="p">[]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Using image header table from section 4.1 find closest drkcfile</span>
+<span class="k">for</span> <span class="n">expstart</span> <span class="ow">in</span> <span class="n">image_table</span><span class="p">[</span><span class="s1">&#39;expstart&#39;</span><span class="p">]:</span>
+    <span class="n">table_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">drkc_table</span><span class="p">[</span><span class="s1">&#39;useafter-mjd&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">expstart</span><span class="p">)</span> <span class="o">==</span> <span class="nb">abs</span><span class="p">(</span><span class="n">drkc_table</span><span class="p">[</span><span class="s1">&#39;useafter-mjd&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">expstart</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">rawfile</span> <span class="o">=</span> <span class="n">image_table</span><span class="p">[</span><span class="n">image_table</span><span class="p">[</span><span class="s1">&#39;expstart&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">expstart</span><span class="p">][</span><span class="s1">&#39;file&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="c1"># if drkcfile has useafter date &gt; rawfile expstart use previous drkcfile</span>
+    <span class="k">if</span> <span class="n">drkc_table</span><span class="p">[</span><span class="n">table_idx</span><span class="p">][</span><span class="s1">&#39;useafter-mjd&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">image_table</span><span class="p">[</span><span class="n">image_table</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">rawfile</span><span class="p">][</span><span class="s1">&#39;expstart&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">table_idx</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="c1">#append info</span>
+    <span class="n">rawfiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rawfile</span><span class="p">)</span>
+    <span class="n">obsdates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_table</span><span class="p">[</span><span class="n">image_table</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">rawfile</span><span class="p">][</span><span class="s1">&#39;date-obs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">dkcfiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">drkc_table</span><span class="p">[</span><span class="n">table_idx</span><span class="p">][</span><span class="s1">&#39;drkcfile&#39;</span><span class="p">])</span>
+    <span class="n">uafters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">drkc_table</span><span class="p">[</span><span class="n">table_idx</span><span class="p">][</span><span class="s1">&#39;useafter&#39;</span><span class="p">])</span>
+    <span class="n">active_dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">drkc_table</span><span class="p">[</span><span class="n">table_idx</span><span class="p">][</span><span class="s1">&#39;activation-date&#39;</span><span class="p">])</span>
+    
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate table of filename, date-obs, drkc-filename, corresponding useafter</span>
+<span class="n">raw_dkc_tab</span> <span class="o">=</span> <span class="n">Table</span><span class="p">([</span><span class="n">rawfiles</span><span class="p">,</span> <span class="n">obsdates</span><span class="p">,</span> <span class="n">dkcfiles</span><span class="p">,</span> <span class="n">uafters</span><span class="p">,</span> <span class="n">active_dates</span><span class="p">],</span>
+                    <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;filename&#39;</span><span class="p">,</span><span class="s1">&#39;date-obs&#39;</span><span class="p">,</span><span class="s1">&#39;dkc-filename&#39;</span><span class="p">,</span><span class="s1">&#39;dkc-useafter&#39;</span><span class="p">,</span><span class="s1">&#39;dkc-activation&#39;</span><span class="p">))</span>
+<span class="c1"># Display table</span>
+<span class="n">raw_dkc_tab</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="modhead"></a></p>
+</section>
+<section id="modify-image-header">
+<h2>6. Modify Image Header<a class="headerlink" href="#modify-image-header" title="Permalink to this heading">#</a></h2>
+<p>Now that we know which v1.0 CTE corrected dark current reference file corresponds to our <code class="docutils literal notranslate"><span class="pre">raw</span></code> science file, we’re ready to edit the header <br> keywords the v1.0 CTE corrected reference files and tables.</p>
+<p><a id="drkcfile"></a></p>
+</section>
+<section id="drkcfile">
+<h2>6.1 <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code><a class="headerlink" href="#drkcfile" title="Permalink to this heading">#</a></h2>
+<p>First, we will edit <code class="docutils literal notranslate"><span class="pre">raw</span></code> file’s header with the v1.0 CTE corrected dark current reference file, <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code>, that we just found in Section 6.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;i*raw.fits&#39;</span><span class="p">):</span>
+    <span class="c1"># Using raw_dkc_tab from above, grab appropriate drkcfile</span>
+    <span class="n">ctecorr_dark</span> <span class="o">=</span> <span class="s1">&#39;iref$&#39;</span><span class="o">+</span><span class="n">raw_dkc_tab</span><span class="p">[</span><span class="n">raw_dkc_tab</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">file</span><span class="p">][</span><span class="s1">&#39;dkc-filename&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;DRKCFILE&#39;</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">ctecorr_dark</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="pctetab"></a></p>
+</section>
+<section id="pctetab">
+<h2>6.2 <code class="docutils literal notranslate"><span class="pre">PCTETAB</span></code><a class="headerlink" href="#pctetab" title="Permalink to this heading">#</a></h2>
+<p>The next keyword we’re going to modify is the <code class="docutils literal notranslate"><span class="pre">PCTETAB</span></code>. This is the pixel-based correction reference table and without it the algorithm will <br> not work. In order to use the v1.0 pixel based correction, <code class="docutils literal notranslate"><span class="pre">PCTETAB</span></code> will need to be set to the proper reference  file. In the below cell, we set <br> the <code class="docutils literal notranslate"><span class="pre">raw</span></code> file’s <code class="docutils literal notranslate"><span class="pre">PCTETAB</span></code> to the v1.0 reference table, <a class="reference external" href="https://hst-crds.stsci.edu/browse/zcv2057mi_cte.fits">zcv2057mi_cte.fits</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="s1">&#39;idv404axq_raw.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;PCTETAB&#39;</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;iref$zcv2057mi_cte.fits&#39;</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="reinspect"></a></p>
+</section>
+<section id="re-inspect-image-header">
+<h2>7. Re-Inspect Image Header<a class="headerlink" href="#re-inspect-image-header" title="Permalink to this heading">#</a></h2>
+<p>Now with the headers modified, we inspect the keywords one last time to verify the file was updated properly before we process <br> it through <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>. At this point you should see:<br></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">PCTETAB</span></code> set to <code class="docutils literal notranslate"><span class="pre">iref$zcv2057mi_cte.fits	</span></code><br></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code> set to <code class="docutils literal notranslate"><span class="pre">iref$3961719li_dkc.fits</span></code><br></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Recollect and display header keywords</span>
+<span class="n">file</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">expstart</span><span class="p">,</span> <span class="n">pctetab</span><span class="p">,</span> <span class="n">drkcfile</span><span class="p">,</span> <span class="n">pctecorr</span> <span class="o">=</span> <span class="p">[],[],[],[],[],[]</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*raw.fits&#39;</span><span class="p">):</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">])</span>
+    <span class="n">date</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;date-obs&#39;</span><span class="p">])</span>
+    <span class="n">expstart</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;expstart&#39;</span><span class="p">])</span>
+    <span class="n">pctetab</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;pctetab&#39;</span><span class="p">])</span>
+    <span class="n">drkcfile</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;drkcfile&#39;</span><span class="p">])</span>
+    <span class="n">pctecorr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;pctecorr&#39;</span><span class="p">])</span>
+
+<span class="n">updated_table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">([</span><span class="n">file</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">expstart</span><span class="p">,</span> <span class="n">pctetab</span><span class="p">,</span> <span class="n">drkcfile</span><span class="p">,</span> <span class="n">pctecorr</span><span class="p">],</span>
+                    <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">,</span><span class="s1">&#39;date-obs&#39;</span><span class="p">,</span> <span class="s1">&#39;expstart&#39;</span><span class="p">,</span> <span class="s1">&#39;pctetab&#39;</span><span class="p">,</span> <span class="s1">&#39;drkcfile&#39;</span><span class="p">,</span> <span class="s1">&#39;pctecorr&#39;</span><span class="p">))</span>
+<span class="n">updated_table</span><span class="p">[</span><span class="s1">&#39;expstart&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;5.6f&#39;</span>
+
+<span class="c1"># Sort and display the table</span>
+<span class="n">updated_table</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s1">&#39;expstart&#39;</span><span class="p">)</span>
+<span class="n">updated_table</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="envvar"></a></p>
+</section>
+<section id="set-environment-variables">
+<h2>8. Set Environment Variables<a class="headerlink" href="#set-environment-variables" title="Permalink to this heading">#</a></h2>
+<div class="alert alert-block alert-warning" style="color:black" > <b> If you already have the absolute paths set for CRDS, please skip this step and proceed to Section 9.</b> <br> </div>
+<p>Before we run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>, we need to <a class="reference external" href="https://hst-crds.stsci.edu/docs/cmdline_bestrefs/">set environment variables</a> for several subsequent calibration tasks.  We will point to a subdirectory called <br> <code class="docutils literal notranslate"><span class="pre">crds_cache/</span></code> using the <code class="docutils literal notranslate"><span class="pre">IREF</span></code> environment variable. The <code class="docutils literal notranslate"><span class="pre">IREF</span></code> variable is used for WFC3 reference files. Other instruments use other <br> variables, e.g., <code class="docutils literal notranslate"><span class="pre">JREF</span></code> for ACS. You have the option to permanently add these environment variables to your user profile by adding the path <br> in your shell’s configuration file. If you’re using bash, you would edit the <code class="docutils literal notranslate"><span class="pre">~/.bash_profile</span></code> file with lines such as:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">CRDS_PATH=&quot;$HOME/crds_cache&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">CRDS_SERVER_URL=&quot;https://hst-crds.stsci.edu&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">iref=&quot;${CRDS_PATH}/references/hst/iref/&quot;</span></code></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;~/crds_cache&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;iref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;~/crds_cache/references/hst/iref/&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="runcal"></a></p>
+</section>
+<section id="run-calwf3">
+<h2>9. Run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code><a class="headerlink" href="#run-calwf3" title="Permalink to this heading">#</a></h2>
+<p>As a reminder, the <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> version must be <code class="docutils literal notranslate"><span class="pre">3.5.2</span></code> to use the v1.0 pixel-base CTE correction with the most up-to-date calibration parameters. <br> If you are not using version <code class="docutils literal notranslate"><span class="pre">3.5.2</span></code> the below <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> call will crash due to an out-of-date <code class="docutils literal notranslate"><span class="pre">IMPHTTAB</span></code> reference file. <br></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">calwf3</span><span class="p">(</span><span class="s1">&#39;idv404axq_raw.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># show list of cwd to verify calibrated files were made</span>
+<span class="o">!</span>ls<span class="w"> </span>-ltr<span class="w"> </span>*.fits
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="inspectflc"></a></p>
+</section>
+<section id="inspect-flc-image-header">
+<h2>10. Inspect FLC Image Header<a class="headerlink" href="#inspect-flc-image-header" title="Permalink to this heading">#</a></h2>
+<p>To verify that the data was calibrated with the v1.0 pixel-based CTE-correction, header keyword <code class="docutils literal notranslate"><span class="pre">CAL_VER</span></code> should be <code class="docutils literal notranslate"><span class="pre">3.5.2</span></code>,<br> <code class="docutils literal notranslate"><span class="pre">CTE_VER</span></code> should be <code class="docutils literal notranslate"><span class="pre">1.0</span></code>, and <code class="docutils literal notranslate"><span class="pre">CTE_NAME</span></code> should be <code class="docutils literal notranslate"><span class="pre">pixelCTE</span> <span class="pre">2012</span></code></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Recollect and display FLC header keywords</span>
+<span class="n">file</span><span class="p">,</span> <span class="n">pctetab</span><span class="p">,</span> <span class="n">drkcfile</span><span class="p">,</span> <span class="n">pctecorr</span><span class="p">,</span> <span class="n">calver</span><span class="p">,</span> <span class="n">ctename</span><span class="p">,</span> <span class="n">ctever</span> <span class="o">=</span> <span class="p">[],[],[],[],[],[],[]</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*flc.fits&#39;</span><span class="p">):</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">])</span>
+    <span class="n">pctetab</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;pctetab&#39;</span><span class="p">])</span>
+    <span class="n">drkcfile</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;drkcfile&#39;</span><span class="p">])</span>
+    <span class="n">pctecorr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;pctecorr&#39;</span><span class="p">])</span>
+    <span class="n">calver</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;cal_ver&#39;</span><span class="p">])</span>
+    <span class="n">ctename</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;cte_name&#39;</span><span class="p">])</span>
+    <span class="n">ctever</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;cte_ver&#39;</span><span class="p">])</span>
+
+<span class="n">final_table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">([</span><span class="n">file</span><span class="p">,</span> <span class="n">pctetab</span><span class="p">,</span> <span class="n">drkcfile</span><span class="p">,</span> <span class="n">pctecorr</span><span class="p">,</span> <span class="n">calver</span><span class="p">,</span> <span class="n">ctename</span><span class="p">,</span> <span class="n">ctever</span><span class="p">],</span>
+                    <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">,</span><span class="s1">&#39;pctetab&#39;</span><span class="p">,</span> <span class="s1">&#39;drkcfile&#39;</span><span class="p">,</span> <span class="s1">&#39;pctecorr&#39;</span><span class="p">,</span><span class="s1">&#39;cal_ver&#39;</span><span class="p">,</span><span class="s1">&#39;cte_name&#39;</span><span class="p">,</span><span class="s1">&#39;cte_ver&#39;</span><span class="p">))</span>
+
+<span class="n">final_table</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="verdiffs"></a></p>
+</section>
+<section id="investigate-v1-0-and-v2-0-differences">
+<h2>11. Investigate v1.0 and v2.0 Differences<a class="headerlink" href="#investigate-v1-0-and-v2-0-differences" title="Permalink to this heading">#</a></h2>
+<p>Now that we have created a v1.0 CTE corrected image, lets compare it to the same image calibrated with the v2.0 correction.<br></p>
+<p><a id="downloadv2.0"></a></p>
+</section>
+<section id="download-the-v2-0-flc-file">
+<h2>11.1 Download the v2.0 FLC File<a class="headerlink" href="#download-the-v2-0-flc-file" title="Permalink to this heading">#</a></h2>
+<p>First, we need to download the same FLC file from MAST that is corrected with the v2.0 pixel-based CTE correction so that we can <br> compare it to the v1.0 FLC file we just created in the notebook.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the observation records</span>
+<span class="n">obs_table</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="s1">&#39;idv404axq*&#39;</span><span class="p">,</span><span class="n">proposal_id</span><span class="o">=</span><span class="mi">15576</span><span class="p">)</span>
+
+<span class="c1"># Get the listing of data products</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">obs_table</span><span class="p">)</span>
+
+<span class="c1"># Filter the products for the RAW files</span>
+<span class="n">filtered_products</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">filter_products</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="s1">&#39;FLC&#39;</span><span class="p">,</span><span class="n">project</span><span class="o">=</span><span class="s1">&#39;CALWF3&#39;</span><span class="p">)</span>
+
+<span class="c1"># Download all the images above</span>
+<span class="n">download_table</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">filtered_products</span><span class="p">,</span> <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># For convenience move raws to cwd and remove empty download dir</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">download_table</span><span class="p">[</span><span class="s1">&#39;Local Path&#39;</span><span class="p">]:</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="mi">9</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_v2.0_flc.fits&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;mastDownload/HST/&#39;</span><span class="o">+</span><span class="n">filename</span><span class="p">[:</span><span class="mi">9</span><span class="p">])</span>
+        
+<span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;mastDownload/HST/&#39;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;mastDownload/&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="openfiles"></a></p>
+</section>
+<section id="open-files">
+<h2>11.2 Open Files<a class="headerlink" href="#open-files" title="Permalink to this heading">#</a></h2>
+<p>In the cell below, we open each of the different files (FLT, v1.0 and v2.0 FLC) and create full-frame ~4Kx4K arrays. Additionally, <br> we multiply the science arrays by the <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3/data-analysis/pixel-area-maps">pixel area maps</a>. Due to the geometric distortion  present in WFC3 images, these pixel <br> area maps are necessary to achieve uniformity in the measured counts of an object across the field. The pixel map simply <br> reflects the area of the pixels at the location of the source, and by multiplying the images by this field-dependent correction <br> factor, we will improve the accuracy of the photometry.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Open data and set variables</span>
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;idv404axq_v2.0_flc.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+    <span class="n">v2_uvis1</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">v2_uvis2</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;idv404axq_flc.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+    <span class="n">v1_uvis1</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">v1_uvis2</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> 
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;idv404axq_flt.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+    <span class="n">flt_uvis1</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">flt_uvis2</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> 
+    
+<span class="c1"># Load pixel area maps </span>
+<span class="n">PAM_uvis1</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;example/UVIS1wfc3_map.fits&#39;</span><span class="p">)</span>
+<span class="n">PAM_uvis2</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;example/UVIS2wfc3_map.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># Stich UVIS1 and 2 together and multiply by pixel area map</span>
+<span class="n">v2sci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">v2_uvis2</span><span class="o">*</span><span class="n">PAM_uvis2</span> <span class="p">,</span><span class="n">v2_uvis1</span><span class="o">*</span><span class="n">PAM_uvis1</span><span class="p">])</span>
+<span class="n">v1sci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">v1_uvis2</span><span class="o">*</span><span class="n">PAM_uvis2</span> <span class="p">,</span><span class="n">v1_uvis1</span><span class="o">*</span><span class="n">PAM_uvis1</span><span class="p">])</span>
+<span class="n">fltsci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">flt_uvis2</span><span class="o">*</span><span class="n">PAM_uvis2</span><span class="p">,</span><span class="n">flt_uvis1</span><span class="o">*</span><span class="n">PAM_uvis1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="bkgsub"></a></p>
+</section>
+<section id="display-50x50-pixel-background-subsection">
+<h2>11.3 Display 50x50 Pixel Background Subsection<a class="headerlink" href="#display-50x50-pixel-background-subsection" title="Permalink to this heading">#</a></h2>
+<p>One of the differences between the v1.0 and v2.0 CTE correction is the background level. Here, we show a square 50x50 pixel <br> subsection that is mostly featureless, i.e. no known sources or cosmic ray hits. The v2.0 correction significantly reduces noise <br> amplification and improves the resulting background. To aid in the visual inspection of the background subsection, an animated <br> GIF is included in the notebook that blinks between the v1.0 and v2.0 FLC files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate subplots</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span><span class="n">ax2</span><span class="p">,</span><span class="n">ax3</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span><span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+
+<span class="c1"># Generate background subsections</span>
+<span class="n">flt_bkg</span> <span class="o">=</span> <span class="n">fltsci</span><span class="p">[</span><span class="mi">2070</span><span class="p">:</span><span class="mi">2120</span><span class="p">,</span><span class="mi">2180</span><span class="p">:</span><span class="mi">2230</span><span class="p">]</span>
+<span class="n">v1_bkg</span> <span class="o">=</span> <span class="n">v1sci</span><span class="p">[</span><span class="mi">2070</span><span class="p">:</span><span class="mi">2120</span><span class="p">,</span><span class="mi">2180</span><span class="p">:</span><span class="mi">2230</span><span class="p">]</span>
+<span class="n">v2_bkg</span> <span class="o">=</span> <span class="n">v2sci</span><span class="p">[</span><span class="mi">2070</span><span class="p">:</span><span class="mi">2120</span><span class="p">,</span><span class="mi">2180</span><span class="p">:</span><span class="mi">2230</span><span class="p">]</span>
+
+<span class="c1"># Calculate min and max values for image scaling </span>
+<span class="n">v1z1</span><span class="p">,</span><span class="n">v1z2</span> <span class="o">=</span> <span class="n">zscale</span><span class="o">.</span><span class="n">zscale</span><span class="p">(</span><span class="n">v1_bkg</span><span class="p">)</span>
+
+<span class="c1"># Display background subsection</span>
+<span class="n">im1</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">flt_bkg</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">v1z1</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">v1z2</span><span class="p">)</span>
+<span class="n">im2</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">v1_bkg</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">v1z1</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">v1z2</span><span class="p">)</span>
+<span class="n">im3</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">v2_bkg</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">v1z1</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">v1z2</span><span class="p">)</span>
+
+<span class="c1"># Formatting</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span><span class="n">shrink</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span><span class="n">shrink</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im3</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">,</span><span class="n">shrink</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;FLT File BKG Subsection&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;v1.0 PCTE FLC BKG Subsection&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;v2.0 PCTE FLC BKG Subsection&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">),</span><span class="n">ax2</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">),</span><span class="n">ax3</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div style="text-align: left"> <strong> <font size ="4">Animated GIF of the v1.0 and v2.0 FLC image subsections: </font> </strong> </div>
+<img align="left" width="800" height="800" src="example/v1_v2_bkg.gif">
+<p><a id="bkgdist"></a></p>
+</section>
+<section id="pixel-distribution-of-background-subsections">
+<h2>11.3.1 Pixel Distribution of Background Subsections<a class="headerlink" href="#pixel-distribution-of-background-subsections" title="Permalink to this heading">#</a></h2>
+<p>To gain a more quantitative picture of how the background pixels are changing between the different file versions, we plot <br>the distribution of pixel values from the 50x50 pixel subsection above. The increased noise level in the v1.0 correction is <br> apparent in the blue histogram below. In addition, we have also computed the difference between the file types and have <br> plotted them as histograms. These two plots illustrates how the background in the v2.0 CTE corrected image is less noisy <br> and more in-line with the values seen in the FLT image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate subplots</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span><span class="n">ax2</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span><span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+
+<span class="c1"># Plot background subsection histograms</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">flt_bkg</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span><span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;FLT&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">v1_bkg</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span><span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;v1.0 FLC&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">v2_bkg</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span><span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;v2.0 FLC&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot background subsection differential histograms</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">hist</span><span class="p">((</span><span class="n">v1_bkg</span><span class="o">-</span><span class="n">flt_bkg</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span><span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;magenta&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;v1.0 FLC $-$ FLT&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">hist</span><span class="p">((</span><span class="n">v2_bkg</span><span class="o">-</span><span class="n">flt_bkg</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span><span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;limegreen&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;v2.0 FLC $-$ FLT&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">hist</span><span class="p">((</span><span class="n">v1_bkg</span><span class="o">-</span><span class="n">v2_bkg</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span><span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;C9&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;v1.0 $-$ v2.0 FLC&#39;</span><span class="p">)</span>
+
+<span class="c1"># Formatting</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Background Subsection Histogram&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Background Subsection Differential Histogram&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Pixel Value [e-]&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Pixel Value [e-]&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span><span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(),</span> <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="imgsub"></a></p>
+</section>
+<section id="display-image-subsection">
+<h2>11.4 Display Image Subsection<a class="headerlink" href="#display-image-subsection" title="Permalink to this heading">#</a></h2>
+<p>Another difference between the v1.0 and v2.0 pixel-based CTE model is the amount of correction applied to fainter sources. <br> In order to reduce noise amplification, the fluxes of faint sources only receive a limited amount of correction in the v2.0 version. <br> We again provide an animated GIF of the two subsections to aid with the visual comparison.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate subplots</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span><span class="n">ax2</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span><span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+
+<span class="c1"># Calculate min and max values for image scaling </span>
+<span class="n">v1z1</span><span class="p">,</span><span class="n">v1z2</span> <span class="o">=</span> <span class="n">zscale</span><span class="o">.</span><span class="n">zscale</span><span class="p">(</span><span class="n">v1_uvis1</span><span class="p">)</span>
+
+<span class="c1"># Display subsection</span>
+<span class="n">im1</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">v1_uvis1</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">v1z1</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">v1z2</span><span class="p">)</span>
+<span class="n">im2</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">v2_uvis1</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">v1z1</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">v1z2</span><span class="p">)</span>
+
+<span class="c1"># Formatting</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">85</span><span class="p">,</span><span class="mi">325</span><span class="p">),</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">85</span><span class="p">,</span><span class="mi">325</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">149</span><span class="p">),</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">149</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span><span class="n">shrink</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span><span class="n">shrink</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;v1.0 PCTE FLC UVIS1 Subsection&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;v2.0 PCTE FLC UVIS1 Subsection&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div style="text-align: left"> <strong> <font size ="4">Animated GIF of the v1.0 and v2.0 FLC image subsections: </font> </strong> </div>
+<img align="left" width="975" height="975" src="example/v1_v2_subsection.gif"><p><a id="apphot"></a></p>
+</section>
+<section id="aperture-photometry">
+<h2>11.5 Aperture Photometry<a class="headerlink" href="#aperture-photometry" title="Permalink to this heading">#</a></h2>
+<p>To show the quantitative difference in the observed flux of sources between the v1.0 and v2.0 pixel-based CTE correction,<br> we perform aperture photometry on six stars of varying brightness within the image subsection above. Here, we display the <br> image subsection again with the apertures, annuli, and star labels overplotted. This subsection includes the first ~150 rows <br> of UVIS 1, which means all of these stars suffer the most CTE flux loss as they transfer 1900+ rows to the readout amplifier.</p>
+<img align="left" width="900" height="900" src="example/apphot_image.png"><p>First, we approximate the center x and y positions of the stars in the 4Kx4K science arrays, and create the apertures and <br> annuli using <code class="docutils literal notranslate"><span class="pre">photutils</span></code>. <br></p>
+<p>Then, we use <code class="docutils literal notranslate"><span class="pre">photutils</span></code> to measure the signal in each area and subtract the background values in the annuli from the <br>aperture sum values. We define a function named <code class="docutils literal notranslate"><span class="pre">get_flux()</span></code> to do this for us.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_flux</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">aperture</span><span class="p">,</span><span class="n">annulus_aperture</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to calculate background subtracted aperture sum </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    data : float array</span>
+<span class="sd">        The 2d array of science pixels being measured</span>
+<span class="sd">    aperture : photutils obj</span>
+<span class="sd">        A photutils aperture object with defined position and radius</span>
+<span class="sd">    annulus_aperture : photutils obj</span>
+<span class="sd">        A photutils circular annulus aperture object with defined position and radii</span>
+<span class="sd">        </span>
+<span class="sd">    Return:</span>
+<span class="sd">    -------</span>
+<span class="sd">    flux : float</span>
+<span class="sd">        The measured background subtracted aperture sum </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Generate photutils.aperture_photometry table object</span>
+    <span class="n">phot</span> <span class="o">=</span> <span class="n">aperture_photometry</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">aperture</span><span class="p">)</span>
+    
+    <span class="c1"># Measure background around sources. aperture_stats_tbl() comes from background_median.py</span>
+    <span class="n">bkg_phot</span> <span class="o">=</span> <span class="n">aperture_stats_tbl</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">annulus_aperture</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;exact&#39;</span><span class="p">,</span> <span class="n">sigma_clip</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate background subtracted aperture sum</span>
+    <span class="n">flux</span> <span class="o">=</span> <span class="n">phot</span><span class="p">[</span><span class="s1">&#39;aperture_sum&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">bkg_phot</span><span class="p">[</span><span class="s1">&#39;aperture_median&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">aperture</span><span class="o">.</span><span class="n">area</span>
+    
+    <span class="k">return</span> <span class="n">flux</span>
+
+<span class="c1"># Approximate x,y pixel locations of each star in the 4Kx4K array</span>
+<span class="n">positions</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">299.4</span><span class="p">,</span><span class="mf">2135.6</span><span class="p">),</span>
+             <span class="p">(</span><span class="mf">114.7</span><span class="p">,</span><span class="mf">2093.4</span><span class="p">),</span>
+             <span class="p">(</span><span class="mf">171.3</span><span class="p">,</span><span class="mf">2074.9</span><span class="p">),</span>
+             <span class="p">(</span><span class="mf">262.6</span><span class="p">,</span><span class="mf">2164.9</span><span class="p">),</span>
+             <span class="p">(</span><span class="mf">289.1</span><span class="p">,</span><span class="mf">2085.6</span><span class="p">),</span>
+             <span class="p">(</span><span class="mf">204.8</span><span class="p">,</span><span class="mf">2073.1</span><span class="p">)]</span>
+
+<span class="c1"># Photutils cirular aperture object with small radius</span>
+<span class="n">aperture</span> <span class="o">=</span> <span class="n">CircularAperture</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Photutils circular annulus aperture object </span>
+<span class="n">annulus_aperture</span> <span class="o">=</span> <span class="n">CircularAnnulus</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">r_in</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">r_out</span><span class="o">=</span><span class="mi">19</span><span class="p">)</span>
+
+<span class="c1"># Call function to calculate flux of stars</span>
+<span class="c1"># THE RUNTIME WARNING MAY BE IGNORED</span>
+<span class="n">fltflux</span> <span class="o">=</span> <span class="n">get_flux</span><span class="p">(</span><span class="n">fltsci</span><span class="p">,</span><span class="n">aperture</span><span class="p">,</span><span class="n">annulus_aperture</span><span class="p">)</span>
+<span class="n">v1flux</span> <span class="o">=</span> <span class="n">get_flux</span><span class="p">(</span><span class="n">v1sci</span><span class="p">,</span><span class="n">aperture</span><span class="p">,</span><span class="n">annulus_aperture</span><span class="p">)</span>
+<span class="n">v2flux</span> <span class="o">=</span> <span class="n">get_flux</span><span class="p">(</span><span class="n">v2sci</span><span class="p">,</span><span class="n">aperture</span><span class="p">,</span><span class="n">annulus_aperture</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="alert alert-block alert-warning" style="color:black" > <b> You can ignore the <code>RuntimeWarning: invalid value encountered in true_divide</code> message.</b> <br> </div>
+<p>Finally, we plot our results.<br></p>
+<p>The first plot below shows the measured flux of the six stars in each of the different calibrated products. Stars 1-6 are organized <br> by increasing flux, with Star 1 being the faintest and Star 6 being the brightest. The x-axis values correspond to the median flux <br> value measured in each of the three different files (FLT, v1.0, and v2.0) per star. The y-axis values show the individual flux values <br> for each star where the different colors and symbols represent the three file types. For example, the individual flux values (y-axis) <br> of Star 1 for the FLT, v1.0, and v2.0 files are ~2467, 3056, and 2799 e- respectively. The median of the three values is ~2799 e-, <br> which is the value plotted on the x-axis. The second plot illustrates the percent differences between the three different <br> flux values per star, and uses the same x-axis values as the first plot. <br></p>
+<p>The FLT files have no CTE correction applied and thus have the lowest measured flux for each star due to the CTE flux loss. <br> Stars 1-4 have noticably different flux values between the v1.0 and v2.0 CTE corrections. In v1.0, the CTE algorithm is actually <br> over-correcting these fainter sources resulting in higher aperture photometry measurements. The flux values for stars 1-4 range <br> from  ~3000 - 10000 e- within a 3-pixel radius aperture. The flux values between the v1.0 and v2.0 CTE corrections for stars <br> 1-4 have percent differences of ~9 - 4%. Sources with more than ~10000 e- within a 3-pixel aperture (stars 5 &amp; 6) have more <br> compareable flux values between the v1.0 and v2.0 CTE corrections, and have percent differences less than 2%.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate subplots</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span><span class="n">ax2</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">),</span><span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">),</span><span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="c1"># Find median flux values between products</span>
+<span class="n">medflux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">([</span><span class="n">fltflux</span><span class="p">,</span><span class="n">v1flux</span><span class="p">,</span><span class="n">v2flux</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Scatter plot of measured flux</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">medflux</span><span class="p">,</span><span class="n">fltflux</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;FLT&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">medflux</span><span class="p">,</span><span class="n">v1flux</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;^&#39;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;v1.0 FLC&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">medflux</span><span class="p">,</span><span class="n">v2flux</span><span class="p">,</span><span class="mi">45</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;v2.0 FLC&#39;</span><span class="p">)</span>
+
+<span class="c1"># Scatter plot of percentage difference</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">medflux</span><span class="p">,</span><span class="nb">abs</span><span class="p">((</span><span class="n">fltflux</span><span class="o">-</span><span class="n">v1flux</span><span class="p">))</span><span class="o">/</span><span class="p">((</span><span class="n">fltflux</span><span class="o">+</span><span class="n">v1flux</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span>
+            <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;^&#39;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;magenta&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\frac{|FLT - v1.0|}{(FLT + v1.0) ÷ 2}$&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">medflux</span><span class="p">,</span><span class="nb">abs</span><span class="p">((</span><span class="n">fltflux</span><span class="o">-</span><span class="n">v2flux</span><span class="p">))</span><span class="o">/</span><span class="p">((</span><span class="n">fltflux</span><span class="o">+</span><span class="n">v2flux</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span><span class="mi">45</span><span class="p">,</span>
+            <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;limegreen&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\frac{|FLT - v2.0|}{(FLT + v2.0) ÷ 2}$&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">medflux</span><span class="p">,</span><span class="nb">abs</span><span class="p">((</span><span class="n">v1flux</span><span class="o">-</span><span class="n">v2flux</span><span class="p">))</span><span class="o">/</span><span class="p">((</span><span class="n">v1flux</span><span class="o">+</span><span class="n">v2flux</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span>
+            <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">&#39;C9&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\frac{|v1.0 - v2.0|}{(v1.0 + v2.0) ÷ 2}$&#39;</span><span class="p">)</span>
+
+<span class="c1"># Formatting </span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Measured Flux Within 3-pix Radius Aperture&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Median Flux [e-]&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Flux [e-]&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Median Flux [e-]&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Percent Difference [%]&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span><span class="mi">11</span><span class="p">}),</span><span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span><span class="mi">15</span><span class="p">})</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="conclude"></a></p>
+</section>
+<section id="conclusions">
+<h2>12. Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this heading">#</a></h2>
+<p>Thank you for walking through this notebook. You now have everything you need to process your own files with the v1.0 CTE <br>correction within <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>. Since completing this notebook you should be more familiar with:</p>
+<ul class="simple">
+<li><p>Applying the v1.0 pixel-based CTE correction to 2009-2021 UVIS data.</p></li>
+<li><p>Which header keywords of the <code class="docutils literal notranslate"><span class="pre">raw</span></code> fits file to edit in order to use the v1.0 correction.</p></li>
+<li><p>How to find and download the appropriate <code class="docutils literal notranslate"><span class="pre">PCTETAB</span></code> and <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code> reference files.</p></li>
+<li><p>Verifying your version of <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> and calibrating a <code class="docutils literal notranslate"><span class="pre">raw</span></code> file with the v1.0 CTE correction.</p></li>
+<li><p>Investigating the differences between v1.0 and v2.0 CTE corrected files.</p></li>
+</ul>
+<section id="congratulations-you-have-completed-the-notebook">
+<h3>Congratulations, you have completed the notebook!<a class="headerlink" href="#congratulations-you-have-completed-the-notebook" title="Permalink to this heading">#</a></h3>
+<p><a id="resources"></a></p>
+</section>
+</section>
+<section id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this heading">#</a></h2>
+<p>Below are some additional resources that may be helpful. Please feel free to contact the <a class="reference external" href="https://stsci.service-now.com/hst">WFC3 Helpdesk</a> for any questions.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3/performance/cte">WFC3 CTE Website</a></p></li>
+<li><p><a class="reference external" href="https://github.com/spacetelescope/hstcal">HSTCAL GitHub</a></p></li>
+<li><p><a class="reference external" href="https://wfc3tools.readthedocs.io/en/latest/wfc3tools/calwf3.html">Calwf3 Documentation</a></p></li>
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3">WFC3 Website</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb">WFC3 Instrument Handbook</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb">WFC3 Data Handbook</a></p></li>
+<li><p><a class="reference external" href="https://github.com/spacetelescope/notebooks/tree/master/notebooks">STScI Jupyter-notebooks</a></p></li>
+<li><p><a class="reference external" href="http://ssb.stsci.edu/astroconda">STScI Astroconda Channel</a></p></li>
+</ul>
+<p><a id="about"></a></p>
+</section>
+<section id="about-this-notebook">
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
+<p><strong>Author:</strong> Benjamin Kuhn; WFC3 Instrument Team</p>
+<p><strong>Updated on:</strong> January 19, 2023</p>
+<p><a id="cite"></a></p>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Permalink to this heading">#</a></h2>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, or photutils for published research, please cite the authors.<br>
+Follow these links for more information about citing the libraries below:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://github.com/astropy/astroquery/blob/main/astroquery/CITATION">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/users/project/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://photutils.readthedocs.io/en/stable/citation.html">Citing <code class="docutils literal notranslate"><span class="pre">photutils</span></code></a>
+<br></p></li>
+</ul>
+<hr class="docutils" />
+<p><span class="xref myst">Top of Page</span>
+<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/WFC3/calwf3_v1.0_cte"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../calwf3_recalibration/calwf3_recal_tvb.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../dash/dash.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">How to use <code class="docutils literal notranslate"><span class="pre">wfc3_dash</span></code> on DASH data</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">1. Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-archived-drkcfiles-txt-is-in-cwd">2. Verify <code class="docutils literal notranslate"><span class="pre">archived_drkcfiles.txt</span></code> is in CWD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-that-calwf3-version-is-v3-5-2">3. Check that <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Version is <code class="docutils literal notranslate"><span class="pre">v3.5.2</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query-mast-and-download-a-wfc3-raw-fits-image">4. Query MAST and Download a WFC3 <code class="docutils literal notranslate"><span class="pre">raw.fits</span></code> Image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-image-header">4.1 Inspect Image Header</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#find-the-correct-drkcfile">5. Find the Correct <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modify-image-header">6. Modify Image Header</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#drkcfile">6.1 <code class="docutils literal notranslate"><span class="pre">DRKCFILE</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pctetab">6.2 <code class="docutils literal notranslate"><span class="pre">PCTETAB</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#re-inspect-image-header">7. Re-Inspect Image Header</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-environment-variables">8. Set Environment Variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-calwf3">9. Run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-flc-image-header">10. Inspect FLC Image Header</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#investigate-v1-0-and-v2-0-differences">11. Investigate v1.0 and v2.0 Differences</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-v2-0-flc-file">11.1 Download the v2.0 FLC File</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open-files">11.2 Open Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#display-50x50-pixel-background-subsection">11.3 Display 50x50 Pixel Background Subsection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pixel-distribution-of-background-subsections">11.3.1 Pixel Distribution of Background Subsections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#display-image-subsection">11.4 Display Image Subsection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aperture-photometry">11.5 Aperture Photometry</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">12. Conclusions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#congratulations-you-have-completed-the-notebook">Congratulations, you have completed the notebook!</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

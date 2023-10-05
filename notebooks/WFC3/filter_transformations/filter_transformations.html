@@ -1,0 +1,1121 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>WFC3/UVIS Filter Transformations with stsynphot &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/WFC3/filter_transformations/filter_transformations';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Flux Unit Conversions with synphot and stsynphot" href="../flux_conversion_tool/flux_conversion_tool.html" />
+    <link rel="prev" title="Exception Report Checklist - WFC3" href="../exception_report/wfc3_exception_report.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">Obtaining Pixel Area Maps for ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Jupyter Notebook Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/Initialization/Initialization.html">DrizzlePac Initialization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an absolute reference catalog</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling WFPC2 Images to use a Single Zeropoint</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Using updated astrometry solutions</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/README.html">STIS-Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">WFC3Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dash/dash.html">How to use <code class="docutils literal notranslate"><span class="pre">wfc3_dash</span></code> on DASH data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/WFC3/filter_transformations/filter_transformations.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/WFC3/filter_transformations/filter_transformations.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/WFC3/filter_transformations/filter_transformations.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>WFC3/UVIS Filter Transformations with stsynphot</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">1. Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#select-filters-for-the-transformation">2. Select filters for the transformation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-a-spectrum">3. Define a spectrum</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#select-uvis-chips">4. Select UVIS chips</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#select-magnitude-systems">5. Select magnitude systems</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-outputs">6. Generate outputs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-bandpasses">7. Plot bandpasses</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">8. Conclusions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#congratulations-you-have-completed-the-notebook">Congratulations, you have completed the notebook!</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <p><a id="title"></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="wfc3-uvis-filter-transformations-with-stsynphot">
+<h1>WFC3/UVIS Filter Transformations with stsynphot<a class="headerlink" href="#wfc3-uvis-filter-transformations-with-stsynphot" title="Permalink to this heading">#</a></h1>
+<hr class="docutils" />
+<section id="learning-goals">
+<h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h2>
+<p>By the end of this tutorial, you will:</p>
+<ul class="simple">
+<li><p>Generate synthetic observations using <code class="docutils literal notranslate"><span class="pre">synphot</span></code> and <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code>.</p></li>
+<li><p>Find color terms between WFC3/UVIS filters and non-HST filters.</p></li>
+<li><p>Plot bandpasses to investigate various throughputs.</p></li>
+</ul>
+</section>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
+<p><span class="xref myst">Introduction</span> <br>
+<span class="xref myst">1. Imports</span> <br>
+<span class="xref myst">2. Select filters for the transformation</span> <br>
+<span class="xref myst">3. Define a spectrum</span> <br>
+<span class="xref myst">4. Select UVIS chips</span> <br>
+<span class="xref myst">5. Select magnitude systems</span> <br>
+<span class="xref myst">6. Generate outputs</span> <br>
+<span class="xref myst">7. Plot bandpasses</span> <br>
+<span class="xref myst">8. Conclusions</span> <br>
+<span class="xref myst">Additional Resources</span> <br>
+<span class="xref myst">About the Notebook</span> <br>
+<span class="xref myst">Citations</span> <br></p>
+<p><a id="intro"></a></p>
+</section>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>This notebook computes color terms between selected WFC3/UVIS filters and non-HST filters, such as Johnson-Cousins, for a user-defined reference spectrum. The terms as given are the difference between the magnitude of the spectrum in the selected non-HST filter and the corresponding UVIS filter.</p>
+<p>This tool reproduces the methods described in section 4 of <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2014/WFC3-2014-16.pdf">WFC3 ISR 2014-16</a>, but will automatically use the latest available spectra and throughput tables.</p>
+<p><code class="docutils literal notranslate"><span class="pre">stsynphot</span></code> requires access to data distributed by the <a class="reference external" href="https://hst-crds.stsci.edu/">Calibration Data Reference System</a> (CRDS) in order to operate. Both packages look for an environment variable called <code class="docutils literal notranslate"><span class="pre">PYSYN_CDBS</span></code> to find the directory containing these data.</p>
+<p>Users can obtain these data files from the CDRS. Information on how to obtain the most up-to-date reference files (and what they contain) can be found <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/reference-data-for-calibration-and-tools/synphot-throughput-tables">here</a>. An example of how to download the files with <code class="docutils literal notranslate"><span class="pre">curl</span></code> and set up this environment variable is presented below.</p>
+<p>For detailed instructions on how to install and set up these packages, see the <a class="reference external" href="https://synphot.readthedocs.io/en/latest/#installation-and-setup">synphot</a> and <a class="reference external" href="https://stsynphot.readthedocs.io/en/latest/#installation-and-setup">stsynphot</a> documentation.</p>
+<p><a id="imports"></a></p>
+</section>
+<section id="imports">
+<h2>1. Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<p>This notebook assumes you have created the virtual environment in <a class="reference external" href="https://github.com/spacetelescope/WFC3Library">WFC3 Library’s</a> installation instructions.</p>
+<p>We import:</p>
+<ul class="simple">
+<li><p><em>os</em> for setting environment variables</p></li>
+<li><p><em>numpy</em> for handling array functions</p></li>
+<li><p><em>pandas</em> for managing data</p></li>
+<li><p><em>matplotlib.pyplot</em> for plotting data</p></li>
+<li><p><em>astropy.units</em> and <em>synphot.units</em> for handling units</p></li>
+<li><p><em>synphot</em> and <em>stsynphot</em> for evaluating synthetic photometry</p></li>
+</ul>
+<p>Additionally, we will need to set the <code class="docutils literal notranslate"><span class="pre">PYSYN_CDBS</span></code> environment variable <em>before</em> importing stsynphot. We will also create a Vega spectrum using synphot’s inbuilt <code class="docutils literal notranslate"><span class="pre">from_vega()</span></code> method, as the latter package will supercede this method’s functionality and require a downloaded copy of the latest Vega spectrum to be provided.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> notebook
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
+<span class="kn">import</span> <span class="nn">synphot.units</span> <span class="k">as</span> <span class="nn">su</span>
+<span class="kn">import</span> <span class="nn">synphot</span> <span class="k">as</span> <span class="nn">syn</span>
+<span class="kn">from</span> <span class="nn">synphot</span> <span class="kn">import</span> <span class="n">Observation</span>
+
+<span class="n">vegaspec</span> <span class="o">=</span> <span class="n">syn</span><span class="o">.</span><span class="n">SourceSpectrum</span><span class="o">.</span><span class="n">from_vega</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This section obtains the WFC3 throughput component tables for use with <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code>. If the reference files need to be downloaded, please uncomment and execute the code block below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># cmd_input = &#39;curl -O https://archive.stsci.edu/hlsps/reference-atlases/hlsp_reference-atlases_hst_multi_everything_multi_v11_sed.tar&#39;</span>
+<span class="c1"># os.system(cmd_input)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once the download is complete, unzip the file and set the environment variable <code class="docutils literal notranslate"><span class="pre">PYSYN_CDBS</span></code> to the path of the reference files. To do so, uncomment and execute the relevant line from the code block below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># os.environ[&#39;PYSYN_CDBS&#39;] = &#39;/path/to/my/reference/files/&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, after having set up <code class="docutils literal notranslate"><span class="pre">PYSYN_CDBS</span></code>, we import stsynphot.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">stsynphot</span> <span class="k">as</span> <span class="nn">stsyn</span>
+<span class="kn">from</span> <span class="nn">stsynphot</span> <span class="kn">import</span> <span class="n">band</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="select"></a></p>
+</section>
+<section id="select-filters-for-the-transformation">
+<h2>2. Select filters for the transformation<a class="headerlink" href="#select-filters-for-the-transformation" title="Permalink to this heading">#</a></h2>
+<p>Define the filters to use for computing the transformation. One filter should be a UVIS filter, and the other a non-HST filter such as a Johnson-Cousins filter.</p>
+<p><strong>Filter names should be input as a list of tupled strings. Each tuple represents a pair of filters to convert between, and should contain the non-HST filter as the first element, and the UVIS filter as the second.</strong></p>
+<p>For non-HST filters, the filter system be included in the string, separated from the filter name by a comma (e.g. <code class="docutils literal notranslate"><span class="pre">'johnson,</span> <span class="pre">v'</span></code> or <code class="docutils literal notranslate"><span class="pre">'sdss,</span> <span class="pre">g'</span></code>). The available non-HST filters are listed here:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>System</p></th>
+<th class="head text-left"><p>Bands</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>cousins</p></td>
+<td class="text-left"><p>r, i</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>galex</p></td>
+<td class="text-left"><p>nuv, fuv</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>johnson</p></td>
+<td class="text-left"><p>u, b, v, r, i, j, k</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>landolt</p></td>
+<td class="text-left"><p>u, b, v, r, i</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>sdss</p></td>
+<td class="text-left"><p>u, g, r, i, z,</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>stromgren</p></td>
+<td class="text-left"><p>u, v, b, y</p></td>
+</tr>
+</tbody>
+</table>
+<p>Furthermore, Johnson-Cousins filters with corresponding UVIS filters are listed here:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Johnson-Cousins Filter</p></th>
+<th class="head text-left"><p>UVIS Filter</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>U</p></td>
+<td class="text-left"><p>F336W</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>B</p></td>
+<td class="text-left"><p>F475W</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>V</p></td>
+<td class="text-left"><p>F555W/F606W</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>I</p></td>
+<td class="text-left"><p>F814W</p></td>
+</tr>
+</tbody>
+</table>
+<p>A summary of the UVIS filters, with descriptions, is available in <a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb/chapter-6-uvis-imaging-with-wfc3/6-5-uvis-spectral-elements#id-6.5UVISSpectralElements-6.5.1FilterandGrismSummary">Section 6.5.1</a> of the WFC3 Instrument Handbook</p>
+<p>The notebook is currently set up to return the color terms between the V and I Johnson-Cousins filters, and corresponding UVIS filters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filts</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;johnson, v&#39;</span><span class="p">,</span> <span class="s1">&#39;f555w&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cousins, i&#39;</span><span class="p">,</span> <span class="s1">&#39;f814w&#39;</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="spec"></a></p>
+</section>
+<section id="define-a-spectrum">
+<h2>3. Define a spectrum<a class="headerlink" href="#define-a-spectrum" title="Permalink to this heading">#</a></h2>
+<p>Define a spectrum to get color terms for. Some common options are embedded below. A wide array of reference spectra are available for download from spectral atlases located <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/reference-data-for-calibration-and-tools/astronomical-catalogs">here</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Blackbody (5000 K)</span>
+<span class="n">bb_temp</span> <span class="o">=</span> <span class="mi">5000</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">K</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">syn</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">BlackBody1D</span><span class="p">(</span><span class="n">bb_temp</span><span class="p">)</span>
+<span class="n">spec</span>  <span class="o">=</span> <span class="n">syn</span><span class="o">.</span><span class="n">SourceSpectrum</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Power law </span>
+<span class="n">pl_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">syn</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">PowerLawFlux1D</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">flux_in</span><span class="p">,</span> <span class="n">x_0</span><span class="o">=</span><span class="n">wl_in</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">pl_index</span><span class="p">)</span>
+<span class="n">spec</span>  <span class="o">=</span> <span class="n">syn</span><span class="o">.</span><span class="n">SourceSpectrum</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+                   
+<span class="c1"># Load from a FITS table (e.g. a CALSPEC spectrum)</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">syn</span><span class="o">.</span><span class="n">SourceSpectrum</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;/path/to/your/spectrum.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Currently, the notebook is configured to use a 5000 K blackbody spectrum.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bb_temp</span> <span class="o">=</span> <span class="mi">5000</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">K</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">syn</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">BlackBody1D</span><span class="p">(</span><span class="n">bb_temp</span><span class="p">)</span>
+<span class="n">spec</span>  <span class="o">=</span> <span class="n">syn</span><span class="o">.</span><span class="n">SourceSpectrum</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="chips"></a></p>
+</section>
+<section id="select-uvis-chips">
+<h2>4. Select UVIS chips<a class="headerlink" href="#select-uvis-chips" title="Permalink to this heading">#</a></h2>
+<p>Quantum efficiency differences between the two UVIS chips mean that you must specify which chips to use for computing color terms. Simply set the chip you would like to use to <code class="docutils literal notranslate"><span class="pre">True</span></code> and the other to <code class="docutils literal notranslate"><span class="pre">False</span></code>, or set both to <code class="docutils literal notranslate"><span class="pre">True</span></code> if you would like coefficients for both.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">uvis1</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">uvis2</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">chips</span> <span class="o">=</span> <span class="p">[</span><span class="n">uvis1</span><span class="p">,</span> <span class="n">uvis2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="system"></a></p>
+</section>
+<section id="select-magnitude-systems">
+<h2>5. Select magnitude systems<a class="headerlink" href="#select-magnitude-systems" title="Permalink to this heading">#</a></h2>
+<p>Select which magnitude systems you would like color terms to be provided for. Set those you would like to <code class="docutils literal notranslate"><span class="pre">True</span></code> and others to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ABMAG</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">STMAG</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">VEGAMAG</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">mags</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;ABMAG&#39;</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">ABmag</span><span class="p">,</span> <span class="n">ABMAG</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;STMAG&#39;</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">STmag</span><span class="p">,</span> <span class="n">STMAG</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;VEGAMAG&#39;</span><span class="p">,</span> <span class="n">su</span><span class="o">.</span><span class="n">VEGAMAG</span><span class="p">,</span> <span class="n">VEGAMAG</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="output"></a></p>
+</section>
+<section id="generate-outputs">
+<h2>6. Generate outputs<a class="headerlink" href="#generate-outputs" title="Permalink to this heading">#</a></h2>
+<p>Generate a data frame containing the color terms for the inputs you have specified.</p>
+<p>First, let’s define the column names for the output table, and a list to fill with table rows.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Filters&#39;</span><span class="p">,</span> <span class="s1">&#39;Chip&#39;</span><span class="p">]</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then, append the names of magnitude systems being used.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">toggle</span> <span class="ow">in</span> <span class="n">mags</span><span class="p">:</span>
+    
+    <span class="k">if</span> <span class="n">toggle</span><span class="p">:</span>
+        
+        <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;d_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, iterate over filter pairs. For each filter pair, this loop will:</p>
+<ul class="simple">
+<li><p>generate observation mode strings, bandpasses, and observations</p></li>
+<li><p>calculate the color term and append it</p></li>
+<li><p>append filters, chip, and color term as a row to <code class="docutils literal notranslate"><span class="pre">rows</span></code></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">filts</span><span class="p">:</span>
+
+    <span class="n">filt_non</span><span class="p">,</span> <span class="n">filt_uvis</span> <span class="o">=</span> <span class="n">pair</span>  <span class="c1"># Unpack filters</span>
+    
+    <span class="n">filt_str</span> <span class="o">=</span> <span class="n">filt_non</span> <span class="o">+</span> <span class="s1">&#39; - &#39;</span> <span class="o">+</span> <span class="n">filt_uvis</span>
+    
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">toggle</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chips</span><span class="p">):</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">toggle</span><span class="p">:</span>
+            <span class="k">continue</span>
+        
+        <span class="n">chip_str</span> <span class="o">=</span> <span class="s1">&#39;uvis&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># Generate observation mode strings, bandpasses, observations</span>
+        
+        <span class="n">obsmode_non</span> <span class="o">=</span> <span class="n">filt_non</span>
+        <span class="n">obsmode_uvis</span> <span class="o">=</span> <span class="s1">&#39;wfc3, &#39;</span> <span class="o">+</span> <span class="n">chip_str</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="n">filt_uvis</span>
+
+        <span class="n">bp_non</span> <span class="o">=</span> <span class="n">band</span><span class="p">(</span><span class="n">obsmode_non</span><span class="p">)</span>
+        <span class="n">bp_uvis</span> <span class="o">=</span> <span class="n">band</span><span class="p">(</span><span class="n">obsmode_uvis</span><span class="p">)</span>
+
+        <span class="n">obs_non</span> <span class="o">=</span> <span class="n">Observation</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">bp_non</span><span class="p">)</span>
+        <span class="n">obs_uvis</span> <span class="o">=</span> <span class="n">Observation</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">bp_uvis</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="n">filt_str</span><span class="p">,</span> <span class="n">chip_str</span><span class="p">]</span>  <span class="c1"># Append filters and chip to row</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">toggle</span> <span class="ow">in</span> <span class="n">mags</span><span class="p">:</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">toggle</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">effstim_non</span> <span class="o">=</span> <span class="n">obs_non</span><span class="o">.</span><span class="n">effstim</span><span class="p">(</span><span class="n">flux_unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span> <span class="n">vegaspec</span><span class="o">=</span><span class="n">vegaspec</span><span class="p">)</span> 
+            <span class="n">effstim_uvis</span> <span class="o">=</span> <span class="n">obs_uvis</span><span class="o">.</span><span class="n">effstim</span><span class="p">(</span><span class="n">flux_unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span> <span class="n">vegaspec</span><span class="o">=</span><span class="n">vegaspec</span><span class="p">)</span>
+            
+            <span class="n">color</span> <span class="o">=</span> <span class="n">effstim_non</span> <span class="o">-</span> <span class="n">effstim_uvis</span> <span class="c1"># Find color term</span>
+            
+            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.3f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="n">color</span><span class="o">.</span><span class="n">value</span><span class="p">)))</span>  <span class="c1"># Append color term</span>
+            
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>  <span class="c1"># Append row to list of rows</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, generate and return the output table.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+
+<span class="n">df</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>If you wish to save the output table as a .txt file, please uncomment and execute the code block below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#df.to_csv(&#39;your/path/here.txt&#39;, sep=&#39;\t&#39;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="band"></a></p>
+</section>
+<section id="plot-bandpasses">
+<h2>7. Plot bandpasses<a class="headerlink" href="#plot-bandpasses" title="Permalink to this heading">#</a></h2>
+<p>It can be nice to see your selected bandpass pairs plotted with each other. The cell below will generate a figure with subplots for each filter pair specified above, as well as the relevant portion of the spectrum you’ve defined, all normalized to fit on the same axes.</p>
+<p><strong>Note:</strong> For the purposes of these plots, the non-HST bandpass and spectrum have been scaled to the amplitude of the HST bandpass, which reflects the actual total system throughput as a function of wavelength.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">filts</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">filts</span><span class="p">),</span><span class="mi">4</span><span class="p">))</span>  <span class="c1"># Instantiate subplots</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Throughput&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pair</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">filts</span><span class="p">):</span>
+    
+    <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span> <span class="o">=</span> <span class="n">pair</span>
+    
+    <span class="n">bp1</span> <span class="o">=</span> <span class="n">band</span><span class="p">(</span><span class="n">f1</span><span class="p">)</span>
+    <span class="n">bp2</span> <span class="o">=</span> <span class="n">band</span><span class="p">(</span><span class="s1">&#39;wfc3, uvis1,&#39;</span> <span class="o">+</span> <span class="n">f2</span><span class="p">)</span>
+    
+    <span class="c1"># Create wavelength array for subplot based on average bandpass wavelength and width</span>
+    <span class="n">avgwave</span> <span class="o">=</span> <span class="p">(</span><span class="n">bp1</span><span class="o">.</span><span class="n">avgwave</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">)</span> <span class="o">+</span> <span class="n">bp2</span><span class="o">.</span><span class="n">avgwave</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="p">(</span><span class="n">bp1</span><span class="o">.</span><span class="n">rectwidth</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">)</span> <span class="o">+</span> <span class="n">bp2</span><span class="o">.</span><span class="n">rectwidth</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span>
+    
+    <span class="n">left</span> <span class="o">=</span> <span class="nb">max</span><span class="p">((</span><span class="n">avgwave</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">width</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="p">(</span><span class="n">avgwave</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">width</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+    
+    <span class="n">wl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">nm</span>
+
+    <span class="c1"># Normalize curves to fit on one set of axes</span>
+    
+    <span class="n">bp1_norm</span> <span class="o">=</span> <span class="n">bp1</span><span class="p">(</span><span class="n">wl</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">bp1</span><span class="p">(</span><span class="n">wl</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">bp2</span><span class="p">(</span><span class="n">wl</span><span class="p">))</span>
+    <span class="n">spec_norm</span> <span class="o">=</span> <span class="n">spec</span><span class="p">(</span><span class="n">wl</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">spec</span><span class="p">(</span><span class="n">wl</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">bp2</span><span class="p">(</span><span class="n">wl</span><span class="p">))</span>
+    
+    <span class="c1"># Plot bandpasses and spectrum on subplot </span>
+    
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span><span class="p">,</span> <span class="n">bp1_norm</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">f1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span><span class="p">,</span> <span class="n">bp2</span><span class="p">(</span><span class="n">wl</span><span class="p">),</span>  <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">f2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;tab:red&#39;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span><span class="p">,</span> <span class="n">spec_norm</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;spectrum&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;tab:purple&#39;</span><span class="p">)</span>
+
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (nm)&#39;</span><span class="p">)</span>
+    
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;x-small&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="conclusion"></a></p>
+</section>
+<section id="conclusions">
+<h2>8. Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this heading">#</a></h2>
+<p>Thank you for walking through this notebook. Now using WFC3 data, you should be more familiar with:</p>
+<ul class="simple">
+<li><p>Generating synthetic observations using <code class="docutils literal notranslate"><span class="pre">synphot</span></code> and <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code>.</p></li>
+<li><p>Finding color terms between WFC3/UVIS filters and non-HST filters.</p></li>
+<li><p>Ploting bandpasses to investigate various throughputs.</p></li>
+</ul>
+<section id="congratulations-you-have-completed-the-notebook">
+<h3>Congratulations, you have completed the notebook!<a class="headerlink" href="#congratulations-you-have-completed-the-notebook" title="Permalink to this heading">#</a></h3>
+<p><a id="resources"></a></p>
+</section>
+</section>
+<section id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this heading">#</a></h2>
+<p>Below are some additional resources that may be helpful. Please send any questions through the <a class="reference external" href="https://stsci.service-now.com/hst">HST Helpdesk</a>.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3">WFC3 Website</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb">WFC3 Instrument Handbook</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb">WFC3 Data Handbook</a></p>
+<ul>
+<li><p>see sections 9.5.2 for reference to this notebook</p></li>
+</ul>
+</li>
+</ul>
+<p><a id="about"></a></p>
+</section>
+<section id="about-this-notebook">
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
+<p><strong>Authors:</strong> Aidan Pidgeon, Jennifer Mack; WFC3 Instrument Team</p>
+<p><strong>Updated on:</strong> 2021-09-13</p>
+<p><a id="cite"></a></p>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Permalink to this heading">#</a></h2>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">synphot</span></code>, or <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code> for published research, please cite the
+authors. Follow these links for more information about citing the libraries below:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://synphot.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">synphot</span></code></a></p></li>
+<li><p><a class="reference external" href="https://stsynphot.readthedocs.io/en/latest/index.html">Citing <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code></a></p></li>
+</ul>
+<hr class="docutils" />
+<p><span class="xref myst">Top of Page</span>
+<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/WFC3/filter_transformations"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../exception_report/wfc3_exception_report.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Exception Report Checklist - WFC3</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../flux_conversion_tool/flux_conversion_tool.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Flux Unit Conversions with synphot and stsynphot</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">1. Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#select-filters-for-the-transformation">2. Select filters for the transformation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-a-spectrum">3. Define a spectrum</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#select-uvis-chips">4. Select UVIS chips</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#select-magnitude-systems">5. Select magnitude systems</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-outputs">6. Generate outputs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-bandpasses">7. Plot bandpasses</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">8. Conclusions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#congratulations-you-have-completed-the-notebook">Congratulations, you have completed the notebook!</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

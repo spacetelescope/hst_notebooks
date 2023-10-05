@@ -1,0 +1,1162 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Correcting for Scattered Light in WFC3/IR Exposures: Using calwf3 to Mask Bad Reads &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads" href="../ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html" />
+    <link rel="prev" title="WFC3/IR IMA Visualization Tools with An Example of Time Variable Background" href="../ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">Obtaining Pixel Area Maps for ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Jupyter Notebook Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/Initialization/Initialization.html">DrizzlePac Initialization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an absolute reference catalog</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling WFPC2 Images to use a Single Zeropoint</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Using updated astrometry solutions</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/README.html">STIS-Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">WFC3Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dash/dash.html">How to use <code class="docutils literal notranslate"><span class="pre">wfc3_dash</span></code> on DASH data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Correcting for Scattered Light in WFC3/IR Exposures: Using calwf3 to Mask Bad Reads</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-a-id-intro-a">Introduction <a id="intro"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-a-id-import-a">1. Imports <a id="import"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloading-data-a-id-load-a">2. Downloading Data<a id="load"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identifying-reads-with-time-variable-background-a-id-identify-a">3. Identifying Reads with Time Variable Background<a id="identify"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#querying-crds-for-the-reference-file-a-id-ref-a">4. Querying CRDS for the Reference File<a id="ref"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reprocessing-the-observation-a-id-main-a">5. Reprocessing the Observation<a id="main"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#re-running-calwf3-a-id-reprocess-a">5.1 Re-running <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> <a id="reprocess"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-flt-products-a-id-compare-a">5.2 Comparing FLT Products <a id="compare"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#drizzling-nominal-and-reprocessed-flt-products-a-id-drizzle-a">6. Drizzling Nominal and Reprocessed FLT Products <a id="drizzle"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions-a-id-conclusions-a">7. Conclusions <a id="conclusions"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources-a-id-add-a">Additional Resources <a id="add"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook-a-id-about-a">About this Notebook <a id="about"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations-a-id-cite-a">Citations <a id="cite"></a></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <p><a id="top"></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="correcting-for-scattered-light-in-wfc3-ir-exposures-using-calwf3-to-mask-bad-reads">
+<h1>Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads<a class="headerlink" href="#correcting-for-scattered-light-in-wfc3-ir-exposures-using-calwf3-to-mask-bad-reads" title="Permalink to this heading">#</a></h1>
+<section id="learning-goals">
+<h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h2>
+<p>This notebook shows one of two available methods to correct for time-variable background
+(TVB) due to scattered light from observing close to the Earth’s limb. This method illustrates how to mask bad reads in the RAW image and then reprocess with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>, and it may be used for rejecting anomalous reads occurring either at the beginning or at the end of an exposure.</p>
+<p>By the end of this tutorial, you will:</p>
+<ul class="simple">
+<li><p>Compute and plot the difference between IMA reads to identify the reads affected by TVB.</p></li>
+<li><p>Reprocess a single exposure with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> by excluding the first few reads which are affected by scattered light.</p></li>
+<li><p>Compare the original FLT to the reprocessed FLT image.</p></li>
+<li><p>Compare the original DRZ to the reprocessed DRZ image.</p></li>
+</ul>
+<p>A second method (manually subtracting bad reads from the final IMA read) can
+be found in the notebook <a class="reference external" href="https://github.com/spacetelescope/WFC3Library/tree/master/notebooks/ir_scattered_light_manual_corrections">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads (O’Connor 2023)</a>. This provides a method for removing anomalies such as satellite trails which appear in the middle of an IMA exposure.  One caveat of the second method is that it does not perform the ‘ramp fitting’ step and therefore the calibrated FLT products will still contain cosmic rays.</p>
+<div class="alert alert-block alert-info">
+<p><strong>Please note that this method may leave large sky residuals in regions
+corresponding to WFC3/IR ‘blobs’, flagged in the FLT data quality (DQ) array as a value of 512. This method is therefore recommended for observations acquired using an WFC3-IR-DITHER-BLOB dither (or POSTARG equivalent) to step over blob regions. Software such
+as AstroDrizzle may then be used to combine the FLT exposures, while excluding pixels
+with 512 flags (or any bit-wise combination of 512 and another flag e.g. 576 = 512 + 64).</strong></p>
+</div>
+</section>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
+<p><span class="xref myst">Introduction</span> <br>
+<span class="xref myst">1. Imports</span> <br>
+<span class="xref myst">2. Downloading Data</span> <br>
+<span class="xref myst">3. Identifying Reads with Time Variable Background</span> <br>
+<span class="xref myst">4. Querying CRDS for the Reference File</span> <br>
+<span class="xref myst">5. Reprocessing the Observation</span> <br></p>
+<ul class="simple">
+<li><p><span class="xref myst">5.1 Re-running <code class="docutils literal notranslate"><span class="pre">calwf3</span></code></span> <br></p></li>
+<li><p><span class="xref myst">5.2 Comparing FLT Products</span> <br></p></li>
+</ul>
+<p><span class="xref myst">6. Drizzling Nominal and Reprocessed FLT Products</span> <br>
+<span class="xref myst">7. Conclusions</span> <br>
+<span class="xref myst">Additional Resources</span> <br>
+<span class="xref myst">About this Notebook</span> <br>
+<span class="xref myst">Citations</span> <br></p>
+</section>
+<section id="introduction-a-id-intro-a">
+<h2>Introduction <a id="intro"></a><a class="headerlink" href="#introduction-a-id-intro-a" title="Permalink to this heading">#</a></h2>
+<p>Observations with strong time variability in the sky background during a MULTIACCUM ramp can corrupt the WFC3 <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> ‘linear ramp fit’ and cosmic-ray identification algorithm (CRCORR, <a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb/chapter-3-wfc3-data-calibration/3-3-ir-data-calibration-steps#id-3.3IRDataCalibrationSteps-3.3.10">Section 3.3.10 of the Data Handbook</a>). The CRCORR
+algorithm assumes that a given pixel sees a constant count rate throughout the read from a
+combination of sources and diffuse background (i.e., the integrated signal “ramps” are linear). A background
+varying strongly with time (i.e. where the “ramps” are non-linear) can trigger the cosmic-ray
+(CR) flagging thresholds in <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>, causing the algorithm to identify most or all of the pixels as a CR at any given read.</p>
+<p>In this notebook we will examine an observation affected by strong TVB,
+specifically due to Earth limb scattered light (<a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb/chapter-7-wfc3-ir-sources-of-error/7-10-time-variable-background">Section 7.10 of the WFC3 Data Handbook</a>) affecting the first few reads and producing a spatially variable background. We will run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> while rejecting the affected reads to create an improved FLT product with a flat background and an improved ramp fit. One caveat is that the new FLT will
+have a reduced total exposure time, given the rejection of some number of reads, and
+therefore a lower signal-to-noise ratio.</p>
+<p>Please see the notebook  <a class="reference external" href="https://github.com/spacetelescope/WFC3Library/tree/master/notebooks/ir_ima_visualization">WFC3/IR IMA Visualization with An Example of Time Variable Background (O’Connor 2023)</a> for a walkthrough of how to identify a TVB in due to scattered light.</p>
+</section>
+<section id="imports-a-id-import-a">
+<h2>1. Imports <a id="import"></a><a class="headerlink" href="#imports-a-id-import-a" title="Permalink to this heading">#</a></h2>
+<p>This notebook assumes you have created the virtual environment in <a class="reference external" href="https://github.com/spacetelescope/WFC3Library">WFC3 Library’s</a> installation instructions.</p>
+<p>We import:</p>
+<ul class="simple">
+<li><p><em>os</em> for setting environment variables</p></li>
+<li><p><em>glob</em> for finding lists of files</p></li>
+<li><p><em>shutil</em> for managing directories</p></li>
+<li><p><em>numpy</em> for handling array functions</p></li>
+<li><p><em>matplotlib.pyplot</em> for plotting data</p></li>
+<li><p><em><a class="reference external" href="http://astropy.io">astropy.io</a> fits</em> for accessing FITS files</p></li>
+<li><p><em>astroquery.mast Observations</em> for downloading data</p></li>
+<li><p><em>wfc3tools</em> <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> for calibrating WFC3 data</p></li>
+<li><p><em>ginga</em> for finding min/max outlier pixels</p></li>
+<li><p><em>stwcs</em> for updating World Coordinate System images</p></li>
+<li><p><em>drizzlepac</em> for combining images with AstroDrizzle</p></li>
+</ul>
+<p>We import the following modules:</p>
+<ul class="simple">
+<li><p><em>ima_visualization_and_differencing</em> to take the difference between reads, plot the ramp, and visualize the difference in images</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span> 
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">shutil</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+<span class="kn">from</span> <span class="nn">wfc3tools</span> <span class="kn">import</span> <span class="n">calwf3</span>
+<span class="kn">from</span> <span class="nn">ginga.util.zscale</span> <span class="kn">import</span> <span class="n">zscale</span>
+<span class="kn">from</span> <span class="nn">stwcs</span> <span class="kn">import</span> <span class="n">updatewcs</span>
+<span class="kn">from</span> <span class="nn">drizzlepac</span> <span class="kn">import</span> <span class="n">astrodrizzle</span>
+
+<span class="kn">import</span> <span class="nn">ima_visualization_and_differencing</span> <span class="k">as</span> <span class="nn">diff</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="downloading-data-a-id-load-a">
+<h2>2. Downloading Data<a id="load"></a><a class="headerlink" href="#downloading-data-a-id-load-a" title="Permalink to this heading">#</a></h2>
+<p>The following commands query MAST for the necessary data products and download them to the current directory. Here we obtain WFC3/IR observations from HST Frontier Fields program <a class="reference external" href="https://archive.stsci.edu/proposal_search.php?id=14037&amp;mission=hst">14037</a>, Visit BB. We specifically want the observation <code class="docutils literal notranslate"><span class="pre">icqtbbbxq</span></code>, as it is strongly affected by Earth limb scattered light. The data products requested are the RAW, IMA, and FLT files. For an example of TVB at the end of an exposure, we include an alternate dataset (OBS_ID = <code class="docutils literal notranslate"><span class="pre">ICXT27020</span></code>, file_id = <code class="docutils literal notranslate"><span class="pre">icxt27hkq</span></code>) in which the Earth limb affects the reads at the end of the MULTIACCUM sequence (SCI,1 through  SCI,5).</p>
+<p><strong>Warning: this cell may take a few minutes to complete.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">OBS_ID</span> <span class="o">=</span> <span class="s1">&#39;ICQTBB020&#39;</span> <span class="c1">#Earth-limb at the start </span>
+<span class="c1">#OBS_ID = &#39;ICXT27020&#39; #Earth-limb at the end </span>
+<span class="n">data_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">OBS_ID</span><span class="p">)</span>
+
+<span class="n">file_id</span> <span class="o">=</span> <span class="s2">&quot;icqtbbbxq&quot;</span>
+<span class="c1">#file_id = &#39;icxt27hkq&#39;</span>
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">data_list</span><span class="p">[</span><span class="s1">&#39;obsid&#39;</span><span class="p">],</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;CALWF3&#39;</span><span class="p">,</span> <span class="n">obs_id</span><span class="o">=</span><span class="n">file_id</span><span class="p">,</span> 
+                <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RAW&#39;</span><span class="p">,</span> <span class="s1">&#39;IMA&#39;</span><span class="p">,</span> <span class="s1">&#39;FLT&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we will move our IMA and FLT files to a separate directory called “orig/” so they are not overwritten when we run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>. We leave our RAW file in the working directory for later use.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;orig/&#39;</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;orig/&#39;</span><span class="p">)</span>
+
+<span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;mastDownload/HST/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_ima.fits&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;orig/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_ima.fits&#39;</span><span class="p">)</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;mastDownload/HST/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;orig/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">)</span>  
+
+<span class="n">raw_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;mastDownload/HST/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_raw.fits&#39;</span>
+
+<span class="n">remove_files_list</span><span class="o">=</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_*.fits&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">rm_file</span> <span class="ow">in</span> <span class="n">remove_files_list</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">rm_file</span><span class="p">)</span>
+
+<span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">raw_file</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_raw.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="identifying-reads-with-time-variable-background-a-id-identify-a">
+<h2>3. Identifying Reads with Time Variable Background<a id="identify"></a><a class="headerlink" href="#identifying-reads-with-time-variable-background-a-id-identify-a" title="Permalink to this heading">#</a></h2>
+<p>In this section, we show how to identify the reads impacted by TVB by examining the difference in count rate between reads. This section was taken from the <a class="reference external" href="https://github.com/spacetelescope/WFC3Library/tree/master/notebooks/ir_ima_visualization">WFC3/IR IMA Visualization with An Example of Time Variable Background (O’Connor 2023)</a> notebook, which includes a more comprehensive walkthrough of identifying time variable background in WFC3/IR images.</p>
+<p>Here we implement a technique to examine the count rate difference between consecutive reads. In this case, we first convert from count rate (electrons/second) back to counts (electrons) before taking the difference, as shown in equation 3 from <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2018/WFC3-2018-05.pdf">WFC3 ISR 2018-05</a>.</p>
+<p><img alt="Instantaneous Difference Equation" src="../../../_images/instantaneous_diff1.png" /></p>
+<p>We compare sky values in different regions of the detector (left side, right side, and full frame). If you would like to specify your own regions for the left and right sides of your image, you can change the <code class="docutils literal notranslate"><span class="pre">lhs_region</span></code> and <code class="docutils literal notranslate"><span class="pre">rhs_region</span></code> parameters. Each region must be specified as a dictionary including the four “corners” (x0, x1, y0, and y1) of the region you would like to select. You may want to avoid the edges of the detector which have a large number of bad pixels and higher flat field errors.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="n">ima_filepath</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;orig/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_ima.fits&#39;</span>
+
+<span class="n">path</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">ima_filepath</span><span class="p">)</span>
+<span class="n">cube</span><span class="p">,</span> <span class="n">integ_time</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">read_wfc3</span><span class="p">(</span><span class="n">ima_filepath</span><span class="p">)</span>
+
+
+<span class="n">lhs_region</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x0&quot;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span><span class="s2">&quot;x1&quot;</span><span class="p">:</span><span class="mi">250</span><span class="p">,</span><span class="s2">&quot;y0&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="s2">&quot;y1&quot;</span><span class="p">:</span><span class="mi">900</span><span class="p">}</span>
+<span class="n">rhs_region</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x0&quot;</span><span class="p">:</span><span class="mi">700</span><span class="p">,</span><span class="s2">&quot;x1&quot;</span><span class="p">:</span><span class="mi">900</span><span class="p">,</span><span class="s2">&quot;y0&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="s2">&quot;y1&quot;</span><span class="p">:</span><span class="mi">900</span><span class="p">}</span>
+
+<span class="c1">#Please use a limit that makes sense for your own data, when running your images through this notebook.</span>
+<span class="n">cube</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">cube</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+<span class="n">diff_cube</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">compute_diff_imas</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span> <span class="n">integ_time</span><span class="p">,</span> <span class="n">diff_method</span> <span class="o">=</span> <span class="s2">&quot;instantaneous&quot;</span><span class="p">)</span>
+<span class="n">median_diff_fullframe</span><span class="p">,</span> <span class="n">median_diff_lhs</span><span class="p">,</span> <span class="n">median_diff_rhs</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">get_median_fullframe_lhs_rhs</span><span class="p">(</span><span class="n">diff_cube</span><span class="p">,</span> <span class="n">lhs_region</span> <span class="o">=</span> <span class="n">lhs_region</span><span class="p">,</span> <span class="n">rhs_region</span> <span class="o">=</span> <span class="n">rhs_region</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick&#39;</span><span class="p">,</span> <span class="n">labelsize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick&#39;</span><span class="p">,</span> <span class="n">labelsize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;lines.markersize&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">})</span>
+
+<span class="n">diff</span><span class="o">.</span><span class="n">plot_ramp</span><span class="p">(</span><span class="n">ima_filepath</span><span class="p">,</span> <span class="n">integ_time</span><span class="p">,</span> <span class="n">median_diff_fullframe</span><span class="p">,</span> <span class="n">median_diff_lhs</span><span class="p">,</span> <span class="n">median_diff_rhs</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">2.5</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here, we utilize a few functions from our module <code class="docutils literal notranslate"><span class="pre">ima_visualization_and_differencing</span></code>. We use <code class="docutils literal notranslate"><span class="pre">read_wfc3</span></code> to grab the IMA data from all reads and corresponding integration times. We also implement upper and lower limits on our pixel values to exclude sources when plotting our ramp. We take the instantaneous difference using <code class="docutils literal notranslate"><span class="pre">compute_diff_imas</span></code>, which computes the difference as described in the equation above. Finally, we use <code class="docutils literal notranslate"><span class="pre">plot_ramp</span></code> to plot the median count rate from the left side, right side, and full frame image.</p>
+<p>For our scattered light exposure, we see  zodiacal light at a level of ~0.9e-/s in later reads, with the scattered light component affecting the first several reads where the median count rate for the left side (orange triangles) is larger than the right side (green triangles). We can visualize this in 2 dimensions in the panel plot below, using the <code class="docutils literal notranslate"><span class="pre">plot_ima_difference_subplots</span></code>.</p>
+<p>In the panel plot, we see that sources (small galaxies) are visible in the difference images using this new method. Note that this may complicate the analysis of the spatial background (e.g. left versus right) for images with extended targets, such as large galaxies. In this case, users may wish to adjust the regions of the detector used for the ramp plots. We therefore recommend inspecting both the panel plots as well as the ramp fits for diagnosing any issues with the data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="n">ima_filepath</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;orig/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_ima.fits&#39;</span>
+
+<span class="n">lhs_region</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x0&quot;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span><span class="s2">&quot;x1&quot;</span><span class="p">:</span><span class="mi">250</span><span class="p">,</span><span class="s2">&quot;y0&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="s2">&quot;y1&quot;</span><span class="p">:</span><span class="mi">900</span><span class="p">}</span>
+<span class="n">rhs_region</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x0&quot;</span><span class="p">:</span><span class="mi">700</span><span class="p">,</span><span class="s2">&quot;x1&quot;</span><span class="p">:</span><span class="mi">900</span><span class="p">,</span><span class="s2">&quot;y0&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="s2">&quot;y1&quot;</span><span class="p">:</span><span class="mi">900</span><span class="p">}</span>
+
+<span class="n">diff</span><span class="o">.</span><span class="n">plot_ima_difference_subplots</span><span class="p">(</span><span class="n">ima_filepath</span><span class="p">,</span> <span class="n">difference_method</span><span class="o">=</span><span class="s1">&#39;instantaneous&#39;</span><span class="p">,</span> <span class="n">lhs_region</span><span class="o">=</span><span class="n">lhs_region</span><span class="p">,</span> <span class="n">rhs_region</span><span class="o">=</span><span class="n">rhs_region</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In this figure, we see that the ratio of instantaneous rate for the left versus right side of the image is ~1.0 for all but the first few reads (which are affected by scattered light). We choose to exclude reads with a ratio greater than 1.1 from the exposure and reprocess the image with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>. While this reduces the total exposure from 1403 to 1000 seconds, it removes the spatial component from the sky background and allows for a more accurate ‘up-the-ramp’ fit with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>.</p>
+</section>
+<section id="querying-crds-for-the-reference-file-a-id-ref-a">
+<h2>4. Querying CRDS for the Reference File<a id="ref"></a><a class="headerlink" href="#querying-crds-for-the-reference-file-a-id-ref-a" title="Permalink to this heading">#</a></h2>
+<p>Before running <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>, we need to set some environment variables.</p>
+<p>We will point to a subdirectory called <code class="docutils literal notranslate"><span class="pre">crds_cache</span></code> using the IREF environment variable, which is used for WFC3 reference files. Other instruments use other variables, e.g., JREF for ACS.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;iref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache/references/hst/wfc3/&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The code block below will query CRDS for the best reference files currently available for our dataset and update the header keywords to point to these new files. We will use the Python package <code class="docutils literal notranslate"><span class="pre">os</span></code> to run terminal commands. In the terminal, the line would be:</p>
+<p>…where ‘filename’ is the name of your fits file.</p>
+<p><strong>Warning: this cell may take a few minutes to complete.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">raw_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_raw.fits&#39;</span>
+
+
+<span class="nb">print</span><span class="p">(</span> <span class="sa">f</span><span class="s2">&quot;Querying CRDS for the reference file associated with </span><span class="si">{</span><span class="n">raw_file</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<span class="n">command_line_input</span> <span class="o">=</span> <span class="s1">&#39;crds bestrefs --files </span><span class="si">{:}</span><span class="s1"> --sync-references=1 --update-bestrefs&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">raw_file</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">command_line_input</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="reprocessing-the-observation-a-id-main-a">
+<h2>5. Reprocessing the Observation<a id="main"></a><a class="headerlink" href="#reprocessing-the-observation-a-id-main-a" title="Permalink to this heading">#</a></h2>
+<p>As discussed in the <span class="xref myst">introduction</span> to this notebook, the accuracy of the ramp fit performed during the CRCORR cosmic-ray rejection step of the pipeline determines the quality of the calibrated WFC3/IR FLT data products. Given that a time variable background can compromise the quality of the ramp fit, observations affected by TVB will likely result in poor-quality calibrated FLT images (see the Appendix of <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2021/2021-01.pdf">WFC3 ISR 2021-01</a>).</p>
+<p>To address poorly calibrated FLT images where some reads are affected by scattered light TVB (as in our example observation), we can remove these reads and re-run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to produce cleaner FLT images. We choose to exclude reads where the ratio of background signal is greater than 1.1 e-/s (see the notebook <a class="reference external" href="https://github.com/spacetelescope/WFC3Library/tree/master/notebooks/ir_ima_visualization">WFC3/IR IMA Visualization with An Example of Time Variable Background (O’Connor 2023)</a> for a more complete demonstration of how we find this ratio).</p>
+<p>The following reprocessing example is replacing section <a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb/chapter-7-wfc3-ir-sources-of-error/7-10-time-variable-background">7.10.1 of the WFC3 Data Handbook</a>.</p>
+<section id="re-running-calwf3-a-id-reprocess-a">
+<h3>5.1 Re-running <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> <a id="reprocess"></a><a class="headerlink" href="#re-running-calwf3-a-id-reprocess-a" title="Permalink to this heading">#</a></h3>
+<p>Below, we select our excluded reads (in this case reads 11-15), which are at the beginning of the exposure. We set the DQ value to 1024 for these reads, prompting <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to flag all pixels in these reads as bad, effectively rejecting the reads.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">raw_filepath</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_raw.fits&#39;</span>
+
+<span class="c1"># Remove existing products or calwf3 will die</span>
+<span class="n">flt_filepath</span> <span class="o">=</span> <span class="n">raw_filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="s1">&#39;flt&#39;</span><span class="p">)</span>
+<span class="n">ima_filepath</span> <span class="o">=</span> <span class="n">raw_filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="s1">&#39;ima&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">filepath</span> <span class="ow">in</span> <span class="p">[</span><span class="n">flt_filepath</span><span class="p">,</span> <span class="n">ima_filepath</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+<span class="n">reads</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">16</span><span class="p">)</span> <span class="c1">#numpy arange creates an array including the start value (11) but excluding the stop value (16), so the array is actually 11-15. </span>
+<span class="k">for</span> <span class="n">read</span> <span class="ow">in</span> <span class="n">reads</span><span class="p">:</span>
+    <span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">raw_filepath</span><span class="p">,</span> <span class="n">extver</span><span class="o">=</span><span class="n">read</span><span class="p">,</span> <span class="n">extname</span><span class="o">=</span><span class="s1">&#39;DQ&#39;</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;pixvalue&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">1024</span><span class="p">)</span>
+
+<span class="n">calwf3</span><span class="p">(</span><span class="n">raw_filepath</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="comparing-flt-products-a-id-compare-a">
+<h3>5.2 Comparing FLT Products <a id="compare"></a><a class="headerlink" href="#comparing-flt-products-a-id-compare-a" title="Permalink to this heading">#</a></h3>
+<p>Please move your reprocessed images to a new directory with a different name each time you run this notebook.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reprocessed_flt</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span>
+<span class="n">reprocessed_ima</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_ima.fits&#39;</span>
+<span class="n">original_flt</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;orig/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span>
+<span class="n">original_ima</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;orig/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_ima.fits&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we can compare our original and reprocessed FLT products.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_new</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">reprocessed_flt</span><span class="p">)</span>
+<span class="n">image_old</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">original_flt</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="n">fig</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="c1">#add the total exptime in the title </span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Reprocessed FLT image&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">im1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image_new</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">labelsize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">cbar1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+<span class="n">cbar1</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">columns</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Original FLT image&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">im2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image_old</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>  <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">cbar2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+<span class="n">cbar2</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<p>This new image was produced by <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> after masking the first 5 reads (not including the zero read) in the RAW file, reducing the effective exposure time from 1403 to 1000 seconds. While the total exposure is reduced from 1403 seconds to 1000 seconds (thus decreasing the overall S/N of the image), the background in the reprocessed image is now uniform over the entire field of view. We can see that the new FLT image is free of the Earth limb scattered light visible in the old FLT image.</p>
+<p>Finally, note that the reprocessed FLT product now includes a larger sky background in science pixels corresponding to IR “blobs”, regions of reduced sensitivity due particulate matter on the channel selection mechanism (CSM)  mirror (<a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb/chapter-7-wfc3-ir-sources-of-error/7-5-blobs">section 7.5 of the WFC3 Data Handbook</a>).</p>
+<p>The method for correcting WFC3/IR images described in the notebook <a class="reference external" href="https://github.com/spacetelescope/WFC3Library/tree/master/notebooks/ir_scattered_light_manual_corrections">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads (O’Connor 2023)</a> provides FLT products without blobs, but that do include cosmic rays.</p>
+<p>We update the FLT header keywords “EXPTIME” (in the primary header) and “SAMPTIME” (in the science header) to reflect the new total exposure time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_new</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">reprocessed_flt</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
+
+<span class="n">ima_orig</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">original_ima</span><span class="p">)</span>
+        
+<span class="n">hdr</span> <span class="o">=</span> <span class="n">ima_orig</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+<span class="n">NSAMP</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;NSAMP&#39;</span><span class="p">]</span>
+<span class="n">hdr1</span> <span class="o">=</span> <span class="n">ima_orig</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+<span class="n">integ_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">NSAMP</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">NSAMP</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">integ_time</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ima_orig</span><span class="p">[(</span><span class="s1">&#39;TIME&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">)]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PIXVALUE&#39;</span><span class="p">]</span>
+<span class="n">integ_time</span> <span class="o">=</span> <span class="n">integ_time</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">dt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">integ_time</span><span class="p">)</span>
+
+<span class="n">final_time</span> <span class="o">=</span> <span class="n">integ_time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">reads</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">read</span> <span class="ow">in</span> <span class="n">reads</span><span class="p">:</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">integ_time</span><span class="p">)</span><span class="o">-</span><span class="n">read</span><span class="o">-</span><span class="mi">1</span> <span class="c1">#because the reads are stored in reverse order</span>
+        <span class="n">final_time</span> <span class="o">-=</span> <span class="n">dt</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        
+        
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The final exposure time after reprocessing is </span><span class="si">{</span><span class="n">final_time</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+<span class="n">image_new</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">final_time</span>
+<span class="n">image_new</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+<span class="n">image_new</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="drizzling-nominal-and-reprocessed-flt-products-a-id-drizzle-a">
+<h2>6. Drizzling Nominal and Reprocessed FLT Products <a id="drizzle"></a><a class="headerlink" href="#drizzling-nominal-and-reprocessed-flt-products-a-id-drizzle-a" title="Permalink to this heading">#</a></h2>
+<p>In our example we use an exposure (<code class="docutils literal notranslate"><span class="pre">icqtbbbxq</span></code>) from image association <code class="docutils literal notranslate"><span class="pre">ICQTBB020</span></code> acquired in visit BB of program <a class="reference external" href="https://www.stsci.edu/hst/observing/program-information">14037</a>. This visit consists of two orbits of two exposures each, and we now download the three other FLTs in the visit (<code class="docutils literal notranslate"><span class="pre">icqtbbc0q_flt.fits</span></code>, <code class="docutils literal notranslate"><span class="pre">icqtbbbrq_flt.fits</span></code>, <code class="docutils literal notranslate"><span class="pre">icqtbbbtq_flt.fits</span></code>) and the pipeline drizzled DRZ product.</p>
+<p>To produce a clean DRZ image (without blob residuals), we can drizzle the four FLTs together (from the nominal exposures and the reprocessed exposure), replacing pixels flagged as blobs with those from the dithered (nominal) image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">OBS_ID</span><span class="p">)</span>
+
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">data_list</span><span class="p">[</span><span class="s1">&#39;obsid&#39;</span><span class="p">],</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;CALWF3&#39;</span><span class="p">,</span>  
+                <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;FLT&#39;</span><span class="p">,</span><span class="s1">&#39;DRZ&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nominal_file_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;icqtbbc0q&quot;</span><span class="p">,</span> <span class="s2">&quot;icqtbbbrq&quot;</span><span class="p">,</span> <span class="s2">&quot;icqtbbbtq&quot;</span><span class="p">]</span>
+<span class="c1">#nominal_file_ids = [&quot;icxt27hoq&quot;]</span>
+<span class="n">nominal_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">nominal_file_id</span> <span class="ow">in</span> <span class="n">nominal_file_ids</span><span class="p">:</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;mastDownload/HST/</span><span class="si">{</span><span class="n">nominal_file_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">nominal_file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">nominal_file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">)</span>
+    <span class="n">nominal_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">nominal_file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">nominal_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we update the image World Coordinate System of the reprocessed image in preparation for drizzling.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">updatewcs</span><span class="o">.</span><span class="n">updatewcs</span><span class="p">(</span><span class="n">reprocessed_flt</span><span class="p">,</span> <span class="n">use_db</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we combine the four FLT images with AstroDrizzle while exluding pixels flagged as blobs and replacing those pixels with those from dithered frames.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">&#39;icqtbb*flt.fits&#39;</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;f140w&#39;</span><span class="p">,</span> <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">build</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">skymethod</span><span class="o">=</span><span class="s1">&#39;match&#39;</span><span class="p">,</span> <span class="n">driz_separate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">driz_cr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">final_bits</span><span class="o">=</span><span class="s1">&#39;16&#39;</span><span class="p">)</span>
+<span class="c1">#astrodrizzle.AstroDrizzle(&#39;icxt27*flt.fits&#39;, output=&#39;f105w&#39;, preserve=False, build=False, context=False, skymethod=&#39;match&#39;, driz_separate=False, median=False, blot=False, driz_cr=False, final_bits=&#39;16&#39;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Comparing the new DRZ image made with the reprocessed FLT product against the original pipeline DRZ image, we see that the new DRZ image no longer includes scattered light but has a slightly lower S/N due the reduced total exposure time from 1403 to 1000 seconds.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DRZ_image</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;f140w_drz_sci.fits&quot;</span><span class="p">)</span>
+<span class="n">Orig_DRZ</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;mastDownload/HST/icqtbb020/icqtbb020_drz.fits&#39;</span><span class="p">)</span>
+
+<span class="c1">#DRZ_image = fits.getdata(&quot;f105w_drz_sci.fits&quot;)</span>
+<span class="c1">#Orig_DRZ = fits.getdata(&#39;mastDownload/HST/icxt27020/icxt27020_drz.fits&#39;)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="mi">2</span>
+
+
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Reprocessed DRZ Image&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">vmin</span><span class="p">,</span><span class="n">vmax</span> <span class="o">=</span> <span class="n">zscale</span><span class="p">(</span><span class="n">Orig_DRZ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="n">im1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">DRZ_image</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">)</span>
+<span class="n">_</span><span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Original Pipeline DRZ Image&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">im2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Orig_DRZ</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">)</span>
+<span class="n">_</span><span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="conclusions-a-id-conclusions-a">
+<h2>7. Conclusions <a id="conclusions"></a><a class="headerlink" href="#conclusions-a-id-conclusions-a" title="Permalink to this heading">#</a></h2>
+<p><strong>Congratulations, you have completed the notebook.</strong></p>
+<p>You should now be familiar with how to reprocess an observation affected by Earth limb scattered light by removing the first few reads and rerunning <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>.</p>
+<p>Thank you for following along!</p>
+</section>
+<section id="additional-resources-a-id-add-a">
+<h2>Additional Resources <a id="add"></a><a class="headerlink" href="#additional-resources-a-id-add-a" title="Permalink to this heading">#</a></h2>
+<p>Below are some additional resources that may be helpful. Please send any questions through the <a class="reference external" href="https://stsci.service-now.com/hst">HST Help Desk</a>.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3">WFC3 Website</a></p>
+<ul>
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3/performance/cte">WFC3/UVIS CTE Website</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb">WFC3 Instrument Handbook</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb">WFC3 Data Handbook</a></p></li>
+<li><p><a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2021/2021-01.pdf">Instrument Science Report WFC3 2021-01</a></p></li>
+</ul>
+</section>
+<section id="about-this-notebook-a-id-about-a">
+<h2>About this Notebook <a id="about"></a><a class="headerlink" href="#about-this-notebook-a-id-about-a" title="Permalink to this heading">#</a></h2>
+<p><strong>Author:</strong> Anne O’Connor, Jennifer Mack, Annalisa Calamida, Harish Khandrika – WFC3 Instrument</p>
+<p><strong>Updated On:</strong> 2023-05-25</p>
+</section>
+<section id="citations-a-id-cite-a">
+<h2>Citations <a id="cite"></a><a class="headerlink" href="#citations-a-id-cite-a" title="Permalink to this heading">#</a></h2>
+<p>If you use the following tools for published research, please cite the
+authors. Follow these links for more information about citing the tools:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
+<li><p><a class="reference external" href="https://wfc3tools.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">wfc3tools</span></code></a></p></li>
+<li><p><a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/LICENSE.html">Citing <code class="docutils literal notranslate"><span class="pre">drizzlepac</span></code></a></p></li>
+</ul>
+<p>If you use this notebook, or information from the WFC3 Data Handbook, Instrument Handbook,
+or WFC3 ISRs for published research, please cite them:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb#:~:text=Citation,%2C%20(Baltimore%3A%20STScI).">Citing the WFC3 Data Handbook</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb#:~:text=Citation,14.0%E2%80%9D%20(Baltimore%3A%20STScI)">Citing the WFC3 Instrument Handbook</a></p></li>
+<li><p><a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2021/2021-01.pdf">Instrument Science Report WFC3 2021-01</a></p></li>
+<li><p>Citing this notebook:
+Please cite the primary author and year, and hyperlink the notebook or WFC3 Library</p></li>
+</ul>
+<hr class="docutils" />
+<p><span class="xref myst">Top of Page</span>
+<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/WFC3/ir_scattered_light_calwf3_corrections"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-a-id-intro-a">Introduction <a id="intro"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-a-id-import-a">1. Imports <a id="import"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloading-data-a-id-load-a">2. Downloading Data<a id="load"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identifying-reads-with-time-variable-background-a-id-identify-a">3. Identifying Reads with Time Variable Background<a id="identify"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#querying-crds-for-the-reference-file-a-id-ref-a">4. Querying CRDS for the Reference File<a id="ref"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reprocessing-the-observation-a-id-main-a">5. Reprocessing the Observation<a id="main"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#re-running-calwf3-a-id-reprocess-a">5.1 Re-running <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> <a id="reprocess"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-flt-products-a-id-compare-a">5.2 Comparing FLT Products <a id="compare"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#drizzling-nominal-and-reprocessed-flt-products-a-id-drizzle-a">6. Drizzling Nominal and Reprocessed FLT Products <a id="drizzle"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions-a-id-conclusions-a">7. Conclusions <a id="conclusions"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources-a-id-add-a">Additional Resources <a id="add"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook-a-id-about-a">About this Notebook <a id="about"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations-a-id-cite-a">Citations <a id="cite"></a></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

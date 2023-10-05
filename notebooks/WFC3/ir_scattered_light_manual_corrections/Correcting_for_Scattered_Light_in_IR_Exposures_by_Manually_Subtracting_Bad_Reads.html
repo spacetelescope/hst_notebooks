@@ -1,0 +1,1464 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Masking Persistence in WFC3/IR Images" href="../persistence/wfc3_ir_persistence.html" />
+    <link rel="prev" title="Correcting for Scattered Light in WFC3/IR Exposures: Using calwf3 to Mask Bad Reads" href="../ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">Obtaining Pixel Area Maps for ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Jupyter Notebook Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/Initialization/Initialization.html">DrizzlePac Initialization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an absolute reference catalog</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling WFPC2 Images to use a Single Zeropoint</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Using updated astrometry solutions</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/README.html">STIS-Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">WFC3Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dash/dash.html">How to use <code class="docutils literal notranslate"><span class="pre">wfc3_dash</span></code> on DASH data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-a-id-intro-a">Introduction <a id="intro"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-a-id-import-a">1. Imports <a id="import"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloading-data-a-id-load-a">2. Downloading Data<a id="load"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identifying-reads-with-earth-limb-scattered-light-a-id-identify-a">3. Identifying Reads with Earth-limb Scattered Light<a id="identify"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#querying-crds-for-the-reference-file-a-id-ref-a">4. Querying CRDS for the Reference File<a id="ref"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correcting-the-data-a-id-main-a">5. Correcting the Data<a id="main"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excising-bad-reads-a-id-reprocess-a">5.1 Excising “Bad” Reads <a id="reprocess"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-run-calwf3">STEP 1: Run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-correct-the-ima-product">STEP 2: Correct the IMA product</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-correct-the-error-image">STEP 3: Correct the Error Image</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-update-the-flt-product">STEP 4: Update the FLT Product</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#putting-it-all-together">Putting It All Together</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-flt-products-a-id-compare-a">5.2 Comparing FLT Products <a id="compare"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#drizzling-nominal-and-reprocessed-flt-products-a-id-drizzle-a">6. Drizzling Nominal and Reprocessed FLT Products <a id="drizzle"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions-a-id-conclusions-a">7. Conclusions <a id="conclusions"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources-a-id-add-a">Additional Resources <a id="add"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook-a-id-about-a">About this Notebook <a id="about"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations-a-id-cite-a">Citations <a id="cite"></a></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <p><a id="top"></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="correcting-for-scattered-light-in-wfc3-ir-exposures-manually-subtracting-bad-reads">
+<h1>Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads<a class="headerlink" href="#correcting-for-scattered-light-in-wfc3-ir-exposures-manually-subtracting-bad-reads" title="Permalink to this heading">#</a></h1>
+<section id="learning-goals">
+<h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h2>
+<p>This notebook presents one of two available methods to correct for a time variable background (TVB) due to scattered light from observing close to the Earth’s limb. This method illustrates how to manually subtract any bad reads from the final exposure read of the WFC3/IR IMA data.</p>
+<p>By the end of this tutorial, you will:</p>
+<ul class="simple">
+<li><p>Compute and plot the difference between IMA reads to identify those affected by TVB.</p></li>
+<li><p>Correct a single exposure in which the first few reads are affected by scattered light by subtracting those “bad” reads from the final IMA read.</p></li>
+<li><p>Compare the original FLT to the reprocessed FLT image.</p></li>
+<li><p>Compare the original DRZ to the reprocessed DRZ image.</p></li>
+</ul>
+<p>A second method for correcting TVB (masking bad reads in the RAW image and re-running <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>) can be found in the notebook <a class="reference external" href="https://github.com/spacetelescope/WFC3Library/tree/master/notebooks/ir_scattered_light_calwf3_corrections">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads (O’Connor 2023)</a>. This method performs the ‘ramp
+fitting’ step in calwf3 and therefore removes cosmic rays from the final image. It only works,
+however, when TVB occurs at the beginning or end of the IR exposure and may leave sky
+residuals in regions flagged as IR ‘blobs’.</p>
+<div class="alert alert-block alert-info">
+<p><strong>Please note that the FLT products in this notebook are really ‘corrected IMA’
+files and therefore do not include the ‘ramp fitting’ step in <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>.  The final images will
+therefore still contain cosmic rays, and these artifacts may be removed using software such
+as AstroDrizzle when combining multiple exposures.</strong></p>
+</div>
+</section>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
+<p><span class="xref myst">Introduction</span> <br>
+<span class="xref myst">1. Imports</span> <br>
+<span class="xref myst">2. Downloading Data</span> <br>
+<span class="xref myst">3. Identifying Reads with Earth-limb Scattered Light</span> <br>
+<span class="xref myst">4. Querying CRDS for the Reference File</span> <br></p>
+<p><span class="xref myst">5. Correcting the Data</span> <br></p>
+<ul class="simple">
+<li><p><span class="xref myst">5.1 Excising “Bad” Reads</span> <br></p></li>
+<li><p><span class="xref myst">5.2 Comparing FLT Products</span> <br></p></li>
+</ul>
+<p><span class="xref myst">6. Drizzling Nominal and Reprocessed FLT Products</span> <br>
+<span class="xref myst">7. Conclusions</span> <br>
+<span class="xref myst">Additional Resources</span> <br>
+<span class="xref myst">About this Notebook</span> <br>
+<span class="xref myst">Citations</span> <br></p>
+</section>
+<section id="introduction-a-id-intro-a">
+<h2>Introduction <a id="intro"></a><a class="headerlink" href="#introduction-a-id-intro-a" title="Permalink to this heading">#</a></h2>
+<p>WFC3 images can be affected by many different kinds of unwanted, non-science features,  such as satellite trails, peculiar cosmic rays, Earth-limb scattered light,  reflections off the filter wheel, and more. We call these features “anomalies”. The majority of these anomalies are well studied, correctable, and easily identifiable, as discussed in  <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2017/WFC3-2017-22.pdf">WFC3 ISR 2017-22</a>.</p>
+<p>In this notebook, we will walk through the process of correcting WFC3/IR images for anomalies that appear in only some of the reads (see <a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb/chapter-7-ir-imaging-with-wfc3/7-7-ir-exposure-and-readout">section 7.7 of the WFC3 Instrument Handboook</a> for a discussion of the WFC3/IR MULTIACCUM observing mode).  We examine
+an observation affected by a strong TVB due to Earth limb scattered light affecting the first few reads (<a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb/chapter-7-wfc3-ir-sources-of-error/7-10-time-variable-background">section 7.10 of the WFC3 Data Handbook</a>). We will manually subtract the affected reads from the final read of the IMA and copy the updated science and error arrays into the FLT science and error arrays.  This method is based on section 5 of  <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2016/WFC3-2016-16.pdf">WFC3 ISR 2016-16: ‘Excising Individual Reads’</a>.  This same method can be used to remove individual reads that contain other anomalies, such as satellite trails.</p>
+<p>This new FLT will have a reduced total exposure time (and signal-to-noise) given the rejection
+of some number of reads but will now have a flat background and an improved ramp fit.</p>
+<p>Please see the notebook <a class="reference external" href="https://github.com/spacetelescope/WFC3Library/tree/master/notebooks/ir_ima_visualization">WFC3/IR IMA Visualization with An Example of Time Variable Background (O’Connor 2023)</a> for a walkthrough of how to identify a TVB due to scattered light.</p>
+</section>
+<section id="imports-a-id-import-a">
+<h2>1. Imports <a id="import"></a><a class="headerlink" href="#imports-a-id-import-a" title="Permalink to this heading">#</a></h2>
+<p>This notebook assumes you have created the virtual environment in <a class="reference external" href="https://github.com/spacetelescope/WFC3Library">WFC3 Library’s</a> installation instructions.</p>
+<p>We import:</p>
+<ul class="simple">
+<li><p><em>os</em> for setting environment variables</p></li>
+<li><p><em>glob</em> for finding lists of files</p></li>
+<li><p><em>shutil</em> for managing directories</p></li>
+<li><p><em>numpy</em> for handling array functions</p></li>
+<li><p><em>matplotlib.pyplot</em> for plotting data</p></li>
+<li><p><em><a class="reference external" href="http://astropy.io">astropy.io</a> fits</em> for accessing FITS files</p></li>
+<li><p><em>astroquery.mast Observations</em> for downloading data</p></li>
+<li><p><em>wfc3tools</em> <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> for calibrating WFC3 data</p></li>
+<li><p><em>ginga</em> for finding min/max outlier pixels</p></li>
+<li><p><em>stwcs</em> for updating World Coordinate System images</p></li>
+<li><p><em>drizzlepac</em> for combining images with AstroDrizzle</p></li>
+</ul>
+<p>We import the following modules:</p>
+<ul class="simple">
+<li><p><em>ima_visualization_and_differencing</em> to take the difference between reads, plot the ramp, and visualize the difference in images</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span> 
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">shutil</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+<span class="kn">from</span> <span class="nn">wfc3tools</span> <span class="kn">import</span> <span class="n">calwf3</span>
+<span class="kn">from</span> <span class="nn">ginga.util.zscale</span> <span class="kn">import</span> <span class="n">zscale</span>
+<span class="kn">from</span> <span class="nn">stwcs</span> <span class="kn">import</span> <span class="n">updatewcs</span>
+<span class="kn">from</span> <span class="nn">drizzlepac</span> <span class="kn">import</span> <span class="n">astrodrizzle</span>
+
+<span class="kn">import</span> <span class="nn">ima_visualization_and_differencing</span> <span class="k">as</span> <span class="nn">diff</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="downloading-data-a-id-load-a">
+<h2>2. Downloading Data<a id="load"></a><a class="headerlink" href="#downloading-data-a-id-load-a" title="Permalink to this heading">#</a></h2>
+<p>The following commands query MAST for the necessary data products and download them to the current directory. Here we obtain WFC3/IR observations from HST Frontier Fields program <a class="reference external" href="https://archive.stsci.edu/proposal_search.php?id=14037&amp;mission=hst">14037</a>, Visit BB. We specifically want the observation “icqtbbbxq”, as it is strongly affected by Earth limb scattered light. The data products requested are the RAW, IMA, and FLT files.</p>
+<p><strong>Warning: this cell may take a few minutes to complete.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">OBS_ID</span> <span class="o">=</span> <span class="s1">&#39;ICQTBB020&#39;</span>
+<span class="n">data_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">OBS_ID</span><span class="p">)</span>
+
+<span class="n">file_id</span> <span class="o">=</span> <span class="s2">&quot;icqtbbbxq&quot;</span>
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">data_list</span><span class="p">[</span><span class="s1">&#39;obsid&#39;</span><span class="p">],</span> <span class="n">project</span> <span class="o">=</span> <span class="s1">&#39;CALWF3&#39;</span><span class="p">,</span> <span class="n">obs_id</span> <span class="o">=</span> <span class="n">file_id</span><span class="p">,</span> 
+                <span class="n">mrp_only</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">productSubGroupDescription</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;RAW&#39;</span><span class="p">,</span><span class="s1">&#39;IMA&#39;</span><span class="p">,</span><span class="s1">&#39;FLT&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we will copy our RAW file into our working directory to use in this tutorial. We copy the IMA and FLT files to a new directory called “orig/” for later use.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;orig/&#39;</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;orig/&#39;</span><span class="p">)</span>
+
+<span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;mastDownload/HST/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_ima.fits&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s1">&#39;orig/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_ima.fits&#39;</span><span class="p">)</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;mastDownload/HST/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s1">&#39;orig/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">)</span>  
+
+<span class="n">raw_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;mastDownload/HST/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_raw.fits&#39;</span>
+
+<span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">raw_file</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_raw.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="identifying-reads-with-earth-limb-scattered-light-a-id-identify-a">
+<h2>3. Identifying Reads with Earth-limb Scattered Light<a id="identify"></a><a class="headerlink" href="#identifying-reads-with-earth-limb-scattered-light-a-id-identify-a" title="Permalink to this heading">#</a></h2>
+<p>In this section, we show how to identify the reads impacted by the scattered light by examining the difference in count rate between reads. This section was taken from the <a class="reference external" href="https://github.com/spacetelescope/WFC3Library/tree/master/notebooks/ir_ima_visualization">WFC3/IR IMA Visualization with An Example of Time Variable Background (O’Connor 2023)</a> notebook, which includes a more comprehensive walkthrough of identifying time variable background.</p>
+<p>Here we implement a technique to examine the count rate difference between consecutive reads. In this case, we first convert from count rate (electrons/second) back to counts (electrons) before taking the difference, as shown in equation 3 from <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2018/WFC3-2018-05.pdf">WFC3 ISR 2018-05</a>.</p>
+<p><img alt="Instantaneous Difference Equation" src="../../../_images/instantaneous_diff2.png" /></p>
+<p>We compare sky values in different regions of the detector (left side, right side, and full frame). If you would like to specify your own regions for the left and right sides of your image, you can change the <code class="docutils literal notranslate"><span class="pre">lhs_region</span></code> and <code class="docutils literal notranslate"><span class="pre">rhs_region</span></code> parameters. Each region must be specified as a dictionary including the four “corners” (x0, x1, y0, and y1) of the region you would like to select. You may want to avoid the edges of the detector which have a large number of bad pixels and higher flat field errors.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="n">ima_filepath</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;orig/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_ima.fits&#39;</span>
+
+<span class="n">path</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">ima_filepath</span><span class="p">)</span>
+<span class="n">cube</span><span class="p">,</span> <span class="n">integ_time</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">read_wfc3</span><span class="p">(</span><span class="n">ima_filepath</span><span class="p">)</span>
+
+
+<span class="n">lhs_region</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x0&quot;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span><span class="s2">&quot;x1&quot;</span><span class="p">:</span><span class="mi">250</span><span class="p">,</span><span class="s2">&quot;y0&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="s2">&quot;y1&quot;</span><span class="p">:</span><span class="mi">900</span><span class="p">}</span>
+<span class="n">rhs_region</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x0&quot;</span><span class="p">:</span><span class="mi">700</span><span class="p">,</span><span class="s2">&quot;x1&quot;</span><span class="p">:</span><span class="mi">900</span><span class="p">,</span><span class="s2">&quot;y0&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="s2">&quot;y1&quot;</span><span class="p">:</span><span class="mi">900</span><span class="p">}</span>
+
+<span class="c1">#Please use a limit that makes sense for your own data, when running your images through this notebook.</span>
+<span class="n">cube</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">cube</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+<span class="n">diff_cube</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">compute_diff_imas</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span> <span class="n">integ_time</span><span class="p">,</span> <span class="n">diff_method</span> <span class="o">=</span> <span class="s2">&quot;instantaneous&quot;</span><span class="p">)</span>
+<span class="n">median_diff_fullframe</span><span class="p">,</span> <span class="n">median_diff_lhs</span><span class="p">,</span> <span class="n">median_diff_rhs</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">get_median_fullframe_lhs_rhs</span><span class="p">(</span><span class="n">diff_cube</span><span class="p">,</span> <span class="n">lhs_region</span> <span class="o">=</span> <span class="n">lhs_region</span><span class="p">,</span> <span class="n">rhs_region</span> <span class="o">=</span> <span class="n">rhs_region</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick&#39;</span><span class="p">,</span> <span class="n">labelsize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick&#39;</span><span class="p">,</span> <span class="n">labelsize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;lines.markersize&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">})</span>
+
+<span class="n">diff</span><span class="o">.</span><span class="n">plot_ramp</span><span class="p">(</span><span class="n">ima_filepath</span><span class="p">,</span> <span class="n">integ_time</span><span class="p">,</span> <span class="n">median_diff_fullframe</span><span class="p">,</span> <span class="n">median_diff_lhs</span><span class="p">,</span> <span class="n">median_diff_rhs</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">2.5</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here, we utilize a few functions from our module <code class="docutils literal notranslate"><span class="pre">ima_visualization_and_differencing</span></code>. We use <code class="docutils literal notranslate"><span class="pre">read_wfc3</span></code> to grab the IMA data from all reads and corresponding integration times. We also implement upper and lower limits on our pixel values to exclude sources when plotting our ramp. We take the instantaneous difference using <code class="docutils literal notranslate"><span class="pre">compute_diff_imas</span></code>, which computes the difference as described in the equation above. Finally, we use <code class="docutils literal notranslate"><span class="pre">plot_ramp</span></code> to plot the median count rate from the left side, right side, and full frame image.</p>
+<p>For our scattered light exposure, we see  zodiacal light at a level of ~0.9e/s in later reads, with the scattered light component affecting the first several reads where the median count rate for the left side (orange triangles) is larger than the right side (green triangles). We can visualize this in 2 dimensions in the panel plot below, using <code class="docutils literal notranslate"><span class="pre">plot_ima_difference_subplots</span></code>.</p>
+<p>In the panel plot, we see that sources (small galaxies) are visible in the difference images using this new method. Note that this may complicate the analysis of the spatial background (e.g. left versus right) for images with extended targets, such as large galaxies. In this case, users may wish to adjust the regions of the detector used for the ramp plots. We therefore recommend inspecting both the panel plots as well as the ramp fits for diagnosing any issues with the data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="n">ima_filepath</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;orig/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_ima.fits&#39;</span>
+
+
+<span class="n">lhs_region</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x0&quot;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span><span class="s2">&quot;x1&quot;</span><span class="p">:</span><span class="mi">250</span><span class="p">,</span><span class="s2">&quot;y0&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="s2">&quot;y1&quot;</span><span class="p">:</span><span class="mi">900</span><span class="p">}</span>
+<span class="n">rhs_region</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x0&quot;</span><span class="p">:</span><span class="mi">700</span><span class="p">,</span><span class="s2">&quot;x1&quot;</span><span class="p">:</span><span class="mi">900</span><span class="p">,</span><span class="s2">&quot;y0&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="s2">&quot;y1&quot;</span><span class="p">:</span><span class="mi">900</span><span class="p">}</span>
+
+<span class="n">diff</span><span class="o">.</span><span class="n">plot_ima_difference_subplots</span><span class="p">(</span><span class="n">ima_filepath</span><span class="p">,</span> <span class="n">difference_method</span><span class="o">=</span><span class="s1">&#39;instantaneous&#39;</span><span class="p">,</span> <span class="n">lhs_region</span><span class="o">=</span><span class="n">lhs_region</span><span class="p">,</span> <span class="n">rhs_region</span><span class="o">=</span><span class="n">rhs_region</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In this figure, we see that the ratio of instantaneous rate for the left versus right side of the image is ~1.0 for all but the first few reads (which are affected by scattered light). We choose to exclude reads with a ratio greater than 1.1 from the final science data, as they are the reads most strongly affected by scattered light. While this reduces the total exposure from 1403 to 1000 seconds, it removes the spatial component from the sky background.</p>
+</section>
+<section id="querying-crds-for-the-reference-file-a-id-ref-a">
+<h2>4. Querying CRDS for the Reference File<a id="ref"></a><a class="headerlink" href="#querying-crds-for-the-reference-file-a-id-ref-a" title="Permalink to this heading">#</a></h2>
+<p>In this notebook, we will run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to produce an IMA file, which we will use to remove bad reads. Before running <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>, we need to set some environment variables.</p>
+<p>We will point to a subdirectory called <code class="docutils literal notranslate"><span class="pre">crds_cache</span></code> using the IREF environment variable, which is used for WFC3 reference files. Other instruments use other variables, e.g., JREF for ACS.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;iref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache/references/hst/wfc3/&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The code block below will query CRDS for the best reference files currently available for our dataset and update the header keywords to point to these new files. We will use <code class="docutils literal notranslate"><span class="pre">os</span></code> to run terminal commands. In the terminal, the line would be:</p>
+<p>…where ‘filename’ is the name of your fits file.</p>
+<p><strong>Warning: this cell may take a few minutes to complete.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">raw_filepath</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_raw.fits&#39;</span>
+
+
+<span class="nb">print</span><span class="p">(</span> <span class="sa">f</span><span class="s2">&quot;Querying CRDS for the reference file associated with </span><span class="si">{</span><span class="n">raw_filepath</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<span class="n">command_line_input</span> <span class="o">=</span> <span class="s1">&#39;crds bestrefs --files </span><span class="si">{:}</span><span class="s1"> --sync-references=1 --update-bestrefs&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">raw_file</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">command_line_input</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="correcting-the-data-a-id-main-a">
+<h2>5. Correcting the Data<a id="main"></a><a class="headerlink" href="#correcting-the-data-a-id-main-a" title="Permalink to this heading">#</a></h2>
+<p>To address anomalies such as scattered light, satellite trails, and more in WFC3/IR images  we can remove the individual affected reads and correct the science and error arrays accordingly. For our example image, we choose to exclude reads where the ratio of background signal is greater than 1.1 e-/s (see the notebook <a class="reference external" href="https://github.com/spacetelescope/WFC3Library/tree/master/notebooks/ir_ima_visualization">WFC3/IR IMA Visualization with An Example of Time Variable Background (O’Connor 2023)</a> for a more complete demonstration of how we find this ratio).</p>
+<section id="excising-bad-reads-a-id-reprocess-a">
+<h3>5.1 Excising “Bad” Reads <a id="reprocess"></a><a class="headerlink" href="#excising-bad-reads-a-id-reprocess-a" title="Permalink to this heading">#</a></h3>
+<p>In this section, we walk through the key steps to removing bad reads.</p>
+<p>We select our excluded reads (in this case reads reads SCI,15 through SCI, 11) and use the “remove_reads” function to effectively subtract out the reads affected by TVB.</p>
+<p>The key steps to this process are:</p>
+<ol class="arabic simple">
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> on the RAW image file to produce an IMA and an FLT.</p></li>
+<li><p>Take the IMA file and subtract the science array from the “bad” reads from the cumulative exposure.</p>
+<ul class="simple">
+<li><p>Correct the final integration time accordingly.</p></li>
+</ul>
+</li>
+<li><p>Correct the error image extension to reflect the changes to the science array.</p></li>
+<li><p>Update the final FLT headers, science array, and error array.</p></li>
+</ol>
+<p>We walk through this process below.</p>
+<section id="step-1-run-calwf3">
+<h4>STEP 1: Run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code><a class="headerlink" href="#step-1-run-calwf3" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bad_reads</span> <span class="o">=</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">]</span> <span class="c1">#note, we leave the &quot;zero read&quot; (read number 16)</span>
+
+<span class="c1">#### Remove any existing ima or flt products from working directory or calwf3 will not run </span>
+<span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;flt&#39;</span><span class="p">,</span><span class="s1">&#39;ima&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">raw_filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="p">)):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">raw_filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span> <span class="c1">##run CALWF3</span>
+<span class="n">calwf3</span><span class="p">(</span><span class="n">raw_filepath</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-2-correct-the-ima-product">
+<h4>STEP 2: Correct the IMA product<a class="headerlink" href="#step-2-correct-the-ima-product" title="Permalink to this heading">#</a></h4>
+<p>Here we walk through the process of subtracting the reads affected by Earth-limb scattered light from the cumulative science extension of the IMA. While an FLT product is also created in step 1, we do not use this file due to the poor-quality ramp fit in the presence of TVB.</p>
+<p>Overall, the steps are as follows:</p>
+<ol class="arabic simple">
+<li><p>Load the science data as a 3D array and the integration time as a 1D array from the science and time extensions of the IMA file. In addition, load the associated dark reference file.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ima_filepath_new</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_ima.fits&#39;</span>
+<span class="n">ima</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ima_filepath_new</span><span class="p">)</span>
+
+<span class="n">cube</span><span class="p">,</span> <span class="n">integ_time</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">read_wfc3</span><span class="p">(</span><span class="n">ima_filepath_new</span><span class="p">)</span>
+
+<span class="n">dark_file</span> <span class="o">=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;DARKFILE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;iref$&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;iref&#39;</span><span class="p">))</span>
+<span class="n">dark_counts</span><span class="p">,</span> <span class="n">dark_time</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">read_wfc3</span><span class="p">(</span><span class="n">dark_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Convert science data from electrons/second to electrons.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cube_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">cube</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+    <span class="n">cube_counts</span><span class="p">[:,:,</span><span class="n">img</span><span class="p">]</span> <span class="o">=</span> <span class="n">cube</span><span class="p">[:,:,</span><span class="n">img</span><span class="p">]</span><span class="o">*</span><span class="n">integ_time</span><span class="p">[</span><span class="n">img</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Compute the difference between reads (the cumulative difference, in this case) to isolate counts and integration time from bad reads.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cube_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">cube_counts</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">dark_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">dark_counts</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">integ_time</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>For each bad read, subtract the counts (and time) from ONLY that read from the total data.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">final_dark</span> <span class="o">=</span> <span class="n">dark_counts</span><span class="p">[:,:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> 
+
+<span class="n">final_sci</span> <span class="o">=</span> <span class="n">cube_counts</span><span class="p">[:,:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">final_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">))</span><span class="o">*</span><span class="n">integ_time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bad_reads</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">read</span> <span class="ow">in</span> <span class="n">bad_reads</span><span class="p">:</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">cube_counts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">read</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">final_sci</span> <span class="o">-=</span> <span class="n">cube_diff</span><span class="p">[:,:,</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">final_dark</span> <span class="o">-=</span> <span class="n">dark_diff</span><span class="p">[:,:,</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">final_time</span> <span class="o">-=</span> <span class="n">dt</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-3-correct-the-error-image">
+<h4>STEP 3: Correct the Error Image<a class="headerlink" href="#step-3-correct-the-error-image" title="Permalink to this heading">#</a></h4>
+<p>The errors associated with the raw data are estimated according  to the noise model for the detector which currently includes a simple combination of detector readnoise and poisson noise from the pixel and which is intended to replicate the <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> error array calculation. Currently, the inital detector noise model (in electrons) is as follows, where RN is the readnoise.</p>
+<div class="math notranslate nohighlight">
+\[ SCI_{1} = signal= (flux*flat + dark)\]</div>
+<div class="math notranslate nohighlight">
+\[ \sigma_{1} = \sqrt{(RN^{2}) + (flux*flat + dark)} \]</div>
+<p>Note that our signal equation includes flat and dark corrections to revert the final science array (flux) produced by <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to the original signal (in electrons) recorded in the detector.</p>
+<p>The ERR array continues to be updated as the SCI array is processed. The dark error term is added in quadrature as the dark current is subtracted from the science array:</p>
+<div class="math notranslate nohighlight">
+\[ SCI_{2} = signal - dark \]</div>
+<div class="math notranslate nohighlight">
+\[ \sigma_{2} = \sqrt{\sigma_{1}^{2}+\sigma_{dark}^{2}} \]</div>
+<p>Next, the flat images are divided out of the science image. There are two flat-fields (p-flat and delta-flat), which are each divided out of the science image. The flat errors are combined using the correct error propagation method.</p>
+<div class="math notranslate nohighlight">
+\[ flat = pflat * dflat \]</div>
+<p>P-Flat (pflat) file:</p>
+<div class="math notranslate nohighlight">
+\[ SCI_{3} = SCI_{2}/pflat \]</div>
+<div class="math notranslate nohighlight">
+\[ \frac{\sigma_{3}}{SCI_{3}} = \sqrt{ (\frac{\sigma_{2}}{SCI_{2}})^{2} +(\frac{\sigma_{pflat}}{pflat})^{2}} \]</div>
+<p>Delta-Flat (dflat) file:</p>
+<div class="math notranslate nohighlight">
+\[ SCI_{4} = SCI_{3}/dflat \]</div>
+<div class="math notranslate nohighlight">
+\[ \frac{\sigma_{4}}{SCI_{4}} = \sqrt{ (\frac{\sigma_{3}}{SCI_{3}})^{2} +(\frac{\sigma_{dflat}}{dflat})^{2}} = \sqrt{ (\frac{\sigma_{2}}{SCI_{2}})^{2} +(\frac{\sigma_{pflat}}{pflat})^{2} +(\frac{\sigma_{dflat}}{dflat})^{2}}\]</div>
+<p>and finally it is converted to an error in electrons/second as:</p>
+<div class="math notranslate nohighlight">
+\[ \sigma_{e^{-}/s}= \frac{\sigma_{4}}{exptime}\]</div>
+<p>Evaluating this equation, we come up with an equation for error array calculation (in electrons/second) which we use in our Python calculations as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \sigma_{e^{-}/s}= \frac{\sqrt{ RN^{2} + (flux*(pflat*dflat) + dark) +  \sigma_{dark}^{2} + (\sigma_{pflat}*flux*dflat)^{2} + (\sigma_{dflat}*flux*pflat)^{2} }}{pflat*dflat*exptime}\]</div>
+<p>We do not address the error propagation through the nonlinearity correction step of <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> (NLINCORR), as it is complicated and sufficiently small to be outside of the scope of this notebook.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">##getting variance terms</span>
+<span class="c1">#### Readnoise in 4 amps</span>
+<span class="n">RN</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1024</span><span class="p">,</span><span class="mi">1024</span><span class="p">))</span>
+<span class="n">RN</span><span class="p">[</span><span class="mi">512</span><span class="p">:</span> <span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;READNSEA&#39;</span><span class="p">]</span>
+<span class="n">RN</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;READNSEB&#39;</span><span class="p">]</span>
+<span class="n">RN</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">:]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;READNSEC&#39;</span><span class="p">]</span>
+<span class="n">RN</span><span class="p">[</span><span class="mi">512</span><span class="p">:</span> <span class="p">,</span> <span class="mi">512</span><span class="p">:]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;READNSED&#39;</span><span class="p">]</span>
+
+
+<span class="c1">#### Gain in 4 amps</span>
+<span class="n">gain_2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1024</span><span class="p">,</span><span class="mi">1024</span><span class="p">))</span>
+<span class="n">gain_2D</span><span class="p">[</span><span class="mi">512</span><span class="p">:</span> <span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ATODGNA&#39;</span><span class="p">]</span>
+<span class="n">gain_2D</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ATODGNB&#39;</span><span class="p">]</span>
+<span class="n">gain_2D</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">:]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ATODGNC&#39;</span><span class="p">]</span>
+<span class="n">gain_2D</span><span class="p">[</span><span class="mi">512</span><span class="p">:</span> <span class="p">,</span> <span class="mi">512</span><span class="p">:]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ATODGND&#39;</span><span class="p">]</span>
+
+<span class="c1">#dark image</span>
+<span class="n">dark_im</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dark_file</span><span class="p">)</span>
+
+<span class="c1">##And grabbing the flats</span>
+<span class="n">pflat_file</span> <span class="o">=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PFLTFILE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;iref$&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;iref&#39;</span><span class="p">))</span>
+<span class="n">pflat_im</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pflat_file</span><span class="p">)</span>
+<span class="n">pflat</span> <span class="o">=</span> <span class="n">pflat_im</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+<span class="n">dflat_file</span> <span class="o">=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;DFLTFILE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;iref$&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;iref&#39;</span><span class="p">))</span>
+<span class="n">dflat_im</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dflat_file</span><span class="p">)</span>
+<span class="n">dflat</span> <span class="o">=</span> <span class="n">dflat_im</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+
+<span class="c1">#Computing the final error</span>
+
+<span class="c1">#### Variance terms</span>
+
+<span class="c1">## poisson error: sqrt(signal), flux = final_sci, dark is converted to electrons</span>
+<span class="n">signal</span> <span class="o">=</span> <span class="p">(</span><span class="n">final_sci</span><span class="o">*</span><span class="p">(</span><span class="n">pflat</span><span class="o">*</span><span class="n">dflat</span><span class="p">)</span><span class="o">+</span><span class="n">final_dark</span><span class="o">*</span><span class="n">gain_2D</span><span class="p">)</span>
+<span class="c1">## flat errors</span>
+<span class="n">dflat_err</span><span class="o">=</span><span class="n">dflat_im</span><span class="p">[</span><span class="s1">&#39;ERR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">pflat_err</span><span class="o">=</span><span class="n">pflat_im</span><span class="p">[</span><span class="s1">&#39;ERR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="c1">#dark error</span>
+<span class="n">dark_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">dark_im</span><span class="p">[</span><span class="s1">&#39;ERR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">*</span><span class="n">gain_2D</span> 
+<span class="c1">##final</span>
+<span class="n">final_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">RN</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">signal</span> <span class="o">+</span> <span class="p">(</span><span class="n">dark_err</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">pflat_err</span><span class="o">*</span><span class="n">final_sci</span><span class="o">*</span><span class="n">dflat</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>\
+                  <span class="o">+</span> <span class="p">(</span><span class="n">dflat_err</span><span class="o">*</span><span class="n">final_sci</span><span class="o">*</span><span class="n">pflat</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    
+<span class="n">final_err</span> <span class="o">/=</span> <span class="p">(</span><span class="n">pflat</span><span class="o">*</span><span class="n">dflat</span><span class="o">*</span><span class="n">final_time</span><span class="p">)</span>
+<span class="n">final_err</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">final_err</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1">#and finally the final science image (converted back to count rate)</span>
+<span class="n">final_sci</span> <span class="o">/=</span> <span class="n">final_time</span>      
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-4-update-the-flt-product">
+<h4>STEP 4: Update the FLT Product<a class="headerlink" href="#step-4-update-the-flt-product" title="Permalink to this heading">#</a></h4>
+<p>Finally, we update the FLT product created in step 1 with the new science array, error array, and header keywords (such as the new total exposure time).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flt_filepath_new</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span>
+<span class="n">flt</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">flt_filepath_new</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
+ 
+<span class="c1">#Updating the flt data</span>
+
+<span class="n">flt</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">final_sci</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">flt</span><span class="p">[</span><span class="s1">&#39;ERR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">final_err</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span>
+
+
+<span class="c1"># Updating the FLT header</span>
+<span class="n">flt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;IMA2FLT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;FLT extracted from IMA file&#39;</span><span class="p">)</span>
+<span class="n">flt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">final_time</span><span class="p">)</span>
+<span class="n">flt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;NPOP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bad_reads</span><span class="p">),</span> <span class="s1">&#39;Number of reads popped from the sequence&#39;</span><span class="p">)</span>
+
+<span class="n">flt</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="putting-it-all-together">
+<h4>Putting It All Together<a class="headerlink" href="#putting-it-all-together" title="Permalink to this heading">#</a></h4>
+<p>Below, we have included the entire correction process (steps 1-4 above) in a function, for convenience.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">remove_reads</span><span class="p">(</span><span class="n">raw_filepath</span><span class="p">,</span> <span class="n">bad_reads</span> <span class="o">=</span> <span class="p">[]):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    From the final IMA read, subtract data of reads affected by anomalies.</span>
+<span class="sd">    Compute a corrected science image and error image, and place them in the FLT product. </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    raw_filepath: str</span>
+<span class="sd">        Path to a RAW full-frame IR image fits file.</span>
+<span class="sd">        </span>
+<span class="sd">    bad_reads: list of int</span>
+<span class="sd">        List of the IMSET numbers (science extension numbers) of reads affected by anomalies.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">flt_filepath</span> <span class="o">=</span> <span class="n">raw_filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="s1">&#39;flt&#39;</span><span class="p">)</span>
+    <span class="n">ima_filepath</span> <span class="o">=</span> <span class="n">raw_filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="s1">&#39;ima&#39;</span><span class="p">)</span>
+    
+    <span class="c1">#### Remove existing products or calwf3 will die</span>
+    <span class="k">for</span> <span class="n">filepath</span> <span class="ow">in</span> <span class="p">[</span><span class="n">flt_filepath</span><span class="p">,</span> <span class="n">ima_filepath</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+    
+    <span class="c1">#### Run calwf3</span>
+    <span class="n">calwf3</span><span class="p">(</span><span class="n">raw_filepath</span><span class="p">)</span>
+    
+    <span class="c1">#take calwf3 produced IMA, get rid of bad reads </span>
+    <span class="n">ima</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ima_filepath</span><span class="p">)</span>
+
+    <span class="n">cube</span><span class="p">,</span> <span class="n">integ_time</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">read_wfc3</span><span class="p">(</span><span class="n">ima_filepath</span><span class="p">)</span>
+
+    <span class="n">dark_file</span> <span class="o">=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;DARKFILE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;iref$&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;iref&#39;</span><span class="p">))</span>
+    <span class="n">dark_counts</span><span class="p">,</span> <span class="n">dark_time</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">read_wfc3</span><span class="p">(</span><span class="n">dark_file</span><span class="p">)</span>
+
+
+    <span class="n">cube_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">cube</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+        <span class="n">cube_counts</span><span class="p">[:,:,</span><span class="n">img</span><span class="p">]</span> <span class="o">=</span> <span class="n">cube</span><span class="p">[:,:,</span><span class="n">img</span><span class="p">]</span><span class="o">*</span><span class="n">integ_time</span><span class="p">[</span><span class="n">img</span><span class="p">]</span>
+
+    <span class="n">cube_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">cube_counts</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">dark_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">dark_counts</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">integ_time</span><span class="p">)</span>
+
+    <span class="n">final_dark</span> <span class="o">=</span> <span class="n">dark_counts</span><span class="p">[:,:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> 
+
+    <span class="n">final_sci</span> <span class="o">=</span> <span class="n">cube_counts</span><span class="p">[:,:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">final_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">))</span><span class="o">*</span><span class="n">integ_time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bad_reads</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">read</span> <span class="ow">in</span> <span class="n">bad_reads</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">cube_counts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">read</span><span class="o">-</span><span class="mi">1</span>
+            <span class="n">final_sci</span> <span class="o">-=</span> <span class="n">cube_diff</span><span class="p">[:,:,</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">final_dark</span> <span class="o">-=</span> <span class="n">dark_diff</span><span class="p">[:,:,</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">final_time</span> <span class="o">-=</span> <span class="n">dt</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+
+
+    <span class="c1">##getting variance terms</span>
+    <span class="c1">#### Readnoise in 4 amps</span>
+    <span class="n">RN</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1024</span><span class="p">,</span><span class="mi">1024</span><span class="p">))</span>
+    <span class="n">RN</span><span class="p">[</span><span class="mi">512</span><span class="p">:</span> <span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;READNSEA&#39;</span><span class="p">]</span>
+    <span class="n">RN</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;READNSEB&#39;</span><span class="p">]</span>
+    <span class="n">RN</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">:]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;READNSEC&#39;</span><span class="p">]</span>
+    <span class="n">RN</span><span class="p">[</span><span class="mi">512</span><span class="p">:</span> <span class="p">,</span> <span class="mi">512</span><span class="p">:]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;READNSED&#39;</span><span class="p">]</span>
+
+
+    <span class="c1">#### Gain in 4 amps</span>
+    <span class="n">gain_2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1024</span><span class="p">,</span><span class="mi">1024</span><span class="p">))</span>
+    <span class="n">gain_2D</span><span class="p">[</span><span class="mi">512</span><span class="p">:</span> <span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ATODGNA&#39;</span><span class="p">]</span>
+    <span class="n">gain_2D</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ATODGNB&#39;</span><span class="p">]</span>
+    <span class="n">gain_2D</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">:]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ATODGNC&#39;</span><span class="p">]</span>
+    <span class="n">gain_2D</span><span class="p">[</span><span class="mi">512</span><span class="p">:</span> <span class="p">,</span> <span class="mi">512</span><span class="p">:]</span> <span class="o">+=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ATODGND&#39;</span><span class="p">]</span>
+
+    <span class="c1">#dark image</span>
+    <span class="n">dark_im</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dark_file</span><span class="p">)</span>
+
+    <span class="c1">##And grabbing the flats</span>
+    <span class="n">pflat_file</span> <span class="o">=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PFLTFILE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;iref$&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;iref&#39;</span><span class="p">))</span>
+    <span class="n">pflat_im</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pflat_file</span><span class="p">)</span>
+    <span class="n">pflat</span> <span class="o">=</span> <span class="n">pflat_im</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+    <span class="n">dflat_file</span> <span class="o">=</span> <span class="n">ima</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;DFLTFILE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;iref$&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;iref&#39;</span><span class="p">))</span>
+    <span class="n">dflat_im</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dflat_file</span><span class="p">)</span>
+    <span class="n">dflat</span> <span class="o">=</span> <span class="n">dflat_im</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+
+    <span class="c1">#Computing the final error</span>
+
+    <span class="c1">#### Variance terms</span>
+
+    <span class="c1">## poisson error: sqrt(signal), flux = final_sci, dark is converted to electrons</span>
+    <span class="n">signal</span> <span class="o">=</span> <span class="p">(</span><span class="n">final_sci</span><span class="o">*</span><span class="p">(</span><span class="n">pflat</span><span class="o">*</span><span class="n">dflat</span><span class="p">)</span><span class="o">+</span><span class="n">final_dark</span><span class="o">*</span><span class="n">gain_2D</span><span class="p">)</span>
+    <span class="c1">## flat errors</span>
+    <span class="n">dflat_err</span><span class="o">=</span><span class="n">dflat_im</span><span class="p">[</span><span class="s1">&#39;ERR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">pflat_err</span><span class="o">=</span><span class="n">pflat_im</span><span class="p">[</span><span class="s1">&#39;ERR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="c1">#dark error</span>
+    <span class="n">dark_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">dark_im</span><span class="p">[</span><span class="s1">&#39;ERR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">*</span><span class="n">gain_2D</span> 
+    <span class="c1">##final</span>
+    <span class="n">final_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">RN</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">signal</span> <span class="o">+</span> <span class="p">(</span><span class="n">dark_err</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">pflat_err</span><span class="o">*</span><span class="n">final_sci</span><span class="o">*</span><span class="n">dflat</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>\
+                      <span class="o">+</span> <span class="p">(</span><span class="n">dflat_err</span><span class="o">*</span><span class="n">final_sci</span><span class="o">*</span><span class="n">pflat</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">final_err</span> <span class="o">/=</span> <span class="p">(</span><span class="n">pflat</span><span class="o">*</span><span class="n">dflat</span><span class="o">*</span><span class="n">final_time</span><span class="p">)</span>
+    <span class="n">final_err</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">final_err</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1">#and finally the final science image (converted back to count rate)</span>
+    <span class="n">final_sci</span> <span class="o">/=</span> <span class="n">final_time</span>  
+
+
+    <span class="c1">#Updating the flt data</span>
+    
+    <span class="n">flt</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">flt_filepath</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
+
+    <span class="n">flt</span><span class="p">[</span><span class="s1">&#39;SCI&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">final_sci</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span>
+    <span class="n">flt</span><span class="p">[</span><span class="s1">&#39;ERR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">final_err</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span>
+
+
+    <span class="c1"># Updating the FLT header</span>
+    <span class="n">flt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;IMA2FLT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;FLT extracted from IMA file&#39;</span><span class="p">)</span>
+    <span class="n">flt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">final_time</span><span class="p">)</span>
+    <span class="n">flt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;NPOP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bad_reads</span><span class="p">),</span> <span class="s1">&#39;Number of reads popped from the sequence&#39;</span><span class="p">)</span>
+
+    <span class="n">flt</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="comparing-flt-products-a-id-compare-a">
+<h3>5.2 Comparing FLT Products <a id="compare"></a><a class="headerlink" href="#comparing-flt-products-a-id-compare-a" title="Permalink to this heading">#</a></h3>
+<p>You may want to move your reprocessed images to a new directory, especially if you plan to run the notebook again.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reprocessed_flt</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span>
+
+<span class="n">original_flt</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;orig/</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we can compare our original and reprocessed FLT products.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_new</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">reprocessed_flt</span><span class="p">)</span>
+<span class="n">image_old</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">original_flt</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="n">fig</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="c1">#add the total exptime in the title </span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Reprocessed FLT image&quot;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">im1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image_new</span><span class="p">[</span><span class="s2">&quot;SCI&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">vmin</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mf">1.3</span><span class="p">,</span> <span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;Greys_r&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span><span class="n">labelsize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">cbar1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">)</span>
+<span class="n">cbar1</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Original FLT image&quot;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">im2</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image_old</span><span class="p">[</span><span class="s2">&quot;SCI&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">vmin</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mf">1.3</span><span class="p">,</span> <span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span><span class="p">,</span>  <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;Greys_r&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">labelsize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">cbar2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax2</span><span class="p">)</span>
+<span class="n">cbar2</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick&#39;</span><span class="p">,</span> <span class="n">labelsize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick&#39;</span><span class="p">,</span> <span class="n">labelsize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<p>This new image was produced by subtracting the signal from the first 5 reads (not including the 0 read) from the final science data, reducing the effective exposure time from 1403 to 1000 seconds. While the total exposure is reduced from 1403 seconds to 1000 seconds (thus decreasing the overall S/N of the image), the background in the reprocessed image is now uniform over the entire field of view. We can see that the new FLT image is free of the Earth limb scattered light visible in the old FLT image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The final exposure time after reprocessing is </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_new</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="drizzling-nominal-and-reprocessed-flt-products-a-id-drizzle-a">
+<h2>6. Drizzling Nominal and Reprocessed FLT Products <a id="drizzle"></a><a class="headerlink" href="#drizzling-nominal-and-reprocessed-flt-products-a-id-drizzle-a" title="Permalink to this heading">#</a></h2>
+<p>In our example we use an exposure (<code class="docutils literal notranslate"><span class="pre">icqtbbbxq</span></code>) from image association <code class="docutils literal notranslate"><span class="pre">ICQTBB020</span></code> acquired in visit BB of program 14037. This visit consists of two orbits of two exposures each, and we now download the three other FLTs in the visit (<code class="docutils literal notranslate"><span class="pre">icqtbbc0q_flt.fits</span></code>, <code class="docutils literal notranslate"><span class="pre">icqtbbbrq_flt.fits</span></code>, <code class="docutils literal notranslate"><span class="pre">icqtbbbtq_flt.fits</span></code>) and the pipeline drizzled DRZ product.</p>
+<p>To produce a clean DRZ image (without cosmic rays), we can drizzle the four FLTs together (from the nominal exposures and the reprocessed exposure).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">OBS_ID</span><span class="p">)</span>
+
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">data_list</span><span class="p">[</span><span class="s1">&#39;obsid&#39;</span><span class="p">],</span> <span class="n">project</span><span class="o">=</span><span class="s1">&#39;CALWF3&#39;</span><span class="p">,</span>  
+                <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;FLT&#39;</span><span class="p">,</span><span class="s1">&#39;DRZ&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nominal_file_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;icqtbbc0q&quot;</span><span class="p">,</span> <span class="s2">&quot;icqtbbbrq&quot;</span><span class="p">,</span> <span class="s2">&quot;icqtbbbtq&quot;</span><span class="p">]</span>
+
+<span class="n">nominal_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">nominal_file_id</span> <span class="ow">in</span> <span class="n">nominal_file_ids</span><span class="p">:</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;mastDownload/HST/</span><span class="si">{</span><span class="n">nominal_file_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">nominal_file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">nominal_file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">)</span>
+    <span class="n">nominal_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">nominal_file_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">nominal_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we update the image World Coordinate System of the reprocessed image in preparation for drizzling.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">updatewcs</span><span class="o">.</span><span class="n">updatewcs</span><span class="p">(</span><span class="n">reprocessed_flt</span><span class="p">,</span> <span class="n">use_db</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we combine the four FLT images with AstroDrizzle.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">&#39;*flt.fits&#39;</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;f140w&#39;</span><span class="p">,</span> <span class="n">mdriztab</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">build</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Comparing the new DRZ image made with the reprocessed FLT product against the original pipeline DRZ image, we see that the new DRZ image no longer includes scattered light but has a slightly lower S/N due the reduced total exposure time from 1403 to 1000 seconds.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DRZ_image</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s2">&quot;f140w_drz.fits&quot;</span><span class="p">)</span>
+<span class="n">Orig_DRZ</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;mastDownload/HST/icqtbb020/icqtbb020_drz.fits&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="mi">2</span>
+
+
+<span class="c1">#add the total exptime in the title </span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Reprocessed DRZ Image&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">vmin</span><span class="p">,</span><span class="n">vmax</span> <span class="o">=</span> <span class="n">zscale</span><span class="p">(</span><span class="n">Orig_DRZ</span><span class="p">)</span>
+<span class="n">im1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">DRZ_image</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">)</span>
+<span class="n">_</span><span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Original Pipeline DRZ Image&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">im2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Orig_DRZ</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">)</span>
+<span class="n">_</span><span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="conclusions-a-id-conclusions-a">
+<h2>7. Conclusions <a id="conclusions"></a><a class="headerlink" href="#conclusions-a-id-conclusions-a" title="Permalink to this heading">#</a></h2>
+<p><strong>Congratulations, you have completed the notebook.</strong></p>
+<p>You should now be familiar with how to reprocess an observation affected by Earth limb scattered light by removing the affected reads from your science and error images.</p>
+<p>Thank you for following along!</p>
+</section>
+<section id="additional-resources-a-id-add-a">
+<h2>Additional Resources <a id="add"></a><a class="headerlink" href="#additional-resources-a-id-add-a" title="Permalink to this heading">#</a></h2>
+<p>Below are some additional resources that may be helpful. Please send any questions through the <a class="reference external" href="https://stsci.service-now.com/hst">HST Help Desk</a>.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3">WFC3 Website</a></p>
+<ul>
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3/performance/cte">WFC3/UVIS CTE Website</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb">WFC3 Instrument Handbook</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb">WFC3 Data Handbook</a></p></li>
+<li><p><a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2021/2021-01.pdf">Instrument Science Report WFC3 2021-01</a></p></li>
+</ul>
+</section>
+<section id="about-this-notebook-a-id-about-a">
+<h2>About this Notebook <a id="about"></a><a class="headerlink" href="#about-this-notebook-a-id-about-a" title="Permalink to this heading">#</a></h2>
+<p><strong>Author:</strong> Anne O’Connor, Jennifer Mack, Annalisa Calamida, Harish Khandrika – WFC3 Instrument</p>
+<p><strong>Updated On:</strong> 2023-05-16</p>
+</section>
+<section id="citations-a-id-cite-a">
+<h2>Citations <a id="cite"></a><a class="headerlink" href="#citations-a-id-cite-a" title="Permalink to this heading">#</a></h2>
+<p>If you use the following tools for published research, please cite the
+authors. Follow these links for more information about citing the tools:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
+<li><p><a class="reference external" href="https://wfc3tools.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">wfc3tools</span></code></a></p></li>
+<li><p><a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/LICENSE.html">Citing <code class="docutils literal notranslate"><span class="pre">drizzlepac</span></code></a></p></li>
+</ul>
+<p>If you use this notebook, or information from the WFC3 Data Handbook, Instrument Handbook,
+or WFC3 ISRs for published research, please cite them:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb#:~:text=Citation,%2C%20(Baltimore%3A%20STScI).">Citing the WFC3 Data Handbook</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb#:~:text=Citation,14.0%E2%80%9D%20(Baltimore%3A%20STScI)">Citing the WFC3 Instrument Handbook</a></p></li>
+<li><p><a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2021/2021-01.pdf">Instrument Science Report WFC3 2021-01</a></p></li>
+<li><p>Citing this notebook:
+Please cite the primary author and year, and hyperlink the notebook or WFC3 Library</p></li>
+</ul>
+<hr class="docutils" />
+<p><span class="xref myst">Top of Page</span>
+<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/WFC3/ir_scattered_light_manual_corrections"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../persistence/wfc3_ir_persistence.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Masking Persistence in WFC3/IR Images</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-a-id-intro-a">Introduction <a id="intro"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-a-id-import-a">1. Imports <a id="import"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloading-data-a-id-load-a">2. Downloading Data<a id="load"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identifying-reads-with-earth-limb-scattered-light-a-id-identify-a">3. Identifying Reads with Earth-limb Scattered Light<a id="identify"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#querying-crds-for-the-reference-file-a-id-ref-a">4. Querying CRDS for the Reference File<a id="ref"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correcting-the-data-a-id-main-a">5. Correcting the Data<a id="main"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excising-bad-reads-a-id-reprocess-a">5.1 Excising “Bad” Reads <a id="reprocess"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-run-calwf3">STEP 1: Run <code class="docutils literal notranslate"><span class="pre">calwf3</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-correct-the-ima-product">STEP 2: Correct the IMA product</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-correct-the-error-image">STEP 3: Correct the Error Image</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-update-the-flt-product">STEP 4: Update the FLT Product</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#putting-it-all-together">Putting It All Together</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-flt-products-a-id-compare-a">5.2 Comparing FLT Products <a id="compare"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#drizzling-nominal-and-reprocessed-flt-products-a-id-drizzle-a">6. Drizzling Nominal and Reprocessed FLT Products <a id="drizzle"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions-a-id-conclusions-a">7. Conclusions <a id="conclusions"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources-a-id-add-a">Additional Resources <a id="add"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook-a-id-about-a">About this Notebook <a id="about"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations-a-id-cite-a">Citations <a id="cite"></a></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
