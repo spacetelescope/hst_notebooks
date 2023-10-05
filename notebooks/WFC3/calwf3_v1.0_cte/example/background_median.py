@@ -96,3 +96,4 @@ def calc_aperture_mmm(data, mask, sigma_clip):
         mode = 3 * median - 2 * mean
         actual_area = (~np.isnan(values)).sum()
         return (mean, median, mode, std, actual_area)
+
