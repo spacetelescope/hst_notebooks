@@ -295,3 +295,4 @@ class RadialProfile:
             ax.plot(tmp_r, model_fit, label=label,color='k')
             ax.legend(loc=1,prop={'size':13})
         return ax
+
