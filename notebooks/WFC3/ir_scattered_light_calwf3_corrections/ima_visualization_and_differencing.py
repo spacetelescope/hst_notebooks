@@ -444,3 +444,4 @@ def plot_ima_difference_subplots(ima_filename, difference_method, lhs_region, rh
     fig_0 = panel_plot(cube, integ_time, median_diff_fullframe, median_diff_lhs, median_diff_rhs, standard_dev_fullframe, standard_dev_lhs, standard_dev_rhs, diff_method = difference_method)
     _=fig_0.suptitle(filename, fontsize = 40)
     plt.subplots_adjust(bottom = 0.25, right = 0.9, top = 0.95)
+
