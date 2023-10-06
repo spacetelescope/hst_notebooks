@@ -1,4 +1,4 @@
-# STScI Notebook Repository HQ
+# STScI HST Notebook Repository HQ
 This page provides links to notebooks created by various Hubble Space
 Telescope instrument teams and software groups, including:
 
