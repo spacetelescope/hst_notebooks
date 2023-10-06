@@ -604,3 +604,4 @@ def makeIR1x3plot(scaling, colormaps, data_sci, data_err, data_dq,
         ax1.set_title(f"WFC3/{detector} {fname}  {h1['extname']} read {(nsamps+1)-ext}")
         ax2.set_title(f"WFC3/{detector} {fname}  {h2['extname']} read {(nsamps+1)-ext}")
         ax3.set_title(f"WFC3/{detector} {fname}  {h3['extname']} read {(nsamps+1)-ext}")
+

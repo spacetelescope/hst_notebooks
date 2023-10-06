@@ -420,3 +420,4 @@ def row_column_stats(filename, stat='median', axis='column', ylim=(None,None),
                          ylim, figsize, dpi)
 
     return xaxis, yaxis
+
