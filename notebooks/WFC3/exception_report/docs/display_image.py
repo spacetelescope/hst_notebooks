@@ -1,18 +1,19 @@
 #! /usr/bin/env python
 
-import numpy as np
 import sys
 
 from astropy.io import fits
 from ginga.util import zscale
 import matplotlib.pyplot as plt
+import numpy as np
+
 
 def display_image(filename,
-                  colormaps=['Greys_r','Greys_r','inferno_r'],
-                  scaling=[(None,None),(None,None),(None,None)],
+                  colormaps=['Greys_r', 'Greys_r', 'inferno_r'],
+                  scaling=[(None, None), (None, None), (None, None)],
                   printmeta=False,
                   ima_multiread=False,
-                  figsize=(18,18),
+                  figsize=(18, 18),
                   dpi=200):
 
     """ A function to display the 'SCI', 'ERR/WHT', and 'DQ/CTX' arrays
@@ -163,21 +164,21 @@ def display_image(filename,
                 yend = naxis2*2 # full y size
 
             with fits.open(imagename) as hdu:
-                uvis2_sci = hdu["SCI",1].data
+                uvis2_sci = hdu["SCI", 1].data
                 uvis2_err = hdu[2].data
                 uvis2_dq = hdu[3].data
-                uvis1_sci = hdu["SCI",2].data
+                uvis1_sci = hdu["SCI", 2].data
                 uvis1_err = hdu[5].data
                 uvis1_dq = hdu[6].data
 
             try:
-                fullsci = np.concatenate([uvis2_sci,uvis1_sci])
-                fulldq = np.concatenate([uvis2_dq,uvis1_dq])
-                fullerr = np.concatenate([uvis2_err,uvis1_err])
+                fullsci = np.concatenate([uvis2_sci, uvis1_sci])
+                fulldq = np.concatenate([uvis2_dq, uvis1_dq])
+                fullerr = np.concatenate([uvis2_err, uvis1_err])
 
-                fullsci = fullsci[ystart:yend,xstart:xend]
-                fulldq  = fulldq[ystart:yend,xstart:xend]
-                fullerr = fullerr[ystart:yend,xstart:xend]
+                fullsci = fullsci[ystart:yend, xstart:xend]
+                fulldq  = fulldq[ystart:yend, xstart:xend]
+                fullerr = fullerr[ystart:yend, xstart:xend]
 
                 make1x3plot(scaling, colormaps, fullsci, fullerr, fulldq,
                             xstart, xend, ystart, yend,
@@ -185,20 +186,20 @@ def display_image(filename,
                             figsize, dpi)
 
             except ValueError:
-                fullsci = np.concatenate([uvis2_sci,uvis1_sci])
-                fullsci = fullsci[ystart:yend,xstart:xend]
+                fullsci = np.concatenate([uvis2_sci, uvis1_sci])
+                fullsci = fullsci[ystart:yend, xstart:xend]
 
-                z1_sci, z2_sci = get_scale_limits(scaling[0],fullsci,'SCI')
+                z1_sci, z2_sci = get_scale_limits(scaling[0], fullsci, 'SCI')
 
-                fig, ax1 = plt.subplots(1,1,figsize=figsize,dpi=dpi)
-                im1 = ax1.imshow(fullsci,origin='lower',extent=(xstart,xend,ystart,yend),cmap=colormaps[0],vmin=z1_sci, vmax=z2_sci)
+                fig, ax1 = plt.subplots(1, 1, figsize=figsize, dpi=dpi)
+                im1 = ax1.imshow(fullsci, origin='lower', extent=(xstart, xend, ystart, yend), cmap=colormaps[0], vmin=z1_sci, vmax=z2_sci)
                 if len(fname) > 18:
                     ax1.set_title(f"WFC3/{detector} {fname}\n{h1['extname']} ext")
                 else:
                     ax1.set_title(f"WFC3/{detector} {fname} {h1['extname']} ext")
-                fig.colorbar(im1, ax=ax1,shrink=.75,pad=.03)
+                fig.colorbar(im1, ax=ax1, shrink=.75, pad=.03)
 
-        except (IndexError,KeyError):
+        except (IndexError, KeyError):
 
             if all_pixels:
                     xstart = 0
@@ -212,25 +213,25 @@ def display_image(filename,
                 uvis_ext3 = hdu[3].data
 
             try:
-                uvis_ext1 = uvis_ext1[ystart:yend,xstart:xend]
-                uvis_ext2 = uvis_ext2[ystart:yend,xstart:xend]
-                uvis_ext3 = uvis_ext3[ystart:yend,xstart:xend]
+                uvis_ext1 = uvis_ext1[ystart:yend, xstart:xend]
+                uvis_ext2 = uvis_ext2[ystart:yend, xstart:xend]
+                uvis_ext3 = uvis_ext3[ystart:yend, xstart:xend]
 
                 make1x3plot(scaling, colormaps, uvis_ext1, uvis_ext2, uvis_ext3,
                             xstart, xend, ystart, yend,
                             detector, fname, h1, h2, h3,
                             figsize, dpi)
 
-            except (TypeError,IndexError,AttributeError):
+            except (TypeError, IndexError, AttributeError):
 
-                z1_sci, z2_sci = get_scale_limits(scaling[0],uvis_ext1,'SCI')
-                fig, ax1 = plt.subplots(1,1,figsize=figsize,dpi=dpi)
-                im1 = ax1.imshow(uvis_ext1,origin='lower',extent=(xstart,xend,ystart,yend),cmap=colormaps[0],vmin=z1_sci, vmax=z2_sci)
+                z1_sci, z2_sci = get_scale_limits(scaling[0], uvis_ext1, 'SCI')
+                fig, ax1 = plt.subplots(1, 1, figsize=figsize, dpi=dpi)
+                im1 = ax1.imshow(uvis_ext1, origin='lower', extent=(xstart, xend, ystart, yend), cmap=colormaps[0], vmin=z1_sci, vmax=z2_sci)
                 if len(fname) > 18:
                     ax1.set_title(f"WFC3/{detector} {fname}\n{h1['extname']} ext")
                 else:
                     ax1.set_title(f"WFC3/{detector} {fname} {h1['extname']} ext")
-                fig.colorbar(im1, ax=ax1,shrink=.75,pad=.03)
+                fig.colorbar(im1, ax=ax1, shrink=.75, pad=.03)
 
 
     if detector == 'IR' and '_ima.fits' not in fname:
@@ -248,9 +249,9 @@ def display_image(filename,
                 data_err = hdu[2].data
                 data_dq = hdu[3].data
 
-            data_sci = data_sci[ystart:yend,xstart:xend]
-            data_err = data_err[ystart:yend,xstart:xend]
-            data_dq  = data_dq[ystart:yend,xstart:xend]
+            data_sci = data_sci[ystart:yend, xstart:xend]
+            data_err = data_err[ystart:yend, xstart:xend]
+            data_dq  = data_dq[ystart:yend, xstart:xend]
 
             make1x3plot(scaling, colormaps, data_sci, data_err, data_dq,
                         xstart, xend, ystart, yend,
@@ -258,14 +259,14 @@ def display_image(filename,
                         figsize, dpi)
 
         except (AttributeError, TypeError, ValueError):
-                z1_sci, z2_sci = get_scale_limits(scaling[0],data_sci,'SCI')
-                fig, ax1 = plt.subplots(1,1,figsize=figsize,dpi=dpi)
-                im1 = ax1.imshow(data_sci,origin='lower',extent=(xstart,xend,ystart,yend),cmap=colormaps[0],vmin=z1_sci, vmax=z2_sci)
+                z1_sci, z2_sci = get_scale_limits(scaling[0], data_sci, 'SCI')
+                fig, ax1 = plt.subplots(1, 1, figsize=figsize, dpi=dpi)
+                im1 = ax1.imshow(data_sci, origin='lower', extent=(xstart, xend, ystart, yend), cmap=colormaps[0], vmin=z1_sci, vmax=z2_sci)
                 if len(fname) > 18:
                     ax1.set_title(f"WFC3/{detector} {fname}\n{h1['extname']} ext")
                 else:
                     ax1.set_title(f"WFC3/{detector} {fname} {h1['extname']} ext")
-                fig.colorbar(im1, ax=ax1,shrink=.75,pad=.03)
+                fig.colorbar(im1, ax=ax1,shrink=.75, pad=.03)
 
 
     if '_ima.fits' in fname:
@@ -279,13 +280,13 @@ def display_image(filename,
             nsamps = h['NSAMP']
             for ext in reversed(range(1,nsamps+1)):
                 with fits.open(imagename) as hdu:
-                    data_sci = hdu['SCI',ext].data
-                    data_err = hdu['ERR',ext].data
-                    data_dq  = hdu['DQ',ext].data
+                    data_sci = hdu['SCI', ext].data
+                    data_err = hdu['ERR', ext].data
+                    data_dq  = hdu['DQ', ext].data
 
-                data_sci = data_sci[ystart:yend,xstart:xend]
-                data_err = data_err[ystart:yend,xstart:xend]
-                data_dq  = data_dq[ystart:yend,xstart:xend]
+                data_sci = data_sci[ystart:yend, xstart:xend]
+                data_err = data_err[ystart:yend, xstart:xend]
+                data_dq  = data_dq[ystart:yend, xstart:xend]
 
                 makeIR1x3plot(scaling, colormaps, data_sci, data_err, data_dq,
                                 xstart, xend, ystart, yend,
@@ -294,13 +295,13 @@ def display_image(filename,
 
         if ima_multiread == False:
             with fits.open(imagename) as hdu:
-                data_sci = hdu['SCI',1].data
-                data_err = hdu['ERR',1].data
-                data_dq  = hdu['DQ',1].data
+                data_sci = hdu['SCI', 1].data
+                data_err = hdu['ERR', 1].data
+                data_dq  = hdu['DQ', 1].data
 
-            data_sci = data_sci[ystart:yend,xstart:xend]
-            data_err = data_err[ystart:yend,xstart:xend]
-            data_dq  = data_dq[ystart:yend,xstart:xend]
+            data_sci = data_sci[ystart:yend, xstart:xend]
+            data_err = data_err[ystart:yend, xstart:xend]
+            data_dq  = data_dq[ystart:yend, xstart:xend]
 
             make1x3plot(scaling, colormaps, data_sci, data_err, data_dq,
                         xstart, xend, ystart, yend,
@@ -401,7 +402,7 @@ def get_scale_limits(scaling, array, extname):
 def make1x3plot(scaling, colormaps, fullsci, fullerr, fulldq,
                 xstart, xend, ystart, yend,
                 detector, fname, h1, h2, h3,
-                figsize=(9,6), dpi=100):
+                figsize=(9, 6), dpi=100):
     """ Make a 3 column figure to display any WFC3 image or image section.
 
     Parameters
@@ -477,15 +478,15 @@ def make1x3plot(scaling, colormaps, fullsci, fullerr, fulldq,
 
     """
 
-    z1_sci, z2_sci = get_scale_limits(scaling[0],fullsci,'SCI')
-    z1_err, z2_err = get_scale_limits(scaling[1],fullerr,'ERR')
-    z1_dq, z2_dq   = get_scale_limits(scaling[2],fulldq,'DQ')
+    z1_sci, z2_sci = get_scale_limits(scaling[0], fullsci, 'SCI')
+    z1_err, z2_err = get_scale_limits(scaling[1], fullerr, 'ERR')
+    z1_dq, z2_dq   = get_scale_limits(scaling[2], fulldq, 'DQ')
 
-    fig, [ax1,ax2,ax3] = plt.subplots(1,3,figsize=figsize,dpi=dpi)
+    fig, [ax1, ax2, ax3] = plt.subplots(1, 3, figsize=figsize, dpi=dpi)
 
-    im1 = ax1.imshow(fullsci,origin='lower',extent=(xstart,xend,ystart,yend),cmap=colormaps[0],vmin=z1_sci, vmax=z2_sci)
-    im2 = ax2.imshow(fullerr,origin='lower',extent=(xstart,xend,ystart,yend),cmap=colormaps[1],vmin=z1_err, vmax=z2_err)
-    im3 = ax3.imshow(fulldq, origin='lower',extent=(xstart,xend,ystart,yend),cmap=colormaps[2],vmin=z1_dq, vmax=z2_dq)
+    im1 = ax1.imshow(fullsci, origin='lower', extent=(xstart, xend, ystart, yend), cmap=colormaps[0], vmin=z1_sci, vmax=z2_sci)
+    im2 = ax2.imshow(fullerr, origin='lower', extent=(xstart, xend, ystart, yend), cmap=colormaps[1], vmin=z1_err, vmax=z2_err)
+    im3 = ax3.imshow(fulldq, origin='lower',extent=(xstart, xend, ystart, yend), cmap=colormaps[2], vmin=z1_dq, vmax=z2_dq)
 
     if len(fname) > 18:
         ax1.set_title(f"WFC3/{detector} {fname}\n{h1['extname']} ext")
@@ -495,14 +496,14 @@ def make1x3plot(scaling, colormaps, fullsci, fullerr, fulldq,
         ax1.set_title(f"WFC3/{detector} {fname} {h1['extname']} ext")
         ax2.set_title(f"WFC3/{detector} {fname} {h2['extname']} ext")
         ax3.set_title(f"WFC3/{detector} {fname} {h3['extname']} ext")
-    fig.colorbar(im1, ax=ax1,shrink=.25,pad=.03)
-    fig.colorbar(im2, ax=ax2,shrink=.25,pad=.03)
-    fig.colorbar(im3, ax=ax3,shrink=.25,pad=.03)
+    fig.colorbar(im1, ax=ax1, shrink=.25, pad=.03)
+    fig.colorbar(im2, ax=ax2, shrink=.25, pad=.03)
+    fig.colorbar(im3, ax=ax3, shrink=.25, pad=.03)
 
 def makeIR1x3plot(scaling, colormaps, data_sci, data_err, data_dq,
                   xstart, xend, ystart, yend,
                   detector, fname, h1, h2, h3, nsamps, ext,
-                  figsize=(9,6), dpi=100):
+                  figsize=(9, 6), dpi=100):
     """ Make a 3 column figure to display any WFC3 IMA image or image section.
 
     Parameters
@@ -584,17 +585,17 @@ def makeIR1x3plot(scaling, colormaps, data_sci, data_err, data_dq,
 
     """
 
-    z1_sci, z2_sci = get_scale_limits(scaling[0],data_sci,'SCI')
-    z1_err, z2_err = get_scale_limits(scaling[1],data_err,'ERR')
-    z1_dq, z2_dq   = get_scale_limits(scaling[2],data_dq,'DQ')
+    z1_sci, z2_sci = get_scale_limits(scaling[0], data_sci, 'SCI')
+    z1_err, z2_err = get_scale_limits(scaling[1], data_err, 'ERR')
+    z1_dq, z2_dq   = get_scale_limits(scaling[2], data_dq, 'DQ')
 
-    fig, [ax1,ax2,ax3] = plt.subplots(1,3,figsize = figsize,dpi=dpi)
-    im1 = ax1.imshow(data_sci,origin='lower',extent=(xstart,xend,ystart,yend),cmap=colormaps[0],vmin=z1_sci, vmax=z2_sci)
-    im2 = ax2.imshow(data_err,origin='lower',extent=(xstart,xend,ystart,yend),cmap=colormaps[1],vmin=z1_err, vmax=z2_err)
-    im3 = ax3.imshow(data_dq, origin='lower',extent=(xstart,xend,ystart,yend),cmap=colormaps[2],vmin=z1_dq, vmax=z2_dq)
-    fig.colorbar(im1, ax=ax1,shrink=.25,pad=.03)
-    fig.colorbar(im2, ax=ax2,shrink=.25,pad=.03)
-    fig.colorbar(im3, ax=ax3,shrink=.25,pad=.03)
+    fig, [ax1, ax2, ax3] = plt.subplots(1, 3, figsize=figsize, dpi=dpi)
+    im1 = ax1.imshow(data_sci, origin='lower', extent=(xstart, xend, ystart, yend), cmap=colormaps[0], vmin=z1_sci, vmax=z2_sci)
+    im2 = ax2.imshow(data_err, origin='lower', extent=(xstart, xend, ystart, yend), cmap=colormaps[1], vmin=z1_err, vmax=z2_err)
+    im3 = ax3.imshow(data_dq, origin='lower', extent=(xstart, xend, ystart, yend), cmap=colormaps[2], vmin=z1_dq, vmax=z2_dq)
+    fig.colorbar(im1, ax=ax1, shrink=.25, pad=.03)
+    fig.colorbar(im2, ax=ax2, shrink=.25, pad=.03)
+    fig.colorbar(im3, ax=ax3, shrink=.25, pad=.03)
 
     if len(fname) > 18:
         ax1.set_title(f"WFC3/{detector} {fname}\n  {h1['extname']} read {(nsamps+1)-ext}")
