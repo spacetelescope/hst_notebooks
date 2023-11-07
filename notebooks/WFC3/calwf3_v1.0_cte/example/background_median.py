@@ -20,6 +20,7 @@ import numpy as np
 from scipy.stats import sigmaclip
 from astropy.table import Table
 
+
 def aperture_stats_tbl(data, apertures, method='exact', sigma_clip=True):
     
     """Computes mean/median/mode/std in Photutils apertures.
@@ -71,6 +72,7 @@ def aperture_stats_tbl(data, apertures, method='exact', sigma_clip=True):
     stats_tbl = Table(data=stacked, names=names)
 
     return stats_tbl
+
 
 def calc_aperture_mmm(data, mask, sigma_clip):
     
