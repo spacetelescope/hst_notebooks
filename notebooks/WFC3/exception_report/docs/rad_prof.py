@@ -140,7 +140,6 @@ class RadialProfile:
                 self.fit_profile() # performs fit, updates self.fitted
             if show:
                 self.show_profile(ax)
-
     
     def _create_profile(self):
         """Compute distances to pixels in cutout"""
@@ -150,7 +149,6 @@ class RadialProfile:
         self.distances = np.sqrt((iX - self.x) ** 2.
                                  + (iY - self.y) ** 2.).flatten()
         self.values = self.cutout.flatten()
-
     
     def _setup_cutout(self, data):
         """Cuts out the aperture and defines slice objects.
@@ -164,7 +162,6 @@ class RadialProfile:
 
         if self.cutout is None:
             self.is_empty = True
-
     
     def fit_profile(self):
         """Fits 1d Moffat function to measured radial profile.
@@ -192,7 +189,6 @@ class RadialProfile:
             self.fwhm = np.nan
             self.fitted = False
             self.chisquared = np.nan
-
     
     @staticmethod
     def profile_model(r, amp, gamma, alpha, bias):
@@ -224,7 +220,6 @@ class RadialProfile:
         """
         model = amp * (1. + (r / gamma) ** 2.) ** (-1. * alpha) + bias
         return model
-
     
     def recenter_source(self, data):
         """Recenters source position in cutout and updates x,y attributes"""
@@ -250,7 +245,6 @@ class RadialProfile:
                 self.x = xg1 + self.sx.start
                 self.y = yg1 + self.sy.start
                 self._setup_cutout(data)
-
     
     def show_profile(self, ax=None, show_fit=True):
         """Makes plot of radial profile.
