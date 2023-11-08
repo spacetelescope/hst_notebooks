@@ -255,14 +255,14 @@ def display_image(filename,
                         figsize, dpi)
 
         except (AttributeError, TypeError, ValueError):
-                z1_sci, z2_sci = get_scale_limits(scaling[0], data_sci, 'SCI')
-                fig, ax1 = plt.subplots(1, 1, figsize=figsize, dpi=dpi)
-                im1 = ax1.imshow(data_sci, origin='lower', extent=(xstart, xend, ystart, yend), cmap=colormaps[0], vmin=z1_sci, vmax=z2_sci)
-                if len(fname) > 18:
-                    ax1.set_title(f"WFC3/{detector} {fname}\n{h1['extname']} ext")
-                else:
-                    ax1.set_title(f"WFC3/{detector} {fname} {h1['extname']} ext")
-                fig.colorbar(im1, ax=ax1,shrink=.75, pad=.03)
+            z1_sci, z2_sci = get_scale_limits(scaling[0], data_sci, 'SCI')
+            fig, ax1 = plt.subplots(1, 1, figsize=figsize, dpi=dpi)
+            im1 = ax1.imshow(data_sci, origin='lower', extent=(xstart, xend, ystart, yend), cmap=colormaps[0], vmin=z1_sci, vmax=z2_sci)
+            if len(fname) > 18:
+                ax1.set_title(f"WFC3/{detector} {fname}\n{h1['extname']} ext")
+            else:
+                ax1.set_title(f"WFC3/{detector} {fname} {h1['extname']} ext")
+            fig.colorbar(im1, ax=ax1, shrink=.75, pad=.03)
 
     if '_ima.fits' in fname:
         if all_pixels:
@@ -273,7 +273,7 @@ def display_image(filename,
 
         if ima_multiread is True:
             nsamps = h['NSAMP']
-            for ext in reversed(range(1,nsamps+1)):
+            for ext in reversed(range(1, nsamps+1)):
                 with fits.open(imagename) as hdu:
                     data_sci = hdu['SCI', ext].data
                     data_err = hdu['ERR', ext].data
@@ -284,9 +284,9 @@ def display_image(filename,
                 data_dq = data_dq[ystart:yend, xstart:xend]
 
                 makeIR1x3plot(scaling, colormaps, data_sci, data_err, data_dq,
-                                xstart, xend, ystart, yend,
-                                detector, fname, h1, h2, h3, nsamps, ext,
-                                figsize, dpi)
+                              xstart, xend, ystart, yend,
+                              detector, fname, h1, h2, h3, nsamps, ext,
+                              figsize, dpi)
 
         if ima_multiread is False:
             with fits.open(imagename) as hdu:
@@ -453,7 +453,7 @@ def make1x3plot(scaling, colormaps, fullsci, fullerr, fulldq,
 
     im1 = ax1.imshow(fullsci, origin='lower', extent=(xstart, xend, ystart, yend), cmap=colormaps[0], vmin=z1_sci, vmax=z2_sci)
     im2 = ax2.imshow(fullerr, origin='lower', extent=(xstart, xend, ystart, yend), cmap=colormaps[1], vmin=z1_err, vmax=z2_err)
-    im3 = ax3.imshow(fulldq, origin='lower',extent=(xstart, xend, ystart, yend), cmap=colormaps[2], vmin=z1_dq, vmax=z2_dq)
+    im3 = ax3.imshow(fulldq, origin='lower', extent=(xstart, xend, ystart, yend), cmap=colormaps[2], vmin=z1_dq, vmax=z2_dq)
 
     if len(fname) > 18:
         ax1.set_title(f"WFC3/{detector} {fname}\n{h1['extname']} ext")
