@@ -272,29 +272,29 @@ def panel_plot(cube, integ_time, median_diff_full_frame, median_diff_lhs, median
                            vmin=vmin, vmax=vmax)
             title = fr'$\mu = ${median_diff_full_frame[i]:.2f}±{standard_dev_fullframe[i]:.2f} e-/s'
             ax.set_title(title, fontsize=30)
-            text_lhs=f'{median_diff_lhs[i]:.3f}\n±\n{standard_dev_lhs[i]:.3f}'
+            text_lhs = f'{median_diff_lhs[i]:.3f}\n±\n{standard_dev_lhs[i]:.3f}'
             text = ax.text(50, 500, text_lhs, color='Orange', fontsize=30)
             text.set_path_effects([path_effects.Stroke(linewidth=15, foreground='black'),
                                    path_effects.Normal()])
-            text_rhs=f'{median_diff_rhs[i]:.3f}\n±\n{standard_dev_rhs[i]:.3f}'
+            text_rhs = f'{median_diff_rhs[i]:.3f}\n±\n{standard_dev_rhs[i]:.3f}'
             text = ax.text(700, 500, text_rhs, color='Orange', fontsize=30)
             text.set_path_effects([path_effects.Stroke(linewidth=15, foreground='black'),
                                    path_effects.Normal()])
-            text_ratio=f'Ratio = {median_diff_lhs[i]/median_diff_rhs[i]:.2f}'
+            text_ratio = f'Ratio = {median_diff_lhs[i]/median_diff_rhs[i]:.2f}'
             text = ax.text(200, 900, text_ratio, color='White', fontsize=30)
             text.set_path_effects([path_effects.Stroke(linewidth=15, foreground='black'),
                                    path_effects.Normal()])
-            text_delta=fr'$\Delta = ${median_diff_lhs[i]-median_diff_rhs[i]:.2f}'
+            text_delta = fr'$\Delta = ${median_diff_lhs[i]-median_diff_rhs[i]:.2f}'
             text = ax.text(300, 300, text_delta, color='#32CD32', fontsize=30)
             text.set_path_effects([path_effects.Stroke(linewidth=15, foreground='black'),
                                    path_effects.Normal()])
           
-            cbar = plt.colorbar(im, ax = ax)
-            cbar.ax.tick_params(labelsize = 20)
+            cbar = plt.colorbar(im, ax=ax)
+            cbar.ax.tick_params(labelsize=20)
             
             ax.set_yticklabels([])
             ax.set_xticklabels([])
-            ax.set_xlabel(fr'{xlabel_list[i]}, $\Delta t = ${np.abs(itime[i]):.2f} sec', fontsize = 30)
+            ax.set_xlabel(fr'{xlabel_list[i]}, $\Delta t = ${np.abs(itime[i]):.2f} sec', fontsize=30)
 
         else:
             ax.set_axis_off()
@@ -328,7 +328,7 @@ def plot_ima_subplots(ima_filename, vmin, vmax):
     read_title = np.arange(16, 0, -1)
     for i, ax in enumerate(axarr.reshape(-1)):
 
-        im = ax.imshow(cube[:, :, i], cmap='Greys_r', origin='lower', vmin=vmin , vmax=vmax) 
+        im = ax.imshow(cube[:, :, i], cmap='Greys_r', origin='lower', vmin=vmin, vmax=vmax) 
 
         cbar = plt.colorbar(im, ax=ax)
         cbar.ax.tick_params(labelsize=20)
@@ -366,7 +366,7 @@ def plot_ramp_subplots(ima_files, difference_method, ylims, exclude_sources, lhs
     rhs_region : dict
        The four corners (x0, x1, y0, y1) of the right hand region.
     '''
-    fig = plt.figure(figsize = (50, 20))
+    fig = plt.figure(figsize=(50, 20))
     fig
     rows = 1
     columns = 2
@@ -382,8 +382,11 @@ def plot_ramp_subplots(ima_files, difference_method, ylims, exclude_sources, lhs
             cube[np.abs(cube) > 3] = np.nan
 
         diff_cube = compute_diff_imas(cube, integ_time, diff_method=difference_method)
-        median_diff_fullframe, median_diff_lhs, median_diff_rhs =\
-        get_median_fullframe_lhs_rhs(diff_cube, lhs_region=lhs_region, rhs_region=rhs_region)
+        
+        median_diff_fullframe, median_diff_lhs, median_diff_rhs = (
+            get_median_fullframe_lhs_rhs(diff_cube, 
+                                         lhs_region=lhs_region,
+                                         rhs_region=rhs_region))
 
         ax = fig.add_subplot(rows, columns, i+1)
         plot_ramp(ima, integ_time, median_diff_fullframe, median_diff_lhs, median_diff_rhs)
@@ -426,17 +429,22 @@ def plot_ima_difference_subplots(ima_filename, difference_method, lhs_region, rh
 
     cube, integ_time = read_wfc3(ima_filename)
 
-    median_fullframe, median_lhs, median_rhs = get_median_fullframe_lhs_rhs(cube, 
-                                                                            lhs_region=lhs_region,
-                                                                            rhs_region=rhs_region)
+    median_fullframe, median_lhs, median_rhs = (
+        get_median_fullframe_lhs_rhs(cube,
+                                     lhs_region=lhs_region,
+                                     rhs_region=rhs_region))
 
     diff_cube = compute_diff_imas(cube, integ_time, diff_method=difference_method)
 
-    median_diff_fullframe, median_diff_lhs, median_diff_rhs =\
-    get_median_fullframe_lhs_rhs(diff_cube, lhs_region=lhs_region, rhs_region=rhs_region)
+    median_diff_fullframe, median_diff_lhs, median_diff_rhs = (
+        get_median_fullframe_lhs_rhs(diff_cube, 
+                                     lhs_region=lhs_region, 
+                                     rhs_region=rhs_region))
     
-    standard_dev_fullframe, standard_dev_lhs, standard_dev_rhs =\
-    get_std_fullframe_lhs_rhs(diff_cube, lhs_region=lhs_region, rhs_region=rhs_region)
+    standard_dev_fullframe, standard_dev_lhs, standard_dev_rhs = (
+        get_std_fullframe_lhs_rhs(diff_cube, 
+                                  lhs_region=lhs_region, 
+                                  rhs_region=rhs_region))
 
     fig_0 = panel_plot(cube, integ_time, median_diff_fullframe, median_diff_lhs,
                        median_diff_rhs, standard_dev_fullframe, standard_dev_lhs, 
