@@ -5,8 +5,14 @@ generates the
 import glob
 import pdb
 
-file_content = ["version: 2",
-                "updates:"]
+file_content = ['version: 2',
+                'updates:',
+                '  - package-ecosystem: "github-actions"',
+                '    directory: "/"',
+                '    schedule:',
+                '     interval: "weekly"',
+                '     time: "12:00"',
+                '    target-branch: dependabot_sandbox']
 
 #1: locate all paths with notebook-level requirements.txt files.
 req_file_list = glob.glob("notebooks/*/*/requirements.txt")
