@@ -2,7 +2,7 @@
 import sys
 
 from astropy.io import fits
-from ginga.util import zscale
+from astropy.visualization import ZScaleInterval
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -51,8 +51,8 @@ def display_image(filename,
         List of real numbers to act as scalings for the SCI, ERR, and DQ arrays.
         The first element in the list is for the SCI array the second is for the
         ERR array and the third element in the list is for the DQ extension. If
-        no scalings are given the default scaling will use
-        ginga.util.zscale.zscale(). All three scalings must be provided even if
+        no scalings are given the default scaling will use astropy.visualization
+        ZScaleInterval.get_limits(). All three scalings must be provided even if
         only changing 1-2 scalings. E.g. to change SCI array scaling:
         scaling = [(5E4,8E4),(None,None),(None,None)]
 
@@ -314,8 +314,8 @@ def get_scale_limits(scaling, array, extname):
         List of real numbers to act as scalings for the SCI, ERR, and DQ arrays.
         The first element in the list is for the SCI array the second is for the
         ERR array and the third element in the list is for the DQ extension. If
-        no scalings are given the default scaling will use
-        ginga.util.zscale.zscale(). All three scalings must be provided even if
+        no scalings are given the default scaling will use astropy.visualization
+        ZScaleInterval.get_limits(). All three scalings must be provided even if
         only changing 1-2 scalings. E.g. to change SCI array scaling:
         scaling = [(5E4,8E4),(None,None),(None,None)]
 
@@ -334,6 +334,8 @@ def get_scale_limits(scaling, array, extname):
         The maximum value for the image scale.
 
     """
+    
+    z = ZScaleInterval()
     if extname == 'DQ':
         if scaling[0] is None and scaling[1] is None:
             z1, z2 = array.min(), array.max()
@@ -346,16 +348,16 @@ def get_scale_limits(scaling, array, extname):
         elif scaling[0] is not None and scaling[1] is not None:
             z1 = scaling[0]
             z2 = scaling[1]
-
+    
     elif extname == 'SCI' or extname == 'ERR':
         if scaling[0] is None and scaling[1] is None:
-            z1, z2 = zscale.zscale(array)
+            z1, z2 = z.get_limits(array)
         elif scaling[0] is None and scaling[1] is not None:
-            z1 = zscale.zscale(array)[0]
+            z1 = z.get_limits(array)[0]
             z2 = scaling[1]
         elif scaling[0] is not None and scaling[1] is None:
             z1 = scaling[0]
-            z2 = zscale.zscale(array)[1]
+            z2 = z.get_limits(array)[1]
         elif scaling[0] is not None and scaling[1] is not None:
             z1 = scaling[0]
             z2 = scaling[1]
@@ -378,8 +380,8 @@ def make1x3plot(scaling, colormaps, fullsci, fullerr, fulldq,
         List of real numbers to act as scalings for the SCI, ERR, and DQ arrays.
         The first element in the list is for the SCI array the second is for the
         ERR array and the third element in the list is for the DQ extension. If
-        no scalings are given the default scaling will use
-        ginga.util.zscale.zscale(). All three scalings must be provided even if
+        no scalings are given the default scaling will use astropy.visualization
+        ZScaleInterval.get_limits(). All three scalings must be provided even if
         only changing 1-2 scalings. E.g. to change SCI array scaling:
         scaling = [(5E4,8E4),(None,None),(None,None)]
 
@@ -480,8 +482,8 @@ def makeIR1x3plot(scaling, colormaps, data_sci, data_err, data_dq,
         List of real numbers to act as scalings for the SCI, ERR, and DQ arrays.
         The first element in the list is for the SCI array the second is for the
         ERR array and the third element in the list is for the DQ extension. If
-        no scalings are given the default scaling will use
-        ginga.util.zscale.zscale(). All three scalings must be provided even if
+        no scalings are given the default scaling will use astropy.visualization
+        ZScaleInterval.get_limits(). All three scalings must be provided even if
         only changing 1-2 scalings. E.g. to change SCI array scaling:
         scaling = [(5E4,8E4),(None,None),(None,None)]
 
