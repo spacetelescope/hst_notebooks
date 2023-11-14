@@ -12,9 +12,9 @@ that contains (at minimum) the packages listed in the `requirements.txt` file
 that is included within the repository. We recommend creating a new conda 
 environment using the requirements file: 
 
-  `$ conda create -n except_report python=3.11` 
-  `$ conda activate except_report` 
-  `$ pip install -r requirements.txt`
+  `$ conda create -n except_report python=3.11` <br>
+  `$ conda activate except_report` <br>
+  `$ pip install -r requirements.txt`<br>
   
 Optional Note: The tools in this notebook (specifically display_image) look much
 better in Jupyter Lab rather than in the classic Jupyter Notebook. If your
