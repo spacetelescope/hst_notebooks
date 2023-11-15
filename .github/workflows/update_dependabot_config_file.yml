@@ -4,3 +4,15 @@ on:
   workflow_dispatch:
 
 jobs:
+  update-dependabot-config-file:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.8.12
+        uses: actions/setup-python@v4 ## needed for caching
+        with:
+          python-version: 3.8.12
+          cache: 'pip'
+      - name: Run dependabot config file updater script
+          run: |
+            python .github/scripts/make_dependabot_file.py
