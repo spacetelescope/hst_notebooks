@@ -1,11 +1,11 @@
 #! /usr/bin/env python
-
 import sys
 import numpy as np
 
 from astropy.io import fits
 import matplotlib.pyplot as plt
 from scipy.stats import mode as mode
+
 
 def get_bunit(ext1header):
     """ Get the brightness unit for the plot axis label
@@ -34,6 +34,7 @@ def get_bunit(ext1header):
         return 'e$^-$/s'
     else:
         return units
+
 
 def get_yaxis_and_label(stat, scidata, axes):
     """ Get the y-axis values and the y axis label for the plot
@@ -78,8 +79,9 @@ def get_yaxis_and_label(stat, scidata, axes):
 
     return yaxis, ylabel
 
+
 def makeplot(xaxis, yaxis, axlabel, ylabel,
-             bunit,detector, fname, h1, ylim,
+             bunit, detector, fname, h1, ylim,
              figsize, dpi):
     """ Make and display the plot for WFC3 UVIS or IR images
 
@@ -121,26 +123,26 @@ def makeplot(xaxis, yaxis, axlabel, ylabel,
     N/A
 
     """
-    fig, ax1 = plt.subplots(1, 1, figsize = figsize, dpi=dpi)
-        # ax1.scatter(xaxis,yaxis,10,alpha=0.75)
-    ax1.plot(xaxis,yaxis,marker='o',markersize=5,ls='-',alpha=0.75)
+    fig, ax1 = plt.subplots(1, 1, figsize=figsize, dpi=dpi)
+    ax1.plot(xaxis, yaxis, marker='o', markersize=5, ls='-', alpha=0.75)
 
-    ax1.set_xlabel(f"{axlabel} Number",size=13)
-    ax1.set_ylabel(f"{axlabel} {ylabel} [{bunit}]",size=13)
+    ax1.set_xlabel(f"{axlabel} Number", size=13)
+    ax1.set_ylabel(f"{axlabel} {ylabel} [{bunit}]", size=13)
     ax1.grid(alpha=.75)
     ax1.minorticks_on()
-    ax1.yaxis.set_ticks_position('both'),ax1.xaxis.set_ticks_position('both')
-    ax1.tick_params(axis='both',which='minor',direction='in',labelsize = 12,length=4)
-    ax1.tick_params(axis='both',which='major',direction='in',labelsize = 12,length=7)
+    ax1.yaxis.set_ticks_position('both'), ax1.xaxis.set_ticks_position('both')
+    ax1.tick_params(axis='both', which='minor', direction='in', labelsize=12, length=4)
+    ax1.tick_params(axis='both', which='major', direction='in', labelsize=12, length=7)
     if len(fname) > 18:
-        ax1.set_title(f"WFC3/{detector} {fname}\n {h1['extname']} ext",size=14)
+        ax1.set_title(f"WFC3/{detector} {fname}\n {h1['extname']} ext", size=14)
     else:
-        ax1.set_title(f"WFC3/{detector} {fname} {h1['extname']} ext",size=14)
-    if ylim != None:
-        ax1.set_ylim(ylim[0],ylim[1])
+        ax1.set_title(f"WFC3/{detector} {fname} {h1['extname']} ext", size=14)
+    if ylim is not None:
+        ax1.set_ylim(ylim[0], ylim[1])
+
 
 def make_ima_plot(xaxis, yaxis, axlabel, ylabel,
-                  bunit, detector, fname,h1, ylim, nsamps, ext,
+                  bunit, detector, fname, h1, ylim, nsamps, ext,
                   figsize, dpi):
     """ Make and display the plot for WFC3 IR IMA images
 
@@ -188,27 +190,28 @@ def make_ima_plot(xaxis, yaxis, axlabel, ylabel,
     N/A
 
     """
-    fig, ax1 = plt.subplots(1,1,figsize=figsize,dpi=dpi)
+    fig, ax1 = plt.subplots(1, 1, figsize=figsize, dpi=dpi)
         # ax1.scatter(xaxis,yaxis,10,alpha=0.75)
-    ax1.plot(xaxis,yaxis,marker='o',markersize=5,ls='-',alpha=0.75)
+    ax1.plot(xaxis, yaxis, marker='o', markersize=5, ls='-', alpha=0.75)
 
-    ax1.set_xlabel(f"{axlabel} Number",size=13)
-    ax1.set_ylabel(f"{axlabel} {ylabel} [{bunit}]",size=13)
+    ax1.set_xlabel(f"{axlabel} Number", size=13)
+    ax1.set_ylabel(f"{axlabel} {ylabel} [{bunit}]", size=13)
     ax1.grid(alpha=.75)
     ax1.minorticks_on()
     ax1.yaxis.set_ticks_position('both'),ax1.xaxis.set_ticks_position('both')
-    ax1.tick_params(axis='both',which='minor',direction='in',labelsize = 12,length=4)
-    ax1.tick_params(axis='both',which='major',direction='in',labelsize = 12,length=7)
+    ax1.tick_params(axis='both', which='minor', direction='in', labelsize=12, length=4)
+    ax1.tick_params(axis='both', which='major', direction='in', labelsize=12, length=7)
     if len(fname) > 18:
-        ax1.set_title(f"WFC3/{detector} {fname}\n {h1['extname']} read {(nsamps+1)-ext}",size=14)
+        ax1.set_title(f"WFC3/{detector} {fname}\n {h1['extname']} read {(nsamps+1)-ext}", size=14)
     else:
-        ax1.set_title(f"WFC3/{detector} {fname} {h1['extname']} read {(nsamps+1)-ext}",size=14)
-    if ylim != None:
-        ax1.set_ylim(ylim[0],ylim[1])
+        ax1.set_title(f"WFC3/{detector} {fname} {h1['extname']} read {(nsamps+1)-ext}", size=14)
+    if ylim is not None:
+        ax1.set_ylim(ylim[0], ylim[1])
 
-def row_column_stats(filename, stat='median', axis='column', ylim=(None,None),
+
+def row_column_stats(filename, stat='median', axis='column', ylim=(None, None),
                      printmeta=False, ima_multiread=False, plot=True,
-                     figsize=(9,6), dpi=120):
+                     figsize=(9, 6), dpi=120):
     """ A function to plot the column median vs column number for
         the 'SCI' data of any WFC3 fits image.
 
@@ -296,7 +299,7 @@ def row_column_stats(filename, stat='median', axis='column', ylim=(None,None),
             print("Invalid image section specified")
             return 0, 0
         try:
-            xstart = int(xsec[: xs])
+            xstart = int(xsec[:xs])
         except ValueError:
             print("Problem getting xstart")
             return
@@ -351,73 +354,69 @@ def row_column_stats(filename, stat='median', axis='column', ylim=(None,None),
         sys.exit("keyword argument 'axis' must be set to 'column' or 'row' ")
 
     if printmeta:
-        print(f"\t{si}/{detector} {fname} ")
+        print(f"\t{si}/{detector} {fname}")
         print('-'*44)
         print(f"Filter = {h['filter']}, Date-Obs = {h['date-obs']} T{h['time-obs']},\nTarget = {h['targname']}, Exptime = {h['exptime']}, Subarray = {issubarray}, Units = {h1['bunit']}\n")
 
-
-
     if detector == 'UVIS':
-        if ima_multiread == True:
+        if ima_multiread is True:
             sys.exit("keyword argument 'ima_multiread' can only be set to True for 'ima.fits' files")
         try:
             with fits.open(imagename) as hdu:
-                uvis1_sci = hdu['SCI',2].data
-                uvis2_sci = hdu['SCI',1].data
+                uvis1_sci = hdu['SCI', 2].data
+                uvis2_sci = hdu['SCI', 1].data
 
-            uvis_sci = np.concatenate([uvis2_sci,uvis1_sci])
+            uvis_sci = np.concatenate([uvis2_sci, uvis1_sci])
 
             if all_pixels:
-                uvis_sci = uvis_sci[ystart:yend*2,xstart:xend]
+                uvis_sci = uvis_sci[ystart:yend*2, xstart:xend]
                 if axis == 'row':
                     xaxis = range(ystart, yend*2)
             else:
-                uvis_sci = uvis_sci[ystart:yend,xstart:xend]
+                uvis_sci = uvis_sci[ystart:yend, xstart:xend]
 
         except KeyError:
             with fits.open(imagename) as hdu:
-                uvis_sci = hdu['SCI',1].data
+                uvis_sci = hdu['SCI', 1].data
 
             if all_pixels:
-                uvis_sci = uvis_sci[ystart:yend,xstart:xend]
+                uvis_sci = uvis_sci[ystart:yend, xstart:xend]
                 if axis == 'row':
                     xaxis = range(ystart, yend)
             else:
-                uvis_sci = uvis_sci[ystart:yend,xstart:xend]
+                uvis_sci = uvis_sci[ystart:yend, xstart:xend]
 
-        yaxis, ylabel = get_yaxis_and_label(stat,uvis_sci,axes)
+        yaxis, ylabel = get_yaxis_and_label(stat, uvis_sci, axes)
         if plot:
             makeplot(xaxis, yaxis, axlabel, ylabel,
                      bunit, detector, fname, h1,
                      ylim, figsize, dpi)
 
-
     if detector == 'IR':
-        if ima_multiread == True:
+        if ima_multiread is True:
             nsamps = fits.getheader(imagename)['NSAMP']
-            for ext in reversed(range(1,nsamps+1)):
+            for ext in reversed(range(1, nsamps+1)):
                 with fits.open(imagename) as hdu:
-                    scidata = hdu['SCI',ext].data
+                    scidata = hdu['SCI', ext].data
 
-                scidata = scidata[ystart:yend,xstart:xend]
+                scidata = scidata[ystart:yend, xstart:xend]
 
-                yaxis, ylabel = get_yaxis_and_label(stat,scidata,axes)
+                yaxis, ylabel = get_yaxis_and_label(stat, scidata, axes)
                 if plot:
                     make_ima_plot(xaxis, yaxis, axlabel, ylabel,
-                                  bunit, detector, fname,h1, ylim,
+                                  bunit, detector, fname, h1, ylim,
                                   nsamps, ext, figsize, dpi)
 
-        if ima_multiread == False:
+        if ima_multiread is False:
             with fits.open(imagename) as hdu:
-                scidata = hdu['SCI',1].data
+                scidata = hdu['SCI', 1].data
 
-            scidata = scidata[ystart:yend,xstart:xend]
+            scidata = scidata[ystart:yend, xstart:xend]
 
-            yaxis, ylabel = get_yaxis_and_label(stat,scidata,axes)
+            yaxis, ylabel = get_yaxis_and_label(stat, scidata, axes)
             if plot:
                 makeplot(xaxis, yaxis, axlabel, ylabel,
                          bunit, detector, fname, h1,
                          ylim, figsize, dpi)
 
     return xaxis, yaxis
-
