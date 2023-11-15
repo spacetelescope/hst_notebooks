@@ -191,14 +191,13 @@ def make_ima_plot(xaxis, yaxis, axlabel, ylabel,
 
     """
     fig, ax1 = plt.subplots(1, 1, figsize=figsize, dpi=dpi)
-        # ax1.scatter(xaxis,yaxis,10,alpha=0.75)
     ax1.plot(xaxis, yaxis, marker='o', markersize=5, ls='-', alpha=0.75)
 
     ax1.set_xlabel(f"{axlabel} Number", size=13)
     ax1.set_ylabel(f"{axlabel} {ylabel} [{bunit}]", size=13)
     ax1.grid(alpha=.75)
     ax1.minorticks_on()
-    ax1.yaxis.set_ticks_position('both'),ax1.xaxis.set_ticks_position('both')
+    ax1.yaxis.set_ticks_position('both'), ax1.xaxis.set_ticks_position('both')
     ax1.tick_params(axis='both', which='minor', direction='in', labelsize=12, length=4)
     ax1.tick_params(axis='both', which='major', direction='in', labelsize=12, length=7)
     if len(fname) > 18:
