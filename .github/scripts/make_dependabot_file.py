@@ -46,9 +46,13 @@ def make_file():
     req_file_list = glob.glob("notebooks/*/*/requirements.txt")
 
     # 2: Dynamically generate the dependabot.yml file content based on the paths identified by the above glob command.
+    ctr = 1 # TODO: REMOVE BEFORE DEPLOYMENT
     for rf_list_item in sorted(req_file_list):
         rf_path = rf_list_item.replace("requirements.txt", "")
         output_file_content += generate_file_content_from_template("pip", rf_path)
+        ctr += 1 # TODO: REMOVE BEFORE DEPLOYMENT
+        if ctr > 2: # TODO: REMOVE BEFORE DEPLOYMENT
+            break # TODO: REMOVE BEFORE DEPLOYMENT
 
     # 3: Write yml file content only if generated content and content of current file are not identical
     if os.path.isfile(output_file_name):
