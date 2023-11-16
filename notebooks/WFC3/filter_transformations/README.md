@@ -1,0 +1,3 @@
+This notebook demonstrates how to calculate photometric transformation coefficients between WFC3/UVIS wide-band filters and any other non-HST filter system for a given object spectrum.
+
+The new tool uses the latest WFC3 synthetic throughput tables and replaces functionality provided in the [WFC3 Photometric Conversion Tool](https://colortool.stsci.edu/uvis-filter-transformations), which is no longer supported. For more detail on photometric transformations to other systems, see [WFC3 ISR 2014-16](https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2014/WFC3-2014-16.pdf).
