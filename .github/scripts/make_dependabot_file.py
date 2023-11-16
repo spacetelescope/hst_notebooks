@@ -30,7 +30,9 @@ def generate_file_content_from_template(ecosystem, directory):
                         '    schedule:',
                         '     interval: "weekly"',
                         '     day: "sunday"',
-                        '     time: "12:00"']
+                        '     time: "12:00"',
+                        '    labels:',
+                        '      - "{} dependencies"'.format(ecosystem)]
     for line in template_content:
         yml_content.append(line)
     return yml_content
@@ -60,10 +62,13 @@ def make_file(req_file_search_string="notebooks/*/*/requirements.txt"):
     req_file_list = glob.glob(req_file_search_string)
 
     # 2: Dynamically generate the dependabot.yml file content based on the paths identified by the above glob command.
+    ctr = 0 #TODO: REMOVE
     for rf_list_item in sorted(req_file_list):
         rf_path = rf_list_item.replace("requirements.txt", "")
         output_file_content += generate_file_content_from_template("pip", rf_path)
-
+        ctr += 1 #TODO: REMOVE
+        if ctr == 5: #TODO: REMOVE
+            break #TODO: REMOVE
     # 3: Write yml file content only if generated content and content of current file are not identical
     if os.path.isfile(output_file_name):
         with open(output_file_name, 'r') as f_in:
