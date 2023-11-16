@@ -1,6 +1,6 @@
 """
-This script generates .github/dependabot.yml. It assumes 1) github-actions workflows are stored in
-.github/workflows/ and 2) notebook-level requirements.txt files are found in notebooks/*/*/requirements.txt
+This script generates .github/dependabot.yml. It assumes github-actions workflows are stored in
+.github/workflows/
 """
 
 import argparse
