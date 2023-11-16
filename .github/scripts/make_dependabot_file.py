@@ -85,7 +85,10 @@ def make_file(req_file_search_string="notebooks/*/*/requirements.txt"):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('req_file_search_string', type=str, help='Search pattern used to locate notebook-level requirements.txt files. The path in the search string is assumed to start from the repository root.')
+    parser.add_argument('req_file_search_string', type=str, help='Search pattern used to locate '
+                                                                 'notebook-level requirements.txt files. '
+                                                                 'The path in the search string is assumed to '
+                                                                 'start from the repository root.')
     args = parser.parse_args()
     make_file(req_file_search_string=args.req_file_search_string)
 
