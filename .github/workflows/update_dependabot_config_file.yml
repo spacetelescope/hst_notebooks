@@ -36,17 +36,17 @@ jobs:
       - name: Run dependabot config file updater script
         run: |
           python .github/scripts/make_dependabot_file.py "${{ inputs.req_file_search_string }}"
-      - name: Commit and push changes to branch ${{ pull_request_source_branch }}
+      - name: Commit and push changes to branch ${{ inputs.pull_request_source_branch }}
         uses: devops-infra/action-commit-push@v0.9.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           target_branch: dependabot_file_update
           commit_message: "Updated ./github/dependabot.yml"
-      - name: Create pull request to merge changes in branch ${{ pull_request_source_branch }} into ${{ pull_request_target_branch }}
+      - name: Create pull request to merge changes in branch ${{ inputs.pull_request_source_branch }} into ${{ inputs.pull_request_target_branch }}
         uses: devops-infra/action-pull-request@v0.5.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           body: "**Automated pull request**<br><br>Updated ./github/dependabot.yml"
           title: "Updated ./github/dependabot.yml"
-          source_branch: ${{ pull_request_source_branch }}
-          target_branch: ${{ pull_request_target_branch }}
+          source_branch: ${{ inputs.pull_request_source_branch }}
+          target_branch: ${{ inputs.pull_request_target_branch }}
