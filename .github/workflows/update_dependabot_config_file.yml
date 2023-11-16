@@ -10,6 +10,8 @@ on:
 jobs:
   update-dependabot-config-file:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.8.12
@@ -27,8 +29,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           target_branch: dependabot_testing
           commit_message: "Updated ./github/dependabot.yml"
-        permissions:
-          contents: write
       - name: Create pull request
         uses: devops-infra/action-pull-request@v0.5.5
         with:
@@ -37,5 +37,3 @@ jobs:
           title: "Updated ./github/dependabot.yml"
           source_branch: dependabot_testing
           target_branch: main
-        permissions:
-          contents: write
