@@ -6,7 +6,17 @@ on:
       req_file_search_string:
         default: notebooks/*/*/requirements.txt
         description: "Search pattern used to locate notebook-level requirements.txt files. The path in the search 
-        string is assumed to start from the repository root."
+        string is assumed to start from the repository root"
+        required: false
+        type: 'string'
+      pull_request_source_branch:
+        default: dependabot_file_update
+        description: "Name of the branch that will created to serve as the source branch for the pull request"
+        required: false
+        type: 'string'
+      pull_request_target_branch:
+        default: dependabot_file_update
+        description: "Name of the branch that will created to serve as the target branch for the pull request"
         required: false
         type: 'string'
 
@@ -26,17 +36,17 @@ jobs:
       - name: Run dependabot config file updater script
         run: |
           python .github/scripts/make_dependabot_file.py "${{ inputs.req_file_search_string }}"
-      - name: Commit and push changes
+      - name: Commit and push changes to branch ${{ pull_request_source_branch }}
         uses: devops-infra/action-commit-push@v0.9.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          target_branch: dependabot_testing
+          target_branch: dependabot_file_update
           commit_message: "Updated ./github/dependabot.yml"
-      - name: Create pull request
+      - name: Create pull request to merge changes in branch ${{ pull_request_source_branch }} into ${{ pull_request_target_branch }}
         uses: devops-infra/action-pull-request@v0.5.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           body: "**Automated pull request**<br><br>Updated ./github/dependabot.yml"
           title: "Updated ./github/dependabot.yml"
-          source_branch: dependabot_testing
-          target_branch: main
+          source_branch: ${{ pull_request_source_branch }}
+          target_branch: ${{ pull_request_target_branch }}
