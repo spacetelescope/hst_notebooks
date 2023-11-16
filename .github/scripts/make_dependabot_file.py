@@ -30,9 +30,7 @@ def generate_file_content_from_template(ecosystem, directory):
                         '    schedule:',
                         '     interval: "weekly"',
                         '     day: "sunday"',
-                        '     time: "12:00"',
-                        '    labels:',
-                        '      - "{} dependencies"'.format(ecosystem)]
+                        '     time: "12:00"']
     for line in template_content:
         yml_content.append(line)
     return yml_content
