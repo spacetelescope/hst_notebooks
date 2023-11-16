@@ -3,6 +3,7 @@ This script generates .github/dependabot.yml. It assumes 1) github-actions workf
 .github/workflows/ and 2) notebook-level requirements.txt files are found in notebooks/*/*/requirements.txt
 """
 
+import argparse
 import glob
 import os
 
@@ -35,7 +36,21 @@ def generate_file_content_from_template(ecosystem, directory):
         yml_content.append(line)
     return yml_content
 
-def make_file():
+def make_file(req_file_search_string="notebooks/*/*/requirements.txt"):
+    """
+    Generates the dependabot.yml file.
+
+    Parameters
+    ----------
+    req_file_search_string : string
+        Search pattern used to locate notebook-level requirements.txt files. The path in the search string is
+        assumed to start from the repository root. If not explicitly specified by the user, the default value
+        is "notebooks/*/*/requirements.txt".
+
+    Returns
+    -------
+    Nothing!
+    """
     output_file_name = ".github/dependabot.yml"
     output_file_content = ['version: 2',
                            'updates:']
@@ -43,7 +58,7 @@ def make_file():
     output_file_content += generate_file_content_from_template("github-actions", "/")
 
     # 1: locate all paths with notebook-level requirements.txt files.
-    req_file_list = glob.glob("notebooks/*/*/requirements.txt")
+    req_file_list = glob.glob(req_file_search_string)
 
     # 2: Dynamically generate the dependabot.yml file content based on the paths identified by the above glob command.
     ctr = 1 # TODO: REMOVE BEFORE DEPLOYMENT
@@ -70,5 +85,8 @@ def make_file():
             output_file_name))
 
 if __name__ == '__main__':
-    make_file()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('req_file_search_string', type=str, help='Search pattern used to locate notebook-level requirements.txt files. The path in the search string is assumed to start from the repository root.')
+    args = parser.parse_args()
+    make_file(req_file_search_string=args.req_file_search_string)
 
