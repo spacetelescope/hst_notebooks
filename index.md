@@ -11,3 +11,6 @@ Telescope instrument teams and software groups, including:
 - [Near Infrared Camera and Multi-Object Spectrometer (NICMOS)](https://www.stsci.edu/hst/instrumentation/legacy/nicmos)
 
 - [Space Telescope Imaging Spectrograph (STIS)](https://www.stsci.edu/hst/instrumentation/stis)
+
+- [Wide Field Camera 3 (WFC3)](https://www.stsci.edu/hst/instrumentation/wfc3)
+
