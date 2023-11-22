@@ -452,4 +452,3 @@ def plot_ima_difference_subplots(ima_filename, difference_method, lhs_region, rh
     
     _ = fig_0.suptitle(filename, fontsize=40)
     plt.subplots_adjust(bottom=0.25, right=0.9, top=0.95)
-    
