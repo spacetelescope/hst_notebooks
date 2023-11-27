@@ -1,1 +1,13 @@
 This Jupyter notebook provides `calwf3` reprocessing examples to improve calibrated WFC3/IR images affected by time-variable background (TVB). The notebook shows how to diagnose images with poor-quality ramp fits and rerun `calwf3` with the 'CRCORR' step turned off. This method is described as the 'Last-minus-first' technique [WFC3 ISR 2016-16](https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2016/WFC3-2016-16.pdf). See Section 3.5.2 of the [WFC3 Data Handbook](https://hst-docs.stsci.edu/wfc3dhb) for more information.
+
+Dependencies:
+
+Install the necessary packages using the pre-requirements.sh and requirements.txt:
+
+    bash pre-requirements.sh
+    pip install -r requirements.txt
+    
+If necessary, also install jupyter notebook:
+
+    pip install notebook
+
