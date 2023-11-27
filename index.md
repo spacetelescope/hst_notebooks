@@ -1,6 +1,19 @@
-# STScI HST Notebook Repository HQ
-This page provides links to notebooks created by various Hubble Space
-Telescope instrument teams and software groups, including:
+
+## STScI HST Notebook Repository HQ
+Welcome to the STScI HST Notebook Repository
+This resource provides comprehensive documentation and interactive notebooks created by the Hubble Space Telescope instruments teams.
+
+### Interactive Notebooks
+Explore our interactive notebooks for hands-on experience with HST data.
+- [ACS notebooks](./notebooks/ACS/README.md)
+- [COS notebooks](./notebooks/COS/README.md)
+- [DrizzlePac notebooks](./notebooks/DrizzlePac/README.md)
+- [NICMOS notebooks](./notebooks/NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.ipynb)
+- [STIS notebooks](./notebooks/STIS/README.md)
+- [WFC3 notebooks](./notebooks/WFC3/README.md)
+
+### Instrument Documentation
+Here, you can find detailed documentation for each instrument the Hubble Space Telescope uses.
 
 - [Advanced Camera for Surveys (ACS)](https://www.stsci.edu/hst/instrumentation/acs)
 
@@ -13,4 +26,3 @@ Telescope instrument teams and software groups, including:
 - [Space Telescope Imaging Spectrograph (STIS)](https://www.stsci.edu/hst/instrumentation/stis)
 
 - [Wide Field Camera 3 (WFC3)](https://www.stsci.edu/hst/instrumentation/wfc3)
-
