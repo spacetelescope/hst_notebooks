@@ -658,29 +658,17 @@ The following tasks in the drizzlepac package can be run with TEAL:
 <p>The following commands query the Mikulski Archive for Space Telescopes (MAST) and then download the FLT and DRZ data products to the current directory.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="s2">&quot;ica529*&quot;</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s2">&quot;F140W&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="s1">&#39;ica529*&#39;</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;F140W&#39;</span><span class="p">)</span>
 
-<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span>
-    <span class="n">data_list</span><span class="p">[</span><span class="s2">&quot;obsid&quot;</span><span class="p">],</span>
-    <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">download_dir</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span><span class="p">,</span>
-    <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;FLT&quot;</span><span class="p">,</span> <span class="s2">&quot;DRZ&quot;</span><span class="p">],</span>
-<span class="p">)</span>
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">data_list</span><span class="p">[</span><span class="s1">&#39;obsid&#39;</span><span class="p">],</span> <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">download_dir</span><span class="o">=</span><span class="s1">&#39;./data&#39;</span><span class="p">,</span>
+                               <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;FLT&#39;</span><span class="p">,</span> <span class="s1">&#39;DRZ&#39;</span><span class="p">])</span>
 
-<span class="n">science_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;data/mastDownload/HST/*/*fits&quot;</span><span class="p">)</span>
+<span class="n">science_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;data/mastDownload/HST/*/*fits&#39;</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">science_files</span><span class="p">:</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
-    <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">new_path</span><span class="p">)</span>
-
-<span class="n">data_directory</span> <span class="o">=</span> <span class="s2">&quot;./data&quot;</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">data_directory</span><span class="p">):</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">data_directory</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occured while deleting the directory </span><span class="si">{</span><span class="n">data_directory</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="s1">&#39;./&#39;</span><span class="o">+</span><span class="n">root</span><span class="p">)</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;data/&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -707,45 +695,24 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/produ
 <p>This Visit contains 4 consecutive dithered FLT exposures in the F140W filter, which are obtained in a single orbit. The following commands print the values of keywords describing those data, where the POSTARG* values represent the commanded x-axis and y-axis offsets in arcseconds.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_collection</span> <span class="o">=</span> <span class="n">ImageFileCollection</span><span class="p">(</span>
-    <span class="s2">&quot;./&quot;</span><span class="p">,</span>
-    <span class="n">keywords</span><span class="o">=</span><span class="p">[</span>
-        <span class="s2">&quot;asn_id&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;targname&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;filter&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;samp_seq&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;nsamp&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;exptime&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;postarg1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;postarg2&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;date-obs&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;time-obs&quot;</span><span class="p">,</span>
-    <span class="p">],</span>
-    <span class="n">glob_include</span><span class="o">=</span><span class="s2">&quot;ica529*flt.fits&quot;</span><span class="p">,</span>
-    <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">summary_table</span> <span class="o">=</span> <span class="n">image_collection</span><span class="o">.</span><span class="n">summary</span>
-    <span class="k">if</span> <span class="n">summary_table</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">summary_table</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No FITS files matched the pattern or no relevant data found.&quot;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred while creating the summary table: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">collec</span> <span class="o">=</span> <span class="n">ImageFileCollection</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">,</span>
+                             <span class="n">keywords</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;asn_id&quot;</span><span class="p">,</span> <span class="s2">&quot;targname&quot;</span><span class="p">,</span> <span class="s2">&quot;filter&quot;</span><span class="p">,</span> <span class="s2">&quot;samp_seq&quot;</span><span class="p">,</span> <span class="s2">&quot;nsamp&quot;</span><span class="p">,</span> <span class="s2">&quot;exptime&quot;</span><span class="p">,</span>
+                                       <span class="s2">&quot;postarg1&quot;</span><span class="p">,</span> <span class="s2">&quot;postarg2&quot;</span><span class="p">,</span> <span class="s2">&quot;date-obs&quot;</span><span class="p">,</span> <span class="s2">&quot;time-obs&quot;</span><span class="p">,],</span> <span class="n">glob_include</span><span class="o">=</span><span class="s2">&quot;ica529*flt.fits&quot;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">out_table</span> <span class="o">=</span> <span class="n">collec</span><span class="o">.</span><span class="n">summary</span>
+<span class="n">out_table</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       file          asn_id      targname    ... postarg2  date-obs  time-obs
------------------- --------- --------------- ... -------- ---------- --------
-ica529rmq_flt.fits ICA529030 MACS0717.5+3745 ...      0.0 2014-02-19 11:26:12
-ica529rsq_flt.fits ICA529030 MACS0717.5+3745 ...    0.424 2014-02-19 11:47:06
-ica529s0q_flt.fits ICA529030 MACS0717.5+3745 ...    1.212 2014-02-19 12:55:38
-ica529s6q_flt.fits ICA529030 MACS0717.5+3745 ...    0.788 2014-02-19 13:16:32
-</pre></div>
-</div>
-</div>
+<div class="output text_html"><div><i>Table masked=True length=4</i>
+<table id="table140305149027088" class="table-striped table-bordered table-condensed">
+<thead><tr><th>file</th><th>asn_id</th><th>targname</th><th>filter</th><th>samp_seq</th><th>nsamp</th><th>exptime</th><th>postarg1</th><th>postarg2</th><th>date-obs</th><th>time-obs</th></tr></thead>
+<thead><tr><th>str18</th><th>str9</th><th>str15</th><th>str5</th><th>str7</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>str10</th><th>str8</th></tr></thead>
+<tr><td>ica529rmq_flt.fits</td><td>ICA529030</td><td>MACS0717.5+3745</td><td>F140W</td><td>SPARS50</td><td>5</td><td>152.933533</td><td>0.0</td><td>0.0</td><td>2014-02-19</td><td>11:26:12</td></tr>
+<tr><td>ica529rsq_flt.fits</td><td>ICA529030</td><td>MACS0717.5+3745</td><td>F140W</td><td>SPARS50</td><td>6</td><td>202.933945</td><td>1.355</td><td>0.424</td><td>2014-02-19</td><td>11:47:06</td></tr>
+<tr><td>ica529s0q_flt.fits</td><td>ICA529030</td><td>MACS0717.5+3745</td><td>F140W</td><td>SPARS50</td><td>5</td><td>152.933533</td><td>0.881</td><td>1.212</td><td>2014-02-19</td><td>12:55:38</td></tr>
+<tr><td>ica529s6q_flt.fits</td><td>ICA529030</td><td>MACS0717.5+3745</td><td>F140W</td><td>SPARS50</td><td>6</td><td>202.933945</td><td>-0.474</td><td>0.788</td><td>2014-02-19</td><td>13:16:32</td></tr>
+</table></div></div></div>
 </div>
 </section>
 <section id="download-the-persistence-model-products-a-id-model-a">
@@ -756,28 +723,20 @@ ica529s6q_flt.fits ICA529030 MACS0717.5+3745 ...    0.788 2014-02-19 13:16:32
 <p>This cell may take several minutes to complete, as it will download persistence products for all images in the visit, and not just those for the F140W filter.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://archive.stsci.edu/pub/wfc3_persist/13459/Visit29/13459.Visit29.tar.gz&quot;</span>
-<span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;13459.Visit29.tar.gz&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">request</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="s1">&#39;https://archive.stsci.edu/pub/wfc3_persist/13459/Visit29/13459.Visit29.tar.gz&#39;</span><span class="p">)</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_file</span><span class="p">:</span>
-            <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting files....&quot;</span><span class="p">)</span>
+<span class="n">tar</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;13459.Visit29.tar.gz&#39;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">gzfile</span><span class="p">:</span>
+    <span class="n">gzfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">tar</span><span class="p">)</span>
 
-    <span class="c1"># Extract files:</span>
-    <span class="o">!</span>tar<span class="w"> </span>-zxvf<span class="w"> </span><span class="o">{</span>filename<span class="o">}</span>
+<span class="o">!</span>tar<span class="w"> </span>-zxvf<span class="w"> </span><span class="m">13459</span>.Visit29.tar.gz
 
-    <span class="c1"># Remove the files after extraction</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;13459.Visit29.tar.gz&quot;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occured: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;13459.Visit29.tar.gz&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Extracting files....
-13459.Visit29/
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>13459.Visit29/
 13459.Visit29/ica529rmq_extper.fits
 13459.Visit29/ica529rmq_flt_cor.fits
 13459.Visit29/ica529rmq_persist.fits
@@ -869,7 +828,7 @@ ica529s6q_flt.fits ICA529030 MACS0717.5+3745 ...    0.788 2014-02-19 13:16:32
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fca1529d150&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f9b56982f90&gt;]
 </pre></div>
 </div>
 <img alt="../../../_images/7f43ef1d74161d3f5a219ffc972cc497d74f32f5619b3083180b7c2f91440cb5.png" src="../../../_images/7f43ef1d74161d3f5a219ffc972cc497d74f32f5619b3083180b7c2f91440cb5.png" />
@@ -934,10 +893,10 @@ ica529s6q_flt.fits ICA529030 MACS0717.5+3745 ...    0.788 2014-02-19 13:16:32
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle log file: astrodrizzle.log
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.astrodrizzle:AstroDrizzle Version 3.5.1 started at: 20:15:36.261 (17/11/2023)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.astrodrizzle:AstroDrizzle Version 3.5.1 started at: 16:32:26.351 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.5.1 started at: 20:15:36.261 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.5.1 started at: 16:32:26.351 (28/11/2023)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.astrodrizzle:
@@ -948,15 +907,15 @@ ica529s6q_flt.fits ICA529030 MACS0717.5+3745 ...    0.788 2014-02-19 13:16:32
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.astrodrizzle:Version Information
 INFO:drizzlepac.astrodrizzle:--------------------
-INFO:drizzlepac.astrodrizzle:Python Version 3.11.6 (main, Oct  3 2023, 04:44:12) [GCC 9.4.0]
+INFO:drizzlepac.astrodrizzle:Python Version 3.11.5 (main, Sep 11 2023, 13:54:46) [GCC 11.2.0]
 INFO:drizzlepac.astrodrizzle:numpy Version -&gt; 1.23.4 
 INFO:drizzlepac.astrodrizzle:astropy Version -&gt; 5.2.1 
 INFO:drizzlepac.astrodrizzle:stwcs Version -&gt; 1.7.2 
-INFO:drizzlepac.astrodrizzle:photutils Version -&gt; 1.9.0 
-INFO:drizzlepac.util:==== Processing Step  Initialization  started at  20:15:36.268 (17/11/2023)
+INFO:drizzlepac.astrodrizzle:photutils Version -&gt; 1.10.0 
+INFO:drizzlepac.util:==== Processing Step  Initialization  started at  16:32:26.357 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Initialization  started at  20:15:36.268 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Initialization  started at  16:32:26.357 (28/11/2023)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:
@@ -1079,10 +1038,10 @@ INFO:astropy.wcs.wcs:WCS Keywords
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>********************************************************************************
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step Initialization finished at 20:15:36.859 (17/11/2023)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step Initialization finished at 16:32:26.884 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Initialization finished at 20:15:36.859 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Initialization finished at 16:32:26.884 (28/11/2023)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.astrodrizzle:USER INPUT PARAMETERS common to all Processing Steps:
@@ -1103,10 +1062,10 @@ INFO:drizzlepac.astrodrizzle:	runfile :	astrodrizzle.log
 INFO:drizzlepac.astrodrizzle:	stepsize :	10
 INFO:drizzlepac.astrodrizzle:	updatewcs :	False
 INFO:drizzlepac.astrodrizzle:	wcskey :	
-INFO:drizzlepac.util:==== Processing Step  Static Mask  started at  20:15:36.870 (17/11/2023)
+INFO:drizzlepac.util:==== Processing Step  Static Mask  started at  16:32:26.893 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  20:15:36.870 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  16:32:26.893 (28/11/2023)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:
@@ -1131,16 +1090,16 @@ INFO:drizzlepac.staticMask:Computing static mask:
 
 INFO:drizzlepac.staticMask:  mode =  1.027159;   rms = 0.193714;   static_sig = 4.00
 INFO:drizzlepac.staticMask:Saving static mask to disk: ./ica529030_1014x1014_1_staticMask.fits
-INFO:drizzlepac.util:==== Processing Step Static Mask finished at 20:15:36.949 (17/11/2023)
+INFO:drizzlepac.util:==== Processing Step Static Mask finished at 16:32:26.97 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 20:15:36.949 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 16:32:26.97 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step  Subtract Sky  started at  20:15:36.950 (17/11/2023)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step  Subtract Sky  started at  16:32:26.973 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  20:15:36.950 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  16:32:26.973 (28/11/2023)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:
@@ -1164,10 +1123,10 @@ INFO:drizzlepac.sky:	skyuser :
 INFO:drizzlepac.sky:	skyusigma :	4.0
 INFO:drizzlepac.sky:	skywidth :	0.1
 INFO:drizzlepac.sky:	use_static :	True
-INFO:stsci.skypac.utils:***** skymatch started on 2023-11-17 20:15:37.014075
+INFO:stsci.skypac.utils:***** skymatch started on 2023-11-28 16:32:27.034248
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>***** skymatch started on 2023-11-17 20:15:37.014075
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>***** skymatch started on 2023-11-28 16:32:27.034248
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:stsci.skypac.utils:      Version 1.0.9
@@ -1626,28 +1585,28 @@ INFO:stsci.skypac.utils:***** skymatch started on 2023-11-17 20:15:37.014075
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:stsci.skypac.utils:***** skymatch ended on 2023-11-17 20:15:40.177360
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:stsci.skypac.utils:***** skymatch ended on 2023-11-28 16:32:29.897107
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>***** skymatch ended on 2023-11-17 20:15:40.177360
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>***** skymatch ended on 2023-11-28 16:32:29.897107
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:stsci.skypac.utils:TOTAL RUN TIME: 0:00:03.163285
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:stsci.skypac.utils:TOTAL RUN TIME: 0:00:02.862859
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TOTAL RUN TIME: 0:00:03.163285
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TOTAL RUN TIME: 0:00:02.862859
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step Subtract Sky finished at 20:15:40.237 (17/11/2023)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step Subtract Sky finished at 16:32:29.95 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 20:15:40.237 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 16:32:29.95 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step  Separate Drizzle  started at  20:15:40.238 (17/11/2023)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step  Separate Drizzle  started at  16:32:29.954 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  20:15:40.238 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  16:32:29.954 (28/11/2023)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:
@@ -1745,7 +1704,7 @@ INFO:drizzlepac.outputimage:-Generating simple FITS output: ica529rmq_single_sci
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-Generating simple FITS output: ica529rmq_single_sci.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:py.warnings:/opt/hostedtoolcache/Python/3.11.6/x64/lib/python3.11/site-packages/astropy/io/fits/card.py:1064: VerifyWarning: Card is too long, comment will be truncated.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:py.warnings:/usr/share/miniconda/lib/python3.11/site-packages/astropy/io/fits/card.py:1064: VerifyWarning: Card is too long, comment will be truncated.
   warnings.warn(
 
 INFO:drizzlepac.outputimage:Writing out image to disk: ica529rmq_single_sci.fits
@@ -1832,16 +1791,16 @@ INFO:drizzlepac.outputimage:-Generating simple FITS output: ica529s6q_single_sci
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ica529s6q_single_wht.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step Separate Drizzle finished at 20:15:41.544 (17/11/2023)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step Separate Drizzle finished at 16:32:30.97 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 20:15:41.544 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 16:32:30.97 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step  Create Median  started at  20:15:41.545 (17/11/2023)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step  Create Median  started at  16:32:30.979 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  20:15:41.545 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  16:32:30.979 (28/11/2023)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:
@@ -1894,16 +1853,16 @@ INFO:drizzlepac.createMedian:reference sky value for image &#39;ica529rmq_flt.fi
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saving output median image to: &#39;ica529030_pcorr_med.fits&#39;
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step Create Median finished at 20:15:41.720 (17/11/2023)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step Create Median finished at 16:32:31.157 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Create Median finished at 20:15:41.720 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Create Median finished at 16:32:31.157 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step  Blot  started at  20:15:41.721 (17/11/2023)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step  Blot  started at  16:32:31.159 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  20:15:41.721 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  16:32:31.159 (28/11/2023)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:
@@ -2018,16 +1977,16 @@ INFO:drizzlepac.outputimage:-Generating simple FITS output: ica529s6q_sci1_blt.f
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: ica529s6q_sci1_blt.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step Blot finished at 20:15:42.525 (17/11/2023)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step Blot finished at 16:32:31.995 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 20:15:42.525 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 16:32:31.995 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step  Driz_CR  started at  20:15:42.526 (17/11/2023)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step  Driz_CR  started at  16:32:31.996 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  20:15:42.526 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  16:32:31.996 (28/11/2023)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:
@@ -2070,16 +2029,16 @@ INFO:drizzlepac.drizCR:Creating output: ica529rmq_sci1_crmask.fits
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Creating output: ica529s6q_sci1_crmask.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step Driz_CR finished at 20:15:42.943 (17/11/2023)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step Driz_CR finished at 16:32:32.459 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Driz_CR finished at 20:15:42.943 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Driz_CR finished at 16:32:32.459 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step  Final Drizzle  started at  20:15:42.944 (17/11/2023)
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:==== Processing Step  Final Drizzle  started at  16:32:32.460 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  20:15:42.944 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  16:32:32.460 (28/11/2023)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:
@@ -2109,6 +2068,7 @@ INFO:drizzlepac.adrizzle:	wcskey :
 INFO:drizzlepac.adrizzle:	wht_type :	EXP
 INFO:drizzlepac.adrizzle:	wt_scl :	exptime
 INFO:drizzlepac.adrizzle:  **Using sub-sampling value of 10 for kernel square
+INFO:drizzlepac.adrizzle:Removing previous output product...
 INFO:drizzlepac.adrizzle:Running Drizzle to create output frame with WCS of: 
 INFO:astropy.wcs.wcs:WCS Keywords
 </pre></div>
@@ -2216,13 +2176,13 @@ INFO:drizzlepac.outputimage:-Generating multi-extension output file:  ica529030_
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out to disk: ica529030_pcorr_drz.fits
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:py.warnings:/opt/hostedtoolcache/Python/3.11.6/x64/lib/python3.11/site-packages/astropy/io/fits/card.py:1064: VerifyWarning: Card is too long, comment will be truncated.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:py.warnings:/usr/share/miniconda/lib/python3.11/site-packages/astropy/io/fits/card.py:1064: VerifyWarning: Card is too long, comment will be truncated.
   warnings.warn(
 
-INFO:drizzlepac.util:==== Processing Step Final Drizzle finished at 20:15:44.498 (17/11/2023)
+INFO:drizzlepac.util:==== Processing Step Final Drizzle finished at 16:32:33.996 (28/11/2023)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Final Drizzle finished at 20:15:44.498 (17/11/2023)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Final Drizzle finished at 16:32:33.996 (28/11/2023)
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.astrodrizzle:
@@ -2231,10 +2191,10 @@ INFO:drizzlepac.util:==== Processing Step Final Drizzle finished at 20:15:44.498
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.astrodrizzle:AstroDrizzle Version 3.5.1 is finished processing at 20:15:44.500 (17/11/2023).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.astrodrizzle:AstroDrizzle Version 3.5.1 is finished processing at 16:32:33.99 (28/11/2023).
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.5.1 is finished processing at 20:15:44.500 (17/11/2023).
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.5.1 is finished processing at 16:32:33.99 (28/11/2023).
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.astrodrizzle:
@@ -2279,52 +2239,52 @@ INFO:drizzlepac.util:==== Processing Step Final Drizzle finished at 20:15:44.498
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:         Initialization          0.5910 sec.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:         Initialization          0.5270 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>         Initialization          0.5910 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>         Initialization          0.5270 sec.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:            Static Mask          0.0788 sec.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:            Static Mask          0.0786 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>            Static Mask          0.0788 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>            Static Mask          0.0786 sec.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:           Subtract Sky          3.2864 sec.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:           Subtract Sky          2.9799 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>           Subtract Sky          3.2864 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>           Subtract Sky          2.9799 sec.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:       Separate Drizzle          1.3056 sec.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:       Separate Drizzle          1.0234 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Separate Drizzle          1.3056 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Separate Drizzle          1.0234 sec.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:          Create Median          0.1749 sec.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:          Create Median          0.1782 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          Create Median          0.1749 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          Create Median          0.1782 sec.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:                   Blot          0.8033 sec.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:                   Blot          0.8363 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                   Blot          0.8033 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                   Blot          0.8363 sec.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:                Driz_CR          0.4171 sec.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:                Driz_CR          0.4631 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                Driz_CR          0.4171 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                Driz_CR          0.4631 sec.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:          Final Drizzle          1.5536 sec.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:          Final Drizzle          1.5354 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          Final Drizzle          1.5536 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>          Final Drizzle          1.5354 sec.
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:   ====================          ====================
@@ -2333,10 +2293,10 @@ INFO:drizzlepac.util:==== Processing Step Final Drizzle finished at 20:15:44.498
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ====================          ====================
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:                  Total          8.2107 sec.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:                  Total          7.6219 sec.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                  Total          8.2107 sec.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                  Total          7.6219 sec.
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:drizzlepac.util:
@@ -2384,7 +2344,7 @@ INFO:drizzlepac.util:Trailer file written to:  astrodrizzle.log
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fca411b4890&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f9b658f1c10&gt;]
 </pre></div>
 </div>
 <img alt="../../../_images/f204caf2be3471f6e2b03eae28e4f2736a0eb7475aaf63d2c706ac3a32620815.png" src="../../../_images/f204caf2be3471f6e2b03eae28e4f2736a0eb7475aaf63d2c706ac3a32620815.png" />
@@ -2419,7 +2379,7 @@ INFO:drizzlepac.util:Trailer file written to:  astrodrizzle.log
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fca28f68e50&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f9b658bfdd0&gt;]
 </pre></div>
 </div>
 <img alt="../../../_images/29f8703d8ac76b97f842df8c76eb4411ce6c42aa0caa39fbbc76838d36fe7f6d.png" src="../../../_images/29f8703d8ac76b97f842df8c76eb4411ce6c42aa0caa39fbbc76838d36fe7f6d.png" />
