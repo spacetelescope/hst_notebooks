@@ -1,0 +1,33 @@
+# This workflow checks notebook html pages deployed to github.io for broken links. If broken links are found, the
+# workflow will fail and report a list of the broken links and the pages that contain them.
+#
+# Inputs
+# website_url : string, optional.
+#   The URL of the website to check. If not specified, the default value is
+#   'https://spacetelescope.github.io/<your repository name here>'. NOTE: In some cases,the default value for
+#   website_url may not result in the workflow search for brokenlinks ONLY on that page. The solution is to explicitly
+#   specifying the full url of the repository's starting page
+#   (e.g. https://spacetelescope.github.io/<your repository name here>/intro.html').
+
+on:
+  workflow_call:
+    inputs:
+      website_url:
+        default: https://spacetelescope.github.io/${{ github.event.repository.name }}
+        description: "The URL of the website to check."
+        required: false
+        type: 'string'
+
+jobs:
+  find_broken_links:
+    runs-on: ubuntu-latest
+    name: Evaluation of ${{ inputs.website_url }} for broken links
+    steps:
+      - name: Broken-Links-Crawler
+        uses: ScholliYT/Broken-Links-Crawler-Action@v3.3.0
+        with:
+          website_url: ${{ inputs.website_url }}
+          resolve_before_filtering: 'true'
+          verbose: 'True'
+          max_retry_time: 30
+          max_retries: 5
