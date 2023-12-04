@@ -533,7 +533,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <p><a id='top'></a></p>
-<section class="tex2jax_ignore mathjax_ignore" id="stis-drizzlepac-tutorial-a-class-tocskip">
+<section id="stis-drizzlepac-tutorial-a-class-tocskip">
 <h1>STIS DrizzlePac Tutorial <a class="tocSkip"><a class="headerlink" href="#stis-drizzlepac-tutorial-a-class-tocskip" title="Permalink to this heading">#</a></h1>
 <p><font color="red">This notebook currently fails to execute, use as reference only</font></p>
 <h1>Table of Contents<span class="tocSkip"></span></h1>
@@ -573,8 +573,8 @@ document.write(`
 <li><p><em>pandas</em> for dataframe storage and manipulation</p></li>
 <li><p><em>matplotlib.pyplot</em> for plotting images</p></li>
 <li><p><em>tempfile TemporaryDirectory</em> for creating temporary storage directories while downloading and sorting data</p></li>
-<li><p><em><a class="reference external" href="http://astropy.io">astropy.io</a> fits</em> for working with FITS files</p></li>
-<li><p><em><a class="reference external" href="http://astropy.io">astropy.io</a> ascii</em> for working with ascii files</p></li>
+<li><p><em>astropy.io fits</em> for working with FITS files</p></li>
+<li><p><em>astropy.io ascii</em> for working with ascii files</p></li>
 <li><p><em>astropy.table Table</em> for creating tidy tables</p></li>
 <li><p><em>astropy.visualization ZScaleInterval</em> for scaling images for display</p></li>
 <li><p><em>stis_cti</em> for CTI correcting STIS data</p></li>
@@ -1554,7 +1554,7 @@ document.write(`
 <h2>Drizzling Images<a class="headerlink" href="#drizzling-images" title="Permalink to this heading">#</a></h2>
 <p>Next, the images for each detector are combined using <code class="docutils literal notranslate"><span class="pre">astrodrizzle</span></code>. The high-level concept behind drizzling images is described in detail in <a class="reference external" href="https://hst-docs.stsci.edu/drizzpac/files/60245881/109774911/1/1642098151920/DrizzlePac_Handbook_v2.pdf">Section 3.2 of the DrizzlePac Handbook</a>.</p>
 <p>Setting the appropriate <code class="docutils literal notranslate"><span class="pre">final_scale</span></code> and <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> parameters for your images takes some thought and testing to avoid gaps in the data. The figure below shows a basic example of the native pixel scale (red squares), shrink factor <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> (blue squares) and output final pixel scale <code class="docutils literal notranslate"><span class="pre">final_scale</span></code> (grid on right) in a drizzle. For more details on the <code class="docutils literal notranslate"><span class="pre">astrodrizzle</span></code> input parameters, see the the <a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/astrodrizzle.html">DrizzlePac code webpages</a>.
-<img src="drizzle.png" alt="Drizzle" style="width: 600px;"/></p>
+<img alt="Drizzle" src="../../../_images/drizzle.png" /></p>
 <p><code class="docutils literal notranslate"><span class="pre">astrodrizzle</span></code> can be used to increase the pixel sampling of data if images have dithering and different position angles (PAs). For the STIS data used here, all images are at the same PA and therefore sub-sampling the data is not possible. The example for the STIS data shown below adopts the native pixel scale of each detector as the <code class="docutils literal notranslate"><span class="pre">final_scale</span></code> and no fractional scaling down of each pixel (<code class="docutils literal notranslate"><span class="pre">final_pixfrac=1.0</span></code>) prior to drizzling. Drizzle in this context is a useful tool for creating mosaics of images aligned with <code class="docutils literal notranslate"><span class="pre">tweakreg</span></code>.</p>
 <p>To ensure that <code class="docutils literal notranslate"><span class="pre">astrodrizzle</span></code> does not apply additional calibrations to the already calibrated STIS data, Steps 1-6 can be ‘switched off’ using the appropriate keywords (see <a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/astrodrizzle.html"><code class="docutils literal notranslate"><span class="pre">astrodrizzle</span></code> webpage</a> for keyword information). The CCD data are already CR-rejected and the MAMA data don’t require this step, therefore many of those first steps (and their associated keywords) are to do with appropriately applying CR-rejection. Therefore the ‘minmed’ warning is not important for the STIS images.</p>
 <p>Only data in a single filter for each detector are combined in this example: 50CCD (CCD), F25SRF2 (NUV MAMA), 25MAMA (FUV MAMA). STIS data have cleaned edges after the distortion correction is applied in the <code class="docutils literal notranslate"><span class="pre">calstis</span></code> pipeline. These are adaptively cropped out with the <code class="docutils literal notranslate"><span class="pre">crop_edges</span></code> function defined below for each image to avoid gaps in the final mosaics.</p>
@@ -1635,7 +1635,7 @@ document.write(`
 <h3>CCD (CTI Corrected) Image Drizzling<a class="headerlink" href="#ccd-cti-corrected-image-drizzling" title="Permalink to this heading">#</a></h3>
 <p>The CCD images are all observed at a common position angle and RA/Dec with small dithers (hence poorer quality edges in the mosaic below). Sub-sampling the images with <code class="docutils literal notranslate"><span class="pre">astrodrizzle</span></code> is not advisable for these programs as reducing the pixel size results in gaps in the data.</p>
 <p>Figure shows the CCD drizzle of NGC 5139 (left) and the individual CCD reference image used for alignment (right).
-<img src="ccd_drz.png" alt="CCD Drizzle" style="width: 600px;"/></p>
+<img alt="CCD Drizzle" src="../../../_images/ccd_drz.png" /></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Drizzling images together</span>
@@ -1695,7 +1695,8 @@ document.write(`
 <h3>NUV MAMA Image Drizzling<a class="headerlink" href="#nuv-mama-image-drizzling" title="Permalink to this heading">#</a></h3>
 <p>The NUV images are all observed at a common position angle with large dithers (hence different image depths in the mosaic below). Sub-sampling the images with <code class="docutils literal notranslate"><span class="pre">astrodrizzle</span></code> is not advisable for these programs as reducing the pixel size results in gaps in the data.</p>
 <p>Figure shows the NUV drizzle of NGC 6681 (left) and the individual NUV reference image used for alignment (right).</p>
-<img src="nuv_drz.png" alt="NUV Drizzle" style="width: 600px;"/><div class="cell docutils container">
+<img alt="NUV Drizzle" src="../../../_images/nuv_drz.png" />
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Drizzling images together</span>
 <span class="c1"># Move into drizzle directory</span>
@@ -1754,7 +1755,7 @@ document.write(`
 <h3>FUV MAMA Image Drizzling<a class="headerlink" href="#fuv-mama-image-drizzling" title="Permalink to this heading">#</a></h3>
 <p>The FUV images are all observed at a common position angle with large dithers (hence different image depths in the mosaic below). Sub-sampling the images with <code class="docutils literal notranslate"><span class="pre">astrodrizzle</span></code> is not advisable for these programs as reducing the pixel size results in gaps in the data.</p>
 <p>Figure shows the FUV drizzle of NGC 6681 (left) and the individual FUV reference image used for alignment (right).
-<img src="fuv_drz.png" alt="FUV Drizzle" style="width: 600px;"/></p>
+<img alt="FUV Drizzle" src="../../../_images/fuv_drz.png" /></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Drizzling images together</span>
@@ -1815,7 +1816,7 @@ document.write(`
 <h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
 <p><strong>Author:</strong> Laura Prichard, Staff Scientist II, STIS Team.</p>
 <p><strong>Written</strong>: 2022-03-22</p>
-<p>For questions on using the DrizzlePac package with STIS data, contact the <a class="reference external" href="https://stsci.service-now.com/hst">HST Help Desk</a> (<a class="reference external" href="mailto:help&#37;&#52;&#48;stsci&#46;edu">help<span>&#64;</span>stsci<span>&#46;</span>edu</a>).</p>
+<p>For questions on using the DrizzlePac package with STIS data, contact the <a class="reference external" href="https://stsci.service-now.com/hst">HST Help Desk</a> (help&#64;stsci.edu).</p>
 </section>
 <section id="citations">
 <h2>Citations<a class="headerlink" href="#citations" title="Permalink to this heading">#</a></h2>
@@ -1827,7 +1828,7 @@ document.write(`
 </ul>
 <hr class="docutils" />
 <p><span class="xref myst">Top of Page</span>
-<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/></p>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
 </section>
 </section>
 

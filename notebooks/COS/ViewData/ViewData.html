@@ -63,8 +63,6 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/COS/ViewData/ViewData';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -613,10 +611,10 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <p><a id="topV"></a></p>
-<section class="tex2jax_ignore mathjax_ignore" id="viewing-cos-data">
+<section id="viewing-cos-data">
 <h1>Viewing COS Data<a class="headerlink" href="#viewing-cos-data" title="Permalink to this heading">#</a></h1>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="learning-goals">
+<section id="learning-goals">
 <h1>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h1>
 <p><font size="4 ">This Notebook is designed to walk the user (<em>you</em>) through:</font><br></p>
 <p><strong>0. <span class="xref myst">Introduction</span></strong></p>
@@ -668,7 +666,7 @@ document.write(`
 <p><em>If you’re confident with Reading-in and Plotting data in <code class="docutils literal notranslate"><span class="pre">Python</span></code>, you may run the first few cells defining directories and importing modules and then click the link when it appears to go ahead and skip to <span class="xref myst">Section 3</span></em></p>
 <p><a id=introV></a></p>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="introduction">
+<section id="introduction">
 <h1>0. Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h1>
 <p><strong>The Cosmic Origins Spectrograph (<a class="reference external" href="https://www.nasa.gov/content/hubble-space-telescope-cosmic-origins-spectrograph"><em>COS</em></a>) is an ultraviolet spectrograph on-board the Hubble Space Telescope (<a class="reference external" href="https://www.stsci.edu/hst/about"><em>HST</em></a>) with capabilities in the near ultraviolet (<em>NUV</em>) and far ultraviolet (<em>FUV</em>).</strong></p>
 <p><strong>This tutorial aims to prepare you to begin analyzing COS data of your choice by walking you through reading and viewing a spectrum obtained with COS, as well as obtaining a few diagnostic measurements of your spectrum.</strong></p>
@@ -780,7 +778,7 @@ document.write(`
 </ul>
 <p><font size="4"> We will import the following packages:</font></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> to handle array functions (version <span class="math notranslate nohighlight">\(\ge\)</span> 1.17)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> to handle array functions (version $\ge$ 1.17)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pathlib</span></code> for managing system paths.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">astropy.io</span> <span class="pre">fits</span></code> for accessing FITS files</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">astropy.table</span> <span class="pre">Table</span></code> for creating tidy tables of the data</p></li>
@@ -878,7 +876,7 @@ Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/produ
 </section>
 </section>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="reading-in-the-data">
+<section id="reading-in-the-data">
 <h1>1. Reading in the data<a class="headerlink" href="#reading-in-the-data" title="Permalink to this heading">#</a></h1>
 <p>Calibrated COS 1-dimensional spectra are stored in FITS files with the suffix <code class="docutils literal notranslate"><span class="pre">x1d</span></code> or <code class="docutils literal notranslate"><span class="pre">x1dsum</span></code> (<em>1-dimensional here means that the cross-dispersion axis has been collapsed</em>).
 <code class="docutils literal notranslate"><span class="pre">x1d</span></code> files contain a spectrum processed from a single exposure, while <code class="docutils literal notranslate"><span class="pre">x1dsum</span></code> files contain summed data from multiple exposures at different fixed pattern noise position settings (FP-POS). You may also encounter <code class="docutils literal notranslate"><span class="pre">x1dsumN</span></code> files, i.e. <code class="docutils literal notranslate"><span class="pre">x1dsum1</span></code>/<code class="docutils literal notranslate"><span class="pre">x1dsum2</span></code>/<code class="docutils literal notranslate"><span class="pre">x1dsum3</span></code>/<code class="docutils literal notranslate"><span class="pre">x1dsum4</span></code>, which are intermediate files containing data from multiple exposures at the same FP-POS. All of these files are sub-types of <code class="docutils literal notranslate"><span class="pre">x1d</span></code> files and thus share the same basic data structure. What you learn with one filetype is transferable to working with another.
@@ -1036,8 +1034,8 @@ This NUV data was taken on 2009-08-14 starting at 06:03:56 with a net exposure t
 <p>The data are in the 1-th header-data unit (HDU) of our FITS file. There are several ways to read in our data from the our table-formatted FITS file. We’ll demonstrate three common methods below, focusing in on the <a class="reference external" href="https://docs.astropy.org/en/stable/io/unified.html#getting-started-with-table-i-o"><code class="docutils literal notranslate"><span class="pre">astropy.table</span></code></a> method.
 We will then display all the fields contained in this data table using the <code class="docutils literal notranslate"><span class="pre">.colnames</span></code> method. You can ignore the warnings about multiple slashes in the units that come up while reading in the data. The proper units are displayed in LaTex as:</p>
 <ul class="simple">
-<li><p>‘erg /s /cm**2 /angstrom’  ==&gt; $<span class="math notranslate nohighlight">\(\ \ erg\ s^{-1}\ cm^{-2}\ \mathring{A}^{-1}\)</span>$</p></li>
-<li><p>‘count /s /pixel’          ==&gt; $<span class="math notranslate nohighlight">\(\ \ counts\ s^{-1}\ pixel^{-1}\)</span>$</p></li>
+<li><p>‘erg /s /cm**2 /angstrom’  ==&gt; $$\ \ erg\ s^{-1}\ cm^{-2}\ \mathring{A}^{-1}$$</p></li>
+<li><p>‘count /s /pixel’          ==&gt; $$\ \ counts\ s^{-1}\ pixel^{-1}$$</p></li>
 </ul>
 <p>The columns of these tables include some scalar values which <em>describe</em> the data (i.e. <code class="docutils literal notranslate"><span class="pre">EXPTIME</span></code>), while the columns containing actual data hold it in arrays of equal length (i.e. <code class="docutils literal notranslate"><span class="pre">WAVELENGTH</span></code>, <code class="docutils literal notranslate"><span class="pre">FLUX</span></code>, etc., where that length = <code class="docutils literal notranslate"><span class="pre">NELEM</span></code>).</p>
 <div class="cell docutils container">
@@ -1162,7 +1160,7 @@ None
 </section>
 </section>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="plotting-the-data">
+<section id="plotting-the-data">
 <h1>2. Plotting the Data<a class="headerlink" href="#plotting-the-data" title="Permalink to this heading">#</a></h1>
 <p><a id = plotdataFUV></a></p>
 <section id="plotting-an-fuv-spectrum">
@@ -1414,12 +1412,11 @@ None
 <img alt="../../../_images/a8ba4dc5e22ab90ac47c30d02793a896af6dc4656682ca6de1deb7883f1be9ab.png" src="../../../_images/a8ba4dc5e22ab90ac47c30d02793a896af6dc4656682ca6de1deb7883f1be9ab.png" />
 </div>
 </div>
-<p>The source we’re looking at - the quasar 3C48 has a substantial redshift: $<span class="math notranslate nohighlight">\(z \approx 0.37\)</span>$</p>
+<p>The source we’re looking at - the quasar 3C48 has a substantial redshift: $$z \approx 0.37$$</p>
 <p>Source: <a class="reference external" href="http://simbad.u-strasbg.fr/simbad/sim-basic?Ident=3c48&amp;submit=SIMBAD+search">Simbad search for 3C48</a></p>
 <p>With that redshift, we can determine the rest-frame wavelength.</p>
-<div class="math notranslate nohighlight">
-\[z = \dfrac{\lambda_{obs}-\lambda_{rest}}{\lambda_{rest}} \ \ \rightarrow\ \ \ \lambda_{rest} = \dfrac{\lambda_{obs}}{1+z}\]</div>
-<p>At that redshift, we see this line to be <span class="math notranslate nohighlight">\(\approx 1219\)</span> Å. This is close to, and may correspond to, the Lyman-<span class="math notranslate nohighlight">\(\alpha\)</span> transition.</p>
+<p>$$z = \dfrac{\lambda_{obs}-\lambda_{rest}}{\lambda_{rest}} \ \ \rightarrow\ \ \ \lambda_{rest} = \dfrac{\lambda_{obs}}{1+z}$$</p>
+<p>At that redshift, we see this line to be $\approx 1219$ Å. This is close to, and may correspond to, the Lyman-$\alpha$ transition.</p>
 <p><font size="4"><b>Now we will create a much more complex plot,</b></font> <font size="3">allowing us to visualize an entire segment’s spectrum in fine detail</font></p>
 <p>We’ll split the spectrum into “segments” of ~10 Angstroms, and plot these segments in a vertical series. These plots may take a minute to create. If you want them to run quicker, hit the <code class="docutils literal notranslate"><span class="pre">Interrupt</span> <span class="pre">the</span> <span class="pre">Kernel</span></code> square-shaped button to stop the current cell from running (you will get an error message), and run this cell with a smaller number of rows (<code class="docutils literal notranslate"><span class="pre">nRows</span></code>).
 <a id="fig2p4V"></a></p>
@@ -1518,7 +1515,7 @@ None
 <section id="reading-and-plotting-the-data-with-specutils-optional">
 <h3>2.1.4. Reading and plotting the data with <code class="docutils literal notranslate"><span class="pre">specutils</span></code> (<em>OPTIONAL</em>)<a class="headerlink" href="#reading-and-plotting-the-data-with-specutils-optional" title="Permalink to this heading">#</a></h3>
 <p><font size="4.5"> <em>Note, this section is entirely optional, and simply meant to give you more options for how to plot a spectrum.</em></font></p>
-<p>An alternative way to read in and work with spectral data is with the <a class="reference external" href="https://specutils.readthedocs.io/en/stable/"><code class="docutils literal notranslate"><span class="pre">specutils</span></code> package</a>, which contains <em>quite a bit of functionality</em> for working with spectra. It also can make dealing with units easier, as it generally works well with astropy units and other modules. Make sure that your package is up to date (version <span class="math notranslate nohighlight">\(\ge\)</span> 1.1). We describe installing <code class="docutils literal notranslate"><span class="pre">specutils</span></code> in our <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/blob/main/notebooks/COS/Setup/Setup.ipynb">Notebook on setting up an environment</a>.</p>
+<p>An alternative way to read in and work with spectral data is with the <a class="reference external" href="https://specutils.readthedocs.io/en/stable/"><code class="docutils literal notranslate"><span class="pre">specutils</span></code> package</a>, which contains <em>quite a bit of functionality</em> for working with spectra. It also can make dealing with units easier, as it generally works well with astropy units and other modules. Make sure that your package is up to date (version $\ge$ 1.1). We describe installing <code class="docutils literal notranslate"><span class="pre">specutils</span></code> in our <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/blob/main/notebooks/COS/Setup/Setup.ipynb">Notebook on setting up an environment</a>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">specutils</span></code> treats spectra as special python objects rather than lists, and reads in the entire spectrum over both segments.</p>
 <p>Below is a simple example of using <code class="docutils literal notranslate"><span class="pre">specutils</span></code> to read-in, plot, and continuum-normalize our entire spectrum.</p>
 <div class="cell docutils container">
@@ -1784,7 +1781,7 @@ WARNING: UnitsWarning: &#39;count /s /pixel&#39; contains multiple slashes, whic
 </section>
 </section>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="preliminary-review-of-the-data">
+<section id="preliminary-review-of-the-data">
 <h1>3. Preliminary Review of the Data<a class="headerlink" href="#preliminary-review-of-the-data" title="Permalink to this heading">#</a></h1>
 <p><font size="4"><b>There is no one-size-fits-all approach to analyzing COS data.</b></font></p>
 <p>This section aims to walk you through taking a brief critical look at your data by taking the first steps of <a class="reference external" href="https://en.wikipedia.org/wiki/Data_binning">binning</a> the data, (to the size of COS’ resolution elements - called <a class="reference external" href="https://hst-docs.stsci.edu/cosihb/chapter-3-description-and-performance-of-the-cos-optics/3-2-size-of-a-resolution-element">resels</a>), and then measuring the Signal-to-Noise Ratio (<a class="reference external" href="https://en.wikipedia.org/wiki/Signal-to-noise_ratio">SNR</a>).</p>
@@ -1928,7 +1925,7 @@ These zeros are regions on the active area of the detector which don’t receive
 <img alt="../../../_images/14ed4f53e575d0cc30baf6c823b0eb73174f9dcad1e06ad1e3e029b5bc6a7895.png" src="../../../_images/14ed4f53e575d0cc30baf6c823b0eb73174f9dcad1e06ad1e3e029b5bc6a7895.png" />
 </div>
 </div>
-<p>When the data is processed through <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>, it has a summed set of “Serious Data Quality” <a class="reference external" href="https://hst-docs.stsci.edu/cosdhb/chapter-3-cos-calibration/3-4-descriptions-of-spectroscopic-calibration-steps">SDQ</a> flags attached to it in the form of a single integer between 0 and <span class="math notranslate nohighlight">\(2^{15}\)</span>. This value is found in the 1-th header as <code class="docutils literal notranslate"><span class="pre">&quot;SDQFLAGS&quot;</span></code>. This can be decomposed into the powers of 2 data flags above, (by showing its binary representation,) and tells the pipeline whether to weight that pixel in that exposure by 0 or 1. These weights are then stored in the <code class="docutils literal notranslate"><span class="pre">x1d</span></code> and <code class="docutils literal notranslate"><span class="pre">x1dsum</span></code> files, in the <code class="docutils literal notranslate"><span class="pre">&quot;DQ_WGT&quot;</span></code> column. The <code class="docutils literal notranslate"><span class="pre">&quot;DQ_WGT&quot;</span></code> value for a given pixel in the <code class="docutils literal notranslate"><span class="pre">x1dsum</span></code> file will then be equal to the number of exposures which went into creating that <code class="docutils literal notranslate"><span class="pre">x1dsum</span></code> file in which no serious data quality flags apply to that pixel.</p>
+<p>When the data is processed through <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>, it has a summed set of “Serious Data Quality” <a class="reference external" href="https://hst-docs.stsci.edu/cosdhb/chapter-3-cos-calibration/3-4-descriptions-of-spectroscopic-calibration-steps">SDQ</a> flags attached to it in the form of a single integer between 0 and $2^{15}$. This value is found in the 1-th header as <code class="docutils literal notranslate"><span class="pre">&quot;SDQFLAGS&quot;</span></code>. This can be decomposed into the powers of 2 data flags above, (by showing its binary representation,) and tells the pipeline whether to weight that pixel in that exposure by 0 or 1. These weights are then stored in the <code class="docutils literal notranslate"><span class="pre">x1d</span></code> and <code class="docutils literal notranslate"><span class="pre">x1dsum</span></code> files, in the <code class="docutils literal notranslate"><span class="pre">&quot;DQ_WGT&quot;</span></code> column. The <code class="docutils literal notranslate"><span class="pre">&quot;DQ_WGT&quot;</span></code> value for a given pixel in the <code class="docutils literal notranslate"><span class="pre">x1dsum</span></code> file will then be equal to the number of exposures which went into creating that <code class="docutils literal notranslate"><span class="pre">x1dsum</span></code> file in which no serious data quality flags apply to that pixel.</p>
 <p>Below, we first see <em>which</em> data quality flags the pipeline considered “serious”, and then demonstrate masking out the datapoints assigned a weight of 0.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2124,7 +2121,7 @@ bin_by_resel(data_table, binsize=6, weighted=True, verbose=True)
 </section>
 <section id="binning-the-fuv-data">
 <h3>3.2.2. Binning the FUV Data<a class="headerlink" href="#binning-the-fuv-data" title="Permalink to this heading">#</a></h3>
-<p><strong>Below we bin our FUV data by 6. Our resulting table is just under <span class="math notranslate nohighlight">\(\dfrac{1}{6}\)</span> the size of our input table, as a few of the last datapoints were cropped.</strong></p>
+<p><strong>Below we bin our FUV data by 6. Our resulting table is just under $\dfrac{1}{6}$ the size of our input table, as a few of the last datapoints were cropped.</strong></p>
 <p><em>Note</em>, this binning method works well for binsizes which are small compared to the spectrum; however, if you increase your binsize significantly, you may lose important datapoints.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2168,14 +2165,12 @@ Binned Dataset Length is 2730
 <section id="bringing-in-a-useful-function-for-estimating-snr">
 <h3>3.3.1.  Bringing in a Useful Function for Estimating SNR<a class="headerlink" href="#bringing-in-a-useful-function-for-estimating-snr" title="Permalink to this heading">#</a></h3>
 <p>Below, we define a function to estimate the Signal-to-Noise ratio (SNR or S/N) of our data. One way to estimate the SNR for photon-counting instruments like COS is by the square-root of their number of gross counts. This is a simplification of the equation given for point sources in the <a class="reference external" href="https://hst-docs.stsci.edu/cosihb/chapter-7-exposure-time-calculator-etc/7-3-sensitivity-count-rate-and-signal-to-noise">COS Instrument Handbook Section 7.3</a>:</p>
-<div class="math notranslate nohighlight">
-\[\dfrac{Signal}{Noise} = \dfrac{C \times t}{\sqrt{C \times t + N_{pix} \times (B_{sky} + B_{det}) \times t}}\]</div>
-<p>For bright point sources, <span class="math notranslate nohighlight">\(C &gt;&gt; B_{sky} + B_{det}\)</span>, and this approaches the simpler:</p>
-<div class="math notranslate nohighlight">
-\[\dfrac{Signal}{Noise} = \sqrt{C \times t} = \sqrt{Gross\ Counts}\]</div>
+<p>$$\dfrac{Signal}{Noise} = \dfrac{C \times t}{\sqrt{C \times t + N_{pix} \times (B_{sky} + B_{det}) \times t}}$$</p>
+<p>For bright point sources, $C &gt;&gt; B_{sky} + B_{det}$, and this approaches the simpler:</p>
+<p>$$\dfrac{Signal}{Noise} = \sqrt{C \times t} = \sqrt{Gross\ Counts}$$</p>
 <p><font size="5">Caution!</font></p>
 <!-- <img src=figures/warning.png width ="60" title="CAUTION!"> -->
-<p><img alt="CAUTION!" src="../../../_images/warning.png" /></p>
+<p><img alt="CAUTION!" src="../../../_images/warning3.png" /></p>
 <p>This simplification may not hold very well if your source is diffuse or faint.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2207,7 +2202,7 @@ estimate_snr(data_table, snr_range=[-1, -1], bin_data_first=False, binsize_=6, w
 </div>
 </div>
 </div>
-<p><strong>The function <code class="docutils literal notranslate"><span class="pre">estimate_snr</span></code> gives a <span class="math notranslate nohighlight">\(\sqrt{Gross\ Counts}\)</span> estimate of SNR for an input <code class="docutils literal notranslate"><span class="pre">Astropy</span></code> Table of COS data.</strong></p>
+<p><strong>The function <code class="docutils literal notranslate"><span class="pre">estimate_snr</span></code> gives a $\sqrt{Gross\ Counts}$ estimate of SNR for an input <code class="docutils literal notranslate"><span class="pre">Astropy</span></code> Table of COS data.</strong></p>
 <p>By default, it does not bin the data before calculating the SNR, nor does it weight the output SNR by exposure time; however, it has the functionality to do both. In most cases, a range should be specified over which to calculate the SNR. If no range is specified, then SNR will be computed for all Resels, but no mean/weighted average will be computed; instead, -1 will be returned in place of the mean.</p>
 <p><a id = snrregV></a></p>
 </section>
@@ -2370,7 +2365,7 @@ authors. Follow these links for more information about citations:</p>
 </ul>
 <hr class="docutils" />
 <p><span class="xref myst">Top of Page</span>
-<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/></p>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
 </section>
 <section id="exercise-solutions">
 <h2>Exercise Solutions:<a class="headerlink" href="#exercise-solutions" title="Permalink to this heading">#</a></h2>

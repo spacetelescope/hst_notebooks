@@ -63,8 +63,6 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/COS/CalCOS/CalCOS';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -583,10 +581,10 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <p><a id="topC"></a></p>
-<section class="tex2jax_ignore mathjax_ignore" id="running-the-cos-data-pipeline-calcos">
+<section id="running-the-cos-data-pipeline-calcos">
 <h1>Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)<a class="headerlink" href="#running-the-cos-data-pipeline-calcos" title="Permalink to this heading">#</a></h1>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="learning-goals">
+<section id="learning-goals">
 <h1>Learning Goals:<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h1>
 <p><font size="4 "> This Notebook is designed to walk the user (<em>you</em>) through:</font></p>
 <p><strong>1. <span class="xref myst">Setting up the Environment to Run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></span></strong></p>
@@ -605,7 +603,7 @@ document.write(`
 <p>- 4.2. <span class="xref myst">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a Specific Set of Switches</span></p>
 <p>- 4.3. <span class="xref myst">Running <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with a Different Reference File</span></p>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="introduction">
+<section id="introduction">
 <h1>0. Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h1>
 <p><strong>The Cosmic Origins Spectrograph (<a class="reference external" href="https://www.nasa.gov/content/hubble-space-telescope-cosmic-origins-spectrograph"><em>COS</em></a>) is an ultraviolet spectrograph on-board the Hubble Space Telescope (<a class="reference external" href="https://www.stsci.edu/hst/about"><em>HST</em></a>) with capabilities in the near ultraviolet (<em>NUV</em>) and far ultraviolet (<em>FUV</em>).</strong></p>
 <p><strong><code class="docutils literal notranslate"><span class="pre">CalCOS</span></code></strong> is the data processing pipeline which converts the raw data produced by COS’s detectors onboard HST into usable spectral data. It transforms the data from a list of many individual recorded photon interactions into tables of wavelength and flux.</p>
@@ -623,7 +621,7 @@ document.write(`
 <p><a id = setupC></a></p>
 </section>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="setting-up-the-environment-to-run-calcos">
+<section id="setting-up-the-environment-to-run-calcos">
 <h1>1. Setting up the Environment to Run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#setting-up-the-environment-to-run-calcos" title="Permalink to this heading">#</a></h1>
 <p>The first step to processing your data is setting up an environment from which to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>.
 <a id = prereqC></a></p>
@@ -678,7 +676,7 @@ base                     /usr/share/miniconda
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">calcos</span></code> to run the COS data pipeline</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">astroquery.mast</span> <span class="pre">Mast</span> <span class="pre">and</span> <span class="pre">Observations</span></code> for finding and downloading data from the <a class="reference external" href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST</a> archive</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> to handle array functions (version <span class="math notranslate nohighlight">\(\ge\)</span> 1.17)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> to handle array functions (version $\ge$ 1.17)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">astropy.io</span> <span class="pre">fits</span></code> for accessing FITS files</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">astropy.table</span> <span class="pre">Table</span></code> for creating and reading organized tables of the data</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> for plotting data</p></li>
@@ -776,7 +774,7 @@ base                     /usr/share/miniconda
 <p><a id = gatherC></a></p>
 </section>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="gathering-the-data-to-run-calcos">
+<section id="gathering-the-data-to-run-calcos">
 <h1>2. Gathering the Data to Run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#gathering-the-data-to-run-calcos" title="Permalink to this heading">#</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> pipeline can be run either from a <code class="docutils literal notranslate"><span class="pre">Python</span></code> environment, or directly from a Unix-style command line. The two use the same underlying machinery but can differ in syntax. For specifics on the keywords to run <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code> with specific behaviors and arguments, see <a class="reference external" href="https://hst-docs.stsci.edu/cosdhb/chapter-3-cos-calibration/3-6-customizing-cos-data-calibration#:~:text=Table%203.2%3A%20Arguments%20for%20Running%20calcos%20in%20Python">Table 3.2: Arguments for Running CalCOS in Python</a> and <a class="reference external" href="https://hst-docs.stsci.edu/cosdhb/chapter-3-cos-calibration/3-6-customizing-cos-data-calibration#:~:text=Table%203.3%3A%20Command%2Dline%20Options%20for%20Running%20calcos%20in%20Unix/Linux/Mac.">Table 3.3: Command-line Options for Running CalCOS in Unix/Linux/Mac</a>.</p>
 <p><a id = datadlC></a></p>
@@ -901,7 +899,7 @@ To determine which reference files were used most recently by STScI to calibrate
 <p><a id=skipcellC></a></p>
 <p><font size="4 "> If you have not yet downloaded the reference files, you will need to do so, as shown below:</font></p>
 <p><font size="4 ">Caution!</font></p>
-<img src= ./figures/warning.png width ="60" title="CAUTION!" alt="A warning symbol. Watch out!"> 
+<a class="reference internal image-reference" href="../../../_images/warning.png"><img alt="A warning symbol. Watch out!" src="../../../_images/warning.png" style="width: 60px;" /></a>
 <p><em>Note</em> that as of the time of this Notebook’s update, the pipeline context used below was <strong><code class="docutils literal notranslate"><span class="pre">hst_1071.pmap</span></code></strong>, but this changes over time. You are running this in the future, and there is certainly a newer context you would be better off working with. Take a minute to consider this, and check the <a class="reference external" href="http://hst-crds.stsci.edu/">HST Calibration Reference Data System webpage</a> to determine what the <strong>current operational pmap file</strong> is.</p>
 <p>Unless we are connected to the STScI network, or already have the reference files on our machine, we will need to download the reference files and tell the pipeline where to look for the flat files, bad-pixel files, etc.</p>
 <p>The process in the following two cells can take a long time and strain network resources. If you have already downloaded up-to-date COS reference files, we recommend that you avoid doing so again. Instead, keep these <code class="docutils literal notranslate"><span class="pre">crds</span></code> files in an accessible location, and point an environment variable <code class="docutils literal notranslate"><span class="pre">lref</span></code> to this directory. For instance, if your <code class="docutils literal notranslate"><span class="pre">lref</span></code> files are on your home directory in a subdirectory called <code class="docutils literal notranslate"><span class="pre">crds_cache</span></code>, give Jupyter the following command:</p>
@@ -1001,7 +999,7 @@ Line 173:   	 CRDS - INFO -  169 infos
 <p><a id = runC></a></p>
 </section>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="processing-raw-cos-data-using-calcos">
+<section id="processing-raw-cos-data-using-calcos">
 <h1>3. Processing Raw COS Data Using <code class="docutils literal notranslate"><span class="pre">CalCOS</span></code><a class="headerlink" href="#processing-raw-cos-data-using-calcos" title="Permalink to this heading">#</a></h1>
 <p><strong>Now we have all the reference files we need to run the CalCOS pipeline on our data.</strong></p>
 <p>This following cells which run the pipeline can take a while, sometimes more than <strong>10 minutes!</strong></p>
@@ -1100,7 +1098,7 @@ Line 2360:   	 elapsed time = 114.5 sec. = 1.91 min.
 <p><a id = rerunC></a></p>
 </section>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="re-processing-cos-data-with-altered-parameters">
+<section id="re-processing-cos-data-with-altered-parameters">
 <h1>4. Re-processing COS Data with Altered Parameters<a class="headerlink" href="#re-processing-cos-data-with-altered-parameters" title="Permalink to this heading">#</a></h1>
 <p><a id = alterswitchC></a></p>
 <section id="altering-the-calibration-switches">
@@ -1522,7 +1520,7 @@ authors. Follow these links for more information about citations:</p>
 </ul>
 <hr class="docutils" />
 <p><span class="xref myst">Top of Page</span>
-<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/></p>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
 <p><br></br>
 <br></br>
 <br></br></p>

@@ -63,8 +63,6 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/ACS/acs_cte_forward_model/acs_cte_forward_model_example';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -568,7 +566,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <p><a id="title_ID"></a></p>
-<section class="tex2jax_ignore mathjax_ignore" id="pixel-based-acs-wfc-cte-forward-model">
+<section id="pixel-based-acs-wfc-cte-forward-model">
 <h1>Pixel-based ACS/WFC CTE Forward Model<a class="headerlink" href="#pixel-based-acs-wfc-cte-forward-model" title="Permalink to this heading">#</a></h1>
 <p>This notebook demonstrates preparing data for input into the ACS/WFC pixel-based CTE forward model and running the model.</p>
 <section id="table-of-contents">
@@ -631,7 +629,7 @@ document.write(`
 <li><p><em>collections OrderedDict</em> for making dictionaries easily</p></li>
 <li><p><em>matplotlib pyplot</em> for plotting</p></li>
 <li><p><em>matplotlib.colors LogNorm</em> for scaling images</p></li>
-<li><p><em><a class="reference external" href="http://astropy.io">astropy.io</a> fits</em> for working with FITS files</p></li>
+<li><p><em>astropy.io fits</em> for working with FITS files</p></li>
 <li><p><em>photutils datasets</em> for creating synthetic stars and images</p></li>
 <li><p><em>astroquery.mast Observations</em> for downloading data from MAST</p></li>
 <li><p><em>acstools acsccd</em> for performing bias correction</p></li>
@@ -767,7 +765,7 @@ document.write(`
 <p>We will need an image containing artificial stars on zero background for both options presented below. Artificial stars are typically generated using models that do not include the flat field, or are produced from data that have been flat-fielded. If this is the case, artificial stars should be added to the image at the <code class="docutils literal notranslate"><span class="pre">flc</span></code> stage.</p>
 <p>Users of this notebook may have a preferred method for generating artificial stars and adding them to data, so here we simply add several Gaussians to the image using utilities within <code class="docutils literal notranslate"><span class="pre">photutils.datasets</span></code> in <code class="docutils literal notranslate"><span class="pre">astropy</span></code>. These Gaussians are not representative of the true ACS/WFC PSF, and are added here for illustrative purposes only. Please note that artificial sources with peak values approaching or exceeding the WFC CCD full well value of about 80,000 electrons are not recommended for simulated data. Blooming of charge from saturated pixels is not implemented in this example.</p>
 <p>There are many tools for generating artificial stars, including <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/focus-and-pointing/focus/tiny-tim-hst-psf-modeling">Tiny Tim</a>, <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr0601.pdf">effective PSFs</a>, or <a class="reference external" href="https://photutils.readthedocs.io/en/stable/epsf.html"><code class="docutils literal notranslate"><span class="pre">EPSFBuilder</span></code></a> in <code class="docutils literal notranslate"><span class="pre">photutils</span></code>. A recent study of PSF models for ACS/WFC can be found <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr1708.pdf">here</a>.</p>
-<p>First, we generate a table of random Gaussian sources of typical brightness for our 47 Tuc field with <span class="math notranslate nohighlight">\(\mathrm{FWHM}\sim2.5\)</span> pixels. Because <span class="math notranslate nohighlight">\(\mathrm{FWHM} = 2.355\sigma\)</span>, we will generate Gaussian sources with <span class="math notranslate nohighlight">\(\sigma \sim 1.06\)</span> pixels in both <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>.</p>
+<p>First, we generate a table of random Gaussian sources of typical brightness for our 47 Tuc field with $\mathrm{FWHM}\sim2.5$ pixels. Because $\mathrm{FWHM} = 2.355\sigma$, we will generate Gaussian sources with $\sigma \sim 1.06$ pixels in both $x$ and $y$.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_sources</span> <span class="o">=</span> <span class="mi">300</span>
@@ -940,8 +938,8 @@ document.write(`
 </div>
 </div>
 <p>After the forward model is run, the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extensions of the image are equivalent to a <code class="docutils literal notranslate"><span class="pre">blv_tmp</span></code> file, in principle. However, the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions are the original <code class="docutils literal notranslate"><span class="pre">flc</span></code> <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions plus 10% of the forward model correction. To ensure the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions are accurate for a <code class="docutils literal notranslate"><span class="pre">blv_tmp</span></code> file, we will set every pixel to zero and calculate new values for each pixel according to</p>
-<p><span class="math notranslate nohighlight">\(\mathrm{ERR} = \sqrt{\mathrm{SCI} + \mathrm{RN}^2 + (\mathrm{ERR}_{\mathrm{superbias}}g)^2}\)</span>,</p>
-<p>where <span class="math notranslate nohighlight">\(\mathrm{SCI}\)</span> is the pixel value in the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extension (all negative pixels are set to zero), <span class="math notranslate nohighlight">\(\mathrm{RN}\)</span> is the readnoise, <span class="math notranslate nohighlight">\(\mathrm{ERR}_{\mathrm{superbias}}\)</span> is the pixel value in the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extension of the superbias, and <span class="math notranslate nohighlight">\(g\)</span> is the gain.</p>
+<p>$\mathrm{ERR} = \sqrt{\mathrm{SCI} + \mathrm{RN}^2 + (\mathrm{ERR}_{\mathrm{superbias}}g)^2}$,</p>
+<p>where $\mathrm{SCI}$ is the pixel value in the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extension (all negative pixels are set to zero), $\mathrm{RN}$ is the readnoise, $\mathrm{ERR}_{\mathrm{superbias}}$ is the pixel value in the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extension of the superbias, and $g$ is the gain.</p>
 <p>First, we access the header and <code class="docutils literal notranslate"><span class="pre">SCI</span></code> and <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions of the forward-modeled data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1245,8 +1243,8 @@ document.write(`
 </div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extensions of this image are now equivalent to a <code class="docutils literal notranslate"><span class="pre">blv_tmp</span></code> file, in principle. However, the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions are the original <code class="docutils literal notranslate"><span class="pre">blv_tmp</span></code> <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions plus 10% of the forward model correction. To ensure the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions are accurate, we will calculate new values for each pixel according to</p>
-<p><span class="math notranslate nohighlight">\(\mathrm{ERR} = \sqrt{\mathrm{SCI} + \mathrm{RN}^2 + (\mathrm{ERR}_{\mathrm{superbias}}g)^2}\)</span>,</p>
-<p>where <span class="math notranslate nohighlight">\(\mathrm{SCI}\)</span> is the pixel value in the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extension (all negative pixels are set to zero), <span class="math notranslate nohighlight">\(\mathrm{RN}\)</span> is the readnoise, <span class="math notranslate nohighlight">\(\mathrm{ERR}_{\mathrm{superbias}}\)</span> is the pixel value in the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extension of the superbias, and <span class="math notranslate nohighlight">\(g\)</span> is the gain.</p>
+<p>$\mathrm{ERR} = \sqrt{\mathrm{SCI} + \mathrm{RN}^2 + (\mathrm{ERR}_{\mathrm{superbias}}g)^2}$,</p>
+<p>where $\mathrm{SCI}$ is the pixel value in the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extension (all negative pixels are set to zero), $\mathrm{RN}$ is the readnoise, $\mathrm{ERR}_{\mathrm{superbias}}$ is the pixel value in the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extension of the superbias, and $g$ is the gain.</p>
 <p>First, we access the header and <code class="docutils literal notranslate"><span class="pre">SCI</span></code> and <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions of the forward-modeled data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1455,7 +1453,7 @@ document.write(`
 <strong>Updated On:</strong> 04/21/2022</p>
 <hr class="docutils" />
 <p><span class="xref myst">Top of Page</span>
-<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a>
 <br></br>
 <br></br></p>
 </section>
