@@ -8,9 +8,11 @@ By the end of this tutorial, you will:
 
 Dependencies: 
 
-The environment from [WFC3 Library's](https://github.com/spacetelescope/WFC3Library) installation instructions contains the packages you need. However if you would like to run this notebook from a different environment, then refer to the instructions below:
+Install the necessary packages using the requirements.txt:
 
-Two astropy packages must be installed in your conda environment before downloading the data. To do this, type the following command in the terminal before starting the notebook:
+    pip install -r requirements.txt
 
-    conda install -c astropy astroquery ccdproc
+If necessary, also install `jupyter notebook`:
+
+    pip install notebook
 
