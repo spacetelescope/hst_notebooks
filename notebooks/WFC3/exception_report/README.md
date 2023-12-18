@@ -3,19 +3,22 @@ when an observer receives a WFC3 Exception Report Email.
 
 This directory, once downloaded, should contain this README.md, the tutorial
 Jupyter Notebook `wfc3_exception_report.ipynb`, an `html` copy of the notebook,
-and a subdirectory titled `docs`. The subdirectory should contain two `.py`
-files, one `.png`, and one `.gif` file that are used in the notebook.
+a `requirements.txt` file, and a subdirectory titled `docs`. The subdirectory 
+should contain two `.py` files, one `.png`, and one `.gif` file that are used
+in the notebook.
 
-In order to run this Jupyter Notebook, you must have created a virtual
-environment, such as the one in [WFC3 Library's](https://github.com/spacetelescope/WFC3Library) installation instructions. If
-you are using the `wfc3_env` environment from the `wfc3_env_legacy.yml` file in the
-WFC3Library repository, then you should not need any other packages to run this
-notebook.
+To run this Jupyter Notebook, you must have created a virtual environment
+that contains (at minimum) the packages listed in the `requirements.txt` file
+that is included within the repository. We recommend creating a new conda 
+environment using the requirements file: 
 
+  `$ conda create -n except_report python=3.11` <br>
+  `$ conda activate except_report` <br>
+  `$ pip install -r requirements.txt`<br>
+  
 Optional Note: The tools in this notebook (specifically display_image) look much
 better in Jupyter Lab rather than in the classic Jupyter Notebook. If your
 environment has Jupyter Lab installed it's recommended you use that to run the
-.ipynb file. If you're interested in adding Jupyter Lab to your environment see
-the install instructions on the [Jupyter website](https://jupyter.org/install).
+.ipynb file. See the [Jupyter website](https://jupyter.org/install) for more info.
 
 Please submit any questions or comments to the [WFC3 Help Desk](https://stsci.service-now.com/hst).
