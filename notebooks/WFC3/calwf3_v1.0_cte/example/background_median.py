@@ -16,13 +16,13 @@ Use
     See the docstring of aperture_stats_tbl for more info.
 """
 import numpy as np
-
 # WAY faster than astropy.stats.sigma_clipped_stats
 from scipy.stats import sigmaclip
 from astropy.table import Table
 
-def aperture_stats_tbl(data, apertures,
-                       method='exact', sigma_clip=True):
+
+def aperture_stats_tbl(data, apertures, method='exact', sigma_clip=True):
+    
     """Computes mean/median/mode/std in Photutils apertures.
     Compute statistics for custom local background methods.
     This is primarily intended for estimating backgrounds
@@ -63,23 +63,24 @@ def aperture_stats_tbl(data, apertures,
 
     aperture_stats = np.array(aperture_stats)
 
-
     # Place the array of the x y positions alongside the stats
     stacked = np.hstack([apertures.positions, aperture_stats])
     # Name the columns
-    names = ['X','Y','aperture_mean','aperture_median','aperture_mode',
-            'aperture_std', 'aperture_area']
+    names = ['X', 'Y', 'aperture_mean', 'aperture_median', 
+             'aperture_mode', 'aperture_std', 'aperture_area']
     # Make the table
     stats_tbl = Table(data=stacked, names=names)
 
-
     return stats_tbl
 
+
 def calc_aperture_mmm(data, mask, sigma_clip):
+    
     """Helper function to actually calculate the stats for pixels
         falling within some Photutils aperture mask on some array
         of data.
     """
+    
     cutout = mask.cutout(data, fill_value=np.nan)
     if cutout is None:
         return (np.nan, np.nan, np.nan, np.nan, np.nan)
@@ -95,4 +96,5 @@ def calc_aperture_mmm(data, mask, sigma_clip):
 
         mode = 3 * median - 2 * mean
         actual_area = (~np.isnan(values)).sum()
+        
         return (mean, median, mode, std, actual_area)
