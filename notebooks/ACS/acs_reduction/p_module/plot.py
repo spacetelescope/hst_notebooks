@@ -8,7 +8,7 @@ def ds9_imitate(ax, image):
     ax.imshow(image, cmap="bone", norm=norm)
 
 
-def triple_pam_plot(flt_file, pam_file, figtitle):
+def triple_pam_plot(flt_file, pam_file,figtitle):
     fl_img = fits.getdata(flt_file, ext=1)
     pam_img = fits.getdata(pam_file)
 
