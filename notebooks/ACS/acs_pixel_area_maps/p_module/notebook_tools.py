@@ -13,7 +13,7 @@ def side2(server, img1, img2, width=500):
     h1 = ipywidgets.HTML()
     h2 = ipywidgets.HTML()
 
-    h1.value = v1.embed(height=650, width=width)._repr_html_()
+    h1.value = v1.embed(height=650,width=width)._repr_html_()
     h2.value = v2.embed(height=650, width=width)._repr_html_()
 
     box.children = [h1, h2]
