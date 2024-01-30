@@ -22,4 +22,4 @@ The eleven notebooks available in this repository include the following topics:
 Additional tutorials will be added to the repository as new software functionality becomes available, especially for advanced use cases. For additional assistance with DrizzlePac tools, users may submit a ticket to the [STScI Help Desk](https://stsci.service-now.com/hst?id=hst_index) or send an email to help@stsci.edu.
 
 
-Special thanks to the authors of these notebooks: J. Mack, S. Hoffmann, R. Avila, V. Bajaj, M. Cara, T. Desjardins, C. Martlin, C. Shanahan
+Special thanks to the authors of these notebooks: J. Mack, S. Hoffmann, R. Avila, V. Bajaj, M. Cara, T. Desjardins, K. Huynh, B. Kuhn, C. Martlin, A. O’Connor, and C. Shanahan
