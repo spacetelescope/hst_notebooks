@@ -40,9 +40,10 @@ Use
 import numpy as np
 import matplotlib.pyplot as plt
 
-from photutils.centroids import centroid_com, centroid_1dg, centroid_2dg
+from photutils.centroids import centroid_2dg
 from photutils.aperture import CircularAperture
 from scipy.optimize import curve_fit
+
 
 class RadialProfile:
     """Main function to calulate radial profiles.
@@ -139,29 +140,29 @@ class RadialProfile:
                 self.fit_profile() # performs fit, updates self.fitted
             if show:
                 self.show_profile(ax)
-
+    
     def _create_profile(self):
         """Compute distances to pixels in cutout"""
         iY, iX = np.mgrid[self.sy, self.sx] # Pixel grid indices
         # extent = [sx.start, sx.stop-1, sy.start, sy.stop-1]
 
-        self.distances = np.sqrt( (iX - self.x) ** 2.
-                                + (iY - self.y) ** 2. ).flatten()
+        self.distances = np.sqrt((iX - self.x) ** 2.
+                                 + (iY - self.y) ** 2.).flatten()
         self.values = self.cutout.flatten()
-
+    
     def _setup_cutout(self, data):
         """Cuts out the aperture and defines slice objects.
         General setup procedure.
         """
         self.ap = CircularAperture((self.x, self.y), r=self.r)
         mask = self.ap.to_mask()
-        self.sy = slice(mask.bbox.iymin,mask.bbox.iymax,None)
-        self.sx = slice(mask.bbox.ixmin,mask.bbox.ixmax,None)
+        self.sy = slice(mask.bbox.iymin, mask.bbox.iymax, None)
+        self.sx = slice(mask.bbox.ixmin, mask.bbox.ixmax, None)
         self.cutout = mask.cutout(data, fill_value=np.nan)
 
         if self.cutout is None:
             self.is_empty = True
-
+    
     def fit_profile(self):
         """Fits 1d Moffat function to measured radial profile.
         Fits a moffat profile to the distance and values of the pixels.
@@ -171,11 +172,11 @@ class RadialProfile:
             amp0 = np.amax(self.values)
             bias0 = np.nanmedian(self.values)
             best_vals, covar = curve_fit(RadialProfile.profile_model,
-                                        self.distances,
-                                        self.values,
-                                        p0 = [amp0, 1.5, 1.5, bias0],
-                                        bounds = ([0., .3, .5, 0],
-                                                  [np.inf, 10., 10., np.inf]))
+                                         self.distances,
+                                         self.values,
+                                         p0=[amp0, 1.5, 1.5, bias0],
+                                         bounds=([0., .3, .5, 0],
+                                                 [np.inf, 10., 10., np.inf]))
             hwhm = best_vals[1] * np.sqrt(2. ** (1./best_vals[2]) - 1.)
             self.fwhm = 2 * hwhm
             self.amp, self.gamma, self.alpha, self.bias = best_vals
@@ -188,7 +189,7 @@ class RadialProfile:
             self.fwhm = np.nan
             self.fitted = False
             self.chisquared = np.nan
-
+    
     @staticmethod
     def profile_model(r, amp, gamma, alpha, bias):
         """Returns 1D Moffat profile evaluated at r values.
@@ -219,7 +220,7 @@ class RadialProfile:
         """
         model = amp * (1. + (r / gamma) ** 2.) ** (-1. * alpha) + bias
         return model
-
+    
     def recenter_source(self, data):
         """Recenters source position in cutout and updates x,y attributes"""
 
@@ -244,7 +245,7 @@ class RadialProfile:
                 self.x = xg1 + self.sx.start
                 self.y = yg1 + self.sy.start
                 self._setup_cutout(data)
-
+    
     def show_profile(self, ax=None, show_fit=True):
         """Makes plot of radial profile.
         
@@ -274,24 +275,22 @@ class RadialProfile:
             fig = plt.figure(dpi=110)
             ax = fig.add_subplot(111)
 
-        ax.scatter(self.distances, self.values, alpha=.5,s=3)
-        min_y = np.amin(self.values[self.values >0.])/2.
-        #ax.set_ylim(min_y, np.nanmax(self.values)*2.)
+        ax.scatter(self.distances, self.values, alpha=.5, s=3)
         ax.set_ylim(0.1, np.nanmax(self.values)*2.)
         ax.set_xlim(0.)
 
         ax.set_yscale('log')
-        ax.set_ylabel('Pixel Value',size=13)
-        ax.set_xlabel('Distance from centroid [pix]',size=13)
+        ax.set_ylabel('Pixel Value', size=13)
+        ax.set_xlabel('Distance from centroid [pix]', size=13)
 
         if self.fitted and show_fit:
-            tmp_r = np.arange(0,np.ceil(np.amax(self.distances)),.1)
+            tmp_r = np.arange(0, np.ceil(np.amax(self.distances)), .1)
             model_fit = RadialProfile.profile_model(tmp_r, self.amp,
                                                     self.gamma, self.alpha,
                                                     self.bias)
-            label = r'$\gamma$= {}, $\alpha$ = {}'.format(round(self.gamma,2),
-                                                          round(self.alpha,2))
+            label = r'$\gamma$= {}, $\alpha$ = {}'.format(round(self.gamma, 2),
+                                                          round(self.alpha, 2))
             label += '\nFWHM = {}'.format(round(self.fwhm, 2))
-            ax.plot(tmp_r, model_fit, label=label,color='k')
-            ax.legend(loc=1,prop={'size':13})
+            ax.plot(tmp_r, model_fit, label=label, color='k')
+            ax.legend(loc=1, prop={'size': 13})
         return ax
