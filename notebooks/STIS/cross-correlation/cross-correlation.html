@@ -597,7 +597,6 @@ document.write(`
   <p><a id=top></a></p>
 <section id="correcting-for-missing-wavecals-with-cross-correlation">
 <h1>Correcting for Missing Wavecals with Cross-Correlation<a class="headerlink" href="#correcting-for-missing-wavecals-with-cross-correlation" title="Link to this heading">#</a></h1>
-<p><font color="red">This notebook currently fails to execute, use as reference only</font></p>
 <h1>Learning Goals<span class="tocSkip"></span></h1>
 <div class="toc"><ul class="toc-item"><li><span><a href="#Introduction" data-toc-modified-id="Introduction-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Introduction</a></span><ul class="toc-item"><li><span><a href="#Import-Necessary-Packages" data-toc-modified-id="Import-Necessary-Packages-1.1"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Import Necessary Packages</a></span></li><li><span><a href="#Collect-Data-Set-From-the-MAST-Archive-Using-Astroquery" data-toc-modified-id="Collect-Data-Set-From-the-MAST-Archive-Using-Astroquery-1.2"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Collect Data Set From the MAST Archive Using Astroquery</a></span></li></ul></li><li><span><a href="#_x1d-Spectra-of-the-Observations" data-toc-modified-id="_x1d-Spectra-of-the-Observations-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>_x1d Spectra of the Observations</a></span><ul class="toc-item"><li><span><a href="#Creating-Shifted-Spectrum" data-toc-modified-id="Creating-Shifted-Spectrum-2.1"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>Creating Shifted Spectrum</a></span></li><li><span><a href="#Spectrum-Interpolation" data-toc-modified-id="Spectrum-Interpolation-2.2"><span class="toc-item-num">2.2&nbsp;&nbsp;</span>Spectrum Interpolation</a></span></li></ul></li><li><span><a href="#Cross-Correlation" data-toc-modified-id="Cross-Correlation-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Cross-Correlation</a></span><ul class="toc-item"><li><span><a href="#Dispersion-per-Pixel" data-toc-modified-id="Dispersion-per-Pixel-3.1"><span class="toc-item-num">3.1&nbsp;&nbsp;</span>Dispersion per Pixel</a></span></li><li><span><a href="#Masking-out-the-Lyman-alpha-line" data-toc-modified-id="Masking-out-the-Lyman-alpha-line-3.2"><span class="toc-item-num">3.2&nbsp;&nbsp;</span>Masking out the Lyman-alpha line</a></span></li><li><span><a href="#Lag-and-Cross-Correlation-Coefficient" data-toc-modified-id="Lag-and-Cross-Correlation-Coefficient-3.3"><span class="toc-item-num">3.3&nbsp;&nbsp;</span>Lag and Cross-Correlation Coefficient</a></span></li><li><span><a href="#Polynimial-Fitting-and-Zero-Point-Shift" data-toc-modified-id="Polynimial-Fitting-and-Zero-Point-Shift-3.4"><span class="toc-item-num">3.4&nbsp;&nbsp;</span>Polynimial Fitting and Zero Point Shift</a></span></li></ul></li><li><span><a href="#Recalibrate-Spectrum" data-toc-modified-id="Recalibrate-Spectrum-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Recalibrate Spectrum</a></span></li></ul></div><section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
@@ -637,6 +636,18 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following tasks in the stistools package can be run with TEAL:
+   basic2d      calstis     ocrreject     wavecal        x1d          x2d
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/lib/python3.11/site-packages/stsci/tools/nmpfit.py:8: UserWarning: NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.
+  warnings.warn(&quot;NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.&quot;)
+/usr/share/miniconda/lib/python3.11/site-packages/stsci/tools/gfit.py:18: UserWarning: GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.Use astropy.modeling instead.
+  warnings.warn(&quot;GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.&quot;
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="collect-data-set-from-the-mast-archive-using-astroquery">
@@ -658,6 +669,68 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101050_raw.fits to ./mastDownload/HST/odj101050/odj101050_raw.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101050_x1d.fits to ./mastDownload/HST/odj101050/odj101050_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101050_x2d.fits to ./mastDownload/HST/odj101050/odj101050_x2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101050_flt.fits to ./mastDownload/HST/odj101050/odj101050_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101060_raw.fits to ./mastDownload/HST/odj101060/odj101060_raw.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101060_x1d.fits to ./mastDownload/HST/odj101060/odj101060_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101060_x2d.fits to ./mastDownload/HST/odj101060/odj101060_x2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101060_flt.fits to ./mastDownload/HST/odj101060/odj101060_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output text_html"><div><i>Table length=8</i>
+<table id="table140468812884624" class="table-striped table-bordered table-condensed">
+<thead><tr><th>Local Path</th><th>Status</th><th>Message</th><th>URL</th></tr></thead>
+<thead><tr><th>str47</th><th>str8</th><th>object</th><th>object</th></tr></thead>
+<tr><td>./mastDownload/HST/odj101050/odj101050_raw.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101050/odj101050_x1d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101050/odj101050_x2d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101050/odj101050_flt.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101060/odj101060_raw.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101060/odj101060_x1d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101060/odj101060_x2d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101060/odj101060_flt.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+</table></div></div></div>
 </div>
 </section>
 </section>
@@ -680,6 +753,19 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>crds<span class="w"> </span>bestrefs<span class="w"> </span>--update-bestrefs<span class="w"> </span>--sync-references<span class="o">=</span><span class="m">1</span><span class="w"> </span>--files<span class="w"> </span>./mastDownload/HST/odj101050/odj101050_raw.fits
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  No comparison context or source comparison requested.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  ===&gt; Processing ./mastDownload/HST/odj101050/odj101050_raw.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  0 errors
+CRDS - INFO -  0 warnings
+CRDS - INFO -  2 infos
 </pre></div>
 </div>
 </div>
@@ -708,6 +794,225 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-Feb-2024 16:15:09 UTC
+
+Input    ./mastDownload/HST/odj101050/odj101050_raw.fits
+Outroot  ./Shifted/odj101050_raw.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-Feb-2024 16:15:09 UTC
+Input    ./mastDownload/HST/odj101050/odj101050_raw.fits
+Output   ./Shifted/odj101050_flt.fits
+OBSMODE  ACCUM
+APERTURE 52X0.2
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 1  Begin 16:15:09 UTC
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 16:15:09 UTC
+
+End      02-Feb-2024 16:15:09 UTC
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-Feb-2024 16:15:09 UTC
+Input    ./Shifted/odj101050_flt.fits
+Output   ./Shifted/odj101050_x2d.fits
+OBSMODE  ACCUM
+APERTURE 52X0.2
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 16:15:09 UTC
+Warning  Wavecal processing has not been performed.
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 16:15:09 UTC
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$77o1827do_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 30/06/1998
+SPTRCTAB DESCRIP =New traces for select echelle secondary modes
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$6471930po_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Updated sensitivity curves for G140L and E140M
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$3ah1528co_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 04/07/2019
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 16:15:09 UTC
+Imset 1  End 16:15:09 UTC
+
+End      02-Feb-2024 16:15:09 UTC
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-Feb-2024 16:15:09 UTC
+
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    ./Shifted/odj101050_flt.fits
+Output   ./Shifted/odj101050_x1d.fits
+Rootname odj101050
+OBSMODE  ACCUM
+APERTURE 52X0.2
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$n7p10323o_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$77o1827do_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 01/12/2009
+SPTRCTAB DESCRIP =New traces for select echelle secondary modes
+
+Imset 1  Begin 16:15:09 UTC
+         Input read into memory.
+Order 1  Begin 16:15:09 UTC
+X1DCORR  PERFORM
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BACKCORR PERFORM
+******** Calling Slfit ***********BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 390.008
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$6471930po_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 24/09/2019
+PHOTTAB  DESCRIP =Updated sensitivity curves for G140L and E140M
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$3ah1528co_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 04/07/2019
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 16:15:09 UTC
+
+Imset 1  End 16:15:09 UTC
+
+Warning  Keyword `XTRACALG&#39; is being added to header.
+End      02-Feb-2024 16:15:09 UTC
+
+*** CALSTIS-6 complete ***
+
+End      02-Feb-2024 16:15:09 UTC
+
+*** CALSTIS-0 complete ***
+</pre></div>
+</div>
+</div>
 </div>
 <p><a id='shifted'></a>
 As seen in the plot, the spectrum is now shifted compared to the pipeline spectrum:</p>
@@ -732,6 +1037,12 @@ As seen in the plot, the spectrum is now shifted compared to the pipeline spectr
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Pipeline and Shifted _x1d Spectrum&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Pipeline and Shifted _x1d Spectrum&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/b73f9a2b0ce6b49cbc33222d94f0ef593cf9267a2abbffb5b488040eee53c750.png" src="../../../_images/b73f9a2b0ce6b49cbc33222d94f0ef593cf9267a2abbffb5b488040eee53c750.png" />
 </div>
 </div>
 </section>
@@ -761,6 +1072,12 @@ As seen in the plot, the spectrum is now shifted compared to the pipeline spectr
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Reference and Shifted _x1d Spectrum&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/859f8ae35f939ed6df5f392e210dfc837c85d1c5a5000f03e8eef930306ebc61.png" src="../../../_images/859f8ae35f939ed6df5f392e210dfc837c85d1c5a5000f03e8eef930306ebc61.png" />
+</div>
 </div>
 </section>
 </section>
@@ -777,11 +1094,16 @@ As seen in the plot, the spectrum is now shifted compared to the pipeline spectr
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The dispersion per pixel is 0.053 Å/pixel
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="masking-out-the-lyman-alpha-line">
 <h3>Masking out the Lyman-alpha line<a class="headerlink" href="#masking-out-the-lyman-alpha-line" title="Link to this heading">#</a></h3>
-<p>The absorption line at around 1215 Å is from Hydrogen Lyman-alpha, which mostly comes from the atmosphere and so should not shift like the science spectrum. Therefore we need to mask out this region by separating the spectrum into two parts and perform two cross-correlations. There are other airglows lines in the ultraviolet that also does not shift with the science spectrum, including OI line at 1302 Å, OI line at 1305 Å, OI line at 1306 Å. For more information on the Airglow, see: <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/cos/calibration/airglow"><code class="docutils literal notranslate"><span class="pre">AIRGLOW</span></code></a>.</p>
+<p>The absorption line at around 1215 Å is from Hydrogen Lyman-alpha, which mostly comes from the atmosphere and so should not shift like the science spectrum. Therefore, we need to mask out this region by separating the spectrum into two parts and perform two cross-correlations. There are other airglows lines in the ultraviolet that also does not shift with the science spectrum, including OI line at 1302 Å, OI line at 1305 Å, OI line at 1306 Å. For more information on the Airglow, see: <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/cos/calibration/airglow"><code class="docutils literal notranslate"><span class="pre">AIRGLOW</span></code></a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># the spectrum on the right of Lyman-alpha</span>
@@ -859,11 +1181,22 @@ As seen in the plot, the spectrum is now shifted compared to the pipeline spectr
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fc19560b250&gt;
+</pre></div>
+</div>
+<img alt="../../../_images/5a8299405ff0cce369b0c0a94b7e47b1683d6cbb3e05c4643193179ca6254570.png" src="../../../_images/5a8299405ff0cce369b0c0a94b7e47b1683d6cbb3e05c4643193179ca6254570.png" />
+</div>
 </div>
 <p>Convert the lag back into zero point shift in wavelength space:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shift between the G140M/c1222 observations is </span><span class="si">{:.3f}</span><span class="s2"> pix = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shift1</span><span class="p">,</span> <span class="n">shift1</span> <span class="o">*</span> <span class="n">mean_plate_scale</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;Å&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shift between the G140M/c1222 observations is -4.936 pix = -0.263Å
 </pre></div>
 </div>
 </div>
@@ -897,12 +1230,23 @@ As seen in the plot, the spectrum is now shifted compared to the pipeline spectr
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>shift2 between the G140M/c1222 observations is -3.953 pix = -0.211Å
+</pre></div>
+</div>
+<img alt="../../../_images/1fef6ae322bf2f654c0ca56e01a8569f6218093aab672947d30ad93152140c38.png" src="../../../_images/1fef6ae322bf2f654c0ca56e01a8569f6218093aab672947d30ad93152140c38.png" />
+</div>
 </div>
 <p>However, as shown in the plot, the maximum cross-correlation coefficient (~0.5) is relatively small, which suggests that the spectra are less similar on the left side. With such a small cross-correlation coefficient, we cannot determine a reasonable shift in the pixel space. Therefore, we only take the shift determined by the right part of the spectrum as the shift of the spectrum:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shift</span> <span class="o">=</span> <span class="n">shift1</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;shift between the G140M/c1222 observations is </span><span class="si">{:.3f}</span><span class="s2"> pix = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="n">shift</span> <span class="o">*</span> <span class="n">mean_plate_scale</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;Å&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>shift between the G140M/c1222 observations is -4.936 pix = -0.263Å
 </pre></div>
 </div>
 </div>
@@ -954,6 +1298,218 @@ As seen in the plot, the spectrum is now shifted compared to the pipeline spectr
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-Feb-2024 16:15:10 UTC
+
+Input    ./mastDownload/HST/odj101050/odj101050_raw.fits
+Outroot  ./Recalibration/odj101050_raw.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-Feb-2024 16:15:10 UTC
+Input    ./mastDownload/HST/odj101050/odj101050_raw.fits
+Output   ./Recalibration/odj101050_flt.fits
+OBSMODE  ACCUM
+APERTURE 52X0.2
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 16:15:10 UTC
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 16:15:11 UTC
+
+End      02-Feb-2024 16:15:11 UTC
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-Feb-2024 16:15:11 UTC
+Input    ./Recalibration/odj101050_flt.fits
+Output   ./Recalibration/odj101050_x2d.fits
+OBSMODE  ACCUM
+APERTURE 52X0.2
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 16:15:11 UTC
+Warning  Wavecal processing has not been performed.
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 16:15:11 UTC
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$77o1827do_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 30/06/1998
+SPTRCTAB DESCRIP =New traces for select echelle secondary modes
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$6471930po_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Updated sensitivity curves for G140L and E140M
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$3ah1528co_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 04/07/2019
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 16:15:11 UTC
+Imset 1  End 16:15:11 UTC
+
+End      02-Feb-2024 16:15:11 UTC
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    02-Feb-2024 16:15:11 UTC
+
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    ./Recalibration/odj101050_flt.fits
+Output   ./Recalibration/odj101050_x1d.fits
+Rootname odj101050
+OBSMODE  ACCUM
+APERTURE 52X0.2
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$n7p10323o_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$77o1827do_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 01/12/2009
+SPTRCTAB DESCRIP =New traces for select echelle secondary modes
+
+Imset 1  Begin 16:15:11 UTC
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>         Input read into memory.
+Order 1  Begin 16:15:11 UTC
+X1DCORR  PERFORM
+BACKCORR PERFORM
+******** Calling Slfit ***********BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 390.008
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$6471930po_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 24/09/2019
+PHOTTAB  DESCRIP =Updated sensitivity curves for G140L and E140M
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$3ah1528co_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 04/07/2019
+TDSTAB   DESCRIP =Updated time and temperature sensitivities for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 16:15:11 UTC
+
+Imset 1  End 16:15:11 UTC
+
+Warning  Keyword `XTRACALG&#39; is being added to header.
+End      02-Feb-2024 16:15:11 UTC
+
+*** CALSTIS-6 complete ***
+
+End      02-Feb-2024 16:15:11 UTC
+
+*** CALSTIS-0 complete ***
+</pre></div>
+</div>
+</div>
 </div>
 <p>We compare the recalibrated spectrum with the pipeline spectrum. The top panel is the shifted spectrum (orange) and the pipeline spectrum (blue) of observation odj101050, which is the same as the plot in <a class="reference internal" href="#shifted"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">2.1</span> <span class="pre">Creating</span> <span class="pre">Shifted</span> <span class="pre">Spectrum</span></code></span></a>. The bottom panel is the recalibrated spectrum (orange) and the pipeline spectrum (blue). The spectra almost overlap in the bottom panel, which suggests that the wavelength shift issue is solved in the recalibrated spectrum.</p>
 <div class="cell docutils container">
@@ -990,6 +1546,9 @@ As seen in the plot, the spectrum is now shifted compared to the pipeline spectr
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/f0e6b6df906eac8940dab29ed33ddf625206af29b227ff75344bc931269d7981.png" src="../../../_images/f0e6b6df906eac8940dab29ed33ddf625206af29b227ff75344bc931269d7981.png" />
 </div>
 </div>
 </section>
