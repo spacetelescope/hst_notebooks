@@ -1,6 +1,6 @@
 [![Notebook Execution and Validation](https://github.com/spacetelescope/hst_notebooks/actions/workflows/ci_runner.yml/badge.svg)](https://github.com/spacetelescope/hst_notebooks/actions/workflows/ci_runner.yml)
 [![Scheduled Notebook Execution](https://github.com/spacetelescope/hst_notebooks/actions/workflows/ci_nightly.yml/badge.svg)](https://github.com/spacetelescope/hst_notebooks/actions/workflows/ci_nightly.yml)
-
+[![Scheduled Broken Link Check](https://github.com/spacetelescope/hst_notebooks/actions/workflows/weekly_broken_link_finder.yml/badge.svg)](https://github.com/spacetelescope/hst_notebooks/actions/workflows/weekly_broken_link_finder.yml)
 
 ```diff
 - 🔴  WELCOME! THIS REPO IS UNDER CONSTRUCTION!! 🔴
