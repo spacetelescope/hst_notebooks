@@ -1,5 +1,4 @@
 from astropy.io import fits
-import plotly
 import plotly.graph_objs as go
 import numpy as np
 
