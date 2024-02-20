@@ -63,6 +63,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/ACS/acs_cte_forward_model/acs_cte_forward_model_example';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -587,7 +589,7 @@ document.write(`
                 <article class="bd-article">
                   
   <p><a id="title_ID"></a></p>
-<section id="pixel-based-acs-wfc-cte-forward-model">
+<section class="tex2jax_ignore mathjax_ignore" id="pixel-based-acs-wfc-cte-forward-model">
 <h1>Pixel-based ACS/WFC CTE Forward Model<a class="headerlink" href="#pixel-based-acs-wfc-cte-forward-model" title="Permalink to this heading">#</a></h1>
 <p>This notebook demonstrates preparing data for input into the ACS/WFC pixel-based CTE forward model and running the model.</p>
 <section id="table-of-contents">
@@ -723,12 +725,12 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                             Local Path                                              Status  Message URL 
 --------------------------------------------------------------------------------------------------- -------- ------- ----
 ./mastDownload/HST/hst_14402_14_acs_wfc_f775w_jd0q14ct/hst_14402_14_acs_wfc_f775w_jd0q14ct_flc.fits COMPLETE    None None
-                   Local Path                    Status  Message URL 
------------------------------------------------ -------- ------- ----
-./mastDownload/HST/jd0q14ctq/jd0q14ctq_raw.fits COMPLETE    None None
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                   Local Path                    Status  Message URL 
+----------------------------------------------- -------- ------- ----
+./mastDownload/HST/jd0q14ctq/jd0q14ctq_raw.fits COMPLETE    None None
+                   Local Path                    Status  Message URL 
 ----------------------------------------------- -------- ------- ----
 ./mastDownload/HST/jd0q14ctq/jd0q14ctq_flc.fits COMPLETE    None None
 </pre></div>
@@ -831,7 +833,7 @@ CRDS - INFO -  2 infos
 <p>We will need an image containing artificial stars on zero background for both options presented below. Artificial stars are typically generated using models that do not include the flat field, or are produced from data that have been flat-fielded. If this is the case, artificial stars should be added to the image at the <code class="docutils literal notranslate"><span class="pre">flc</span></code> stage.</p>
 <p>Users of this notebook may have a preferred method for generating artificial stars and adding them to data, so here we simply add several Gaussians to the image using utilities within <code class="docutils literal notranslate"><span class="pre">photutils.datasets</span></code> in <code class="docutils literal notranslate"><span class="pre">astropy</span></code>. These Gaussians are not representative of the true ACS/WFC PSF, and are added here for illustrative purposes only. Please note that artificial sources with peak values approaching or exceeding the WFC CCD full well value of about 80,000 electrons are not recommended for simulated data. Blooming of charge from saturated pixels is not implemented in this example.</p>
 <p>There are many tools for generating artificial stars, including <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/focus-and-pointing/focus/tiny-tim-hst-psf-modeling">Tiny Tim</a>, <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr0601.pdf">effective PSFs</a>, or <a class="reference external" href="https://photutils.readthedocs.io/en/stable/epsf.html"><code class="docutils literal notranslate"><span class="pre">EPSFBuilder</span></code></a> in <code class="docutils literal notranslate"><span class="pre">photutils</span></code>. A recent study of PSF models for ACS/WFC can be found <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr1708.pdf">here</a>.</p>
-<p>First, we generate a table of random Gaussian sources of typical brightness for our 47 Tuc field with $\mathrm{FWHM}\sim2.5$ pixels. Because $\mathrm{FWHM} = 2.355\sigma$, we will generate Gaussian sources with $\sigma \sim 1.06$ pixels in both $x$ and $y$.</p>
+<p>First, we generate a table of random Gaussian sources of typical brightness for our 47 Tuc field with <span class="math notranslate nohighlight">\(\mathrm{FWHM}\sim2.5\)</span> pixels. Because <span class="math notranslate nohighlight">\(\mathrm{FWHM} = 2.355\sigma\)</span>, we will generate Gaussian sources with <span class="math notranslate nohighlight">\(\sigma \sim 1.06\)</span> pixels in both <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_sources</span> <span class="o">=</span> <span class="mi">300</span>
@@ -907,10 +909,10 @@ Length = 300 rows
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f8b73fec210&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f48adec4550&gt;]
 </pre></div>
 </div>
-<img alt="../../../_images/0a5566e68652d781e29e303885320a6a33854cd19b59f543c2c6cccb1353e00e.png" src="../../../_images/0a5566e68652d781e29e303885320a6a33854cd19b59f543c2c6cccb1353e00e.png" />
+<img alt="../../../_images/173dfbc897c13bec1027cd96ce27f1f91b0af5e8fd9c538729d0095d124394d2.png" src="../../../_images/173dfbc897c13bec1027cd96ce27f1f91b0af5e8fd9c538729d0095d124394d2.png" />
 </div>
 </div>
 <p><a id="option-a"></a></p>
@@ -980,7 +982,7 @@ Length = 300 rows
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1200.0, 1700.0)
 </pre></div>
 </div>
-<img alt="../../../_images/ab7930e2b6b991f0d8e5bd03573c3a69dceaf4f123dc25733d58f9ece169e6d4.png" src="../../../_images/ab7930e2b6b991f0d8e5bd03573c3a69dceaf4f123dc25733d58f9ece169e6d4.png" />
+<img alt="../../../_images/5823947a8386040f2c1672f78feff40a880a0a4dbbc4ec7ed6067a3b61061cba.png" src="../../../_images/5823947a8386040f2c1672f78feff40a880a0a4dbbc4ec7ed6067a3b61061cba.png" />
 </div>
 </div>
 <p><span class="xref myst">Top of Page</span></p>
@@ -1052,7 +1054,7 @@ Read in Primary header from jd0q14ctq_stars_pfl_dkc.fits...
 
 
 CALBEG*** ACSCTE -- Version 10.3.5 (08-Feb-2022) ***
-Begin    19-Feb-2024 18:15:45 UTC
+Begin    20-Feb-2024 16:20:32 UTC
 Input    jd0q14ctq_stars_pfl_dkc.fits
 Output   jd0q14ctq_stars_pfl_dkc_ctefmod.fits
 Trying to open jd0q14ctq_stars_pfl_dkc.fits...
@@ -1115,7 +1117,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -361061.000000 (-0.051077%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -361005.000000 (-0.051070%)
 (pctecorr) Performing CTE correction for amp D
 (pctecorr) Read noise level from CCDTAB: 5.050000.
 (pctecorr) ...complete.
@@ -1126,8 +1128,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -415319.656250 (-0.049270%)
-(pctecorr) CTE run time for current chip: 96.08(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -415252.468750 (-0.049263%)
+(pctecorr) CTE run time for current chip: 95.86(s) with 4 procs/threads
 
 (pctecorr) Using parallel processing provided by OpenMP inside CTE routine
 (pctecorr) Performing CTE correction for amp A
@@ -1140,7 +1142,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -282104.531250 (-0.048677%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -282142.375000 (-0.048684%)
 (pctecorr) Performing CTE correction for amp B
 (pctecorr) Read noise level from CCDTAB: 3.750000.
 (pctecorr) ...complete.
@@ -1151,13 +1153,13 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -455550.093750 (-0.040250%)
-(pctecorr) CTE run time for current chip: 107.22(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -455755.531250 (-0.040268%)
+(pctecorr) CTE run time for current chip: 106.96(s) with 4 procs/threads
 
 PCTECORR COMPLETE
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      19-Feb-2024 18:19:10 UTC
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      20-Feb-2024 16:23:56 UTC
 
 
 *** ACSCTE complete ***
@@ -1173,8 +1175,8 @@ PCTECORR COMPLETE
 </div>
 </div>
 <p>After the forward model is run, the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extensions of the image are equivalent to a <code class="docutils literal notranslate"><span class="pre">blv_tmp</span></code> file, in principle. However, the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions are the original <code class="docutils literal notranslate"><span class="pre">flc</span></code> <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions plus 10% of the forward model correction. To ensure the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions are accurate for a <code class="docutils literal notranslate"><span class="pre">blv_tmp</span></code> file, we will set every pixel to zero and calculate new values for each pixel according to</p>
-<p>$\mathrm{ERR} = \sqrt{\mathrm{SCI} + \mathrm{RN}^2 + (\mathrm{ERR}_{\mathrm{superbias}}g)^2}$,</p>
-<p>where $\mathrm{SCI}$ is the pixel value in the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extension (all negative pixels are set to zero), $\mathrm{RN}$ is the readnoise, $\mathrm{ERR}_{\mathrm{superbias}}$ is the pixel value in the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extension of the superbias, and $g$ is the gain.</p>
+<p><span class="math notranslate nohighlight">\(\mathrm{ERR} = \sqrt{\mathrm{SCI} + \mathrm{RN}^2 + (\mathrm{ERR}_{\mathrm{superbias}}g)^2}\)</span>,</p>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{SCI}\)</span> is the pixel value in the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extension (all negative pixels are set to zero), <span class="math notranslate nohighlight">\(\mathrm{RN}\)</span> is the readnoise, <span class="math notranslate nohighlight">\(\mathrm{ERR}_{\mathrm{superbias}}\)</span> is the pixel value in the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extension of the superbias, and <span class="math notranslate nohighlight">\(g\)</span> is the gain.</p>
 <p>First, we access the header and <code class="docutils literal notranslate"><span class="pre">SCI</span></code> and <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions of the forward-modeled data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1254,7 +1256,7 @@ Read in Primary header from jd0q14ctq_stars_ctefmod_blv_tmp.fits...
 
 
 CALBEG*** ACSCTE -- Version 10.3.5 (08-Feb-2022) ***
-Begin    19-Feb-2024 18:19:10 UTC
+Begin    20-Feb-2024 16:23:57 UTC
 Input    jd0q14ctq_stars_ctefmod_blv_tmp.fits
 Output   jd0q14ctq_stars_ctefmod_blc_tmp.fits
 Warning    Output file `jd0q14ctq_stars_ctefmod_blc_tmp.fits&#39; already exists.
@@ -1289,7 +1291,7 @@ Read in Primary header from jd0q14ctq_stars_ctefmod_blv_tmp.fits...
 
 
 CALBEG*** ACS2D -- Version 10.3.5 (08-Feb-2022) ***
-Begin    19-Feb-2024 18:19:10 UTC
+Begin    20-Feb-2024 16:23:57 UTC
 Input    jd0q14ctq_stars_ctefmod_blv_tmp.fits
 Output   jd0q14ctq_stars_ctefmod_flt.fits
 Warning    Output file `jd0q14ctq_stars_ctefmod_flt.fits&#39; already exists.
@@ -1320,7 +1322,7 @@ Read in Primary header from jd0q14ctq_stars_ctefmod_blc_tmp.fits...
 
 
 CALBEG*** ACS2D -- Version 10.3.5 (08-Feb-2022) ***
-Begin    19-Feb-2024 18:19:10 UTC
+Begin    20-Feb-2024 16:23:57 UTC
 Input    jd0q14ctq_stars_ctefmod_blc_tmp.fits
 Output   jd0q14ctq_stars_ctefmod_flc.fits
 Warning    Output file `jd0q14ctq_stars_ctefmod_flc.fits&#39; already exists.
@@ -1352,7 +1354,7 @@ ERROR:             status = 1021
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1200.0, 1700.0)
 </pre></div>
 </div>
-<img alt="../../../_images/8b18c0d75d068f98b0bfe99ec505d557412586cd5a845f5290b3f0229080b26e.png" src="../../../_images/8b18c0d75d068f98b0bfe99ec505d557412586cd5a845f5290b3f0229080b26e.png" />
+<img alt="../../../_images/222ccca8a22c8616cb42d49a003f74e33aec910b215da2f9bec5abb165cd6400.png" src="../../../_images/222ccca8a22c8616cb42d49a003f74e33aec910b215da2f9bec5abb165cd6400.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1375,7 +1377,7 @@ ERROR:             status = 1021
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1200.0, 1700.0)
 </pre></div>
 </div>
-<img alt="../../../_images/46355f32c194b607aaff205eb0309d5d3f95590010a7f436f774c205e22cf1f2.png" src="../../../_images/46355f32c194b607aaff205eb0309d5d3f95590010a7f436f774c205e22cf1f2.png" />
+<img alt="../../../_images/735f592c34524005008b356b60d7e0c32b00b6282d4a4913aeca006a0c77e630.png" src="../../../_images/735f592c34524005008b356b60d7e0c32b00b6282d4a4913aeca006a0c77e630.png" />
 </div>
 </div>
 <p><span class="xref myst">Top of Page</span></p>
@@ -1405,7 +1407,7 @@ Read in Primary header from jd0q14ctq_raw.fits...
 
 
 CALBEG*** ACSCCD -- Version 10.3.5 (08-Feb-2022) ***
-Begin    19-Feb-2024 18:19:11 UTC
+Begin    20-Feb-2024 16:23:57 UTC
 Input    jd0q14ctq_raw.fits
 Output   jd0q14ctq_blv_tmp.fits
 Warning    Output file `jd0q14ctq_blv_tmp.fits&#39; already exists.
@@ -1464,7 +1466,7 @@ ERROR:             status = 1021
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1200.0, 1700.0)
 </pre></div>
 </div>
-<img alt="../../../_images/0cc4d67c32f0c8b1ec460dcb054544e9b3ef293885f9d00d34b7ff5c5b17d888.png" src="../../../_images/0cc4d67c32f0c8b1ec460dcb054544e9b3ef293885f9d00d34b7ff5c5b17d888.png" />
+<img alt="../../../_images/960a6c778ef7ff49fbcd6d436760d29ef9f8abcfd85409b560b6d97f01c9aed7.png" src="../../../_images/960a6c778ef7ff49fbcd6d436760d29ef9f8abcfd85409b560b6d97f01c9aed7.png" />
 </div>
 </div>
 <p>In order to properly remove the dark current after the forward model is run, we update the exposure time and flash duration header keywords, <code class="docutils literal notranslate"><span class="pre">EXPTIME</span></code> and <code class="docutils literal notranslate"><span class="pre">FLASHDUR</span></code>, with the desired simulated exposure time. The total exposure time used for the dark correction is the combination of exposure time, flash duration, and overhead (which depends on whether the data are post-flashed or not). Here we set <code class="docutils literal notranslate"><span class="pre">EXPTIME</span></code> to 300 seconds and <code class="docutils literal notranslate"><span class="pre">FLASHDUR</span></code> to 0 seconds. In principle one should retrieve the overheads from CCDTAB, but we provide a simpler approach here. Please note that the overhead times may change.</p>
@@ -1543,7 +1545,7 @@ Read in Primary header from synth_blc_tmp.fits...
 
 
 CALBEG*** ACSCTE -- Version 10.3.5 (08-Feb-2022) ***
-Begin    19-Feb-2024 18:19:13 UTC
+Begin    20-Feb-2024 16:24:00 UTC
 Input    synth_blc_tmp.fits
 Output   synth_blc_tmp_ctefmod.fits
 Trying to open synth_blc_tmp.fits...
@@ -1606,7 +1608,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -300747.312500 (-0.135830%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -300685.750000 (-0.135810%)
 (pctecorr) Performing CTE correction for amp D
 (pctecorr) Read noise level from CCDTAB: 5.050000.
 (pctecorr) ...complete.
@@ -1617,8 +1619,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -313297.437500 (-0.135236%)
-(pctecorr) CTE run time for current chip: 43.12(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -313189.531250 (-0.135197%)
+(pctecorr) CTE run time for current chip: 43.09(s) with 4 procs/threads
 
 (pctecorr) Using parallel processing provided by OpenMP inside CTE routine
 (pctecorr) Performing CTE correction for amp A
@@ -1631,7 +1633,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -301583.937500 (-0.142689%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -301657.312500 (-0.142733%)
 (pctecorr) Performing CTE correction for amp B
 (pctecorr) Read noise level from CCDTAB: 3.750000.
 (pctecorr) ...complete.
@@ -1642,13 +1644,13 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -312404.500000 (-0.138742%)
-(pctecorr) CTE run time for current chip: 42.99(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -312430.125000 (-0.138755%)
+(pctecorr) CTE run time for current chip: 42.98(s) with 4 procs/threads
 
 PCTECORR COMPLETE
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      19-Feb-2024 18:20:40 UTC
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      20-Feb-2024 16:25:27 UTC
 
 
 *** ACSCTE complete ***
@@ -1695,8 +1697,8 @@ PCTECORR COMPLETE
 </div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extensions of this image are now equivalent to a <code class="docutils literal notranslate"><span class="pre">blv_tmp</span></code> file, in principle. However, the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions are the original <code class="docutils literal notranslate"><span class="pre">blv_tmp</span></code> <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions plus 10% of the forward model correction. To ensure the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions are accurate, we will calculate new values for each pixel according to</p>
-<p>$\mathrm{ERR} = \sqrt{\mathrm{SCI} + \mathrm{RN}^2 + (\mathrm{ERR}_{\mathrm{superbias}}g)^2}$,</p>
-<p>where $\mathrm{SCI}$ is the pixel value in the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extension (all negative pixels are set to zero), $\mathrm{RN}$ is the readnoise, $\mathrm{ERR}_{\mathrm{superbias}}$ is the pixel value in the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extension of the superbias, and $g$ is the gain.</p>
+<p><span class="math notranslate nohighlight">\(\mathrm{ERR} = \sqrt{\mathrm{SCI} + \mathrm{RN}^2 + (\mathrm{ERR}_{\mathrm{superbias}}g)^2}\)</span>,</p>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{SCI}\)</span> is the pixel value in the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extension (all negative pixels are set to zero), <span class="math notranslate nohighlight">\(\mathrm{RN}\)</span> is the readnoise, <span class="math notranslate nohighlight">\(\mathrm{ERR}_{\mathrm{superbias}}\)</span> is the pixel value in the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extension of the superbias, and <span class="math notranslate nohighlight">\(g\)</span> is the gain.</p>
 <p>First, we access the header and <code class="docutils literal notranslate"><span class="pre">SCI</span></code> and <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions of the forward-modeled data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1792,7 +1794,7 @@ Read in Primary header from synth_ctefmod_rn_raw.fits...
 
 
 CALBEG*** ACSCCD -- Version 10.3.5 (08-Feb-2022) ***
-Begin    19-Feb-2024 18:20:42 UTC
+Begin    20-Feb-2024 16:25:28 UTC
 Input    synth_ctefmod_rn_raw.fits
 Output   synth_ctefmod_rn_blv_tmp.fits
 Trying to open synth_ctefmod_rn_raw.fits...
@@ -1846,7 +1848,7 @@ SNKCFILE DESCRIP =Sink pixel reference file ----------------------------
 SINKCORR COMPLETE
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      19-Feb-2024 18:20:42 UTC
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      20-Feb-2024 16:25:28 UTC
 
 
 *** ACSCCD complete ***
@@ -1916,7 +1918,7 @@ Read in Primary header from synth_ctefmod_rn_blv_tmp.fits...
 
 
 CALBEG*** ACSCTE -- Version 10.3.5 (08-Feb-2022) ***
-Begin    19-Feb-2024 18:20:43 UTC
+Begin    20-Feb-2024 16:25:29 UTC
 Input    synth_ctefmod_rn_blv_tmp.fits
 Output   synth_ctefmod_rn_blc_tmp.fits
 Warning    Output file `synth_ctefmod_rn_blc_tmp.fits&#39; already exists.
@@ -1951,7 +1953,7 @@ Read in Primary header from synth_ctefmod_rn_blv_tmp.fits...
 
 
 CALBEG*** ACS2D -- Version 10.3.5 (08-Feb-2022) ***
-Begin    19-Feb-2024 18:20:43 UTC
+Begin    20-Feb-2024 16:25:29 UTC
 Input    synth_ctefmod_rn_blv_tmp.fits
 Output   synth_ctefmod_rn_flt.fits
 Warning    Output file `synth_ctefmod_rn_flt.fits&#39; already exists.
@@ -1982,7 +1984,7 @@ Read in Primary header from synth_ctefmod_rn_blc_tmp.fits...
 
 
 CALBEG*** ACS2D -- Version 10.3.5 (08-Feb-2022) ***
-Begin    19-Feb-2024 18:20:43 UTC
+Begin    20-Feb-2024 16:25:29 UTC
 Input    synth_ctefmod_rn_blc_tmp.fits
 Output   synth_ctefmod_rn_flc.fits
 Warning    Output file `synth_ctefmod_rn_flc.fits&#39; already exists.
@@ -2014,7 +2016,7 @@ ERROR:             status = 1021
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1200.0, 1700.0)
 </pre></div>
 </div>
-<img alt="../../../_images/4647784770979d080bede12ac1fb37af1319da8bae7208cebf65a5bcb5e9ef7a.png" src="../../../_images/4647784770979d080bede12ac1fb37af1319da8bae7208cebf65a5bcb5e9ef7a.png" />
+<img alt="../../../_images/13e55f2a4498ae4be71dc41c66fc8e49e597e608f0257f0cabd3e91dbd4ee9eb.png" src="../../../_images/13e55f2a4498ae4be71dc41c66fc8e49e597e608f0257f0cabd3e91dbd4ee9eb.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2037,7 +2039,7 @@ ERROR:             status = 1021
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1200.0, 1700.0)
 </pre></div>
 </div>
-<img alt="../../../_images/7e05116ec315c53430a105e47a71fa3c6b131edef45476606a6cb8109c082c99.png" src="../../../_images/7e05116ec315c53430a105e47a71fa3c6b131edef45476606a6cb8109c082c99.png" />
+<img alt="../../../_images/b6c7859d13461538559e1691f0c1c78a76ecbbd260d6f02294fc04df03b5c84a.png" src="../../../_images/b6c7859d13461538559e1691f0c1c78a76ecbbd260d6f02294fc04df03b5c84a.png" />
 </div>
 </div>
 </section>

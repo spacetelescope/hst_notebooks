@@ -63,6 +63,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -587,7 +589,7 @@ document.write(`
                 <article class="bd-article">
                   
   <p><a id="top"></a></p>
-<section id="correcting-for-scattered-light-in-wfc3-ir-exposures-manually-subtracting-bad-reads">
+<section class="tex2jax_ignore mathjax_ignore" id="correcting-for-scattered-light-in-wfc3-ir-exposures-manually-subtracting-bad-reads">
 <h1>Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads<a class="headerlink" href="#correcting-for-scattered-light-in-wfc3-ir-exposures-manually-subtracting-bad-reads" title="Permalink to this heading">#</a></h1>
 <section id="learning-goals">
 <h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h2>
@@ -1263,24 +1265,35 @@ CALWF3 completion for icqtbbbxq_raw.fits
 <section id="step-3-correct-the-error-image">
 <h4>STEP 3: Correct the Error Image<a class="headerlink" href="#step-3-correct-the-error-image" title="Permalink to this heading">#</a></h4>
 <p>The errors associated with the raw data are estimated according  to the noise model for the detector which currently includes a simple combination of detector readnoise and poisson noise from the pixel and which is intended to replicate the <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> error array calculation. Currently, the inital detector noise model (in electrons) is as follows, where RN is the readnoise.</p>
-<p>$$ SCI_{1} = signal= (flux*flat + dark)$$</p>
-<p>$$ \sigma_{1} = \sqrt{(RN^{2}) + (flux*flat + dark)} $$</p>
+<div class="math notranslate nohighlight">
+\[ SCI_{1} = signal= (flux*flat + dark)\]</div>
+<div class="math notranslate nohighlight">
+\[ \sigma_{1} = \sqrt{(RN^{2}) + (flux*flat + dark)} \]</div>
 <p>Note that our signal equation includes flat and dark corrections to revert the final science array (flux) produced by <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to the original signal (in electrons) recorded in the detector.</p>
 <p>The ERR array continues to be updated as the SCI array is processed. The dark error term is added in quadrature as the dark current is subtracted from the science array:</p>
-<p>$$ SCI_{2} = signal - dark $$</p>
-<p>$$ \sigma_{2} = \sqrt{\sigma_{1}^{2}+\sigma_{dark}^{2}} $$</p>
+<div class="math notranslate nohighlight">
+\[ SCI_{2} = signal - dark \]</div>
+<div class="math notranslate nohighlight">
+\[ \sigma_{2} = \sqrt{\sigma_{1}^{2}+\sigma_{dark}^{2}} \]</div>
 <p>Next, the flat images are divided out of the science image. There are two flat-fields (p-flat and delta-flat), which are each divided out of the science image. The flat errors are combined using the correct error propagation method.</p>
-<p>$$ flat = pflat * dflat $$</p>
+<div class="math notranslate nohighlight">
+\[ flat = pflat * dflat \]</div>
 <p>P-Flat (pflat) file:</p>
-<p>$$ SCI_{3} = SCI_{2}/pflat $$</p>
-<p>$$ \frac{\sigma_{3}}{SCI_{3}} = \sqrt{ (\frac{\sigma_{2}}{SCI_{2}})^{2} +(\frac{\sigma_{pflat}}{pflat})^{2}} $$</p>
+<div class="math notranslate nohighlight">
+\[ SCI_{3} = SCI_{2}/pflat \]</div>
+<div class="math notranslate nohighlight">
+\[ \frac{\sigma_{3}}{SCI_{3}} = \sqrt{ (\frac{\sigma_{2}}{SCI_{2}})^{2} +(\frac{\sigma_{pflat}}{pflat})^{2}} \]</div>
 <p>Delta-Flat (dflat) file:</p>
-<p>$$ SCI_{4} = SCI_{3}/dflat $$</p>
-<p>$$ \frac{\sigma_{4}}{SCI_{4}} = \sqrt{ (\frac{\sigma_{3}}{SCI_{3}})^{2} +(\frac{\sigma_{dflat}}{dflat})^{2}} = \sqrt{ (\frac{\sigma_{2}}{SCI_{2}})^{2} +(\frac{\sigma_{pflat}}{pflat})^{2} +(\frac{\sigma_{dflat}}{dflat})^{2}}$$</p>
+<div class="math notranslate nohighlight">
+\[ SCI_{4} = SCI_{3}/dflat \]</div>
+<div class="math notranslate nohighlight">
+\[ \frac{\sigma_{4}}{SCI_{4}} = \sqrt{ (\frac{\sigma_{3}}{SCI_{3}})^{2} +(\frac{\sigma_{dflat}}{dflat})^{2}} = \sqrt{ (\frac{\sigma_{2}}{SCI_{2}})^{2} +(\frac{\sigma_{pflat}}{pflat})^{2} +(\frac{\sigma_{dflat}}{dflat})^{2}}\]</div>
 <p>and finally it is converted to an error in electrons/second as:</p>
-<p>$$ \sigma_{e^{-}/s}= \frac{\sigma_{4}}{exptime}$$</p>
+<div class="math notranslate nohighlight">
+\[ \sigma_{e^{-}/s}= \frac{\sigma_{4}}{exptime}\]</div>
 <p>Evaluating this equation, we come up with an equation for error array calculation (in electrons/second) which we use in our Python calculations as follows:</p>
-<p>$$ \sigma_{e^{-}/s}= \frac{\sqrt{ RN^{2} + (flux*(pflat<em>dflat) + dark) +  \sigma_{dark}^{2} + (\sigma_{pflat}<em>flux</em>dflat)^{2} + (\sigma_{dflat}<em>flux</em>pflat)^{2} }}{pflat</em>dflat*exptime}$$</p>
+<div class="math notranslate nohighlight">
+\[ \sigma_{e^{-}/s}= \frac{\sqrt{ RN^{2} + (flux*(pflat*dflat) + dark) +  \sigma_{dark}^{2} + (\sigma_{pflat}*flux*dflat)^{2} + (\sigma_{dflat}*flux*pflat)^{2} }}{pflat*dflat*exptime}\]</div>
 <p>We do not address the error propagation through the nonlinearity correction step of <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> (NLINCORR), as it is complicated and sufficiently small to be outside of the scope of this notebook.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">

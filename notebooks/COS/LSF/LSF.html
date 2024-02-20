@@ -63,6 +63,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/COS/LSF/LSF';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -612,7 +614,7 @@ document.write(`
                 <article class="bd-article">
                   
   <p><a id="topL"></a></p>
-<section id="working-with-the-cos-line-spread-function-lsf">
+<section class="tex2jax_ignore mathjax_ignore" id="working-with-the-cos-line-spread-function-lsf">
 <h1>Working with the COS Line Spread Function (LSF)<a class="headerlink" href="#working-with-the-cos-line-spread-function-lsf" title="Permalink to this heading">#</a></h1>
 <section id="learning-goals">
 <h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h2>
@@ -744,16 +746,18 @@ document.write(`
 </section>
 </section>
 </section>
-<section id="understanding-the-line-spread-function">
+<section class="tex2jax_ignore mathjax_ignore" id="understanding-the-line-spread-function">
 <h1>1. Understanding the Line Spread Function<a class="headerlink" href="#understanding-the-line-spread-function" title="Permalink to this heading">#</a></h1>
 <p>Each COS observation is taken with a specific <strong>grating</strong> and a specific <strong>central wavelength setting</strong> (<strong>cenwave</strong>). Each such configuration (grating and cenwave) and - thus each COS dataset - has a set of corresponding Line Spread Functions (LSFs).</p>
 <p><a id = whatL></a></p>
 <section id="what-is-an-lsf">
 <h2>1.1. What is an LSF?<a class="headerlink" href="#what-is-an-lsf" title="Permalink to this heading">#</a></h2>
 <p>A Line Spread Function (LSF) is a model of a spectrograph’s response to a monochromatic light source: it explains how an infinitely thin spectral line (a <a class="reference external" href="https://en.wikipedia.org/wiki/Dirac_delta_function">delta function</a>) input into the spectrograph would be output at the focal plane. A spectrum with infinite spectral resolution convolved with the COS LSF will reproduce the COS spectral line profiles:</p>
-<p>$$True\ Input\ Spectrum \ast COS\ LSF = True\ Output\ Spectrum$$</p>
+<div class="math notranslate nohighlight">
+\[True\ Input\ Spectrum \ast COS\ LSF = True\ Output\ Spectrum\]</div>
 <p>Of course, we don’t have access to a “true”, infinite resolution input spectrum, nor can we know the infinite resolution LSF. The best we can do is use a model spectrum, or a spectrum from a higher resolution spectrograph (STIS often works well) and convolve it with a kernel of our LSF model. Convolving these yields our model output spectrum:</p>
-<p>$$Model\ Input\ Spectrum \ast COS\ LSF\ Model = Model\ Output\ Spectrum$$</p>
+<div class="math notranslate nohighlight">
+\[Model\ Input\ Spectrum \ast COS\ LSF\ Model = Model\ Output\ Spectrum\]</div>
 <p><em><strong>Note</strong></em> <em>that there is a corresponding spread function in the cross-dispersion direction, known as the cross-dispersion spread function (CDSF). These functions are also modelled by the COS team and hosted on their website listed below. Working with the CDSFs is out of the scope of this Notebook.</em></p>
 <p><font size="4 "> <b>How does COS handle the LSF?</b></font></p>
 <p>The COS LSFs are generated using an optical model of the spectrograph in the program <a class="reference external" href="https://www.synopsys.com/optical-solutions/codev.html">Code V</a>, and are then validated using real spectral data obtained with the instrument. The LSF kernels are sampled at regular intervals over the wavelength range of each COS configuration. Each of these wavelengths thus corresponds to an LSF kernel. The kernel size (in <a class="reference external" href="https://hst-docs.stsci.edu/cosihb/glossary">COS “pixels”</a>) of each LSF varies for the near ultraviolet (NUV) and far ultraviolet (FUV) modes, as does the sample rate (how many Angstroms between sampled kernels). These values are shown below:</p>
@@ -1817,7 +1821,7 @@ This effectively converts an LSF kernel from a function of pixel to a function o
 </div>
 <p><strong>We can now examine how the convolution differs across the spectrum.</strong>
 We do this by creating a <a class="reference external" href="https://en.wikipedia.org/wiki/Frequency_comb">“picket fence”/”frequency comb”</a>-like spectrum of evenly-spaced, identical, normalized Voigt profiles. Each of these lines is normalized to a maximum of 1.</p>
-<p>We’ll make our synthetic spectrum slightly more realistic by converting from emission lines to absorption lines on a flat spectrum. To do this, we define a simple function, <code class="docutils literal notranslate"><span class="pre">emit2abs()</span></code>, which defines a flat continuum of 1, then multiplies this continuum by $e^{-emission\ spectrum}$</p>
+<p>We’ll make our synthetic spectrum slightly more realistic by converting from emission lines to absorption lines on a flat spectrum. To do this, we define a simple function, <code class="docutils literal notranslate"><span class="pre">emit2abs()</span></code>, which defines a flat continuum of 1, then multiplies this continuum by <span class="math notranslate nohighlight">\(e^{-emission\ spectrum}\)</span></p>
 <p>We then use <code class="docutils literal notranslate"><span class="pre">convolve_lsf</span></code> to convolve each of these synthetic spectral lines with the LSF kernel under whose “jurisdiction” they fall. For each line, we plot <em>pre-</em> and <em>post-</em> convolution spectrum in the 8 smaller panels. In the bottom, larger panel, we also plot the entire spectrum of all the lines.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
