@@ -10,9 +10,9 @@ DESCRIPTION:
     
     The reason this file is defined separate of the Notebook is to prevent the Notebook from including large and confusing code chunks. In the future, these functions may be incorporated into a Python package, such as `COSTools`.
 """
-#%%
 import numpy as np
 from astropy.table import Table
+import matplotlib.pyplot as plt
 
 
 def downsample_sum(myarr, factor):
@@ -55,7 +55,7 @@ def downsample_1d(myarr, factor, weightsarr=[-1], weighted=True, in_quad=False):
     crop_arr = myarr[: xs - (xs % int(factor))]
     crop_weights = weightsarr[: xs - (xs % int(factor))]
 
-    if weighted == True:
+    if weighted:
         if np.mean(weightsarr) == -1:
             print("CAUTION!!!! You didn't specify what to weight by!")
             dsarr = -1
@@ -68,7 +68,7 @@ def downsample_1d(myarr, factor, weightsarr=[-1], weighted=True, in_quad=False):
                 axis=0,
             )
 
-    else:  # when weighted == False:
+    else:
         dsarr = np.mean(
             np.concatenate([[crop_arr[i::factor] for i in range(factor)]]), axis=0
         )
@@ -97,7 +97,7 @@ def bin_by_resel(data_table, binsize=6, weighted=True, verbose=True):
     assert binsize != 0, "Impossible binsize of 0."
     assert binsize != 1, "Binning by 1 means doing nothing."
     assert (
-        binsize > 1 and type(binsize) == int
+        binsize > 1 and type(binsize) is int
     ), "Binsize must be an integer greater than 1."
     exptimes_ = []
     wvlns_, fluxs_, fluxErrs_, fluxErr_lowers_, gross_s_, gcount_s_ = (
@@ -115,7 +115,7 @@ def bin_by_resel(data_table, binsize=6, weighted=True, verbose=True):
         wvln_, flux_, fluxErr_, fluxErr_lower_, gross_, gcount_ = data_table[i][
             "WAVELENGTH", "FLUX", "ERROR", "ERROR_LOWER", "GROSS", "GCOUNTS"
         ]
-        if weighted == True:
+        if weighted:
             np.seterr(
                 invalid="ignore"
             )  # We want to silence warnings from  dividing 0/0
@@ -124,7 +124,7 @@ def bin_by_resel(data_table, binsize=6, weighted=True, verbose=True):
             )  # Exposure time can be calculated by gross counts divided by gross counts/second
             # Dividing this way results in NaNs which are messy. replace nans with a value << exptime
             # This way, weight is ~0 unless all values in a chunk are NaN
-            np.seterr(invalid="warn")  # Turn the warnings back on
+            np.seterr(invalid="warn")
             wvln_ = downsample_1d(myarr=wvln_, weightsarr=weightsarr_, factor=binsize)
             flux_ = downsample_1d(myarr=flux_, weightsarr=weightsarr_, factor=binsize)
             fluxErr_ = np.divide(
@@ -132,7 +132,9 @@ def bin_by_resel(data_table, binsize=6, weighted=True, verbose=True):
                     myarr=fluxErr_, weighted=False, factor=binsize, in_quad=False
                 ),
                 np.sqrt(binsize),
-            )  # Errors are divided by the square root of the number of (identical) observations they represent - this is idealized and simplified. It is good for an estimation.
+            ) 
+            # Errors are divided by the sqrt of the number of (identical) observations they represent
+            # this is idealized and simplified. It is good for an estimation.
             fluxErr_lower_ = np.divide(
                 downsample_1d(
                     myarr=fluxErr_lower_, weighted=False, factor=binsize, in_quad=False
@@ -142,7 +144,7 @@ def bin_by_resel(data_table, binsize=6, weighted=True, verbose=True):
             gross_ = downsample_sum(myarr=gross_, factor=binsize)
             gcount_ = downsample_sum(myarr=gcount_, factor=binsize)
 
-        elif weighted == False:
+        elif weighted is False:
             weightsarr_ = -1
 
             wvln_ = downsample_1d(myarr=wvln_, weighted=False, factor=binsize)
@@ -213,7 +215,7 @@ def estimate_snr(
     segsFound = 0
 
     # STEP ONE - BINNING
-    if bin_data_first == True:  # Should we bin first?
+    if bin_data_first:
         if verbose:
             print("First, Binning the data by ", binsize_)
         data_table = bin_by_resel(data_table, binsize=binsize_)
@@ -222,8 +224,9 @@ def estimate_snr(
     for i in range(len(data_table)):
         wvln_, gross_, gcount_ = data_table[i]["WAVELENGTH", "GROSS", "GCOUNTS"]
 
-        if snr_range == [-1, -1]:  # No range specified - estimates over the whole range
-            snr_array.append([wvln_, np.sqrt(gcount_), i])
+        # No range specified - estimates over the whole range
+        snr_array.append([wvln_, np.sqrt(gcount_), i])
+        if snr_range == [-1, -1]:
             if verbose:
                 print("No range specified.")
 
@@ -240,7 +243,7 @@ def estimate_snr(
 
                 snr_array.append([wvln_range, np.sqrt(gcount_range), i])
 
-                if weighted == False:
+                if weighted is False:
                     weight_avg_snr = np.mean(np.sqrt(gcount_range))
                     if verbose:
                         print(
@@ -250,7 +253,7 @@ def estimate_snr(
                             f"\nUnweighted mean SNR over the range {snr_range} is: {weight_avg_snr}",
                         )
 
-                if weighted == True:
+                if weighted:
                     weight_avg_snr = np.average(
                         np.sqrt(gcount_range),
                         weights=np.nan_to_num(gcount_range / gross_range, nan=1e-30),
@@ -301,7 +304,6 @@ def withinPercent(val1, val2, percent=1.0):
     if (val1 == np.nan) | (val2 == np.nan):
         print("One of your values is NOT A NUMBER")
     lowval = np.min(np.array([val1, val2]))
-    meanval = np.mean(np.array([val1, val2]))
     absDif = np.abs(np.subtract(val1, val2))
     percentDif = np.abs(100 * (absDif / lowval))
     within_percent_bool = percentDif <= percent
@@ -319,9 +321,6 @@ if __name__ == "__main__":
         # You will need to set this filepath to a fitsfile.
         # I used the publicly available ldxt08010_x1dsum.fits from program 15646 (https://archive.stsci.edu/cgi-bin/mastpreview?mission=hst&dataid=LDXT08010). It was chosen at random, and is not particularly high quality data.
         filepath = "./ldxt08010_x1dsum.fits.gz"
-
-        from astropy.io import fits
-        import matplotlib.pyplot as plt
 
         unbin_tab = Table.read(filepath)
         X = [1]
@@ -392,24 +391,23 @@ if __name__ == "__main__":
                 print("failed for", bs_)
                 print(ex)
         plt.figure(figsize=(8, 6), dpi=200)
-        # plt.scatter(X[1:],limfluxerrs, label = "From my binning algorithm")
         plt.scatter(X, snr_counts_approach, label="From my binning algorithm")
         plt.scatter(
             x=X,
             y=snr_flux_approach,
-            label="From the X1DSUM's $\dfrac{FLUX}{ERROR}$",
+            label=r"From the X1DSUM's $\dfrac{FLUX}{ERROR}$",
             marker="x",
             c="r",
         )
         plt.scatter(
             x=X,
             y=snr_flux_approach_low,
-            label="From the X1DSUM's $\dfrac{FLUX}{ERROR\_LOWER}$",
+            label=r"From the X1DSUM's $\dfrac{FLUX}{ERROR\_LOWER}$",
             marker="x",
             c="g",
         )
         plt.xlabel("Binsize [pixels]")
-        plt.ylabel("$\dfrac{Signal}{Noise}$")
+        plt.ylabel(r"$\dfrac{Signal}{Noise}$")
         # plt.xlim(0,30)
         plt.legend()
         plt.savefig("./test_estimate_snr_function.png")
