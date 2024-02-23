@@ -3,19 +3,21 @@ from astropy.io import fits
 from astropy.visualization import (ZScaleInterval, LinearStretch,
                                    ImageNormalize)
 
-def ds9_imitate(ax,image):
+
+def ds9_imitate(ax, image):
     norm = ImageNormalize(image,
                           interval=ZScaleInterval(),
                           stretch=LinearStretch())
 
-    ax.imshow(image, cmap='bone', norm=norm, origin = 'lower')
+    ax.imshow(image, cmap='bone', norm=norm, origin='lower')
+
 
 def triple_pam_plot(flt_file, pam_file, figtitle):
     fl_img = fits.getdata(flt_file, ext=1)
     pam_img = fits.getdata(pam_file)
 
-    fig = plt.figure(figsize=(20,4))
-    fig.suptitle(figtitle,fontsize=20)
+    fig = plt.figure(figsize=(20, 4))
+    fig.suptitle(figtitle, fontsize=20)
 
     ax = fig.add_subplot(1, 3, 1)
     ds9_imitate(ax, fl_img)

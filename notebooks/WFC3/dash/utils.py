@@ -46,6 +46,7 @@ def get_flat(file_name):
 
     return reffile_name
 
+
 def get_IDCtable(file_name):
     '''
     Will check if user has proper reference file directories 
