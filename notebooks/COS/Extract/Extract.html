@@ -275,6 +275,11 @@ const thebe_selector_output = ".output, .cell_output"
 
 <li class="toctree-l1"><a class="reference internal" href="../../HASP/FluxScaleTutorial/FluxScaleTutorial.html">Scaling Flux while using the Hubble Advanced Spectral Products Script</a></li>
 
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/DataDiagnostic/DataDiagnostics.html">HASP Data Diagnostic Notebook</a></li>
+
+
+
+
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
 <ul class="nav bd-sidenav">
@@ -1633,55 +1638,65 @@ To begin, we select and plot the raw counts data from the 0th rawtag file:</p>
 <span class="n">gs</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_gridspec</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
                       <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> 
 
+<span class="n">new_x1dsum_nuv</span> <span class="o">=</span> <span class="s1">&#39;./output_nuv/calcos_nuv_run1/le4b04010_x1dsum.fits&#39;</span>
+
 <span class="c1"># Going through each NUV stripe</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
     <span class="c1"># Creating two subplots, one with the X1DSUM data and the other a residual plot</span>
     <span class="n">ax0</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
     <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
 
-    <span class="c1"># Getting the newly created (edited) X1DSUM&#39;s data</span>
-    <span class="n">new_wvln_nuv</span><span class="p">,</span> <span class="n">new_flux_nuv</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;./output_nuv/calcos_nuv_run1/le4b04010_x1dsum.fits&#39;</span><span class="p">)[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX&#39;</span><span class="p">]</span>
-    <span class="c1"># Getting the old X1DSUM&#39;s data</span>
-    <span class="n">old_wvln_nuv</span><span class="p">,</span> <span class="n">old_flux_nuv</span><span class="p">,</span> <span class="n">seg_nuv</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">old_x1dsum_nuv</span><span class="p">)[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX&#39;</span><span class="p">,</span> <span class="s1">&#39;SEGMENT&#39;</span><span class="p">]</span>
-    
-    <span class="c1"># Interpolate the new wvln onto the old wvln&#39;s sampling:</span>
-    <span class="n">new_flux_interp_nuv</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_wvln_nuv</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">new_flux_nuv</span><span class="p">,</span> 
-                                   <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)(</span><span class="n">old_wvln_nuv</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">new_x1dsum_nuv</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_hdul_nuv</span><span class="p">,</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">old_x1dsum_nuv</span><span class="p">)</span> <span class="k">as</span> <span class="n">old_hdul_nuv</span><span class="p">:</span>
+        <span class="c1"># Getting the flux and wl for old and new x1dsums</span>
+        <span class="n">new_nuv_data</span> <span class="o">=</span> <span class="n">new_hdul_nuv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">old_nuv_data</span> <span class="o">=</span> <span class="n">old_hdul_nuv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        
+        <span class="n">seg_nuv</span> <span class="o">=</span> <span class="n">old_nuv_data</span><span class="p">[</span><span class="s2">&quot;SEGMENT&quot;</span><span class="p">]</span>
 
-    <span class="c1"># Print max difference to user:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stripe </span><span class="si">{</span><span class="n">seg_nuv</span><span class="si">}</span><span class="s2"> differs by up to: </span><span class="se">\</span>
-<span class="s2">    </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">new_flux_nuv</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">old_flux_nuv</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">old_flux_nuv</span><span class="p">))</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+        <span class="n">old_wvln_nuv</span> <span class="o">=</span> <span class="n">old_nuv_data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">]</span>
+        <span class="n">old_flux_nuv</span> <span class="o">=</span> <span class="n">old_nuv_data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">]</span>
 
-    <span class="c1"># Plotting upper panel</span>
-    <span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">new_wvln_nuv</span><span class="p">,</span> <span class="n">new_flux_nuv</span><span class="p">,</span> 
-             <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> 
-             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$New$ extracted spectrum&#39;</span><span class="p">)</span>
-    <span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">old_wvln_nuv</span><span class="p">,</span> <span class="n">old_flux_nuv</span><span class="p">,</span> 
-             <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> 
-             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$Original$ extracted spectrum&#39;</span><span class="p">)</span>
+        <span class="n">new_wvln_nuv</span> <span class="o">=</span> <span class="n">new_nuv_data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">]</span>
+        <span class="n">new_flux_nuv</span> <span class="o">=</span> <span class="n">new_nuv_data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">]</span>
 
-    <span class="c1"># Plotting lower panel</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">new_wvln_nuv</span><span class="p">,</span> <span class="n">old_flux_nuv</span> <span class="o">-</span> <span class="n">new_flux_interp_nuv</span><span class="p">,</span> 
-             <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> 
-             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Residual&#39;</span><span class="p">)</span>
+        <span class="c1"># Interpolate the new wvln onto the old wvln&#39;s sampling:</span>
+        <span class="n">new_flux_interp_nuv</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_wvln_nuv</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">new_flux_nuv</span><span class="p">,</span> 
+                                       <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)(</span><span class="n">old_wvln_nuv</span><span class="p">)</span>
+        
+        <span class="c1"># Print max difference to user:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stripe </span><span class="si">{</span><span class="n">seg_nuv</span><span class="si">}</span><span class="s2"> differs by up to: </span><span class="se">\</span>
+<span class="s2">        </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">new_flux_nuv</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">old_flux_nuv</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">old_flux_nuv</span><span class="p">))</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Formatting:</span>
-    <span class="n">ax0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Segment </span><span class="si">{</span><span class="n">seg_nuv</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> 
-                  <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="c1"># Plotting upper panel</span>
+        <span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">new_wvln_nuv</span><span class="p">,</span> <span class="n">new_flux_nuv</span><span class="p">,</span> 
+                 <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> 
+                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$New$ extracted spectrum&#39;</span><span class="p">)</span>
+        <span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">old_wvln_nuv</span><span class="p">,</span> <span class="n">old_flux_nuv</span><span class="p">,</span> 
+                 <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> 
+                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$Original$ extracted spectrum&#39;</span><span class="p">)</span>
 
-    <span class="n">ax0</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+        <span class="c1"># Plotting lower panel</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">new_wvln_nuv</span><span class="p">,</span> <span class="n">old_flux_nuv</span> <span class="o">-</span> <span class="n">new_flux_interp_nuv</span><span class="p">,</span> 
+                 <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> 
+                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Residual&#39;</span><span class="p">)</span>
 
-    <span class="c1"># Adding a legend</span>
-    <span class="n">ax0</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">)</span>
+        <span class="c1"># Formatting:</span>
+        <span class="n">ax0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Segment </span><span class="si">{</span><span class="n">seg_nuv</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> 
+                      <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
-    <span class="c1"># Add axis labels to the plot</span>
-    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
-        <span class="n">ax0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Flux\n[$erg\ \AA^{-1}\ cm^{-2}\ s^{-1}$]&quot;</span><span class="p">,</span> 
+        <span class="n">ax0</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+
+        <span class="c1"># Adding a legend</span>
+        <span class="n">ax0</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Add axis labels to the plot</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
+            <span class="n">ax0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Flux\n[$erg\ \AA^{-1}\ cm^{-2}\ s^{-1}$]&quot;</span><span class="p">,</span> 
+                           <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength&quot;</span><span class="p">,</span> 
                        <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength&quot;</span><span class="p">,</span> 
-                   <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Fig 3.1</span><span class="se">\n</span><span class="s2">Comparing the old and new extracted spectra for each segment&quot;</span><span class="p">,</span> 
              <span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
@@ -2142,58 +2157,69 @@ We select and plot the raw counts data from the 0th <code class="docutils litera
 <span class="n">gs</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_gridspec</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                       <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
+<span class="n">new_x1dsum_fuv</span> <span class="o">=</span> <span class="s1">&#39;./output_fuv/calcos_fuv_run1/le4b01040_x1dsum.fits&#39;</span>
+
 <span class="c1"># Use i,j to plot FUVA on the right, not the left, by inverting subplot index</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]):</span>
     <span class="n">ax0</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
     <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
 
-    <span class="c1"># Get the new and old flux/wavelength data to be plotted</span>
-    <span class="n">new_wvln_fuv</span><span class="p">,</span> <span class="n">new_flux_fuv</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;./output_fuv/calcos_fuv_run1/le4b01040_x1dsum.fits&#39;</span><span class="p">)[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX&#39;</span><span class="p">]</span>
-    <span class="n">old_wvln_fuv</span><span class="p">,</span> <span class="n">old_flux_fuv</span><span class="p">,</span> <span class="n">seg_fuv</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">old_x1dsum_fuv</span><span class="p">)[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX&#39;</span><span class="p">,</span> <span class="s1">&#39;SEGMENT&#39;</span><span class="p">]</span>
+    <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">new_x1dsum_fuv</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_hdul_fuv</span><span class="p">,</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">old_x1dsum_fuv</span><span class="p">)</span> <span class="k">as</span> <span class="n">old_hdul_fuv</span><span class="p">:</span>
+        <span class="c1"># Getting the flux and wl for old and new x1dsums</span>
+        <span class="n">new_fuv_data</span> <span class="o">=</span> <span class="n">new_hdul_fuv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">old_fuv_data</span> <span class="o">=</span> <span class="n">old_hdul_fuv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        
+        <span class="n">seg_fuv</span> <span class="o">=</span> <span class="n">old_fuv_data</span><span class="p">[</span><span class="s2">&quot;SEGMENT&quot;</span><span class="p">]</span>
 
-    <span class="c1"># Interpolate the new wvln onto the old wvln&#39;s sampling:</span>
-    <span class="n">new_flux_interp_fuv</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_wvln_fuv</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">new_flux_fuv</span><span class="p">,</span>
-                                   <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)(</span><span class="n">old_wvln_fuv</span><span class="p">)</span>
+        <span class="n">old_wvln_fuv</span> <span class="o">=</span> <span class="n">old_fuv_data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">]</span>
+        <span class="n">old_flux_fuv</span> <span class="o">=</span> <span class="n">old_fuv_data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">]</span>
 
-    <span class="c1"># Print the max difference</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stripe </span><span class="si">{</span><span class="n">seg_fuv</span><span class="si">}</span><span class="s2"> differs by up to: </span><span class="se">\</span>
-<span class="s2">    </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">new_flux_fuv</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">old_flux_fuv</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">old_flux_fuv</span><span class="p">))</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+        <span class="n">new_wvln_fuv</span> <span class="o">=</span> <span class="n">new_fuv_data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">]</span>
+        <span class="n">new_flux_fuv</span> <span class="o">=</span> <span class="n">new_fuv_data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">]</span>
 
-    <span class="c1"># Plotting the upper panel</span>
-    <span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">new_wvln_fuv</span><span class="p">,</span> <span class="n">new_flux_fuv</span><span class="p">,</span>
-             <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-             <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-             <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span>
-             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$New$ extracted spectrum&#39;</span><span class="p">)</span>
+        <span class="c1"># Interpolate the new wvln onto the old wvln&#39;s sampling:</span>
+        <span class="n">new_flux_interp_fuv</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_wvln_fuv</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">new_flux_fuv</span><span class="p">,</span>
+                                       <span class="n">fill_value</span><span class="o">=</span><span class="s2">&quot;extrapolate&quot;</span><span class="p">)(</span><span class="n">old_wvln_fuv</span><span class="p">)</span>
+        
+        <span class="c1"># Print the max difference</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stripe </span><span class="si">{</span><span class="n">seg_fuv</span><span class="si">}</span><span class="s2"> differs by up to: </span><span class="se">\</span>
+<span class="s2">        </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">new_flux_fuv</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">old_flux_fuv</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">old_flux_fuv</span><span class="p">))</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
 
-    <span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">old_wvln_fuv</span><span class="p">,</span> <span class="n">old_flux_fuv</span><span class="p">,</span>
-             <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-             <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span>
-             <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dotted&#39;</span><span class="p">,</span>
-             <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>
-             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$Original$ extracted spectrum&#39;</span><span class="p">)</span>
+        <span class="c1"># Plotting the upper panel</span>
+        <span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">new_wvln_fuv</span><span class="p">,</span> <span class="n">new_flux_fuv</span><span class="p">,</span>
+                 <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                 <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span>
+                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$New$ extracted spectrum&#39;</span><span class="p">)</span>
 
-    <span class="c1"># Plotting the lower panel</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">new_wvln_fuv</span><span class="p">,</span> <span class="n">old_flux_fuv</span> <span class="o">-</span> <span class="n">new_flux_interp_fuv</span><span class="p">,</span>
-             <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Residual&#39;</span><span class="p">)</span>
+        <span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">old_wvln_fuv</span><span class="p">,</span> <span class="n">old_flux_fuv</span><span class="p">,</span>
+                 <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span>
+                 <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dotted&#39;</span><span class="p">,</span>
+                 <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>
+                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$Original$ extracted spectrum&#39;</span><span class="p">)</span>
 
-    <span class="c1"># Some formatting:</span>
-    <span class="n">ax0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Segment </span><span class="si">{</span><span class="n">seg_fuv</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                  <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="c1"># Plotting the lower panel</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">new_wvln_fuv</span><span class="p">,</span> <span class="n">old_flux_fuv</span> <span class="o">-</span> <span class="n">new_flux_interp_fuv</span><span class="p">,</span>
+                 <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Residual&#39;</span><span class="p">)</span>
 
-    <span class="n">ax0</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+        <span class="c1"># Some formatting:</span>
+        <span class="n">ax0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Segment </span><span class="si">{</span><span class="n">seg_fuv</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                      <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
-    <span class="n">ax0</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">)</span>
+        <span class="n">ax0</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
 
-    <span class="c1"># Add axis labels to the plot</span>
-    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">ax0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Flux\n[$erg\ \AA^{-1}\ cm^{-2}\ s^{-1}$]&quot;</span><span class="p">,</span>
-                       <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength&quot;</span><span class="p">,</span>
-                   <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">ax0</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Add axis labels to the plot</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ax0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Flux\n[$erg\ \AA^{-1}\ cm^{-2}\ s^{-1}$]&quot;</span><span class="p">,</span>
+                        <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength&quot;</span><span class="p">,</span>
+                    <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Fig 4.4</span><span class="se">\n</span><span class="s2">Comparing the old and new extracted spectra for each segment in the FUV&quot;</span><span class="p">,</span>
              <span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
