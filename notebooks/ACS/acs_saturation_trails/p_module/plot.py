@@ -3,6 +3,7 @@ from astropy.io import fits
 from astropy.visualization import (ZScaleInterval, LinearStretch,
                                    ImageNormalize)
 
+
 def ds9_imitate(ax, image, extent=None):
     norm = ImageNormalize(image,
                           interval=ZScaleInterval(),
@@ -15,8 +16,8 @@ def triple_pam_plot(flt_file, pam_file, figtitle):
     fl_img = fits.getdata(flt_file, ext=1)
     pam_img = fits.getdata(pam_file)
 
-    fig = plt.figure(figsize=(20,4))
-    fig.suptitle(figtitle,fontsize=20)
+    fig = plt.figure(figsize=(20, 4))
+    fig.suptitle(figtitle, fontsize=20)
 
     ax = fig.add_subplot(1, 3, 1)
     ds9_imitate(ax, fl_img)
@@ -36,13 +37,12 @@ def triple_pam_plot(flt_file, pam_file, figtitle):
 
 
 def calib_compare_plot(raw_image, cal_image):
-    fig = plt.figure(figsize=(14,14))
+    fig = plt.figure(figsize=(14, 14))
 
-    ax = fig.add_subplot(2,1,1)
+    ax = fig.add_subplot(2, 1, 1)
     ds9_imitate(ax, raw_image)
     ax.set_title('Raw')
 
-    ax2 = fig.add_subplot(2,1,2)
+    ax2 = fig.add_subplot(2, 1, 2)
     ds9_imitate(ax2, cal_image)
     ax2.set_title('Flat-Fielded')
-
