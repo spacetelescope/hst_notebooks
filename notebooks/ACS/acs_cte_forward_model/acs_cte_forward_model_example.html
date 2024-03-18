@@ -312,6 +312,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../../WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../WFC3/persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../WFC3/zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../WFC3/tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../WFC3/photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../WFC3/uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
@@ -710,39 +711,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_14402_14_acs_wfc_f775w_jd0q14ct_flc.fits to ./mastDownload/HST/hst_14402_14_acs_wfc_f775w_jd0q14ct/hst_14402_14_acs_wfc_f775w_jd0q14ct_flc.fits ...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jd0q14ctq_raw.fits to ./mastDownload/HST/jd0q14ctq/jd0q14ctq_raw.fits ...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jd0q14ctq_flc.fits to ./mastDownload/HST/jd0q14ctq/jd0q14ctq_flc.fits ...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                             Local Path                                              Status  Message URL 
---------------------------------------------------------------------------------------------------- -------- ------- ----
-./mastDownload/HST/hst_14402_14_acs_wfc_f775w_jd0q14ct/hst_14402_14_acs_wfc_f775w_jd0q14ct_flc.fits COMPLETE    None None
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                   Local Path                    Status  Message URL 
------------------------------------------------ -------- ------- ----
-./mastDownload/HST/jd0q14ctq/jd0q14ctq_raw.fits COMPLETE    None None
-                   Local Path                    Status  Message URL 
------------------------------------------------ -------- ------- ----
-./mastDownload/HST/jd0q14ctq/jd0q14ctq_flc.fits COMPLETE    None None
-</pre></div>
-</div>
-</div>
 </div>
 <p>Next, update and download the correct flat and dark reference files for the <code class="docutils literal notranslate"><span class="pre">jd0q14ctq</span></code> dataset from the <a class="reference external" href="https://hst-crds.stsci.edu/">Calibration Reference Data System</a> (CRDS). We use the <a class="reference external" href="https://hst-crds.stsci.edu/static/users_guide/command_line_tools.html#crds-bestrefs">CRDS command line tools</a> to do this.</p>
 <div class="cell docutils container">
@@ -752,19 +720,6 @@ document.write(`
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;jref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache/references/hst/acs/&#39;</span>
 
 <span class="o">!</span>crds<span class="w"> </span>bestrefs<span class="w"> </span>--update-bestrefs<span class="w"> </span>--sync-references<span class="o">=</span><span class="m">1</span><span class="w"> </span>--files<span class="w"> </span>jd0q14ctq_flc.fits
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  No comparison context or source comparison requested.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  ===&gt; Processing jd0q14ctq_flc.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  0 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  2 infos
 </pre></div>
 </div>
 </div>
@@ -860,35 +815,6 @@ CRDS - INFO -  2 infos
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    amplitude            x_mean       ...      y_stddev             theta       
------------------- ------------------ ... ------------------ -------------------
- 7206.412662781505   672.256459027922 ...  1.063089715030752   2.712707760579224
-  9844.37102143771 3285.6320559608557 ... 1.0685943672273157  1.3330571904556816
-24022.280991315656  866.8422527172593 ...  1.059395204536561  0.3480385124846702
-20449.512787153748  3533.654694228986 ... 1.0698033903086575   1.342926033417225
-12037.731742756316 232.08239400772024 ... 1.0515223832088936  2.6122798684754893
-10318.010872058343 1561.9042940107006 ... 1.0546573428346502  0.8062330648198324
-  18150.1082308221 1645.9074246864548 ... 1.0661625193211413  3.0094016055213455
- 6008.658475309544 3997.7114669390653 ... 1.0618157935420693  0.4630263808842762
- 20346.30329843133  3676.193422386556 ... 1.0684144806296034  2.1903431729736735
-28283.184525463148 1574.3302550278277 ...  1.057469375758373   2.508684497439569
-               ...                ... ...                ...                 ...
- 5505.025967961114   863.284471744775 ... 1.0584639705931516  3.0246115853855513
- 22460.78594543185 1096.2642798002244 ... 1.0611834304958094 0.23546611227724332
- 8198.588511505417   953.641597005205 ... 1.0660597856928529  1.1987208959743372
- 3811.029873895477 2319.3017794693465 ... 1.0676855561904914  1.8974014869765485
-28329.932866705938 1189.0625587216773 ... 1.0594482177680393  2.8660981311873894
-20665.887070474408  445.2836622343938 ... 1.0506344689747005  1.2564287062720447
-28766.302003180244 3573.8890874570916 ...  1.065108913670353  0.6087139456187645
- 10220.53835528653  709.6944264651651 ... 1.0532302614853886  0.5441486181817121
- 6171.619463863724  884.4802306999109 ... 1.0616268086942693  1.4697029385979279
- 4535.268669686549 3032.0901023949828 ...  1.067893846815149  1.0788778925254099
- 28329.64204233557 1880.3320343841622 ... 1.0621749562287572 0.15882860128205326
-Length = 300 rows
-</pre></div>
-</div>
-</div>
 </div>
 <p>Next, we get the shape of one of the <code class="docutils literal notranslate"><span class="pre">flc</span></code> image <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extensions and make an image from the table of Gaussian sources. Note that this step may take a few minutes. Finally, we run the synthetic image through a Poisson sampler in order to simulate the Poisson noise of the scene.</p>
 <div class="cell docutils container">
@@ -915,12 +841,6 @@ Length = 300 rows
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f48adec4550&gt;]
-</pre></div>
-</div>
-<img alt="../../../_images/173dfbc897c13bec1027cd96ce27f1f91b0af5e8fd9c538729d0095d124394d2.png" src="../../../_images/173dfbc897c13bec1027cd96ce27f1f91b0af5e8fd9c538729d0095d124394d2.png" />
-</div>
 </div>
 <p><a id="option-a"></a></p>
 </section>
@@ -939,12 +859,6 @@ Length = 300 rows
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">1200</span><span class="p">,</span> <span class="mi">1700</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1200.0, 1700.0)
-</pre></div>
-</div>
-<img alt="../../../_images/2bf2a3d89200dd757c8ce0d4641b1f4ef15eca0ec752719299ec5d781d0843f8.png" src="../../../_images/2bf2a3d89200dd757c8ce0d4641b1f4ef15eca0ec752719299ec5d781d0843f8.png" />
 </div>
 </div>
 <p><span class="xref myst">Top of Page</span></p>
@@ -984,12 +898,6 @@ Length = 300 rows
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">1200</span><span class="p">,</span> <span class="mi">1700</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1200.0, 1700.0)
-</pre></div>
-</div>
-<img alt="../../../_images/5823947a8386040f2c1672f78feff40a880a0a4dbbc4ec7ed6067a3b61061cba.png" src="../../../_images/5823947a8386040f2c1672f78feff40a880a0a4dbbc4ec7ed6067a3b61061cba.png" />
 </div>
 </div>
 <p><span class="xref myst">Top of Page</span></p>
@@ -1048,128 +956,6 @@ Length = 300 rows
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">acscteforwardmodel</span><span class="o">.</span><span class="n">acscteforwardmodel</span><span class="p">(</span><span class="s1">&#39;jd0q14ctq_stars_pfl_dkc.fits&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: UNKNOWN
-git branch: HEAD
-HEAD @: c6382bc48472486e3ad8fdd7acf0be0d5d3f4693
-Setting max threads to 4 out of 4 available
-Trying to open jd0q14ctq_stars_pfl_dkc.fits...
-Read in Primary header from jd0q14ctq_stars_pfl_dkc.fits...
-
-
-CALBEG*** ACSCTE -- Version 10.3.5 (08-Feb-2022) ***
-Begin    20-Feb-2024 16:20:32 UTC
-Input    jd0q14ctq_stars_pfl_dkc.fits
-Output   jd0q14ctq_stars_pfl_dkc_ctefmod.fits
-Trying to open jd0q14ctq_stars_pfl_dkc.fits...
-Read in Primary header from jd0q14ctq_stars_pfl_dkc.fits...
-APERTURE WFCENTER
-FILTER1 F775W
-FILTER2 CLEAR2L
-DETECTOR WFC
-DESCRIP read in as: 
-DESCRIP read in as: 
-DESCRIP read in as: 
-
-
-CCDTAB   jref$72m1821dj_ccd.fits
-CCDTAB   PEDIGREE=inflight
-CCDTAB   DESCRIP =July 2009
-
-
-PCTECORR PERFORM
-PCTEFILE jref$19i16323j_cte.fits
-Trying to open jref$19i16323j_cte.fits...
-Read in Primary header from jref$19i16323j_cte.fits...
-(pctecorr) Generation 2 PCTETAB file auto-detected.
-(pctecorr) Reading CTE parameters from PCTETAB file: &#39;jref$19i16323j_cte.fits&#39;...
-Trying to open jref$19i16323j_cte.fits...
-Read in Primary header from jref$19i16323j_cte.fits...
-
-CTE_NAME: PixelCTE 2017
-CTE_VER: 2.0
-CTEDATE0: 52334.9
-CTEDATE1: 57710.4
-PCTETLEN: 60
-PCTERNOI: 4.300000
-PCTERNFOR: 5
-PCTERNPAR: 7
-PCTENSMD: 0
-PCTETRSH: -10
-FIXROCR: 1
-Reading in image from extension 3
-Reading in image from extension 4
-ERROR:    Keyword = `PCTENSMD&#39;.
-ERROR:    Keyword = `PCTETLEN&#39;.
-ERROR:    Keyword = `PCTERNOI&#39;.
-ERROR:    Keyword = `PCTENFOR&#39;.
-ERROR:    Keyword = `PCTENPAR&#39;.
-ERROR:    Keyword = `FIXROCR&#39;.
-Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000. Using amp dependent values from CCDTAB instead
-(pctecorr) Readout simulation forward modeling iterations PCTENFOR: 5
-(pctecorr) Number of iterations used in the parallel transfer PCTENPAR: 7
-(pctecorr) CTE_FRAC: 0.951805
-(pctecorr) PCTETAB read
-(pctecorr) Using parallel processing provided by OpenMP inside CTE routine
-(pctecorr) Performing CTE correction for amp C
-(pctecorr) Read noise level from CCDTAB: 4.050000.
-(pctecorr) ...complete.
-(pctecorr) Creating charge trap image...
-(pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
-(pctecorr) ...complete.
-(pctecorr) Running forward model simulation...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -361005.000000 (-0.051070%)
-(pctecorr) Performing CTE correction for amp D
-(pctecorr) Read noise level from CCDTAB: 5.050000.
-(pctecorr) ...complete.
-(pctecorr) Creating charge trap image...
-(pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
-(pctecorr) ...complete.
-(pctecorr) Running forward model simulation...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -415252.468750 (-0.049263%)
-(pctecorr) CTE run time for current chip: 95.86(s) with 4 procs/threads
-
-(pctecorr) Using parallel processing provided by OpenMP inside CTE routine
-(pctecorr) Performing CTE correction for amp A
-(pctecorr) Read noise level from CCDTAB: 4.350000.
-(pctecorr) ...complete.
-(pctecorr) Creating charge trap image...
-(pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
-(pctecorr) ...complete.
-(pctecorr) Running forward model simulation...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -282142.375000 (-0.048684%)
-(pctecorr) Performing CTE correction for amp B
-(pctecorr) Read noise level from CCDTAB: 3.750000.
-(pctecorr) ...complete.
-(pctecorr) Creating charge trap image...
-(pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
-(pctecorr) ...complete.
-(pctecorr) Running forward model simulation...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -455755.531250 (-0.040268%)
-(pctecorr) CTE run time for current chip: 106.96(s) with 4 procs/threads
-
-PCTECORR COMPLETE
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      20-Feb-2024 16:23:56 UTC
-
-
-*** ACSCTE complete ***
 </pre></div>
 </div>
 </div>
@@ -1253,26 +1039,6 @@ PCTECORR COMPLETE
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: UNKNOWN
-git branch: HEAD
-HEAD @: c6382bc48472486e3ad8fdd7acf0be0d5d3f4693
-Setting max threads to 4 out of 4 available
-Trying to open jd0q14ctq_stars_ctefmod_blv_tmp.fits...
-Read in Primary header from jd0q14ctq_stars_ctefmod_blv_tmp.fits...
-
-
-CALBEG*** ACSCTE -- Version 10.3.5 (08-Feb-2022) ***
-Begin    20-Feb-2024 16:23:57 UTC
-Input    jd0q14ctq_stars_ctefmod_blv_tmp.fits
-Output   jd0q14ctq_stars_ctefmod_blc_tmp.fits
-Warning    Output file `jd0q14ctq_stars_ctefmod_blc_tmp.fits&#39; already exists.
-ERROR:    Error processing jd0q14ctq_stars_ctefmod_blv_tmp.fits.
-ERROR:    Error processing jd0q14ctq_stars_ctefmod_blv_tmp.fits.
-ERROR:             status = 1021
-</pre></div>
-</div>
-</div>
 </div>
 <p><a id="A8"></a></p>
 </section>
@@ -1289,25 +1055,6 @@ ERROR:             status = 1021
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: UNKNOWN
-git branch: HEAD
-HEAD @: c6382bc48472486e3ad8fdd7acf0be0d5d3f4693
-Trying to open jd0q14ctq_stars_ctefmod_blv_tmp.fits...
-Read in Primary header from jd0q14ctq_stars_ctefmod_blv_tmp.fits...
-
-
-CALBEG*** ACS2D -- Version 10.3.5 (08-Feb-2022) ***
-Begin    20-Feb-2024 16:23:57 UTC
-Input    jd0q14ctq_stars_ctefmod_blv_tmp.fits
-Output   jd0q14ctq_stars_ctefmod_flt.fits
-Warning    Output file `jd0q14ctq_stars_ctefmod_flt.fits&#39; already exists.
-ERROR:    Error processing jd0q14ctq_stars_ctefmod_blv_tmp.fits.
-ERROR:    Error processing jd0q14ctq_stars_ctefmod_blv_tmp.fits.
-ERROR:             status = 1021
-</pre></div>
-</div>
-</div>
 </div>
 <p>If the forward-modeled image was CTE-corrected in <span class="xref myst">Step 7A</span>, we run <code class="docutils literal notranslate"><span class="pre">acs2d</span></code> on the CTE-corrected image. The resulting filename will be <code class="docutils literal notranslate"><span class="pre">*_flc.fits</span></code>.</p>
 <div class="cell docutils container">
@@ -1317,25 +1064,6 @@ ERROR:             status = 1021
 <span class="c1"># fits.setval(&#39;jd0q14ctq_stars_ctefmod_blv_tmp.fits&#39;, &#39;FLSHCORR&#39;, value=&#39;PERFORM&#39;)</span>
 
 <span class="n">acs2d</span><span class="o">.</span><span class="n">acs2d</span><span class="p">(</span><span class="s1">&#39;jd0q14ctq_stars_ctefmod_blc_tmp.fits&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: UNKNOWN
-git branch: HEAD
-HEAD @: c6382bc48472486e3ad8fdd7acf0be0d5d3f4693
-Trying to open jd0q14ctq_stars_ctefmod_blc_tmp.fits...
-Read in Primary header from jd0q14ctq_stars_ctefmod_blc_tmp.fits...
-
-
-CALBEG*** ACS2D -- Version 10.3.5 (08-Feb-2022) ***
-Begin    20-Feb-2024 16:23:57 UTC
-Input    jd0q14ctq_stars_ctefmod_blc_tmp.fits
-Output   jd0q14ctq_stars_ctefmod_flc.fits
-Warning    Output file `jd0q14ctq_stars_ctefmod_flc.fits&#39; already exists.
-ERROR:    Error processing jd0q14ctq_stars_ctefmod_blc_tmp.fits.
-ERROR:    Error processing jd0q14ctq_stars_ctefmod_blc_tmp.fits.
-ERROR:             status = 1021
 </pre></div>
 </div>
 </div>
@@ -1357,12 +1085,6 @@ ERROR:             status = 1021
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1200.0, 1700.0)
-</pre></div>
-</div>
-<img alt="../../../_images/222ccca8a22c8616cb42d49a003f74e33aec910b215da2f9bec5abb165cd6400.png" src="../../../_images/222ccca8a22c8616cb42d49a003f74e33aec910b215da2f9bec5abb165cd6400.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1380,12 +1102,6 @@ ERROR:             status = 1021
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1200.0, 1700.0)
-</pre></div>
-</div>
-<img alt="../../../_images/735f592c34524005008b356b60d7e0c32b00b6282d4a4913aeca006a0c77e630.png" src="../../../_images/735f592c34524005008b356b60d7e0c32b00b6282d4a4913aeca006a0c77e630.png" />
-</div>
 </div>
 <p><span class="xref myst">Top of Page</span></p>
 <p><a id="option-b"></a></p>
@@ -1402,25 +1118,6 @@ ERROR:             status = 1021
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">acsccd</span><span class="o">.</span><span class="n">acsccd</span><span class="p">(</span><span class="s1">&#39;jd0q14ctq_raw.fits&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: UNKNOWN
-git branch: HEAD
-HEAD @: c6382bc48472486e3ad8fdd7acf0be0d5d3f4693
-Trying to open jd0q14ctq_raw.fits...
-Read in Primary header from jd0q14ctq_raw.fits...
-
-
-CALBEG*** ACSCCD -- Version 10.3.5 (08-Feb-2022) ***
-Begin    20-Feb-2024 16:23:57 UTC
-Input    jd0q14ctq_raw.fits
-Output   jd0q14ctq_blv_tmp.fits
-Warning    Output file `jd0q14ctq_blv_tmp.fits&#39; already exists.
-ERROR:    Error processing jd0q14ctq_raw.fits.
-ERROR:    Error processing jd0q14ctq_raw.fits.
-ERROR:             status = 1021
 </pre></div>
 </div>
 </div>
@@ -1468,12 +1165,6 @@ ERROR:             status = 1021
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">1200</span><span class="p">,</span> <span class="mi">1700</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1200.0, 1700.0)
-</pre></div>
-</div>
-<img alt="../../../_images/960a6c778ef7ff49fbcd6d436760d29ef9f8abcfd85409b560b6d97f01c9aed7.png" src="../../../_images/960a6c778ef7ff49fbcd6d436760d29ef9f8abcfd85409b560b6d97f01c9aed7.png" />
 </div>
 </div>
 <p>In order to properly remove the dark current after the forward model is run, we update the exposure time and flash duration header keywords, <code class="docutils literal notranslate"><span class="pre">EXPTIME</span></code> and <code class="docutils literal notranslate"><span class="pre">FLASHDUR</span></code>, with the desired simulated exposure time. The total exposure time used for the dark correction is the combination of exposure time, flash duration, and overhead (which depends on whether the data are post-flashed or not). Here we set <code class="docutils literal notranslate"><span class="pre">EXPTIME</span></code> to 300 seconds and <code class="docutils literal notranslate"><span class="pre">FLASHDUR</span></code> to 0 seconds. In principle one should retrieve the overheads from CCDTAB, but we provide a simpler approach here. Please note that the overhead times may change.</p>
@@ -1539,128 +1230,6 @@ ERROR:             status = 1021
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">acscteforwardmodel</span><span class="o">.</span><span class="n">acscteforwardmodel</span><span class="p">(</span><span class="s1">&#39;synth_blc_tmp.fits&#39;</span><span class="p">)</span>
 
 <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;synth_blc_tmp_ctefmod.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;synth_ctefmod_blv_tmp.fits&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: UNKNOWN
-git branch: HEAD
-HEAD @: c6382bc48472486e3ad8fdd7acf0be0d5d3f4693
-Setting max threads to 4 out of 4 available
-Trying to open synth_blc_tmp.fits...
-Read in Primary header from synth_blc_tmp.fits...
-
-
-CALBEG*** ACSCTE -- Version 10.3.5 (08-Feb-2022) ***
-Begin    20-Feb-2024 16:24:00 UTC
-Input    synth_blc_tmp.fits
-Output   synth_blc_tmp_ctefmod.fits
-Trying to open synth_blc_tmp.fits...
-Read in Primary header from synth_blc_tmp.fits...
-APERTURE WFCENTER
-FILTER1 F775W
-FILTER2 CLEAR2L
-DETECTOR WFC
-DESCRIP read in as: 
-DESCRIP read in as: 
-DESCRIP read in as: 
-
-
-CCDTAB   jref$72m1821dj_ccd.fits
-CCDTAB   PEDIGREE=inflight
-CCDTAB   DESCRIP =July 2009
-
-
-PCTECORR PERFORM
-PCTEFILE jref$19i16323j_cte.fits
-Trying to open jref$19i16323j_cte.fits...
-Read in Primary header from jref$19i16323j_cte.fits...
-(pctecorr) Generation 2 PCTETAB file auto-detected.
-(pctecorr) Reading CTE parameters from PCTETAB file: &#39;jref$19i16323j_cte.fits&#39;...
-Trying to open jref$19i16323j_cte.fits...
-Read in Primary header from jref$19i16323j_cte.fits...
-
-CTE_NAME: PixelCTE 2017
-CTE_VER: 2.0
-CTEDATE0: 52334.9
-CTEDATE1: 57710.4
-PCTETLEN: 60
-PCTERNOI: 4.300000
-PCTERNFOR: 5
-PCTERNPAR: 7
-PCTENSMD: 0
-PCTETRSH: -10
-FIXROCR: 1
-Reading in image from extension 3
-Reading in image from extension 4
-ERROR:    Keyword = `PCTENSMD&#39;.
-ERROR:    Keyword = `PCTETLEN&#39;.
-ERROR:    Keyword = `PCTERNOI&#39;.
-ERROR:    Keyword = `PCTENFOR&#39;.
-ERROR:    Keyword = `PCTENPAR&#39;.
-ERROR:    Keyword = `FIXROCR&#39;.
-Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000. Using amp dependent values from CCDTAB instead
-(pctecorr) Readout simulation forward modeling iterations PCTENFOR: 5
-(pctecorr) Number of iterations used in the parallel transfer PCTENPAR: 7
-(pctecorr) CTE_FRAC: 0.951805
-(pctecorr) PCTETAB read
-(pctecorr) Using parallel processing provided by OpenMP inside CTE routine
-(pctecorr) Performing CTE correction for amp C
-(pctecorr) Read noise level from CCDTAB: 4.050000.
-(pctecorr) ...complete.
-(pctecorr) Creating charge trap image...
-(pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
-(pctecorr) ...complete.
-(pctecorr) Running forward model simulation...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -300685.750000 (-0.135810%)
-(pctecorr) Performing CTE correction for amp D
-(pctecorr) Read noise level from CCDTAB: 5.050000.
-(pctecorr) ...complete.
-(pctecorr) Creating charge trap image...
-(pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
-(pctecorr) ...complete.
-(pctecorr) Running forward model simulation...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -313189.531250 (-0.135197%)
-(pctecorr) CTE run time for current chip: 43.09(s) with 4 procs/threads
-
-(pctecorr) Using parallel processing provided by OpenMP inside CTE routine
-(pctecorr) Performing CTE correction for amp A
-(pctecorr) Read noise level from CCDTAB: 4.350000.
-(pctecorr) ...complete.
-(pctecorr) Creating charge trap image...
-(pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
-(pctecorr) ...complete.
-(pctecorr) Running forward model simulation...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -301657.312500 (-0.142733%)
-(pctecorr) Performing CTE correction for amp B
-(pctecorr) Read noise level from CCDTAB: 3.750000.
-(pctecorr) ...complete.
-(pctecorr) Creating charge trap image...
-(pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
-(pctecorr) ...complete.
-(pctecorr) Running forward model simulation...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -312430.125000 (-0.138755%)
-(pctecorr) CTE run time for current chip: 42.98(s) with 4 procs/threads
-
-PCTECORR COMPLETE
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      20-Feb-2024 16:25:27 UTC
-
-
-*** ACSCTE complete ***
 </pre></div>
 </div>
 </div>
@@ -1771,14 +1340,6 @@ PCTECORR COMPLETE
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10.3.5 (08-Feb-2022)
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0
-</pre></div>
-</div>
-</div>
 </div>
 <p>If your version of CALCACS is prior to v10.3.3, please update. Now let’s run ACSCCD.</p>
 <div class="cell docutils container">
@@ -1789,76 +1350,6 @@ PCTECORR COMPLETE
 <span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="s1">&#39;synth_ctefmod_rn_raw.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;SINKCORR&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;PERFORM&#39;</span><span class="p">)</span>
 
 <span class="n">acsccd</span><span class="o">.</span><span class="n">acsccd</span><span class="p">(</span><span class="s1">&#39;synth_ctefmod_rn_raw.fits&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: UNKNOWN
-git branch: HEAD
-HEAD @: c6382bc48472486e3ad8fdd7acf0be0d5d3f4693
-Trying to open synth_ctefmod_rn_raw.fits...
-Read in Primary header from synth_ctefmod_rn_raw.fits...
-
-
-CALBEG*** ACSCCD -- Version 10.3.5 (08-Feb-2022) ***
-Begin    20-Feb-2024 16:25:28 UTC
-Input    synth_ctefmod_rn_raw.fits
-Output   synth_ctefmod_rn_blv_tmp.fits
-Trying to open synth_ctefmod_rn_raw.fits...
-Read in Primary header from synth_ctefmod_rn_raw.fits...
-APERTURE WFCENTER
-FILTER1 F775W
-FILTER2 CLEAR2L
-DETECTOR WFC
-DESCRIP read in as: 
-DESCRIP read in as: 
-DESCRIP read in as: 
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CCDTAB   jref$72m1821dj_ccd.fits
-CCDTAB   PEDIGREE=inflight
-CCDTAB   DESCRIP =July 2009
-Warning    Could not find appropriate row from OSCNTAB. 
-Warning    Could not find appropriate row from OSCNTAB. 
-
-
-DQICORR  PERFORM
-DQITAB   jref$25g1256nj_bpx.fits
-DQICORR  COMPLETE
-
-
-BIASCORR OMIT
-BIASCORR COMPLETE
-
-
-BLEVCORR OMIT
-Full Frame adjusted Darktime: 300.000000
-
-DARKTIME from SCI header: 300.000000  Offset from CCDTAB: 0.000000  Final DARKTIME: 300.000000
-Warning    
-No Full-well saturation flagging being performed for imset 1.
-
-Warning    
-No Full-well saturation flagging being performed for imset 2.
-
-
-    Uncertainty array initialized,
-    readnoise =4.35,3.75,4.05,5.05
-    gain =2.02,1.886,2.017,2.011
-   default bias levels =4242,4060.6,4481.8,4645.4
-
-
-SINKCORR PERFORM
-SNKCFILE jref$25e1534hj_snk.fits
-SNKCFILE PEDIGREE=INFLIGHT 12/02/2016 09/03/2016
-SNKCFILE DESCRIP =Sink pixel reference file ----------------------------
-SINKCORR COMPLETE
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      20-Feb-2024 16:25:28 UTC
-
-
-*** ACSCCD complete ***
 </pre></div>
 </div>
 </div>
@@ -1915,26 +1406,6 @@ SINKCORR COMPLETE
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: UNKNOWN
-git branch: HEAD
-HEAD @: c6382bc48472486e3ad8fdd7acf0be0d5d3f4693
-Setting max threads to 4 out of 4 available
-Trying to open synth_ctefmod_rn_blv_tmp.fits...
-Read in Primary header from synth_ctefmod_rn_blv_tmp.fits...
-
-
-CALBEG*** ACSCTE -- Version 10.3.5 (08-Feb-2022) ***
-Begin    20-Feb-2024 16:25:29 UTC
-Input    synth_ctefmod_rn_blv_tmp.fits
-Output   synth_ctefmod_rn_blc_tmp.fits
-Warning    Output file `synth_ctefmod_rn_blc_tmp.fits&#39; already exists.
-ERROR:    Error processing synth_ctefmod_rn_blv_tmp.fits.
-ERROR:    Error processing synth_ctefmod_rn_blv_tmp.fits.
-ERROR:             status = 1021
-</pre></div>
-</div>
-</div>
 </div>
 <p><a id="B7"></a></p>
 </section>
@@ -1951,25 +1422,6 @@ ERROR:             status = 1021
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: UNKNOWN
-git branch: HEAD
-HEAD @: c6382bc48472486e3ad8fdd7acf0be0d5d3f4693
-Trying to open synth_ctefmod_rn_blv_tmp.fits...
-Read in Primary header from synth_ctefmod_rn_blv_tmp.fits...
-
-
-CALBEG*** ACS2D -- Version 10.3.5 (08-Feb-2022) ***
-Begin    20-Feb-2024 16:25:29 UTC
-Input    synth_ctefmod_rn_blv_tmp.fits
-Output   synth_ctefmod_rn_flt.fits
-Warning    Output file `synth_ctefmod_rn_flt.fits&#39; already exists.
-ERROR:    Error processing synth_ctefmod_rn_blv_tmp.fits.
-ERROR:    Error processing synth_ctefmod_rn_blv_tmp.fits.
-ERROR:             status = 1021
-</pre></div>
-</div>
-</div>
 </div>
 <p>If the forward-modeled image was CTE-corrected in <span class="xref myst">Step 6</span>, we run <code class="docutils literal notranslate"><span class="pre">acs2d</span></code> on the CTE-corrected image. The resulting filename will be <code class="docutils literal notranslate"><span class="pre">*_flc.fits</span></code>.</p>
 <div class="cell docutils container">
@@ -1979,25 +1431,6 @@ ERROR:             status = 1021
 <span class="c1"># fits.setval(&#39;synth_ctefmod_rn_blc_tmp.fits&#39;, &#39;FLSHCORR&#39;, value=&#39;PERFORM&#39;)</span>
 
 <span class="n">acs2d</span><span class="o">.</span><span class="n">acs2d</span><span class="p">(</span><span class="s1">&#39;synth_ctefmod_rn_blc_tmp.fits&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: UNKNOWN
-git branch: HEAD
-HEAD @: c6382bc48472486e3ad8fdd7acf0be0d5d3f4693
-Trying to open synth_ctefmod_rn_blc_tmp.fits...
-Read in Primary header from synth_ctefmod_rn_blc_tmp.fits...
-
-
-CALBEG*** ACS2D -- Version 10.3.5 (08-Feb-2022) ***
-Begin    20-Feb-2024 16:25:29 UTC
-Input    synth_ctefmod_rn_blc_tmp.fits
-Output   synth_ctefmod_rn_flc.fits
-Warning    Output file `synth_ctefmod_rn_flc.fits&#39; already exists.
-ERROR:    Error processing synth_ctefmod_rn_blc_tmp.fits.
-ERROR:    Error processing synth_ctefmod_rn_blc_tmp.fits.
-ERROR:             status = 1021
 </pre></div>
 </div>
 </div>
@@ -2019,12 +1452,6 @@ ERROR:             status = 1021
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1200.0, 1700.0)
-</pre></div>
-</div>
-<img alt="../../../_images/13e55f2a4498ae4be71dc41c66fc8e49e597e608f0257f0cabd3e91dbd4ee9eb.png" src="../../../_images/13e55f2a4498ae4be71dc41c66fc8e49e597e608f0257f0cabd3e91dbd4ee9eb.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2041,12 +1468,6 @@ ERROR:             status = 1021
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">1200</span><span class="p">,</span> <span class="mi">1700</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1200.0, 1700.0)
-</pre></div>
-</div>
-<img alt="../../../_images/b6c7859d13461538559e1691f0c1c78a76ecbbd260d6f02294fc04df03b5c84a.png" src="../../../_images/b6c7859d13461538559e1691f0c1c78a76ecbbd260d6f02294fc04df03b5c84a.png" />
 </div>
 </div>
 </section>

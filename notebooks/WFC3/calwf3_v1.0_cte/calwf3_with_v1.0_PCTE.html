@@ -310,6 +310,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
@@ -739,11 +740,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-rw-r--r-- 1 runner docker 350644 Dec 12 15:43 archived_drkcfiles.txt
-</pre></div>
-</div>
-</div>
 </div>
 <p><a id="checkcalver"></a></p>
 </section>
@@ -762,11 +758,6 @@ If you would like to use the v1.0 correction, your <br> current environment must
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># print calwf3 version to make sure its equal to or between 3.3 and 3.5.2 </span>
 <span class="o">!</span>calwf3.e<span class="w"> </span>--version
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.5.2
 </pre></div>
 </div>
 </div>
@@ -806,21 +797,11 @@ After downloading the image, we move it to the current working directory (cwd).<
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/idv404axq_raw.fits to ./mastDownload/HST/idv404axq/idv404axq_raw.fits ... [Done]
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># show list of current dir to verify fits file is there</span>
 <span class="o">!</span>ls<span class="w"> </span>-l<span class="w"> </span>*raw.fits
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-rw-r--r-- 1 runner docker 34891200 Dec 12 15:52 idv404axq_raw.fits
 </pre></div>
 </div>
 </div>
@@ -861,15 +842,6 @@ After downloading the image, we move it to the current working directory (cwd).<
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  No comparison context or source comparison requested.
-CRDS - INFO -  ===&gt; Processing idv404axq_raw.fits
-CRDS - INFO -  0 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  2 infos
-</pre></div>
-</div>
-</div>
 </div>
 <p><a id="imageheaders"></a></p>
 </section>
@@ -905,13 +877,6 @@ At this step, you should see: <br></p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div><i>Table length=1</i>
-<table id="table140311519349392" class="table-striped table-bordered table-condensed">
-<thead><tr><th>file</th><th>date-obs</th><th>expstart</th><th>pctetab</th><th>drkcfile</th><th>pctecorr</th></tr></thead>
-<thead><tr><th>str18</th><th>str10</th><th>float64</th><th>str23</th><th>str23</th><th>str7</th></tr></thead>
-<tr><td>idv404axq_raw.fits</td><td>2019-07-29</td><td>58693.181643</td><td>iref$54l1347ei_cte.fits</td><td>iref$7bg1930ki_dkc.fits</td><td>PERFORM</td></tr>
-</table></div></div></div>
 </div>
 <p><a id="finddark"></a></p>
 </section>
@@ -961,13 +926,6 @@ At this step, you should see: <br></p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div><i>Table length=1</i>
-<table id="table140311519007632" class="table-striped table-bordered table-condensed">
-<thead><tr><th>filename</th><th>date-obs</th><th>dkc-filename</th><th>dkc-useafter</th><th>dkc-activation</th></tr></thead>
-<thead><tr><th>str18</th><th>str10</th><th>str18</th><th>str10</th><th>str10</th></tr></thead>
-<tr><td>idv404axq_raw.fits</td><td>2019-07-29</td><td>3961719li_dkc.fits</td><td>2019-07-28</td><td>2019-09-09</td></tr>
-</table></div></div></div>
 </div>
 <p><a id="sync_dkc"></a></p>
 </section>
@@ -981,16 +939,6 @@ At this step, you should see: <br></p>
     <span class="n">run_sync</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">crds_sync</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">run_sync</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;crds sync failed with exit code: </span><span class="si">{</span><span class="n">run_sync</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-operational&#39; resolves to &#39;hst_1125.pmap&#39;
-CRDS - INFO -  Reorganizing 27 references from &#39;flat&#39; to &#39;flat&#39;
-CRDS - INFO -  Syncing explicitly listed files.
-CRDS - INFO -  0 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  3 infos
 </pre></div>
 </div>
 </div>
@@ -1021,16 +969,6 @@ CRDS - INFO -  3 infos
 <span class="n">run_sync</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">crds_sync</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">run_sync</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;crds sync failed: </span><span class="si">{</span><span class="n">run_sync</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-operational&#39; resolves to &#39;hst_1125.pmap&#39;
-CRDS - INFO -  Reorganizing 27 references from &#39;flat&#39; to &#39;flat&#39;
-CRDS - INFO -  Syncing explicitly listed files.
-CRDS - INFO -  0 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  3 infos
 </pre></div>
 </div>
 </div>
@@ -1078,13 +1016,6 @@ CRDS - INFO -  3 infos
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div><i>Table length=1</i>
-<table id="table140311519214864" class="table-striped table-bordered table-condensed">
-<thead><tr><th>file</th><th>date-obs</th><th>expstart</th><th>pctetab</th><th>drkcfile</th><th>pctecorr</th></tr></thead>
-<thead><tr><th>str18</th><th>str10</th><th>float64</th><th>str23</th><th>str23</th><th>str7</th></tr></thead>
-<tr><td>idv404axq_raw.fits</td><td>2019-07-29</td><td>58693.181643</td><td>iref$zcv2057mi_cte.fits</td><td>iref$3961719li_dkc.fits</td><td>PERFORM</td></tr>
-</table></div></div></div>
 </div>
 <p><a id="runcal"></a></p>
 </section>
@@ -1103,14 +1034,6 @@ CRDS - INFO -  3 infos
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># show list of cwd to verify calibrated files were made</span>
 <span class="o">!</span>ls<span class="w"> </span>-ltr<span class="w"> </span>*.fits
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-rw-r--r-- 1 runner docker 168079680 Dec 12 15:52 idv404axq_flt.fits
--rw-r--r-- 1 runner docker 168079680 Dec 12 15:52 idv404axq_flc.fits
--rw-r--r-- 1 runner docker 168681600 Dec 12 15:52 idv404axq_v2.0_flc.fits
--rw-r--r-- 1 runner docker  34891200 Dec 12 15:53 idv404axq_raw.fits
 </pre></div>
 </div>
 </div>
@@ -1141,14 +1064,6 @@ CRDS - INFO -  3 infos
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div><i>Table length=2</i>
-<table id="table140311519365328" class="table-striped table-bordered table-condensed">
-<thead><tr><th>file</th><th>pctetab</th><th>drkcfile</th><th>pctecorr</th><th>cal_ver</th><th>cte_name</th><th>cte_ver</th></tr></thead>
-<thead><tr><th>str18</th><th>str23</th><th>str23</th><th>str8</th><th>str19</th><th>str13</th><th>str3</th></tr></thead>
-<tr><td>idv404axq_flc.fits</td><td>iref$54l1347ei_cte.fits</td><td>iref$54n2022fi_dkc.fits</td><td>COMPLETE</td><td>3.6.2 (May-27-2021)</td><td>pixelCTE 2019</td><td>2.0</td></tr>
-<tr><td>idv404axq_flc.fits</td><td>iref$zcv2057mi_cte.fits</td><td>iref$3961719li_dkc.fits</td><td>COMPLETE</td><td>3.5.2(Aug-12-2020)</td><td>pixelCTE 2012</td><td>1.0</td></tr>
-</table></div></div></div>
 </div>
 <p><a id="verdiffs"></a></p>
 </section>
@@ -1182,11 +1097,6 @@ CRDS - INFO -  3 infos
         
 <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;mastDownload/HST/&#39;</span><span class="p">)</span>
 <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;mastDownload/&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/idv404axq_flc.fits to ./mastDownload/HST/idv404axq/idv404axq_flc.fits ... [Done]
 </pre></div>
 </div>
 </div>
@@ -1257,9 +1167,6 @@ CRDS - INFO -  3 infos
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/02c9e0fa65ec5d8db98bb66a5eb7f59ea0cb033f0de10b7b31cfe44b8aeacf54.png" src="../../../_images/02c9e0fa65ec5d8db98bb66a5eb7f59ea0cb033f0de10b7b31cfe44b8aeacf54.png" />
-</div>
 </div>
 <div style="text-align: left"> <strong> <font size ="4">Animated GIF of the v1.0 and v2.0 FLC image subsections: </font> </strong> </div>
 <a class="reference internal image-reference" href="../../../_images/v1_v2_bkg.gif"><img alt="An animated gif blinking between a subsection of background sky using the v1.0 and V2.0 pixel-based CTE corrections. The v2.0 background appears smoother with less noise and pixel variations." class="align-left" src="../../../_images/v1_v2_bkg.gif" style="width: 800px; height: 800px;" /></a>
@@ -1298,9 +1205,6 @@ CRDS - INFO -  3 infos
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/a37ddb9f9f91be6f8ff4d690cc6f92e7626d06956d56e6323b7e8883d37a7c85.png" src="../../../_images/a37ddb9f9f91be6f8ff4d690cc6f92e7626d06956d56e6323b7e8883d37a7c85.png" />
-</div>
 </div>
 <p><a id="imgsub"></a></p>
 </section>
@@ -1330,9 +1234,6 @@ CRDS - INFO -  3 infos
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/ba1e54979ed9397a6f99f7f5fa8ce240b421dd71304a9da90c65ac19c3fc3d17.png" src="../../../_images/ba1e54979ed9397a6f99f7f5fa8ce240b421dd71304a9da90c65ac19c3fc3d17.png" />
 </div>
 </div>
 <div style="text-align: left"> <strong> <font size ="4">Animated GIF of the v1.0 and v2.0 FLC image subsections: </font> </strong> </div>
@@ -1400,16 +1301,6 @@ CRDS - INFO -  3 infos
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/hst_notebooks/hst_notebooks/notebooks/WFC3/calwf3_v1.0_cte/example/background_median.py:88: RuntimeWarning: invalid value encountered in divide
-  values = cutout * mask.data / mask.data
-/home/runner/work/hst_notebooks/hst_notebooks/notebooks/WFC3/calwf3_v1.0_cte/example/background_median.py:88: RuntimeWarning: invalid value encountered in divide
-  values = cutout * mask.data / mask.data
-/home/runner/work/hst_notebooks/hst_notebooks/notebooks/WFC3/calwf3_v1.0_cte/example/background_median.py:88: RuntimeWarning: invalid value encountered in divide
-  values = cutout * mask.data / mask.data
-</pre></div>
-</div>
-</div>
 </div>
 <div class="alert alert-block alert-warning" style="color:black" > <b> You can ignore the <code>RuntimeWarning: invalid value encountered in true_divide</code> message.</b> <br> </div>
 <p>Finally, we plot our results.<br></p>
@@ -1447,9 +1338,6 @@ CRDS - INFO -  3 infos
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/3612da94ddffafc43a9735f9e0929004b64ec1fcd106b9a2f75e49d89c5ea74e.png" src="../../../_images/3612da94ddffafc43a9735f9e0929004b64ec1fcd106b9a2f75e49d89c5ea74e.png" />
 </div>
 </div>
 <p><a id="conclude"></a></p>

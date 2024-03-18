@@ -1,0 +1,1338 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Calculating WFC3 Zeropoints with STSynphot &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/WFC3/zeropoints/zeropoints';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique" href="../tvb_flattenramp/TVB_flattenramp_notebook.html" />
+    <link rel="prev" title="Masking Persistence in WFC3/IR Images" href="../persistence/wfc3_ir_persistence.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="HST Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="HST Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI HST Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">Obtaining Pixel Area Maps for ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html">Focus Diverse ePSFs for ACS/WFC</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Jupyter Notebook Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/Initialization/Initialization.html">DrizzlePac Initialization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an absolute reference catalog</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling WFPC2 Images to use a Single Zeropoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/sky_matching/sky_matching.html">Sky Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/use_ds9_regions_in_tweakreg/use_ds9_regions_in_tweakreg.html">Using DS9 Regions to Include and Exclude Sources in HST Image Alignment with TWEAKREG</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Using updated astrometry solutions</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HASP</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/Setup/Setup.html">Installing the Hubble Advanced Spectral Products Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/CoaddTutorial/CoaddTutorial.html">Inputting User Data using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/FluxScaleTutorial/FluxScaleTutorial.html">Scaling Flux while using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/DataDiagnostic/DataDiagnostics.html">HASP Data Diagnostic Notebook</a></li>
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/README.html">STIS-Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">WFC3 Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Calculating WFC3 Zeropoints with STSynphot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/WFC3/zeropoints/zeropoints.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/WFC3/zeropoints/zeropoints.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/WFC3/zeropoints/zeropoints.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Calculating WFC3 Zeropoints with STSynphot</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">1. Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-throughput-tables-and-define-variables">2. Download throughput tables and define variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up-the-obsmode-string">3. Set up the ‘obsmode’ string</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage-for-a-single-obsmode">4. Basic usage for a single ‘obsmode’</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compute-zeropoints-and-other-photometric-properties">5. Compute zeropoints and other photometric properties</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iterate-over-multiple-obsmodes">6. Iterate over multiple ‘obsmodes’</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-and-plot-total-system-throughput-tables">7. Create and plot ‘total system throughput’ tables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">8. Conclusions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#congratulations-you-have-completed-the-notebook">Congratulations, you have completed the notebook!</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p><a id="title"></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="calculating-wfc3-zeropoints-with-stsynphot">
+<h1>Calculating WFC3 Zeropoints with STSynphot<a class="headerlink" href="#calculating-wfc3-zeropoints-with-stsynphot" title="Permalink to this heading">#</a></h1>
+<hr class="docutils" />
+<section id="learning-goals">
+<h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h2>
+<p>By the end of this tutorial, you will:</p>
+<ul class="simple">
+<li><p>Calculate zeropoints and other photometric properties using <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code>.</p></li>
+<li><p>Create, plot, and save ‘total system throughput’ tables.</p></li>
+</ul>
+</section>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
+<p><span class="xref myst">Introduction</span> <br>
+<span class="xref myst">1. Imports</span> <br>
+<span class="xref myst">2. Download throughput tables and define variables</span> <br>
+<span class="xref myst">3. Set up the ‘obsmode’ string</span> <br>
+<span class="xref myst">4. Basic usage for a single ‘obsmode’</span> <br>
+<span class="xref myst">5. Compute zeropoints and other photometric properties</span> <br>
+<span class="xref myst">6. Iterate over multiple ‘obsmodes’</span> <br>
+<span class="xref myst">7. Create and plot ‘total system throughput’ tables</span> <br>
+<span class="xref myst">8. Conclusions</span> <br>
+<span class="xref myst">Additional Resources</span> <br>
+<span class="xref myst">About the Notebook</span> <br>
+<span class="xref myst">Citations</span> <br></p>
+<p><a id="intro"></a></p>
+</section>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>This notebook shows how to calculate photometric zeropoints using the Python package <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code> for any WFC3 detector, filter, date, or aperture. This tutorial is especially useful for calculating Vegamag zeropoints, which require an input spectrum. The notebook is also useful for computing time-dependent WFC3/UVIS zeropoints for any observation date, as the values listed in <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2021/WFC3_ISR_2021-04.pdf">WFC3 ISR 2021-04</a> are defined for the reference epoch. As of mid-2021, the WFC3/IR zeropoints are not time-dependent.</p>
+<p>More documentation on <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code> is available <a class="reference external" href="https://stsynphot.readthedocs.io/en/latest/index.html">here</a>. Using <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code> requires downloading the throughput curves for the HST instruments and optical path.  One method of doing this is shown in <span class="xref myst">Section 2</span>.  More information on the throughput tables can be found <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/reference-data-for-calibration-and-tools/synphot-throughput-tables">here</a>.</p>
+<p><a id="imports"></a></p>
+</section>
+<section id="imports">
+<h2>1. Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<p>This notebook assumes you have created the virtual environment in <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/blob/main/notebooks/WFC3/README.md">WFC3 notebooks’</a> installation instructions.</p>
+<p>We import:</p>
+<ul class="simple">
+<li><p><em>os</em> for setting environment variables</p></li>
+<li><p><em>tarfile</em> for extracting a .tar archive</p></li>
+<li><p><em>numpy</em> for handling array functions</p></li>
+<li><p><em>matplotlib.pyplot</em> for plotting data</p></li>
+<li><p><em>astropy</em> for astronomy related functions</p></li>
+<li><p><em>synphot</em> and <em>stsynphot</em> for evaluating synthetic photometry</p></li>
+</ul>
+<p>We will need to set the <code class="docutils literal notranslate"><span class="pre">PYSYN_CDBS</span></code> environment variable <em>before</em> importing stsynphot. We will also create a custom Vega spectrum, as the <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code> will supercede the usual <code class="docutils literal notranslate"><span class="pre">synphot</span></code> functionality regarding the Vega spectrum and would otherwise require a downloaded copy of the spectrum to be provided.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
+
+<span class="kn">from</span> <span class="nn">synphot</span> <span class="kn">import</span> <span class="n">Observation</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a class="anchor" id="envvar"></a></p>
+</section>
+<section id="download-throughput-tables-and-define-variables">
+<h2>2. Download throughput tables and define variables<a class="headerlink" href="#download-throughput-tables-and-define-variables" title="Permalink to this heading">#</a></h2>
+<p>This section obtains the WFC3 throughput component tables for use with <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code>. This step only needs to be done once. If these reference files have already been downloaded, this section can be skipped.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmd_input</span> <span class="o">=</span> <span class="s1">&#39;curl -O https://archive.stsci.edu/hlsps/reference-atlases/hlsp_reference-atlases_hst_multi_everything_multi_v11_sed.tar&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd_input</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0  796M    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  9  796M    9 74.0M    0     0  63.5M      0  0:00:12  0:00:01  0:00:11 63.5M
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22  796M   22  179M    0     0  83.1M      0  0:00:09  0:00:02  0:00:07 83.1M
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35  796M   35  280M    0     0  88.8M      0  0:00:08  0:00:03  0:00:05 88.7M
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 49  796M   49  391M    0     0  94.0M      0  0:00:08  0:00:04  0:00:04 94.0M
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 63  796M   63  502M    0     0  97.2M      0  0:00:08  0:00:05  0:00:03  100M
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 76  796M   76  611M    0     0  99.1M      0  0:00:08  0:00:06  0:00:02  107M
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90  796M   90  723M    0     0   100M      0  0:00:07  0:00:07 --:--:--  108M
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100  796M  100  796M    0     0   100M      0  0:00:07  0:00:07 --:--:--  108M
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once the downloaded is complete, extract the file and set the environment variable <code class="docutils literal notranslate"><span class="pre">PYSYN_CDBS</span></code> to the path of the <code class="docutils literal notranslate"><span class="pre">trds</span></code> subdirectory.  The next cell will do this for you, as long as the <code class="docutils literal notranslate"><span class="pre">.tar</span></code> file downloaded above has not been moved.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tar_archive</span> <span class="o">=</span> <span class="s1">&#39;hlsp_reference-atlases_hst_multi_everything_multi_v11_sed.tar&#39;</span>
+<span class="n">extract_to</span> <span class="o">=</span> <span class="s1">&#39;hlsp_reference-atlases_hst_multi_everything_multi_v11_sed&#39;</span>
+<span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">tar_archive</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar</span><span class="p">:</span>
+    <span class="n">tar</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">extract_to</span><span class="p">)</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PYSYN_CDBS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;hlsp_reference-atlases_hst_multi_everything_multi_v11_sed/grp/redcat/trds/&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, after having set up <code class="docutils literal notranslate"><span class="pre">PYSYN_CDBS</span></code>, we import stsynphot. A warning regarding the Vega spectrum is expected here.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">stsynphot</span> <span class="k">as</span> <span class="nn">stsyn</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Failed to load Vega spectrum from hlsp_reference-atlases_hst_multi_everything_multi_v11_sed/grp/redcat/trds//calspec/alpha_lyr_stis_010.fits; Functionality involving Vega will be cripped: FileNotFoundError(2, &#39;No such file or directory&#39;) [stsynphot.spectrum]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Rather than downloading the entire calspec database (synphot6.tar.gz), we can point directly to the latest Vega spectrum which is required for computing VEGAMAG.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vega_url</span> <span class="o">=</span> <span class="s1">&#39;https://ssb.stsci.edu/trds/calspec/alpha_lyr_stis_010.fits&#39;</span>
+<span class="n">stsyn</span><span class="o">.</span><span class="n">Vega</span> <span class="o">=</span> <span class="n">stsyn</span><span class="o">.</span><span class="n">spectrum</span><span class="o">.</span><span class="n">SourceSpectrum</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">vega_url</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a class="anchor" id="inps"></a></p>
+</section>
+<section id="set-up-the-obsmode-string">
+<h2>3. Set up the ‘obsmode’ string<a class="headerlink" href="#set-up-the-obsmode-string" title="Permalink to this heading">#</a></h2>
+<p>Parameters to set in the <code class="docutils literal notranslate"><span class="pre">obsmode</span></code> string include:</p>
+<ol class="arabic simple">
+<li><p>detector,</p></li>
+<li><p>filter,</p></li>
+<li><p>observation date (WFC3/UVIS only), and</p></li>
+<li><p>aperture size (in arcsec).</p></li>
+</ol>
+<p>Note that a 6.0” aperture is considered to be “infinite”, thus containing all of the flux. The zeropoints posted on the WFC3 website are calculated for an infinite aperture, so when computing photometry for smaller radii, aperture corrections must be applied.</p>
+<p>The inputs below can be changed to any desired <code class="docutils literal notranslate"><span class="pre">obsmode</span></code>, with examples of alternate parameters shown as commented lines.</p>
+<p>First, here are some detector examples with WFC3/UVIS1 as the default, and other options including both WFC3/UVIS chips or the WFC3/IR detector.</p>
+<p><strong>Note: if the IR detector is chosen, the filtnames below must be updated.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">detectors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;uvis1&#39;</span><span class="p">]</span>
+<span class="c1"># detectors = [&#39;uvis1&#39;, &#39;uvis2&#39;]</span>
+<span class="c1"># detectors = [&#39;ir&#39;]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, here are some filter examples with all WFC3/UVIS filters as the default, and other options including just F606W and the WFC3/IR filters.</p>
+<p><strong>Note: if WFC3/IR filters is chosen, the detectors above must be set to [‘ir’].</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filtnames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;f200lp&#39;</span><span class="p">,</span> <span class="s1">&#39;f218w&#39;</span><span class="p">,</span> <span class="s1">&#39;f225w&#39;</span><span class="p">,</span> <span class="s1">&#39;f275w&#39;</span><span class="p">,</span> <span class="s1">&#39;f280n&#39;</span><span class="p">,</span> <span class="s1">&#39;f300x&#39;</span><span class="p">,</span> <span class="s1">&#39;f336w&#39;</span><span class="p">,</span> <span class="s1">&#39;f343n&#39;</span><span class="p">,</span> <span class="s1">&#39;f350lp&#39;</span><span class="p">,</span> 
+             <span class="s1">&#39;f373n&#39;</span><span class="p">,</span> <span class="s1">&#39;f390m&#39;</span><span class="p">,</span> <span class="s1">&#39;f390w&#39;</span><span class="p">,</span> <span class="s1">&#39;f395n&#39;</span><span class="p">,</span> <span class="s1">&#39;f410m&#39;</span><span class="p">,</span> <span class="s1">&#39;f438w&#39;</span><span class="p">,</span> <span class="s1">&#39;f467m&#39;</span><span class="p">,</span> <span class="s1">&#39;f469n&#39;</span><span class="p">,</span> <span class="s1">&#39;f475w&#39;</span><span class="p">,</span> 
+             <span class="s1">&#39;f475x&#39;</span><span class="p">,</span> <span class="s1">&#39;f487n&#39;</span><span class="p">,</span> <span class="s1">&#39;f502n&#39;</span><span class="p">,</span> <span class="s1">&#39;f547m&#39;</span><span class="p">,</span> <span class="s1">&#39;f555w&#39;</span><span class="p">,</span> <span class="s1">&#39;f600lp&#39;</span><span class="p">,</span> <span class="s1">&#39;f606w&#39;</span><span class="p">,</span> <span class="s1">&#39;f621m&#39;</span><span class="p">,</span> <span class="s1">&#39;f625w&#39;</span><span class="p">,</span> 
+             <span class="s1">&#39;f631n&#39;</span><span class="p">,</span> <span class="s1">&#39;f645n&#39;</span><span class="p">,</span> <span class="s1">&#39;f656n&#39;</span><span class="p">,</span> <span class="s1">&#39;f657n&#39;</span><span class="p">,</span> <span class="s1">&#39;f658n&#39;</span><span class="p">,</span> <span class="s1">&#39;f665n&#39;</span><span class="p">,</span> <span class="s1">&#39;f673n&#39;</span><span class="p">,</span> <span class="s1">&#39;f680n&#39;</span><span class="p">,</span> <span class="s1">&#39;f689m&#39;</span><span class="p">,</span> 
+             <span class="s1">&#39;f763m&#39;</span><span class="p">,</span> <span class="s1">&#39;f775w&#39;</span><span class="p">,</span> <span class="s1">&#39;f814w&#39;</span><span class="p">,</span> <span class="s1">&#39;f845m&#39;</span><span class="p">,</span> <span class="s1">&#39;f850lp&#39;</span><span class="p">,</span> <span class="s1">&#39;f953n&#39;</span><span class="p">]</span>
+<span class="c1"># filtnames = [&#39;f606w&#39;]   </span>
+<span class="c1"># filtnames = [&#39;f098m&#39;, &#39;f105w&#39;, &#39;f110w&#39;, &#39;f125w&#39;, &#39;f126n&#39;, &#39;f127m&#39;, &#39;f128n&#39;, &#39;f130n&#39;, </span>
+<span class="c1">#              &#39;f132n&#39;, &#39;f139m&#39;, &#39;f140w&#39;, &#39;f153m&#39;, &#39;f160w&#39;, &#39;f164n&#39;, &#39;f167n&#39;]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, here are some date examples with the WFC3/UVIS reference epoch (55008 in MJD;
+2009-06-26) as the default, and the other option being the time right now.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mjd</span> <span class="o">=</span> <span class="s1">&#39;55008&#39;</span>
+<span class="c1"># mjd = str(Time.now().mjd)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, here are some aperture radius examples with 6.0” (151 pixels; “infinity”) as the default, and the other options including 0.396” (10 pixels for WFC3/UVIS) and 0.385” (3 pixels for WFC3/IR).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aper</span> <span class="o">=</span> <span class="s1">&#39;6.0&#39;</span>
+<span class="c1"># aper = &#39;0.396&#39;</span>
+<span class="c1"># aper = &#39;0.385&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a class="anchor" id="usage"></a></p>
+</section>
+<section id="basic-usage-for-a-single-obsmode">
+<h2>4. Basic usage for a single ‘obsmode’<a class="headerlink" href="#basic-usage-for-a-single-obsmode" title="Permalink to this heading">#</a></h2>
+<p>The calculation of the zeropoints starts with creating a specific bandpass object.  Bandpasses generally consist of at least an instrument name, detector name, and filter name, though other parameters (such as the MJD and aperture radius shown above) are optional.</p>
+<p>The cell below defines <code class="docutils literal notranslate"><span class="pre">obsmode</span></code> and creates a bandpass object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsmode</span> <span class="o">=</span> <span class="s1">&#39;wfc3,uvis1,f200lp&#39;</span>
+<span class="n">bp</span> <span class="o">=</span> <span class="n">stsyn</span><span class="o">.</span><span class="n">band</span><span class="p">(</span><span class="n">obsmode</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Optional parameters are supplied on the end of the basic bandpass:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsmode</span> <span class="o">=</span> <span class="s1">&#39;wfc3,uvis1,f200lp,mjd#55008,aper#6.0&#39;</span>
+<span class="n">bp</span> <span class="o">=</span> <span class="n">stsyn</span><span class="o">.</span><span class="n">band</span><span class="p">(</span><span class="n">obsmode</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In addition, we can use the parameters defined in <span class="xref myst">Section 3</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsmode</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;wfc3, </span><span class="si">{</span><span class="n">detectors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">filtnames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">, mjd#</span><span class="si">{</span><span class="n">mjd</span><span class="si">}</span><span class="s1">, aper#</span><span class="si">{</span><span class="n">aper</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="n">bp</span> <span class="o">=</span> <span class="n">stsyn</span><span class="o">.</span><span class="n">band</span><span class="p">(</span><span class="n">obsmode</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a class="anchor" id="zps"></a></p>
+</section>
+<section id="compute-zeropoints-and-other-photometric-properties">
+<h2>5. Compute zeropoints and other photometric properties<a class="headerlink" href="#compute-zeropoints-and-other-photometric-properties" title="Permalink to this heading">#</a></h2>
+<p>With the bandpass objects, we can now calculate zeropoints, pivot wavelengths, and photometric bandwidths.  To calculate Vegamag zeropoints, we use the Vega spectrum to calculate the flux in a given bandpass.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calculate_values</span><span class="p">(</span><span class="n">detector</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> <span class="n">aper</span><span class="p">):</span>
+    <span class="c1"># parameters can be removed from obsmode as needed</span>
+    <span class="n">obsmode</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;wfc3, </span><span class="si">{</span><span class="n">detector</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">, mjd#</span><span class="si">{</span><span class="n">mjd</span><span class="si">}</span><span class="s1">, aper#</span><span class="si">{</span><span class="n">aper</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">bp</span> <span class="o">=</span> <span class="n">stsyn</span><span class="o">.</span><span class="n">band</span><span class="p">(</span><span class="n">obsmode</span><span class="p">)</span>  
+    
+    <span class="c1"># STMag</span>
+    <span class="n">photflam</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">unit_response</span><span class="p">(</span><span class="n">stsyn</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">area</span><span class="p">)</span>  <span class="c1"># inverse sensitivity in flam</span>
+    <span class="n">stmag</span> <span class="o">=</span> <span class="o">-</span><span class="mf">21.1</span> <span class="o">-</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">photflam</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    
+    <span class="c1"># Pivot Wavelength and bandwidth</span>
+    <span class="n">photplam</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">pivot</span><span class="p">()</span> <span class="c1"># pivot wavelength in angstroms</span>
+    <span class="n">bandwidth</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">photbw</span><span class="p">()</span> <span class="c1"># bandwidth in angstroms</span>
+    
+    <span class="c1"># ABMag</span>
+    <span class="n">abmag</span> <span class="o">=</span> <span class="n">stmag</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">photplam</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="mf">18.6921</span>
+    
+    <span class="c1"># Vegamag</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">Observation</span><span class="p">(</span><span class="n">stsyn</span><span class="o">.</span><span class="n">Vega</span><span class="p">,</span> <span class="n">bp</span><span class="p">,</span> <span class="n">binset</span><span class="o">=</span><span class="n">bp</span><span class="o">.</span><span class="n">binset</span><span class="p">)</span>  <span class="c1"># synthetic observation of vega in bandpass using vega spectrum</span>
+    <span class="n">vegamag</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">obs</span><span class="o">.</span><span class="n">effstim</span><span class="p">(</span><span class="n">flux_unit</span><span class="o">=</span><span class="s1">&#39;obmag&#39;</span><span class="p">,</span> <span class="n">area</span><span class="o">=</span><span class="n">stsyn</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">area</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">obsmode</span><span class="p">,</span> <span class="n">photplam</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">photflam</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">stmag</span><span class="p">,</span> <span class="n">abmag</span><span class="p">,</span> <span class="n">vegamag</span><span class="o">.</span><span class="n">value</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsmode</span><span class="p">,</span> <span class="n">photplam</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">,</span> <span class="n">photflam</span><span class="p">,</span> <span class="n">stmag</span><span class="p">,</span> <span class="n">abmag</span><span class="p">,</span> <span class="n">vegamag</span> <span class="o">=</span> <span class="n">calculate_values</span><span class="p">(</span><span class="n">detectors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">filtnames</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mjd</span><span class="p">,</span> <span class="n">aper</span><span class="p">)</span>
+
+<span class="c1"># print values</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Obsmode                              PivotWave Photflam   STMAG   ABMAG   VEGAMAG&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obsmode</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">photplam</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">photflam</span><span class="si">:</span><span class="s1">.4e</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">stmag</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">abmag</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">vegamag</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Obsmode                              PivotWave Photflam   STMAG   ABMAG   VEGAMAG
+wfc3, uvis1, f200lp, mjd#55008, aper#6.0, 4971.9, 4.9157e-20, 27.171, 27.381, 26.931
+</pre></div>
+</div>
+</div>
+</div>
+<p><a class="anchor" id="iterate"></a></p>
+</section>
+<section id="iterate-over-multiple-obsmodes">
+<h2>6. Iterate over multiple ‘obsmodes’<a class="headerlink" href="#iterate-over-multiple-obsmodes" title="Permalink to this heading">#</a></h2>
+<p>To calculate zeropoints for multiple detectors and/or filters, we can use the function defined above and loop through detectors and filters defined in <span class="xref myst">Section 3</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">oms</span><span class="p">,</span> <span class="n">pivots</span><span class="p">,</span> <span class="n">bws</span><span class="p">,</span> <span class="n">pfs</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">ab</span><span class="p">,</span> <span class="n">vm</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Obsmode                              PivotWave Photflam   STMAG   ABMAG   VEGAMAG&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">detector</span> <span class="ow">in</span> <span class="n">detectors</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filtnames</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">calculate_values</span><span class="p">(</span><span class="n">detector</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> <span class="n">aper</span><span class="p">)</span>
+        <span class="n">obsmode</span><span class="p">,</span> <span class="n">photplam</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">,</span> <span class="n">photflam</span><span class="p">,</span> <span class="n">stmag</span><span class="p">,</span> <span class="n">abmag</span><span class="p">,</span> <span class="n">vegamag</span> <span class="o">=</span> <span class="n">res</span> <span class="c1"># solely for readability</span>
+        
+        <span class="c1"># print values</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obsmode</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">photplam</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">photflam</span><span class="si">:</span><span class="s1">.4e</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">stmag</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">abmag</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">vegamag</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+        <span class="n">oms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obsmode</span><span class="p">)</span>
+        <span class="n">pivots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">photplam</span><span class="p">)</span>
+        <span class="n">bws</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">)</span>
+        <span class="n">pfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">photflam</span><span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stmag</span><span class="p">)</span>
+        <span class="n">ab</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">abmag</span><span class="p">)</span>
+        <span class="n">vm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vegamag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Obsmode                              PivotWave Photflam   STMAG   ABMAG   VEGAMAG
+wfc3, uvis1, f200lp, mjd#55008, aper#6.0, 4971.9, 4.9157e-20, 27.171, 27.381, 26.931
+wfc3, uvis1, f218w, mjd#55008, aper#6.0, 2228.0, 1.4594e-17, 20.990, 22.942, 21.278
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f225w, mjd#55008, aper#6.0, 2372.1, 4.5688e-18, 22.251, 24.067, 22.430
+wfc3, uvis1, f275w, mjd#55008, aper#6.0, 2709.7, 3.2206e-18, 22.630, 24.158, 22.677
+wfc3, uvis1, f280n, mjd#55008, aper#6.0, 2832.9, 5.7472e-17, 19.501, 20.932, 19.516
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f300x, mjd#55008, aper#6.0, 2820.5, 1.4093e-18, 23.527, 24.968, 23.565
+wfc3, uvis1, f336w, mjd#55008, aper#6.0, 3354.5, 1.2848e-18, 23.628, 24.692, 23.527
+wfc3, uvis1, f343n, mjd#55008, aper#6.0, 3435.2, 2.5672e-18, 22.876, 23.889, 22.754
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f350lp, mjd#55008, aper#6.0, 5873.9, 5.1638e-20, 27.118, 26.965, 26.810
+wfc3, uvis1, f373n, mjd#55008, aper#6.0, 3730.2, 1.3488e-17, 21.075, 21.909, 21.036
+wfc3, uvis1, f390m, mjd#55008, aper#6.0, 3897.2, 2.5524e-18, 22.883, 23.621, 23.545
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f390w, mjd#55008, aper#6.0, 3923.7, 5.0142e-19, 24.649, 25.373, 25.174
+wfc3, uvis1, f395n, mjd#55008, aper#6.0, 3955.2, 5.9589e-18, 21.962, 22.668, 22.712
+wfc3, uvis1, f410m, mjd#55008, aper#6.0, 4109.0, 2.3481e-18, 22.973, 23.597, 23.771
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f438w, mjd#55008, aper#6.0, 4326.2, 6.7475e-19, 24.327, 24.839, 25.003
+wfc3, uvis1, f467m, mjd#55008, aper#6.0, 4682.6, 1.6498e-18, 23.356, 23.696, 23.859
+wfc3, uvis1, f469n, mjd#55008, aper#6.0, 4688.1, 9.3089e-18, 21.478, 21.815, 21.981
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f475w, mjd#55008, aper#6.0, 4773.1, 2.4962e-19, 25.407, 25.705, 25.810
+wfc3, uvis1, f475x, mjd#55008, aper#6.0, 4940.7, 1.5343e-19, 25.935, 26.158, 26.216
+wfc3, uvis1, f487n, mjd#55008, aper#6.0, 4871.4, 5.8860e-18, 21.975, 22.229, 22.050
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f502n, mjd#55008, aper#6.0, 5009.6, 5.0824e-18, 22.135, 22.328, 22.421
+wfc3, uvis1, f547m, mjd#55008, aper#6.0, 5447.5, 4.5847e-19, 24.747, 24.758, 24.761
+wfc3, uvis1, f555w, mjd#55008, aper#6.0, 5308.4, 1.8272e-19, 25.746, 25.813, 25.841
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f600lp, mjd#55008, aper#6.0, 7468.1, 8.6226e-20, 26.561, 25.887, 25.554
+wfc3, uvis1, f606w, mjd#55008, aper#6.0, 5889.2, 1.1506e-19, 26.248, 26.090, 26.006
+wfc3, uvis1, f621m, mjd#55008, aper#6.0, 6218.9, 4.0126e-19, 24.891, 24.615, 24.465
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f625w, mjd#55008, aper#6.0, 6242.6, 1.7139e-19, 25.815, 25.530, 25.379
+wfc3, uvis1, f631n, mjd#55008, aper#6.0, 6304.3, 4.8250e-18, 22.191, 21.885, 21.723
+wfc3, uvis1, f645n, mjd#55008, aper#6.0, 6453.6, 3.3059e-18, 22.602, 22.245, 22.049
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f656n, mjd#55008, aper#6.0, 6561.4, 1.6713e-17, 20.842, 20.450, 19.868
+wfc3, uvis1, f657n, mjd#55008, aper#6.0, 6566.6, 2.1811e-18, 23.053, 22.659, 22.333
+wfc3, uvis1, f658n, mjd#55008, aper#6.0, 6584.0, 9.7496e-18, 21.428, 21.027, 20.672
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f665n, mjd#55008, aper#6.0, 6655.9, 1.9774e-18, 23.160, 22.736, 22.492
+wfc3, uvis1, f673n, mjd#55008, aper#6.0, 6765.9, 2.1926e-18, 23.048, 22.588, 22.343
+wfc3, uvis1, f680n, mjd#55008, aper#6.0, 6877.6, 6.8241e-19, 24.315, 23.820, 23.556
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f689m, mjd#55008, aper#6.0, 6876.8, 3.7208e-19, 24.973, 24.479, 24.196
+wfc3, uvis1, f763m, mjd#55008, aper#6.0, 7614.4, 3.8291e-19, 24.942, 24.226, 23.837
+wfc3, uvis1, f775w, mjd#55008, aper#6.0, 7651.4, 2.0922e-19, 25.599, 24.872, 24.480
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f814w, mjd#55008, aper#6.0, 8039.1, 1.4994e-19, 25.960, 25.126, 24.698
+wfc3, uvis1, f845m, mjd#55008, aper#6.0, 8439.1, 4.5207e-19, 24.762, 23.823, 23.316
+wfc3, uvis1, f850lp, mjd#55008, aper#6.0, 9176.1, 3.7052e-19, 24.978, 23.857, 23.326
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wfc3, uvis1, f953n, mjd#55008, aper#6.0, 9530.6, 8.0946e-18, 21.630, 20.426, 19.803
+</pre></div>
+</div>
+</div>
+</div>
+<p>Values can also be written into an astropy table.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tbl</span> <span class="o">=</span> <span class="n">Table</span><span class="p">([</span><span class="n">oms</span><span class="p">,</span> <span class="n">pivots</span><span class="p">,</span> <span class="n">bws</span><span class="p">,</span> <span class="n">pfs</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">ab</span><span class="p">,</span> <span class="n">vm</span><span class="p">],</span> 
+            <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Obsmode&#39;</span><span class="p">,</span> <span class="s1">&#39;Pivot Wave&#39;</span><span class="p">,</span> <span class="s1">&#39;Bandwidth&#39;</span><span class="p">,</span> <span class="s1">&#39;Photflam&#39;</span><span class="p">,</span> <span class="s1">&#39;STMag&#39;</span><span class="p">,</span> <span class="s1">&#39;ABMag&#39;</span><span class="p">,</span> <span class="s1">&#39;VegaMag&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’ll also round  columns to a smaller number of decimals.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">tbl</span><span class="o">.</span><span class="n">itercols</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Photflam&#39;</span><span class="p">:</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.4e&#39;</span>
+    <span class="k">elif</span> <span class="n">col</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;f&#39;</span><span class="p">:</span>        
+        <span class="n">col</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.3f&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s view our astropy table:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tbl</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=42</i>
+<table id="table127951224133968" class="table-striped table-bordered table-condensed">
+<thead><tr><th>Obsmode</th><th>Pivot Wave</th><th>Bandwidth</th><th>Photflam</th><th>STMag</th><th>ABMag</th><th>VegaMag</th></tr></thead>
+<thead><tr><th>str40</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>wfc3, uvis1, f200lp, mjd#55008, aper#6.0</td><td>4971.860</td><td>1742.198</td><td>4.9157e-20</td><td>27.171</td><td>27.381</td><td>26.931</td></tr>
+<tr><td>wfc3, uvis1, f218w, mjd#55008, aper#6.0</td><td>2228.039</td><td>128.941</td><td>1.4594e-17</td><td>20.990</td><td>22.942</td><td>21.278</td></tr>
+<tr><td>wfc3, uvis1, f225w, mjd#55008, aper#6.0</td><td>2372.053</td><td>177.430</td><td>4.5688e-18</td><td>22.251</td><td>24.067</td><td>22.430</td></tr>
+<tr><td>wfc3, uvis1, f275w, mjd#55008, aper#6.0</td><td>2709.689</td><td>164.435</td><td>3.2206e-18</td><td>22.630</td><td>24.158</td><td>22.677</td></tr>
+<tr><td>wfc3, uvis1, f280n, mjd#55008, aper#6.0</td><td>2832.862</td><td>200.689</td><td>5.7472e-17</td><td>19.501</td><td>20.932</td><td>19.516</td></tr>
+<tr><td>wfc3, uvis1, f300x, mjd#55008, aper#6.0</td><td>2820.469</td><td>316.561</td><td>1.4093e-18</td><td>23.527</td><td>24.968</td><td>23.565</td></tr>
+<tr><td>wfc3, uvis1, f336w, mjd#55008, aper#6.0</td><td>3354.492</td><td>158.422</td><td>1.2848e-18</td><td>23.628</td><td>24.692</td><td>23.527</td></tr>
+<tr><td>wfc3, uvis1, f343n, mjd#55008, aper#6.0</td><td>3435.151</td><td>86.713</td><td>2.5672e-18</td><td>22.876</td><td>23.889</td><td>22.754</td></tr>
+<tr><td>wfc3, uvis1, f350lp, mjd#55008, aper#6.0</td><td>5873.870</td><td>1490.060</td><td>5.1638e-20</td><td>27.118</td><td>26.965</td><td>26.810</td></tr>
+<tr><td>wfc3, uvis1, f373n, mjd#55008, aper#6.0</td><td>3730.170</td><td>18.343</td><td>1.3488e-17</td><td>21.075</td><td>21.909</td><td>21.036</td></tr>
+<tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+<tr><td>wfc3, uvis1, f665n, mjd#55008, aper#6.0</td><td>6655.876</td><td>42.191</td><td>1.9774e-18</td><td>23.160</td><td>22.736</td><td>22.492</td></tr>
+<tr><td>wfc3, uvis1, f673n, mjd#55008, aper#6.0</td><td>6765.939</td><td>41.943</td><td>2.1926e-18</td><td>23.048</td><td>22.588</td><td>22.343</td></tr>
+<tr><td>wfc3, uvis1, f680n, mjd#55008, aper#6.0</td><td>6877.596</td><td>112.013</td><td>6.8241e-19</td><td>24.315</td><td>23.820</td><td>23.556</td></tr>
+<tr><td>wfc3, uvis1, f689m, mjd#55008, aper#6.0</td><td>6876.755</td><td>207.613</td><td>3.7208e-19</td><td>24.973</td><td>24.479</td><td>24.196</td></tr>
+<tr><td>wfc3, uvis1, f763m, mjd#55008, aper#6.0</td><td>7614.371</td><td>229.425</td><td>3.8291e-19</td><td>24.942</td><td>24.226</td><td>23.837</td></tr>
+<tr><td>wfc3, uvis1, f775w, mjd#55008, aper#6.0</td><td>7651.363</td><td>419.719</td><td>2.0922e-19</td><td>25.599</td><td>24.872</td><td>24.480</td></tr>
+<tr><td>wfc3, uvis1, f814w, mjd#55008, aper#6.0</td><td>8039.056</td><td>666.760</td><td>1.4994e-19</td><td>25.960</td><td>25.126</td><td>24.698</td></tr>
+<tr><td>wfc3, uvis1, f845m, mjd#55008, aper#6.0</td><td>8439.057</td><td>260.304</td><td>4.5207e-19</td><td>24.762</td><td>23.823</td><td>23.316</td></tr>
+<tr><td>wfc3, uvis1, f850lp, mjd#55008, aper#6.0</td><td>9176.126</td><td>470.529</td><td>3.7052e-19</td><td>24.978</td><td>23.857</td><td>23.326</td></tr>
+<tr><td>wfc3, uvis1, f953n, mjd#55008, aper#6.0</td><td>9530.579</td><td>71.190</td><td>8.0946e-18</td><td>21.630</td><td>20.426</td><td>19.803</td></tr>
+</table></div></div></div>
+</div>
+<p>We can finally save the table as a .txt file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;./uvis_zp_tbl.txt&#39;</span><span class="p">):</span>
+    <span class="n">tbl</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;uvis_zp_tbl.txt&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.commented_header&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a class="anchor" id="curves"></a></p>
+</section>
+<section id="create-and-plot-total-system-throughput-tables">
+<h2>7. Create and plot ‘total system throughput’ tables<a class="headerlink" href="#create-and-plot-total-system-throughput-tables" title="Permalink to this heading">#</a></h2>
+<p>The function below returns a tuple containing two objects, the first being an array of wavelengths, and the second being the throughput at each of those wavelengths.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calculate_bands</span><span class="p">(</span><span class="n">bp</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="c1"># Pass in bandpass object as bp</span>
+    <span class="n">waves</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">waveset</span>
+    <span class="n">throughput</span> <span class="o">=</span> <span class="n">bp</span><span class="p">(</span><span class="n">waves</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">Table</span><span class="p">([</span><span class="n">waves</span><span class="p">,</span> <span class="n">throughput</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">,</span> <span class="s1">&#39;THROUGHPUT&#39;</span><span class="p">])</span>
+        <span class="n">tmp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bp</span><span class="o">.</span><span class="n">obsmode</span><span class="o">.</span><span class="n">modes</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.txt&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.commented_header&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">throughput</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’ll calculate the throughput table for WFC3/UVIS1 in F200LP.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsmode</span> <span class="o">=</span> <span class="s1">&#39;wfc3,uvis1,f200lp&#39;</span>
+<span class="n">bp</span> <span class="o">=</span> <span class="n">stsyn</span><span class="o">.</span><span class="n">band</span><span class="p">(</span><span class="n">obsmode</span><span class="p">)</span>
+<span class="n">wl</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">calculate_bands</span><span class="p">(</span><span class="n">bp</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, let’s plot our results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span><span class="p">,</span> <span class="n">tp</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">1500</span><span class="p">,</span> <span class="mi">11000</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength [Angstroms]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Throughput&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;WFC3,UVIS1,F200LP&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;WFC3,UVIS1,F200LP&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/66bbb7d49d9b6b5559cebc2f52f46fc89ac9527190b2b9d9110c22b73bffbe1e.png" src="../../../_images/66bbb7d49d9b6b5559cebc2f52f46fc89ac9527190b2b9d9110c22b73bffbe1e.png" />
+</div>
+</div>
+<p>To save the curve in an ascii table, simply pass the argument <code class="docutils literal notranslate"><span class="pre">save=True</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">calculate_bands</span><span class="p">(</span><span class="n">bp</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;Quantity [  500.,  1000.,  1010., ..., 20002., 30000., 30010.] Angstrom&gt;,
+ &lt;Quantity [0., 0., 0., ..., 0., 0., 0.]&gt;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>To save curves for all obsmodes defined in <span class="xref myst">Section 3</span> in the input list, we can loop through detectors and filters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">det</span> <span class="ow">in</span> <span class="n">detectors</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">filt</span> <span class="ow">in</span> <span class="n">filtnames</span><span class="p">:</span>
+        <span class="n">obsmode</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;wfc3, </span><span class="si">{</span><span class="n">det</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">filt</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">bp</span> <span class="o">=</span> <span class="n">stsyn</span><span class="o">.</span><span class="n">band</span><span class="p">(</span><span class="n">obsmode</span><span class="p">)</span>
+        <span class="n">calculate_bands</span><span class="p">(</span><span class="n">bp</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In addition, we’ll create a directory called <code class="docutils literal notranslate"><span class="pre">obsmodes_curves</span></code> and move all the saved files to that directory.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>mkdir<span class="w"> </span>obsmodes_curves
+<span class="o">!</span><span class="w"> </span>mv<span class="w"> </span>wfc3*txt<span class="w"> </span>obsmodes_curves
+<span class="o">!</span><span class="w"> </span>ls<span class="w"> </span>obsmodes_curves
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>mkdir: cannot create directory ‘obsmodes_curves’: File exists
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;wfc3, uvis1, f200lp.txt&#39;  &#39;wfc3, uvis1, f438w.txt&#39;   &#39;wfc3, uvis1, f645n.txt&#39;
+&#39;wfc3, uvis1, f218w.txt&#39;   &#39;wfc3, uvis1, f467m.txt&#39;   &#39;wfc3, uvis1, f656n.txt&#39;
+&#39;wfc3, uvis1, f225w.txt&#39;   &#39;wfc3, uvis1, f469n.txt&#39;   &#39;wfc3, uvis1, f657n.txt&#39;
+&#39;wfc3, uvis1, f275w.txt&#39;   &#39;wfc3, uvis1, f475w.txt&#39;   &#39;wfc3, uvis1, f658n.txt&#39;
+&#39;wfc3, uvis1, f280n.txt&#39;   &#39;wfc3, uvis1, f475x.txt&#39;   &#39;wfc3, uvis1, f665n.txt&#39;
+&#39;wfc3, uvis1, f300x.txt&#39;   &#39;wfc3, uvis1, f487n.txt&#39;   &#39;wfc3, uvis1, f673n.txt&#39;
+&#39;wfc3, uvis1, f336w.txt&#39;   &#39;wfc3, uvis1, f502n.txt&#39;   &#39;wfc3, uvis1, f680n.txt&#39;
+&#39;wfc3, uvis1, f343n.txt&#39;   &#39;wfc3, uvis1, f547m.txt&#39;   &#39;wfc3, uvis1, f689m.txt&#39;
+&#39;wfc3, uvis1, f350lp.txt&#39;  &#39;wfc3, uvis1, f555w.txt&#39;   &#39;wfc3, uvis1, f763m.txt&#39;
+&#39;wfc3, uvis1, f373n.txt&#39;   &#39;wfc3, uvis1, f600lp.txt&#39;  &#39;wfc3, uvis1, f775w.txt&#39;
+&#39;wfc3, uvis1, f390m.txt&#39;   &#39;wfc3, uvis1, f606w.txt&#39;   &#39;wfc3, uvis1, f814w.txt&#39;
+&#39;wfc3, uvis1, f390w.txt&#39;   &#39;wfc3, uvis1, f621m.txt&#39;   &#39;wfc3, uvis1, f845m.txt&#39;
+&#39;wfc3, uvis1, f395n.txt&#39;   &#39;wfc3, uvis1, f625w.txt&#39;   &#39;wfc3, uvis1, f850lp.txt&#39;
+&#39;wfc3, uvis1, f410m.txt&#39;   &#39;wfc3, uvis1, f631n.txt&#39;   &#39;wfc3, uvis1, f953n.txt&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="conclusions"></a></p>
+</section>
+<section id="conclusions">
+<h2>8. Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this heading">#</a></h2>
+<p>Thank you for walking through this notebook. Now using WFC3 data, you should be more familiar with:</p>
+<ul class="simple">
+<li><p>Calculating zeropoints and other photometric properties using <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code>.</p></li>
+<li><p>Creating, plotting, and saving ‘total system throughput’ tables.</p></li>
+</ul>
+<section id="congratulations-you-have-completed-the-notebook">
+<h3>Congratulations, you have completed the notebook!<a class="headerlink" href="#congratulations-you-have-completed-the-notebook" title="Permalink to this heading">#</a></h3>
+<p><a id="resources"></a></p>
+</section>
+</section>
+<section id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Permalink to this heading">#</a></h2>
+<p>Below are some additional resources that may be helpful. Please send any questions through the <a class="reference external" href="https://stsci.service-now.com/hst">HST Helpdesk</a>.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3">WFC3 Website</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb">WFC3 Instrument Handbook</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb">WFC3 Data Handbook</a></p>
+<ul>
+<li><p>see sections 9.5.2 for reference to this notebook</p></li>
+</ul>
+</li>
+</ul>
+<p><a id="about"></a></p>
+</section>
+<section id="about-this-notebook">
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
+<p><strong>Authors:</strong> Varun Bajaj, Jennifer Mack; WFC3 Instrument Team</p>
+<p><strong>Updated on:</strong> 2024-03-18</p>
+<p><a id="cite"></a></p>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Permalink to this heading">#</a></h2>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">synphot</span></code>, or <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code> for published research, please cite the
+authors. Follow these links for more information about citing the libraries below:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://synphot.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">synphot</span></code></a></p></li>
+<li><p><a class="reference external" href="https://stsynphot.readthedocs.io/en/latest/index.html">Citing <code class="docutils literal notranslate"><span class="pre">stsynphot</span></code></a></p></li>
+</ul>
+<hr class="docutils" />
+<p><span class="xref myst">Top of Page</span>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/WFC3/zeropoints"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../persistence/wfc3_ir_persistence.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Masking Persistence in WFC3/IR Images</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../tvb_flattenramp/TVB_flattenramp_notebook.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">1. Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-throughput-tables-and-define-variables">2. Download throughput tables and define variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up-the-obsmode-string">3. Set up the ‘obsmode’ string</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage-for-a-single-obsmode">4. Basic usage for a single ‘obsmode’</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compute-zeropoints-and-other-photometric-properties">5. Compute zeropoints and other photometric properties</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iterate-over-multiple-obsmodes">6. Iterate over multiple ‘obsmodes’</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-and-plot-total-system-throughput-tables">7. Create and plot ‘total system throughput’ tables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">8. Conclusions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#congratulations-you-have-completed-the-notebook">Congratulations, you have completed the notebook!</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

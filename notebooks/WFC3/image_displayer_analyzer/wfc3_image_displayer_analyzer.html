@@ -310,6 +310,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
@@ -602,21 +603,21 @@ document.write(`
 <hr class="docutils" />
 <section id="learning-goals">
 <h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h2>
+<p>This notebook provides a method to quickly display images from the Hubble Space Telescope’s Wide Field <br>
+Camera 3 (WFC3) instrument. This tool also allows the user to derive statistics by row or column in the image. <br></p>
 <p>By the end of this tutorial, you will:</p>
 <ul class="simple">
 <li><p>Download two WFC3 images from MAST.</p></li>
 <li><p>Learn how to use the <code class="docutils literal notranslate"><span class="pre">display_image</span></code> tool to display any WFC3 fits file.</p></li>
 <li><p>Learn how to use the <code class="docutils literal notranslate"><span class="pre">row_column_stats</span></code> tool to plot row or column statistics for any WFC3 fits file.</p></li>
 </ul>
-<p>This notebook provides a method to quickly display images from the Hubble Space Telescope’s Wide Field Camera 3 (WFC3) instrument. This tool also allows the user to derive statistics by row or column in the image. <br>
-Please make sure you have read the <code class="docutils literal notranslate"><span class="pre">README.md</span></code> file before continuing.</p>
 </section>
 <section id="table-of-contents">
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Introduction</span><br>
 <span class="xref myst">1. Imports</span> <br>
 <span class="xref myst">2. Query MAST and download a WFC3 <code class="docutils literal notranslate"><span class="pre">flt.fits</span></code> and <code class="docutils literal notranslate"><span class="pre">ima.fits</span></code> image</span> <br>
-<span class="xref myst">3. display_image</span> <br>
+<span class="xref myst">3. <code class="docutils literal notranslate"><span class="pre">display_image</span></code></span> <br>
       <span class="xref myst">3.1 Display the full images with metadata</span> <br>
       <span class="xref myst">3.2 Display UVIS1 &amp; UVIS2 separately</span> <br>
       <span class="xref myst">3.3 Display an image section and change the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> array colormap</span> <br>
@@ -663,14 +664,33 @@ statistic (mean, median, mode, or, standard deviation). <br></p>
 </section>
 <section id="imports">
 <h2>1. Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
-<p>This notebook assumes you have created the virtual environment in <a class="reference external" href="https://github.com/spacetelescope/WFC3Library">WFC3 Library’s</a> installation instructions.</p>
-<p>We import: <br>
-<br>
-<strong>•</strong> <em>os</em> for setting environment variables <br></p>
-<p><strong>•</strong> <em>astroquery.mast Observations</em> for downloading data from MAST <br>
-<strong>•</strong> <em>matplotlib.pyplot</em> for plotting data</p>
-<p><strong>•</strong> <em>display_image</em> for displaying a WFC3 image <br>
-<strong>•</strong> <em>row_column_stats</em> for computing statistics on a WFC3 image</p>
+<div class="alert alert-block alert-warning" style="color:black" > <b> This notebook assumes you have created and activated a virtual environment using the 
+    requirements file in this notebook's repository. Please make sure you have read the contents of the README file before continuing the notebook.</b> <br> </div>
+<p>We import: <br></p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Package Name</p></th>
+<th class="head text-left"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">os</span></code></p></td>
+<td class="text-left"><p>setting environment variables</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">astroquery.mast.Observations</span></code></p></td>
+<td class="text-left"><p>downloading data from MAST</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></p></td>
+<td class="text-left"><p>plotting data</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">display_image</span></code></p></td>
+<td class="text-left"><p>displaying any WFC3 image</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">row_column_stats</span></code></p></td>
+<td class="text-left"><p>computing statistics on a WFC3 image</p></td>
+</tr>
+</tbody>
+</table>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
@@ -691,14 +711,15 @@ statistic (mean, median, mode, or, standard deviation). <br></p>
 <section id="query-mast-and-download-a-wfc3-flt-fits-and-ima-fits-image">
 <h2>2. Query MAST and download a WFC3 <code class="docutils literal notranslate"><span class="pre">flt.fits</span></code> and <code class="docutils literal notranslate"><span class="pre">ima.fits</span></code> image<a class="headerlink" href="#query-mast-and-download-a-wfc3-flt-fits-and-ima-fits-image" title="Permalink to this heading">#</a></h2>
 <p>You may download the data from MAST using either the <a class="reference external" href="https://archive.stsci.edu/hst/search.php">Archive Search Engine</a> or the <a class="reference external" href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST Portal</a>.</p>
-<p>Here, we download our images via <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>. For more information, please look at the documentation for <a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Astroquery</a>,
-<a class="reference external" href="https://astroquery.readthedocs.io/en/latest/mast/mast.html">Astroquery.mast</a>, and
+<p>Here, we download our images via <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>. For more information, please look at the documentation for <br>
+<a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Astroquery</a>, <a class="reference external" href="https://astroquery.readthedocs.io/en/latest/mast/mast.html">Astroquery.mast</a>, and
 <a class="reference external" href="https://mast.stsci.edu/api/v0/_c_a_o_mfields.html">CAOM Field Descriptions</a>, which is used for the <code class="docutils literal notranslate"><span class="pre">obs_table</span></code> variable.</p>
-<p>We download images of N2525 from proposal 15145, one being a <code class="docutils literal notranslate"><span class="pre">flt.fits</span></code> in WFC3/UVIS and the other being a <code class="docutils literal notranslate"><span class="pre">ima.fits</span></code> in WFC3/IR. After downloading the images, we move them to our current working directory (cwd).</p>
+<p>We download images of N2525 from proposal 15145, one being a <code class="docutils literal notranslate"><span class="pre">flt.fits</span></code> in WFC3/UVIS and the other <br>
+being a <code class="docutils literal notranslate"><span class="pre">ima.fits</span></code> in WFC3/IR. After downloading the images, we move them to our current working directory (cwd).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;idgga5*&#39;</span><span class="p">,</span><span class="s1">&#39;UVIS&#39;</span><span class="p">,</span><span class="s1">&#39;FLT&#39;</span><span class="p">,(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)),</span>
-         <span class="p">(</span><span class="s1">&#39;i*&#39;</span><span class="p">,</span><span class="s1">&#39;IR&#39;</span><span class="p">,</span><span class="s1">&#39;IMA&#39;</span><span class="p">,(</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">))]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;idgga5*&#39;</span><span class="p">,</span> <span class="s1">&#39;UVIS&#39;</span><span class="p">,</span> <span class="s1">&#39;FLT&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
+         <span class="p">(</span><span class="s1">&#39;i*&#39;</span><span class="p">,</span> <span class="s1">&#39;IR&#39;</span><span class="p">,</span> <span class="s1">&#39;IMA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">))]</span>
 
 <span class="k">for</span> <span class="n">criteria</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
     <span class="c1"># Get the observation records</span>
@@ -724,7 +745,6 @@ statistic (mean, median, mode, or, standard deviation). <br></p>
         
     <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;mastDownload/HST/&#39;</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;mastDownload/&#39;</span><span class="p">)</span>
-    
 </pre></div>
 </div>
 </div>
@@ -741,15 +761,20 @@ statistic (mean, median, mode, or, standard deviation). <br></p>
 </section>
 <section id="display-image">
 <h2>3. <code class="docutils literal notranslate"><span class="pre">display_image</span></code><a class="headerlink" href="#display-image" title="Permalink to this heading">#</a></h2>
-<p>In this section, we demonstrate the functionality of <code class="docutils literal notranslate"><span class="pre">display_image</span></code>, a useful tool for quickly analyzing WFC3 images. The subsections explain how to display full images with metadata, individual WFC3/UVIS chip images, a section of an image with various colormaps/scaling, and individual WFC3/IR <code class="docutils literal notranslate"><span class="pre">ima</span></code> reads.</p>
+<p>In this section, we demonstrate the functionality of <code class="docutils literal notranslate"><span class="pre">display_image</span></code>, a useful tool for quickly analyzing WFC3 images. <br>
+The subsections explain how to display full images with metadata, individual WFC3/UVIS chip images, a section of an <br>
+image with various colormaps/scaling, and individual WFC3/IR <code class="docutils literal notranslate"><span class="pre">ima</span></code> reads.</p>
 <p><a id="displayfull"></a></p>
 <section id="display-the-full-images-with-metadata">
 <h3>3.1 Display the full images with metadata<a class="headerlink" href="#display-the-full-images-with-metadata" title="Permalink to this heading">#</a></h3>
-<p>First, we display the <code class="docutils literal notranslate"><span class="pre">SCI</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR</span></code>, and <code class="docutils literal notranslate"><span class="pre">DQ</span></code> arrays for each image and print header info. The default value for <code class="docutils literal notranslate"><span class="pre">printmeta</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>. In the cell below, we set the keyword <code class="docutils literal notranslate"><span class="pre">printmeta</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> to print useful information from the header of the file to the screen. The WFC3/UVIS image is in electrons and the WFC3/IR image is in electrons/second. See Section 2.2.3 of the <a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb">WFC3 Data Handbook</a> for full descriptions of <code class="docutils literal notranslate"><span class="pre">SCI</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR</span></code>, and <code class="docutils literal notranslate"><span class="pre">DQ</span></code> arrays.</p>
+<p>First, we display the <code class="docutils literal notranslate"><span class="pre">SCI</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR</span></code>, and <code class="docutils literal notranslate"><span class="pre">DQ</span></code> arrays for each image and print header info. The default value for <code class="docutils literal notranslate"><span class="pre">printmeta</span></code> <br>
+is <code class="docutils literal notranslate"><span class="pre">False</span></code>. In the cell below, we set the keyword <code class="docutils literal notranslate"><span class="pre">printmeta</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> to print useful information from the header of the <br>
+file to the screen. The WFC3/UVIS image is in electrons and the WFC3/IR image is in electrons/second. See Section 2.2.3 <br>
+of the <a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb">WFC3 Data Handbook</a> for full descriptions of <code class="docutils literal notranslate"><span class="pre">SCI</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR</span></code>, and <code class="docutils literal notranslate"><span class="pre">DQ</span></code> arrays.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits&#39;</span><span class="p">,</span><span class="n">printmeta</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idggabk1q_ima.fits&#39;</span><span class="p">,</span><span class="n">printmeta</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits&#39;</span><span class="p">,</span> <span class="n">printmeta</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idggabk1q_ima.fits&#39;</span><span class="p">,</span> <span class="n">printmeta</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -758,11 +783,12 @@ statistic (mean, median, mode, or, standard deviation). <br></p>
 </section>
 <section id="display-uvis1-uvis2-separately">
 <h3>3.2 Display UVIS1 &amp; UVIS2 separately<a class="headerlink" href="#display-uvis1-uvis2-separately" title="Permalink to this heading">#</a></h3>
-<p>Next, we display the WFC3/UVIS chips separately. To select a section of an image, append [xstart:xend,ystart:yend] to the image name as shown below. <br>
-Notice how we need to specify the full axis range <code class="docutils literal notranslate"><span class="pre">[0:4096,0:2051]</span></code> and not simply just <code class="docutils literal notranslate"><span class="pre">[:,:2051]</span></code> as in standard <code class="docutils literal notranslate"><span class="pre">numpy</span></code> notation.</p>
+<p>Next, we display the WFC3/UVIS chips separately. To select a section of an image, append [xstart:xend,ystart:yend] to the <br>
+image name as shown below. Notice how we need to specify the full axis range <code class="docutils literal notranslate"><span class="pre">[0:4096,0:2051]</span></code> and not simply just <br>
+<code class="docutils literal notranslate"><span class="pre">[:,:2051]</span></code> as in standard <code class="docutils literal notranslate"><span class="pre">numpy</span></code> notation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Display UVIS1&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Display UVIS1&#39;</span><span class="p">)</span>
 <span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[0:4096,2051:4102]&#39;</span><span class="p">)</span> 
 </pre></div>
 </div>
@@ -770,7 +796,7 @@ Notice how we need to specify the full axis range <code class="docutils literal 
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Display UVIS2&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Display UVIS2&#39;</span><span class="p">)</span>
 <span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[0:4096,0:2051]&#39;</span><span class="p">)</span> 
 </pre></div>
 </div>
@@ -780,11 +806,12 @@ Notice how we need to specify the full axis range <code class="docutils literal 
 </section>
 <section id="display-an-image-section-and-change-the-sci-array-colormap">
 <h3>3.3 Display an image section and change the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> array colormap<a class="headerlink" href="#display-an-image-section-and-change-the-sci-array-colormap" title="Permalink to this heading">#</a></h3>
-<p>Then, we display <code class="docutils literal notranslate"><span class="pre">SCI</span></code> arrays with a different colormap. Regardless of how many colormaps are being changed, all three colormaps must be provided. The elements of <code class="docutils literal notranslate"><span class="pre">colormaps</span></code> sequentially correspond with the <code class="docutils literal notranslate"><span class="pre">SCI</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR</span></code>, and <code class="docutils literal notranslate"><span class="pre">DQ</span></code> arrays.</p>
+<p>Then, we display <code class="docutils literal notranslate"><span class="pre">SCI</span></code> arrays with a different colormap. Regardless of how many colormaps are being changed, all three <br>
+colormaps must be provided. The elements of <code class="docutils literal notranslate"><span class="pre">colormaps</span></code> sequentially correspond with the <code class="docutils literal notranslate"><span class="pre">SCI</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR</span></code>, and <code class="docutils literal notranslate"><span class="pre">DQ</span></code> arrays.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
-              <span class="n">colormaps</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span><span class="s2">&quot;Greys_r&quot;</span><span class="p">,</span><span class="s2">&quot;inferno_r&quot;</span><span class="p">])</span>
+              <span class="n">colormaps</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="s2">&quot;Greys_r&quot;</span><span class="p">,</span> <span class="s2">&quot;inferno_r&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -793,12 +820,15 @@ Notice how we need to specify the full axis range <code class="docutils literal 
 </section>
 <section id="change-the-scaling-of-the-sci-and-err-arrays">
 <h3>3.4 Change the scaling of the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> and <code class="docutils literal notranslate"><span class="pre">ERR</span></code> arrays<a class="headerlink" href="#change-the-scaling-of-the-sci-and-err-arrays" title="Permalink to this heading">#</a></h3>
-<p>Now, we change the scaling of the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> and <code class="docutils literal notranslate"><span class="pre">ERR</span></code> arrays. Regardless of how many scalings are being changed, all three scalings must be provided. The elements of <code class="docutils literal notranslate"><span class="pre">scaling</span></code> sequentially correspond with the <code class="docutils literal notranslate"><span class="pre">SCI</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR</span></code>, and <code class="docutils literal notranslate"><span class="pre">DQ</span></code> arrays. The default scaling value of <code class="docutils literal notranslate"><span class="pre">None</span></code> uses <code class="docutils literal notranslate"><span class="pre">ginga.util.zscale.zscale()</span></code> for scaling (see <a class="reference external" href="https://ginga.readthedocs.io/en/stable/">documentation</a> for more information).</p>
+<p>Now, we change the scaling of the <code class="docutils literal notranslate"><span class="pre">SCI</span></code> and <code class="docutils literal notranslate"><span class="pre">ERR</span></code> arrays. Regardless of how many scalings are being changed, all three <br>
+scalings must be provided. The elements of <code class="docutils literal notranslate"><span class="pre">scaling</span></code> sequentially correspond with the <code class="docutils literal notranslate"><span class="pre">SCI</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR</span></code>, and <code class="docutils literal notranslate"><span class="pre">DQ</span></code> arrays. <br>
+The default scaling value of <code class="docutils literal notranslate"><span class="pre">None</span></code> uses <code class="docutils literal notranslate"><span class="pre">astropy.visualization.ZScaleInterval()</span></code> for scaling <br>
+(see <a class="reference external" href="https://docs.astropy.org/en/stable/api/astropy.visualization.ZScaleInterval.html">documentation</a> for more information).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
-              <span class="n">colormaps</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span><span class="s2">&quot;inferno_r&quot;</span><span class="p">],</span>
-              <span class="n">scaling</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">50000</span><span class="p">,</span><span class="mi">80000</span><span class="p">),(</span><span class="kc">None</span><span class="p">,</span><span class="mi">400</span><span class="p">),(</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">)])</span>
+              <span class="n">colormaps</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="s2">&quot;inferno_r&quot;</span><span class="p">],</span>
+              <span class="n">scaling</span><span class="o">=</span><span class="p">[(</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">80000</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">400</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)])</span>
 </pre></div>
 </div>
 </div>
@@ -811,8 +841,8 @@ Notice how we need to specify the full axis range <code class="docutils literal 
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idggabk1q_ima.fits[43:55,299:311]&#39;</span><span class="p">,</span>
-              <span class="n">colormaps</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span><span class="s2">&quot;Greys_r&quot;</span><span class="p">,</span><span class="s2">&quot;inferno_r&quot;</span><span class="p">],</span>
-              <span class="n">scaling</span><span class="o">=</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span><span class="mi">18</span><span class="p">),(</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">),(</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">)],</span>
+              <span class="n">colormaps</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="s2">&quot;Greys_r&quot;</span><span class="p">,</span> <span class="s2">&quot;inferno_r&quot;</span><span class="p">],</span>
+              <span class="n">scaling</span><span class="o">=</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">18</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)],</span>
               <span class="n">ima_multiread</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -823,7 +853,9 @@ Notice how we need to specify the full axis range <code class="docutils literal 
 </section>
 <section id="row-column-stats">
 <h2>4. <code class="docutils literal notranslate"><span class="pre">row_column_stats</span></code><a class="headerlink" href="#row-column-stats" title="Permalink to this heading">#</a></h2>
-<p>In this section, we demonstrate the functionality of <code class="docutils literal notranslate"><span class="pre">row_column_stats</span></code>, a useful tool for quickly computing WFC3 statistics. The subsections explain how to compute row and column statistics for a full image, individual WFC3/UVIS chips, a section of an image, and individual <code class="docutils literal notranslate"><span class="pre">ima</span></code> reads. The row/column numbers are on the x-axis and the statistics are on the y-axis.</p>
+<p>In this section, we demonstrate the functionality of <code class="docutils literal notranslate"><span class="pre">row_column_stats</span></code>, a useful tool for quickly computing WFC3 statistics.<br>
+The subsections explain how to compute row and column statistics for a full image, individual WFC3/UVIS chips, a section of <br>
+an image, and individual <code class="docutils literal notranslate"><span class="pre">ima</span></code> reads. The row/column numbers are on the x-axis and the statistics are on the y-axis.</p>
 <p><a id="columnmedian"></a></p>
 <section id="compute-column-median-and-column-standard-deviation-for-a-full-image">
 <h3>4.1 Compute column median and column standard deviation for a full image<a class="headerlink" href="#compute-column-median-and-column-standard-deviation-for-a-full-image" title="Permalink to this heading">#</a></h3>
@@ -831,14 +863,14 @@ Notice how we need to specify the full axis range <code class="docutils literal 
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot column median for the full image</span>
-<span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits&#39;</span><span class="p">,</span>
-                       <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span>
-                       <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits&#39;</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
 
 <span class="c1"># plot column standard deviation for the full image</span>
-<span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits&#39;</span><span class="p">,</span>
-                       <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;stddev&#39;</span><span class="p">,</span>
-                       <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits&#39;</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;stddev&#39;</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -851,22 +883,22 @@ Notice how we need to specify the full axis range <code class="docutils literal 
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get column median values for UVIS2 but don&#39;t plot </span>
-<span class="n">x2</span><span class="p">,</span><span class="n">y2</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[0:4096,0:2051]&#39;</span><span class="p">,</span>
-                         <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span>
-                         <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">,</span>
-                         <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[0:4096,0:2051]&#39;</span><span class="p">,</span>
+                          <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span>
+                          <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">,</span>
+                          <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1"># get column median values for UVIS1 but don&#39;t plot </span>
-<span class="n">x1</span><span class="p">,</span><span class="n">y1</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[0:4096,2051:4102]&#39;</span><span class="p">,</span>
-                         <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span>
-                         <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">,</span>
-                         <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[0:4096,2051:4102]&#39;</span><span class="p">,</span>
+                          <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span>
+                          <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">,</span>
+                          <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1"># overplot UVIS1 and UVIS2 data on one figure </span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span><span class="n">dpi</span><span class="o">=</span><span class="mi">130</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">130</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;UVIS 1&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;UVIS 2&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;UVIS 1&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;UVIS 2&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;WFC3/UVIS idgga5m1q_flt.fits&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Column Number&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Column Median [e-]&#39;</span><span class="p">)</span>
@@ -886,14 +918,14 @@ Notice how we need to specify the full axis range <code class="docutils literal 
 <span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">)</span>
 
 <span class="c1"># plot row mean for a section of the image</span>
-<span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
-                      <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-                      <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">)</span>
 
 <span class="c1"># plot column mean for a section of the image</span>
-<span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
-                      <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-                      <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -909,16 +941,16 @@ Set <code class="docutils literal notranslate"><span class="pre">ylim</span></co
 <span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">)</span>
 
 <span class="c1"># plot row mean for single source with custom yaxis limits</span>
-<span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
-                      <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-                      <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
-                      <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span><span class="n">y2</span><span class="p">))</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
+                        <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">))</span>
 
 <span class="c1"># plot column mean for single source with custom yaxis limits</span>
-<span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
-                      <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-                      <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">,</span>
-                      <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span><span class="n">y2</span><span class="p">))</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">,</span>
+                        <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -934,10 +966,10 @@ Set <code class="docutils literal notranslate"><span class="pre">ylim</span></co
 <span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idggabk1q_ima.fits[43:55,299:311]&#39;</span><span class="p">)</span>
 
 <span class="c1"># plot column mean for section of ima</span>
-<span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idggabk1q_ima.fits[43:55,299:311]&#39;</span><span class="p">,</span>
-                       <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-                       <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">,</span>
-                       <span class="n">ima_multiread</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idggabk1q_ima.fits[43:55,299:311]&#39;</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">,</span>
+                        <span class="n">ima_multiread</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
