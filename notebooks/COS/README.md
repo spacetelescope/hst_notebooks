@@ -91,7 +91,7 @@ From a new terminal (*make sure that the current working directory encompasses y
 
 Either of the previous commands should open up a new window in your default web browser (with an address like `localhost:8888/`). From there you can navigate to a Notebook and open it.
 
-If you don't have experience installing packages, you should begin with our **introductory Notebook** [Setup.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/Setup/Setup.ipynb) on setting up an environment for running astronomical Python code. If you do not yet have Jupyter up-and-running, you can read the pre-rendered (`.html`) version [here](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/Setup.html).
+If you don't have experience installing packages, you should begin with our **introductory Notebook** [Setup.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/Setup/Setup.ipynb) on setting up an environment for running astronomical Python code. If you do not yet have Jupyter up-and-running, you can read the pre-rendered (`.html`) version [here](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/Setup/Setup.html).
 
 <a id=ch3></a>
 ## Notes for those new to `Python`/`Jupyter`/Coding:
