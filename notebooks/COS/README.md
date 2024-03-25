@@ -104,6 +104,6 @@ If you don't have experience installing packages, you should begin with our **in
 <a id = ch4></a>
 ## Getting Help
 
-If you have an issue using these Notebooks which you cannot fix, or if believe you have discovered an error in a Notebook, please reach out to the [HST Help Desk](https://stsci.service-now.com/hst) or to the Notebook's primary author: [Marc Rafelski](mailto:mrafelski@stsci.edu).
+If you have an issue using these Notebooks that you cannot fix, or if believe you have discovered an error in a Notebook, please reach out to the [HST Help Desk](https://stsci.service-now.com/hst) or to the Notebook's primary author: [Marc Rafelski](mailto:mrafelski@stsci.edu).
 
 ---
