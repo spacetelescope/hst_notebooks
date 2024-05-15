@@ -19,7 +19,7 @@ If you don't want to run the Notebooks for yourself but just want to see rendere
 
 |Name|Topic|Notebook file (`ipynb`)|Rendered file (`html`)|
 |-|-|-|-|
-|Setup|Setting up an environment to work with COS data|[Setup.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/Setup/Setup.ipynb)|[Setup.html](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/Setup/Setup.html)|
+|Setup|Setting up an environment to work with COS data|[Setup.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/main/notebooks/COS/Setup/Setup.ipynb)|[Setup.html](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/Setup/Setup.html)|
 |DataDl|Downloading COS Data from the archive|[DataDl.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/DataDl/DataDl.ipynb)|[DataDl.html](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/DataDl/DataDl.html)|
 |ViewData|Beginning to work with COS data in Python: *plotting, binning, calculating SNR, & evaluating* a spectrum|[ViewData.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/ViewData/ViewData.ipynb)|[ViewData.html](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/ViewData/ViewData.html)|
 |AsnFile|Modifying or creating an association file|[AsnFile.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/AsnFile/AsnFile.ipynb)|[AsnFile.html](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/AsnFile/AsnFile.html)|
@@ -91,7 +91,7 @@ From a new terminal (*make sure that the current working directory encompasses y
 
 Either of the previous commands should open up a new window in your default web browser (with an address like `localhost:8888/`). From there you can navigate to a Notebook and open it.
 
-If you don't have experience installing packages, you should begin with our **introductory Notebook** [Setup.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/Setup/Setup.ipynb) on setting up an environment for running astronomical Python code. If you do not yet have Jupyter up-and-running, you can read the pre-rendered (`.html`) version [here](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/Setup.html).
+If you don't have experience installing packages, you should begin with our **introductory Notebook** [Setup.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/Setup/Setup.ipynb) on setting up an environment for running astronomical Python code. If you do not yet have Jupyter up-and-running, you can read the pre-rendered (`.html`) version [here](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/Setup/Setup.html).
 
 <a id=ch3></a>
 ## Notes for those new to `Python`/`Jupyter`/Coding:
@@ -104,6 +104,6 @@ If you don't have experience installing packages, you should begin with our **in
 <a id = ch4></a>
 ## Getting Help
 
-If you have an issue using these Notebooks which you cannot fix, or if believe you have discovered an error in a Notebook, please reach out to the [HST Help Desk](https://stsci.service-now.com/hst) or to the Notebook's primary author: [Marc Rafelski](mailto:mrafelski@stsci.edu).
+If you have an issue using these Notebooks that you cannot fix, or if believe you have discovered an error in a Notebook, please reach out to the [HST Help Desk](https://stsci.service-now.com/hst) or to the Notebook's primary author: [Marc Rafelski](mailto:mrafelski@stsci.edu).
 
 ---

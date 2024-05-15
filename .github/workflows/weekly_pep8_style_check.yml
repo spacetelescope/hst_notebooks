@@ -1,0 +1,19 @@
+## This workflow performs weekly PEP8 style checks on python code in all python scripts and 
+## in notebook code cells of all Jupyter notebooks in the hst_notebooks repository.
+name: Weekly PEP8 Style Checks
+
+on:
+  # Runs Sunday 0400 UTC 
+  schedule:
+    - cron: "0 4 * * 0"
+  workflow_dispatch:
+
+jobs:
+  Notebook_PEP8_Check:
+   uses: spacetelescope/notebook-ci-actions/.github/workflows/all_notebooks_pep8check.yml@v3
+   with:
+     python-version: ${{ vars.PYTHON_VERSION }}
+  Script_PEP8_Check:
+   uses: spacetelescope/notebook-ci-actions/.github/workflows/all_scripts_pep8check.yml@v3
+   with:
+     python-version: ${{ vars.PYTHON_VERSION }}
