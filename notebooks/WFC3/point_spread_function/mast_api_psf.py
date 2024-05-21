@@ -22,6 +22,7 @@ Fred Dauphin, February 2024
 import requests
 from astroquery.mast import Mast
 
+
 # Helper functions from https://mast.stsci.edu/api/v0/pyex.html
 def set_filters(parameters):
     """
@@ -29,7 +30,8 @@ def set_filters(parameters):
     This allows you to enter your filter criteria as a dictionary, 
     which will then be parsed into correct format for searching.
     """
-    return [{"paramName":p, "values":v} for p,v in parameters.items()]
+    return [{"paramName": p, "values": v} for p, v in parameters.items()]
+
 
 def set_min_max(min, max):
     """
@@ -38,6 +40,7 @@ def set_min_max(min, max):
     This is a convenience function to format such a query correctly.
     """
     return [{'min': min, 'max': max}]
+
 
 def download_request(payload, filename, download_type="file"):
     """
@@ -70,10 +73,11 @@ def download_request(payload, filename, download_type="file"):
     request_url = 'https://mast.stsci.edu/api/v0.1/Download/' + download_type
     resp = requests.post(request_url, data=payload)
  
-    with open(filename,'wb') as FLE:
+    with open(filename, 'wb') as FLE:
         FLE.write(resp.content)
  
     return filename
+
 
 # Main functions
 def mast_query_psf_database(detector, filts, columns=['*']):
@@ -106,12 +110,12 @@ def mast_query_psf_database(detector, filts, columns=['*']):
         columns applied.
     """
     # Check types
-    if type(detector) != str:
-        raise TypeError(f'detector must be a string.')
-    if type(filts) != list:
-        raise TypeError(f'filts must be a list.')
-    if type(columns) != list:
-        raise TypeError(f'columns must be a list.')
+    if type(detector) is not str:
+        raise TypeError('detector must be a string.')
+    if type(filts) is not list:
+        raise TypeError('filts must be a list.')
+    if type(columns) is not list:
+        raise TypeError('columns must be a list.')
     
     # Check detectors
     valid_detectors = ['UVIS', 'IR', 'WFPC2']
@@ -152,7 +156,8 @@ def mast_query_psf_database(detector, filts, columns=['*']):
     
     return obs
 
-def make_dataURIs(obs, detector, file_suffix, sizes={'unsat':51, 'sat':101}):
+
+def make_dataURIs(obs, detector, file_suffix, sizes={'unsat': 51, 'sat': 101}):
     """
     Make dataURIs for the WFC3 and WFPC2 PSF databases' sources.
     
@@ -184,17 +189,17 @@ def make_dataURIs(obs, detector, file_suffix, sizes={'unsat':51, 'sat':101}):
         The dataURIs made from the queried sources as ('uri', dataURI).
     """
     # Check type
-    if type(file_suffix) != list:
-        raise TypeError(f'detector must be a list.')
-    if type(sizes) != dict:
-        raise TypeError(f'sizes must be a dictionary.')
+    if type(file_suffix) is not list:
+        raise TypeError('detector must be a list.')
+    if type(sizes) is not dict:
+        raise TypeError('sizes must be a dictionary.')
     
     # Check suffixes (make sure there isn't a wrong suffix)
     valid_suffixes = ['raw', 'd0m', 'flt', 'c0m', 'flc']
     for suffix in file_suffix:
         if suffix not in valid_suffixes:
             raise ValueError(f'{suffix} is not a valid suffix. '
-                             f'Choose from {allowed_suffixes}.')
+                             f'Choose from {valid_suffixes}.')
 
     # Check sizes (make sure unsat and sat are in sizes)
     valid_sizes = ['unsat', 'sat']
@@ -239,7 +244,7 @@ def make_dataURIs(obs, detector, file_suffix, sizes={'unsat':51, 'sat':101}):
                 sci_ext = 1
             elif chip == '1':
                 sci_ext = 4
-                if y >=2051:
+                if y >= 2051:
                     y -= 2051 - 3 # another offset to center UVIS1 sources
         # Else chip is the correct sci ext
         else:
@@ -254,5 +259,5 @@ def make_dataURIs(obs, detector, file_suffix, sizes={'unsat':51, 'sat':101}):
             dataURIs.append(("uri", dataURI))
     
     n_subarray_sources = (~mask_full_frame).sum()
-    print (f'Found {n_subarray_sources} subarray sources in queried data.')
+    print(f'Found {n_subarray_sources} subarray sources in queried data.')
     return dataURIs

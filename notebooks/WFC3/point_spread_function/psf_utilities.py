@@ -272,7 +272,7 @@ def make_cutouts(image, star_ids, xis, yis, rpix, scale_stars=True, sub_pixel=Tr
             image_array.append(subimage)
 
             if (show_figs is True):
-                figure = plot_cutouts(data=subimage, rpix=rpix)
+                plot_cutouts(data=subimage, rpix=rpix)
         else:
             print('The peak flux is too close to the edge of the subimage.')
 
@@ -291,8 +291,8 @@ def plot_cutouts(data, rpix):
     mysubplot[1].imshow(data, vmin=0.0, vmax=numpy.amax(data)/100.0, origin='lower')
     mysubplot[2].imshow(data, norm=LogNorm(vmin=percentile(data, 0.0), vmax=percentile(data, 98.5)), origin='lower', aspect='equal')
     mysubplot[3].imshow(numpy.log10(data), origin='lower')
-    mysubplot[0].set_title('100% Max')
-    mysubplot[1].set_title('1% Max')
+    mysubplot[0].set_title(r'100\% Max')
+    mysubplot[1].set_title(r'1\% Max')
     mysubplot[2].set_title('LogNorm')
     mysubplot[3].set_title('Log10')
     for idx in [0, 1, 2, 3]:
