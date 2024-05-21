@@ -1,43 +1,18 @@
 import os
-import glob
 import shutil
-import tarfile
 import urllib
-from IPython.display import clear_output
 import numpy
 from numpy import percentile
 import matplotlib
 import matplotlib.pyplot
 from matplotlib.colors import LogNorm
-from matplotlib.patches import Rectangle
-from astroquery.mast import Observations
-import astropy
 from astropy.io import fits
-from astropy.table import Table, QTable
-from astropy.modeling import models
-from astropy.modeling import fitting
 from astropy.visualization import simple_norm
 from astropy.stats import sigma_clipped_stats
-from astropy.stats import SigmaClip
-import photutils
 from photutils.detection import find_peaks
-from photutils.detection import DAOStarFinder
 from photutils.centroids import centroid_com
-from photutils.aperture import aperture_photometry
 from photutils.aperture import CircularAperture
-from photutils.aperture import CircularAnnulus
-from photutils.aperture import ApertureStats
-from photutils.psf import PSFPhotometry
-from photutils.psf import SourceGrouper
-from photutils.psf import IntegratedGaussianPRF
-from photutils.psf import GriddedPSFModel
-from photutils.psf import STDPSFGrid
-from photutils.psf import stdpsf_reader
-from photutils.psf import FittableImageModel
 from scipy.ndimage import shift
-import drizzlepac
-from drizzlepac import tweakreg
-from drizzlepac import astrodrizzle
 
 
 def save_figure(figure, filename, show_figure):
@@ -48,9 +23,9 @@ def save_figure(figure, filename, show_figure):
 
     figure.tight_layout()
     matplotlib.pyplot.savefig(filename)
-    if (show_figure == True):
+    if (show_figure is True):
         matplotlib.pyplot.show()
-    if (show_figure == False):
+    if (show_figure is False):
         matplotlib.pyplot.close()
 
     return print('\nFigure saved as: '+filename)
@@ -64,7 +39,6 @@ def setup_matplotlib(size, multiplier):
     multiplier parameter increases the fontsize and line widths.
     '''
 
-    #import matplotlib
     matplotlib.pyplot.rcdefaults() # restore default values
     matplotlib.pyplot.rcParams["font.family"] = "STIXGeneral"
     matplotlib.pyplot.rcParams["mathtext.fontset"] = "stix"
@@ -74,16 +48,16 @@ def setup_matplotlib(size, multiplier):
     default_fontsize = 10
     
     if (size == 'notebook'):
-        my_scale       = 1.0
+        my_scale = 1.0
         my_figure_size = (11.0, 11.0)
     else:
-        my_scale       = multiplier
+        my_scale = multiplier
         my_figure_size = (size, size)
         
     my_scale = (my_scale * multiplier)
-    matplotlib.pyplot.rcParams["figure.figsize"]  = my_figure_size
-    matplotlib.pyplot.rcParams["font.size"]       = default_fontsize * my_scale
-    matplotlib.pyplot.rcParams["axes.linewidth"]  = default_thickness_frame * my_scale
+    matplotlib.pyplot.rcParams["figure.figsize"] = my_figure_size
+    matplotlib.pyplot.rcParams["font.size"] = default_fontsize * my_scale
+    matplotlib.pyplot.rcParams["axes.linewidth"] = default_thickness_frame * my_scale
     matplotlib.pyplot.rcParams["lines.linewidth"] = default_thickness_lines * my_scale
     matplotlib.pyplot.rcParams['xtick.major.width'] = default_thickness_frame * my_scale
     matplotlib.pyplot.rcParams['xtick.minor.width'] = default_thickness_frame * my_scale
@@ -128,7 +102,7 @@ def plot_apertures(data, xcenter, ycenter, cutout_size, apertures_stellar, apert
     # Create a figure with the data, identified stars, and photometry apertures.
     my_figure_size, my_fontsize = setup_matplotlib('notebook', 1.2)
     figure, axes = matplotlib.pyplot.subplots(1, 3, figsize=(11.0, 11.0/3))
-    current_width = 1.2 * matplotlib.pyplot.rcParams["lines.linewidth"]
+    # current_width = 1.2 * matplotlib.pyplot.rcParams["lines.linewidth"]
     for ax in [0, 1, 2]:
         axes[ax].imshow(data, origin='lower', aspect='equal', interpolation='nearest', norm=simple_norm(data, 'sqrt', percent=99.8))
     apertures_stellar.plot(ax=axes[1], color='lime', alpha=1.0)
@@ -157,8 +131,8 @@ def plot_psf_results(sci_data, resid, xcenter, ycenter, cutout_size):
     # Make a figure showing the data, model, and residuals.
     my_figure_size, my_fontsize = setup_matplotlib('notebook', 1.2)
     figure, axes = matplotlib.pyplot.subplots(1, 3, figsize=(11.0, 11.0/3))
-    current_width = 1.2 * matplotlib.pyplot.rcParams["lines.linewidth"]
-    norm=simple_norm(sci_data, 'sqrt', percent=99.8)
+    # current_width = 1.2 * matplotlib.pyplot.rcParams["lines.linewidth"]
+    norm = simple_norm(sci_data, 'sqrt', percent=99.8)
     axes[0].imshow(sci_data, origin='lower', norm=norm, aspect='equal', interpolation='nearest')
     axes[1].imshow(sci_data - resid, origin='lower', norm=norm, aspect='equal', interpolation='nearest')
     axes[2].imshow(resid, origin='lower', norm=norm, aspect='equal', interpolation='nearest')
@@ -236,7 +210,7 @@ def make_cutouts(image, star_ids, xis, yis, rpix, scale_stars=True, sub_pixel=Tr
         star_id = star_ids[i]
         
         # Print the (x, y) coordinates and extract each star image.
-        print('Star ID ' + str(int(star_id)) + ':'  + ' (x,y) = (' + str(xi) + ', ' + str(yi) + ')')
+        print('Star ID ' + str(int(star_id)) + ':' + ' (x,y) = (' + str(xi) + ', ' + str(yi) + ')')
         if (verbose is True):
             print('The read in x, y are:', xis[i], yis[i])
 
@@ -282,7 +256,8 @@ def make_cutouts(image, star_ids, xis, yis, rpix, scale_stars=True, sub_pixel=Tr
         
         # Determine the location of the maximum flux.
         peak_location = numpy.unravel_index(numpy.argmax(subimage, axis=None), subimage.shape)
-        if (verbose is True): print('The subimage peak flux (x,y) = (' + str(peak_location[1]) + ', ' + str(peak_location[0]) + ')')
+        if (verbose is True):
+            print('The subimage peak flux (x,y) = (' + str(peak_location[1]) + ', ' + str(peak_location[0]) + ')')
         
         # Scale to maximum flux so all stars peak at unity.
         if (scale_stars is True):
@@ -316,11 +291,11 @@ def plot_cutouts(data, rpix):
     mysubplot[1].imshow(data, vmin=0.0, vmax=numpy.amax(data)/100.0, origin='lower')
     mysubplot[2].imshow(data, norm=LogNorm(vmin=percentile(data, 0.0), vmax=percentile(data, 98.5)), origin='lower', aspect='equal')
     mysubplot[3].imshow(numpy.log10(data), origin='lower')
-    mysubplot[0].set_title('100\% Max')
-    mysubplot[1].set_title('1\% Max')
+    mysubplot[0].set_title('100% Max')
+    mysubplot[1].set_title('1% Max')
     mysubplot[2].set_title('LogNorm')
     mysubplot[3].set_title('Log10')
-    for idx in [0,1,2,3]:
+    for idx in [0, 1, 2, 3]:
         mysubplot[idx].scatter(rpix, rpix, c='red', marker='+')
     matplotlib.pyplot.tight_layout()
     matplotlib.pyplot.show()
@@ -350,7 +325,7 @@ def stack_cutouts(input_array, rpix, stack_type='median', scale_flux=True, expor
     print('Creating a '+stack_type+' image stack.')
 
     # Scale the stack to have a total flux of unity.
-    if scale_flux == True:
+    if (scale_flux is True):
         print('Scaling the total flux to one.')
         stacked_image = (stacked_image/numpy.sum(stacked_image))
     
