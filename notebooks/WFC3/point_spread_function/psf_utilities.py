@@ -42,7 +42,7 @@ def setup_matplotlib(size, multiplier):
     matplotlib.pyplot.rcdefaults() # restore default values
     matplotlib.pyplot.rcParams["font.family"] = "STIXGeneral"
     matplotlib.pyplot.rcParams["mathtext.fontset"] = "stix"
-    matplotlib.pyplot.rcParams['text.usetex'] = True
+    matplotlib.pyplot.rcParams['text.usetex'] = False
     default_thickness_frame = 0.66
     default_thickness_lines = 1.00
     default_fontsize = 10
