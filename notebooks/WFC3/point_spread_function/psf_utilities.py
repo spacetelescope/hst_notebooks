@@ -26,7 +26,6 @@ import os
 import shutil
 import urllib
 import numpy as np
-from numpy import percentile
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from astropy.io import fits
@@ -166,9 +165,10 @@ def create_mask(data, cutout_size, xcenter, ycenter):
 def plot_apertures(data, xcenter, ycenter, cutout_size, apertures_stellar, apertures_annulus):
 
     """
-    A function that takes an image, x and y center locations, image size, and 
+    A function that takes an image, x and y center locations, cutout size, and 
     stellar and background photometric apertures that were calculated with the 
-    photutils CircularAperture and CircularAnnulus functions, respectively.
+    photutils CircularAperture and CircularAnnulus functions, respectively. 
+    The function then creates a figure showing the apertures over the data.
 
     Parameters
     ----------
@@ -194,11 +194,12 @@ def plot_apertures(data, xcenter, ycenter, cutout_size, apertures_stellar, apert
     # Create a figure with the data, identified stars, and photometry apertures.
     my_figure_size, my_fontsize = setup_matplotlib('notebook', 1.2)
     figure, axes = plt.subplots(1, 3, figsize=(11.0, 11.0/3))
+    norm = simple_norm(data, 'sqrt', percent=99.8)
 
-    for ax in [0, 1, 2]:
-        axes[ax].imshow(data, origin='lower', aspect='equal', interpolation='nearest', norm=simple_norm(data, 'sqrt', percent=99.8))
-        axes[ax].set_xlim([xcenter-cutout_size/2, xcenter+cutout_size/2])
-        axes[ax].set_ylim([ycenter-cutout_size/2, ycenter+cutout_size/2])
+    for ax in axes:
+        ax.imshow(data, origin='lower', aspect='equal', interpolation='nearest', norm=norm)
+        ax.set_xlim([xcenter-cutout_size/2, xcenter+cutout_size/2])
+        ax.set_ylim([ycenter-cutout_size/2, ycenter+cutout_size/2])
 
     apertures_stellar.plot(ax=axes[1], color='lime', alpha=1.0)
     apertures_stellar.plot(ax=axes[2], color='lime', alpha=1.0)
@@ -252,9 +253,9 @@ def plot_psf_results(sci_data, resid, xcenter, ycenter, cutout_size):
     axes[2].set_title('Residuals')
     axes[0].set_ylabel('Y (pixels)')
     axes[1].set_xlabel('X (pixels)')    
-    for x in [0, 1, 2]: 
-        axes[x].set_xlim([xcenter-cutout_size/2, xcenter+cutout_size/2])
-        axes[x].set_ylim([ycenter-cutout_size/2, ycenter+cutout_size/2])
+    for ax in axes: 
+        ax.set_xlim([xcenter-cutout_size/2, xcenter+cutout_size/2])
+        ax.set_ylim([ycenter-cutout_size/2, ycenter+cutout_size/2])
 
     return figure
 
@@ -285,8 +286,8 @@ def download_psf_model(file_path, detector, filter):
     if (detector not in ['WFC3UV', 'WFC3IR', 'ACSWFC']):
         print('The valid detector options are: WFC3UV, WFC3IR, or ACSWFC')
 
-    psf_name = 'PSFSTD_{}_{}.fits'.format(detector, filter)
-    psf_path = '{}/{}'.format(file_path, psf_name)
+    psf_name = f'PSFSTD_{detector}_{filter}.fits'
+    psf_path = f'{file_path}/{psf_name}'
     psf_url = 'https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/data-analysis/psf/_documents/'
 
     # Download the PSF file if it doesn't exist.
@@ -369,7 +370,7 @@ def make_cutouts(image, star_ids, xis, yis, rpix, scale_stars=True, sub_pixel=Tr
         star_id = star_ids[i]
         
         # Print the (x, y) coordinates and extract each star image.
-        print('Star ID ' + str(int(star_id)) + ':' + ' (x,y) = (' + str(xi) + ', ' + str(yi) + ')')
+        print(f'Star ID {star_id}: (x,y) = ({xi}, {yi})')
         if (verbose is True):
             print('The read in x, y are:', xis[i], yis[i])
 
@@ -418,7 +419,7 @@ def make_cutouts(image, star_ids, xis, yis, rpix, scale_stars=True, sub_pixel=Tr
         # Determine the location of the maximum flux.
         peak_location = np.unravel_index(np.argmax(subimage, axis=None), subimage.shape)
         if (verbose is True):
-            print('The subimage peak flux (x,y) = (' + str(peak_location[1]) + ', ' + str(peak_location[0]) + ')')
+            print(f'The subimage peak flux (x,y) = ({peak_location[1]}), {peak_location[0]})')
         
         # Scale to maximum flux so all stars peak at unity.
         if (scale_stars is True):
@@ -464,13 +465,13 @@ def plot_cutouts(data, rpix):
     figure, mysubplot = plt.subplots(1, 4, figsize=(11, 11), sharex=True, sharey=True)
     mysubplot[0].imshow(data, vmin=0.0, vmax=np.amax(data), origin='lower', aspect='equal')
     mysubplot[1].imshow(data, vmin=0.0, vmax=np.amax(data)/100.0, origin='lower', aspect='equal')
-    mysubplot[2].imshow(data, norm=LogNorm(vmin=percentile(data, 0.0), vmax=percentile(data, 98.5)), origin='lower', aspect='equal')
+    mysubplot[2].imshow(data, norm=LogNorm(vmin=np.percentile(data, 0.0), vmax=np.percentile(data, 98.5)), origin='lower', aspect='equal')
     mysubplot[3].imshow(np.log10(data), origin='lower', aspect='equal')
     mysubplot[0].set_title(r'100% Max')
     mysubplot[1].set_title(r'1% Max')
     mysubplot[2].set_title('LogNorm')
     mysubplot[3].set_title('Log10')
-    for idx in [0, 1, 2, 3]:
+    for idx in range(4):
         mysubplot[idx].scatter(rpix, rpix, c='red', marker='+')
     plt.tight_layout()
     plt.show()
@@ -478,7 +479,7 @@ def plot_cutouts(data, rpix):
     return figure
 
 
-def stack_cutouts(input_array, rpix, stack_type='median', scale_flux=True, export_file='none'):
+def stack_cutouts(input_array, rpix, stack_type='median', scale_flux=True, export_file=''):
 
     """
     Given an array containing 2D arrays with centered images of stars, 
@@ -503,7 +504,8 @@ def stack_cutouts(input_array, rpix, stack_type='median', scale_flux=True, expor
         If True then the value of each pixel is divided by the maximum. 
         This should generally be set to True to avoid improper weighting.
     export_file : str
-        The desired filename for saving the stacked PSF model.
+        The desired filename for saving the stacked PSF model. If an 
+        empty string then no file will be saved to the directory.
 
     Returns
     -------
@@ -521,9 +523,9 @@ def stack_cutouts(input_array, rpix, stack_type='median', scale_flux=True, expor
     elif (stack_type == 'median'):
         stacked_image = np.median(input_array, axis=0)
     else:
-        return print('ERROR: stack_type must be mean or median.')
+        raise ValueError('stack_type must be mean or median.')
 
-    print('Creating a '+stack_type+' image stack.')
+    print(f'Creating a {stack_type} image stack.')
 
     # Scale the stack to have a total flux of unity.
     if (scale_flux is True):
@@ -534,7 +536,7 @@ def stack_cutouts(input_array, rpix, stack_type='median', scale_flux=True, expor
     
     figure = plot_cutouts(data=stacked_image, rpix=rpix)
     
-    if (export_file != 'none'):
+    if (export_file != ''):
         my_psf = fits.PrimaryHDU(stacked_image)
         my_psf.writeto(export_file, overwrite=True)
     
@@ -583,7 +585,7 @@ def plot_cutout_grid(cutouts, path_data, max_cutouts, verbose=False):
         nrow = 1
     elif (num_cutouts > max_cutouts):
         nrow = int(max_cutouts / ncol)
-        print('Displaying a maximum of', max_cutouts, 'cutouts.')
+        print(f'Displaying a maximum of {max_cutouts} cutouts.')
     else:
         nrow = int(len(cutouts) / ncol)
 
