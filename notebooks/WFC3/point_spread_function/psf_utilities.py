@@ -260,6 +260,58 @@ def plot_psf_results(sci_data, resid, xcenter, ycenter, cutout_size):
     return figure
 
 
+# def download_psf_model(file_path, detector, filter):
+
+#     """
+#     Download a PSF model from the WFC3 website and validate the file.
+
+#     Parameters
+#     ----------
+#     file_path : str
+#         The desired filepath where the PSF model will be saved.
+#     detector : str
+#         The HST instrument name with options of 'WFC3UV', 'WFC3IR', 'ACSWFC'.
+#     filter : str
+#         The HST photometric filter, valid for all filters with empirical 
+#         models as listed on the WFC3 PSF webpage. Models are generally 
+#         available for all wide and most medium band filters, but are not 
+#         available for the specialized narrow or quadrant filters.
+
+#     Returns
+#     -------
+#     psf_name : str
+#         The filename of the PSF model that was downloaded.
+#     """
+
+#     if (detector not in ['WFC3UV', 'WFC3IR', 'ACSWFC']):
+#         print('The valid detector options are: WFC3UV, WFC3IR, or ACSWFC')
+
+#     psf_name = f'PSFSTD_{detector}_{filter}.fits'
+#     psf_path = f'{file_path}/{psf_name}'
+#     psf_url = 'https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/data-analysis/psf/_documents/'
+
+#     # Download the PSF file if it doesn't exist.
+#     if not os.path.exists(psf_path):
+#         print('Downloading:', psf_url+psf_name)
+#         urllib.request.urlretrieve(psf_url+psf_name, psf_path)
+
+#     # Copy the PSF file to the working directory.
+#     if not os.path.exists(psf_name):
+#         print('Copying', psf_name, 'to the current directory.')
+#         shutil.copy(psf_path, '.')
+
+#     # Confirm that the file can be opened successfully.
+#     try:
+#         hdul = fits.open(psf_name, ignore_missing_end=True)
+#         hdul.close()
+#         print('Validation complete, the PSF file is readable.')
+#     except IOError:
+#         raise IOError('ERROR: Unable to open', psf_name)
+#     except Exception as e:
+#         raise Exception(e)
+
+#     return psf_name
+
 def download_psf_model(file_path, detector, filter):
 
     """
@@ -283,12 +335,14 @@ def download_psf_model(file_path, detector, filter):
         The filename of the PSF model that was downloaded.
     """
 
-    if (detector not in ['WFC3UV', 'WFC3IR', 'ACSWFC']):
-        print('The valid detector options are: WFC3UV, WFC3IR, or ACSWFC')
+    valid_detectors = ['WFC3UV', 'WFC3IR', 'WFPC2', 'ACSWFC', 'ACSSBC', 'ACSHRC']
 
-    psf_name = f'PSFSTD_{detector}_{filter}.fits'
+    if (detector not in valid_detectors):
+        print('The valid detector options are:\n', valid_detectors)
+
+    psf_name = f'STDPSF_{detector}_{filter}.fits'
     psf_path = f'{file_path}/{psf_name}'
-    psf_url = 'https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/data-analysis/psf/_documents/'
+    psf_url = 'https://www.stsci.edu/~jayander/HST1PASS/LIB/PSFs/STDPSFs/'+detector+'/'
 
     # Download the PSF file if it doesn't exist.
     if not os.path.exists(psf_path):
@@ -311,6 +365,7 @@ def download_psf_model(file_path, detector, filter):
         raise Exception(e)
 
     return psf_name
+
 
 
 def make_cutouts(image, star_ids, xis, yis, rpix, scale_stars=True, sub_pixel=True, show_figs=True, verbose=True):
