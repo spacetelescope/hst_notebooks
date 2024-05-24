@@ -23,7 +23,6 @@ Updated: 23 May 2024
 """
 
 import os
-import shutil
 import urllib
 import numpy as np
 import matplotlib.pyplot as plt
@@ -311,7 +310,7 @@ def download_psf_model(file_path, detector, filter):
     return psf_name
 
 
-def make_cutouts(image, star_ids, xis, yis, rpix, \
+def make_cutouts(image, star_ids, xis, yis, rpix, 
                  scale_stars=True, sub_pixel=True, show_figs=True, verbose=True):
 
     """
@@ -448,8 +447,8 @@ def plot_cutouts(data, rpix):
     figure, mysubplot = plt.subplots(1, 4, figsize=(11, 11), sharex=True, sharey=True)
     mysubplot[0].imshow(data, vmin=0.0, vmax=np.amax(data), origin='lower', aspect='equal')
     mysubplot[1].imshow(data, vmin=0.0, vmax=np.amax(data)/100.0, origin='lower', aspect='equal')
-    vmin=np.percentile(data, 0.0)
-    vmax=np.percentile(data, 98.5)
+    vmin = np.percentile(data, 0.0)
+    vmax = np.percentile(data, 98.5)
     mysubplot[2].imshow(data, norm=LogNorm(vmin=vmin, vmax=vmax), origin='lower', aspect='equal')
     mysubplot[3].imshow(np.log10(data), origin='lower', aspect='equal')
     mysubplot[0].set_title(r'100% Max')
