@@ -19,7 +19,7 @@ Author
 ------
 Mitchell Revalski
 Created: 15 Apr 2024
-Updated: 23 May 2024
+Updated: 28 May 2024
 """
 
 import os
@@ -361,6 +361,8 @@ def make_cutouts(image, star_ids, xis, yis, rpix,
         The np.ndarray containing a subimage centered on the star.
     """
 
+    print(f'\nCalling make_cutouts with {len(star_ids)} sources.\n')
+
     image_array = []
 
     # Create a loop over all stars.
@@ -500,7 +502,7 @@ def stack_cutouts(input_array, rpix, stack_type='median', scale_flux=True, expor
         The matplotlib image showing the stacked PSF model.
     """
 
-    print('Calling stack_cutouts with', len(input_array), 'sources.')
+    print(f'\nCalling stack_cutouts with {len(input_array)} sources.\n')
 
     if (stack_type == 'mean'):
         stacked_image = np.mean(input_array, axis=0)
