@@ -40,6 +40,7 @@ def save_figure(figure, filename, show_figure):
 
     """
     Save the current figure and display or close the file.
+    There are no returns, the filepath is simply printed.
 
     Parameters
     ----------
@@ -49,11 +50,6 @@ def save_figure(figure, filename, show_figure):
         The full filepath including the desired filename to save.
     show_figure : bool
         The figure will be shown in the notebook if set to True.
-
-    Returns
-    -------
-    filename : str
-        Prints the file location of where the figure was saved.
     """
 
     figure.tight_layout()
@@ -63,7 +59,7 @@ def save_figure(figure, filename, show_figure):
     if (show_figure is False):
         plt.close()
 
-    return print('\nFigure saved as: '+filename)
+    print('\nFigure saved as: '+filename)
 
 
 def setup_matplotlib(size, multiplier):
@@ -151,12 +147,9 @@ def create_mask(data, cutout_size, xcenter, ycenter):
     """
     
     # Create a mask array that is the same size as the science image.
-    # Next, mask the upper, lower, left, and right regions with True.
-    mask = np.zeros(data.shape, dtype=bool)
-    mask[ycenter+int(cutout_size/2):np.shape(data)[0], 0:np.shape(data)[1]] = True
-    mask[0:ycenter-int(cutout_size/2), 0:np.shape(data)[1]] = True
-    mask[0:np.shape(data)[0], 0:xcenter-int(cutout_size/2)] = True
-    mask[0:np.shape(data)[0], xcenter+int(cutout_size/2):np.shape(data)[1]] = True
+    # Next, mask the entire central region as False so it is not masked.
+    mask = np.ones(data.shape, dtype=bool)
+    mask[ycenter-int(cutout_size/2):ycenter+int(cutout_size/2), xcenter-int(cutout_size/2):xcenter+int(cutout_size/2)] = False    
 
     return mask
 
