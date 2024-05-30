@@ -19,7 +19,7 @@ Author
 ------
 Mitchell Revalski
 Created: 15 Apr 2024
-Updated: 28 May 2024
+Updated: 30 May 2024
 """
 
 import os
@@ -124,10 +124,8 @@ def setup_matplotlib(size, multiplier):
 def create_mask(data, cutout_size, xcenter, ycenter):
 
     """
-    A function that accepts an array of science data, a cutout size in 
-    pixels, and xcenter and ycenter locations. The function returns a 
-    mask that is compatible with the daofind function so that source 
-    searches are only conducted on a portion of the overall image.
+    Create a mask that is compatible with the DAOFIND algorithm so that 
+    source searches are only conducted on a portion of the overall image.
 
     Parameters
     ----------
@@ -157,10 +155,7 @@ def create_mask(data, cutout_size, xcenter, ycenter):
 def plot_apertures(data, xcenter, ycenter, cutout_size, apertures_stellar, apertures_annulus):
 
     """
-    A function that takes an image, x and y center locations, cutout size, and 
-    stellar and background photometric apertures that were calculated with the 
-    photutils CircularAperture and CircularAnnulus functions, respectively. 
-    The function then creates a figure showing the apertures over the data.
+    Create a figure plotting the data, identified stars, and photometry apertures.
 
     Parameters
     ----------
@@ -268,7 +263,9 @@ def download_psf_model(file_path, detector, filter):
         The HST photometric filter, valid for all filters with empirical 
         models as listed on the WFC3 PSF webpage. Models are generally 
         available for all wide and most medium band filters, but are not 
-        available for the specialized narrow or quadrant filters.
+        available for the specialized narrow or quadrant filters. The 
+        ACS and WFPC2 models come directly from the database maintained 
+        by Jay Anderson at STScI.
 
     Returns
     -------
@@ -283,7 +280,7 @@ def download_psf_model(file_path, detector, filter):
 
     psf_name = f'STDPSF_{detector}_{filter}.fits'
     psf_path = f'{file_path}{psf_name}'
-    psf_url = 'https://www.stsci.edu/~jayander/HST1PASS/LIB/PSFs/STDPSFs/'+detector+'/'
+    psf_url = f'https://www.stsci.edu/~jayander/HST1PASS/LIB/PSFs/STDPSFs/{detector}/'
 
     # Download the PSF file if it doesn't exist.
     if not os.path.exists(psf_path):
@@ -335,17 +332,17 @@ def make_cutouts(image, star_ids, xis, yis, rpix,
         A list of the y-centroids of each star, assumed to be exact.
     rpix : int
         An integer number of pixels for the cutout length and width.
-    scale_stars : bool
+    scale_stars : bool, default=True
         If True then the value of each pixel is divided by the maximum. 
         This should generally be set to True to avoid improper weighting.
-    sub_pixel : bool
+    sub_pixel : bool, default=True
         If True then a sub-pixel recentering is completed, using the
         values provided by the user in the xis and yis lists, so that 
         the stars centroid is located at exactly (rpix, rpix). This 
         should generally be set to True.
-    show_figs : bool
+    show_figs : bool, default=True
         If True then each cutout will be shown in the notebook.
-    verbose : bool
+    verbose : bool, default=True
         If True then additional diagnostic information is printed.
 
     Returns
@@ -462,7 +459,7 @@ def stack_cutouts(input_array, rpix, stack_type='median', scale_flux=True, expor
 
     """
     Given an array containing 2D arrays with centered images of stars, 
-    create and mean or median stack. The 'rpix' parameter sets the size 
+    create a mean or median stack. The 'rpix' parameter sets the size 
     of the resulting array, and a 'median' stack_type is generally recommended 
     for stars so that outliers and contaminants are rejected. The scale_flux 
     option allows users to normalize the total integrated flux (area under the 
@@ -476,13 +473,13 @@ def stack_cutouts(input_array, rpix, stack_type='median', scale_flux=True, expor
         after being cropped to a subarray using the make_cutouts() function.
     rpix : int
         An integer number of pixels for the cutout length and width.
-    stack_type : str
+    stack_type : str, default='median'
         The mathematical averaging function, either median or mean. 
         In general, median is recommended for rejecting contaminants.
-    scale_flux : bool
-        If True then the value of each pixel is divided by the maximum. 
+    scale_flux : bool, default=True
+        If True then the value of each pixel is divided by the total sum. 
         This should generally be set to True to avoid improper weighting.
-    export_file : str
+    export_file : str, default=''
         The desired filename for saving the stacked PSF model. If an 
         empty string then no file will be saved to the directory.
 
@@ -526,10 +523,10 @@ def plot_cutout_grid(cutouts, path_data, max_cutouts, verbose=False):
 
     """
     A function that displays a grid of MAST PSF cutouts that have 
-    been retrieved using the functions from mast_api_psf.py written 
-    by Fred Dauphin. The function accepts a list of 2D arrays 
-    corresponding to cutouts and generates a gris plot with a 
-    maximum of max_cutouts displayed in the figure.
+    been retrieved using the functions from mast_api_psf.py. The 
+    function accepts a list of 2D arrays corresponding to cutouts 
+    and generates a grid plot with a maximum of max_cutouts 
+    displayed in the figure.
 
     Parameters
     ----------
@@ -540,7 +537,7 @@ def plot_cutout_grid(cutouts, path_data, max_cutouts, verbose=False):
     max_cutouts : int
         The maximum number of cutouts to display on screen. The code 
         will adapt, but intervals of five make for easier displaying.
-    verbose : bool
+    verbose : bool, default=False
         If True then the code will print additional diagnostics.
 
     Returns
@@ -558,7 +555,7 @@ def plot_cutout_grid(cutouts, path_data, max_cutouts, verbose=False):
 
     if (max_cutouts > len(cutouts)):
         max_cutouts = ((len(cutouts) % 5 + 5)*5)
-        print('Setting max_cutouts to', max_cutouts, 'so it is less than the number of', len(cutouts), 'cutouts.')
+        print(f'Setting max_cutouts to {max_cutouts} so it is less than the number of {len(cutouts)} cutouts.')
     
     if (num_cutouts < ncol):
         nrow = 1
@@ -592,7 +589,7 @@ def plot_cutout_grid(cutouts, path_data, max_cutouts, verbose=False):
             apertures_cutout.plot(ax=axes[ax], color='lime', lw=current_width, alpha=1.0)
         else:
             if (verbose is True):
-                print('Only showing the first', max_cutouts, 'cutouts.')
+                print(f'Only showing the first {max_cutouts} cutouts.')
             break
         
     plt.tight_layout()
