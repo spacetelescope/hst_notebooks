@@ -251,6 +251,7 @@ def download_psf_model(file_path, detector, filter):
 
     """
     Download a PSF model from Jay Anderson's website and validate the file.
+    See this page: https://www.stsci.edu/~jayander/HST1PASS/LIB/PSFs/STDPSFs/
 
     Parameters
     ----------
@@ -347,13 +348,13 @@ def make_cutouts(image, star_ids, xis, yis, rpix,
 
     Returns
     -------
-    image_array : np.ndarray
-        The np.ndarray containing a subimage centered on the star.
+    image_list : list
+        The list of np.ndarrays containing subimages centered on each star.
     """
 
     print(f'\nCalling make_cutouts with {len(star_ids)} sources.\n')
 
-    image_array = []
+    image_list = []
 
     # Create a loop over all stars.
     for i in range(len(xis)):
@@ -406,13 +407,13 @@ def make_cutouts(image, star_ids, xis, yis, rpix,
             
         # Protect against peak_finder results that do not contain a star.
         if (peak_location[1] != 0 and peak_location[0] != 0):
-            image_array.append(subimage)
+            image_list.append(subimage)
             if (show_figs is True):
                 plot_cutouts(data=subimage, rpix=rpix)            
         else:
             print('This object does not have a central peak and will be excluded.\n')
 
-    return image_array
+    return image_list
 
 
 def plot_cutouts(data, rpix):
@@ -455,7 +456,7 @@ def plot_cutouts(data, rpix):
     return figure
 
 
-def stack_cutouts(input_array, rpix, stack_type='median', scale_flux=True, export_file=''):
+def stack_cutouts(input_list, rpix, stack_type='median', scale_flux=True, export_file=''):
 
     """
     Given an array containing 2D arrays with centered images of stars, 
@@ -468,8 +469,8 @@ def stack_cutouts(input_array, rpix, stack_type='median', scale_flux=True, expor
 
     Parameters
     ----------
-    input_array : np.ndarray
-        The np.ndarray containing the array of science data, generally 
+    input_list : list
+        A list of np.ndarrays containing the of science data, generally 
         after being cropped to a subarray using the make_cutouts() function.
     rpix : int
         An integer number of pixels for the cutout length and width.
@@ -492,12 +493,12 @@ def stack_cutouts(input_array, rpix, stack_type='median', scale_flux=True, expor
         The matplotlib image showing the stacked PSF model.
     """
 
-    print(f'\nCalling stack_cutouts with {len(input_array)} sources.\n')
+    print(f'\nCalling stack_cutouts with {len(input_list)} sources.\n')
 
     if (stack_type == 'mean'):
-        stacked_image = np.mean(input_array, axis=0)
+        stacked_image = np.mean(input_list, axis=0)
     elif (stack_type == 'median'):
-        stacked_image = np.median(input_array, axis=0)
+        stacked_image = np.median(input_list, axis=0)
     else:
         raise ValueError('stack_type must be mean or median.')
 
