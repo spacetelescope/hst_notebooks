@@ -52,4 +52,4 @@ pip install notebook
 ```
 
 With the environment activated and additional libraries installed based on the
-individual requirement files, you will be able to complete the notebooks.
+individual requirement files, you will be able to complete the notebooks. 
