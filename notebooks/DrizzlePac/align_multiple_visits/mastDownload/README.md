@@ -1,0 +1,1 @@
+Folder to allow for MAST downloads to work with CI.
