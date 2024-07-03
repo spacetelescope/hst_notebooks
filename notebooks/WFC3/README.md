@@ -4,7 +4,7 @@ WFC3 Notebooks
 WFC3 Notebooks is the primary repository for analyzing data from the 
 [Wide Field Camera 3](https://www.stsci.edu/hst/instrumentation/wfc3) on the 
 Hubble Space Telescope. The Jupyter notebooks include tools for general data analysis, 
-WFC3/IR time variable background (TVB), and photometry. This repository contains the 
+WFC3/IR time variable background (TVB), photometry, and point spread function (PSF) modeling. This repository contains the 
 complementary notebooks mentioned in the [WFC3 Data Handbook](https://hst-docs.stsci.edu/wfc3dhb).
 These notebooks include:
 
@@ -28,6 +28,9 @@ Photometry:
 - [WFC3/UVIS Time-dependent Photometry](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/uvis_time_dependent_photometry/uvis_timedep_phot.html)
 - [Calculating WFC3 Zeropoints with `stsynphot`](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/zeropoints/zeropoints.html)
 - [WFC3/UVIS Pixel Area Map Corrections for Subarrays](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html)
+
+Point Spread Function:
+ - [HST WFC3 Point Spread Function Modeling](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/point_spread_function/hst_point_spread_function.html)
 
 See the [WFC3 Instrument Handbook](https://hst-docs.stsci.edu/wfc3ihb),
 [WFC3 Data Handbook](https://hst-docs.stsci.edu/wfc3dhb),
