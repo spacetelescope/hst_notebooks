@@ -611,14 +611,14 @@ document.write(`
 <section class="tex2jax_ignore mathjax_ignore" id="aligning-hst-mosaics">
 <h1>Aligning HST Mosaics<a class="headerlink" href="#aligning-hst-mosaics" title="Permalink to this heading">#</a></h1>
 <hr class="docutils" />
-<div class="alert alert-block alert-warning" style="color:black" > <b> This notebook assumes you have created and activated a virtual environment using the requirements file in this notebook's repository. Please make sure you have read the contents of the README file before continuing the notebook. Note that the text file "align_mosaics_uvis_skyfile.txt" is one of the downloads expected for this notebook.</b> </div> 
+<div class="alert alert-block alert-warning" style="color:black" > <b> This notebook requires creating and activating a virtual environment using the requirements file in this notebook's repository. Please also review the README file before using the notebook. Note that the text file "align_mosaics_uvis_skyfile.txt" is one of the downloads expected for this notebook.</b> </div> 
 <section id="learning-goals">
 <h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h2>
 <p>By the end of this notebook tutorial, you will:</p>
 <ul class="simple">
 <li><p>Download WFC3 UVIS &amp; IR images with <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></p></li>
 <li><p>Check the active WCS (world coordinate system) solution in the FITS images</p></li>
-<li><p>Create a Gaia reference catalog and align the IR images using <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code>.</p></li>
+<li><p>Create a Gaia reference catalog and align the IR images using <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code></p></li>
 <li><p>Verify the quality of the alignment results and compare to the MAST alignment solutions</p></li>
 <li><p>Update the WCS and use <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> to combine the IR mosaic</p></li>
 <li><p>Align the UVIS data to the IR drizzled mosaic using <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code></p></li>
@@ -765,6 +765,7 @@ Small dithers between exposures in a given tile will fill in the UVIS chip gap a
 
 <span class="kn">from</span> <span class="nn">astroquery.gaia</span> <span class="kn">import</span> <span class="n">Gaia</span>
 <span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39; # Improves the resolution of figures rendered in notebooks.
 <span class="n">Gaia</span><span class="o">.</span><span class="n">MAIN_GAIA_TABLE</span> <span class="o">=</span> <span class="s1">&#39;gaiadr3.gaia_source&#39;</span>   <span class="c1"># Change if different data release is desired</span>
 <span class="n">Gaia</span><span class="o">.</span><span class="n">ROW_LIMIT</span> <span class="o">=</span> <span class="mi">100000</span>
 </pre></div>
@@ -943,7 +944,7 @@ Small dithers between exposures in a given tile will fill in the UVIS chip gap a
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=8</i>
-<table id="table140564895839376" class="table-striped table-bordered table-condensed">
+<table id="table140113969956624" class="table-striped table-bordered table-condensed">
 <thead><tr><th>ROOTNAME</th><th>ASN_ID</th><th>TARGNAME</th><th>DETECTOR</th><th>FILTER</th><th>EXPTIME</th><th>RA_TARG</th><th>DEC_TARG</th><th>POSTARG1</th><th>POSTARG2</th><th>DATE-OBS</th><th>ORIENTAT</th></tr></thead>
 <thead><tr><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>str32</th><th>float64</th></tr></thead>
 <tr><td>ick901hzq</td><td>ICK901030</td><td>LBN67-IR</td><td>IR</td><td>F160W</td><td>702.9</td><td>274.7172</td><td>-13.8361</td><td>-62.566</td><td>-62.047</td><td>2014-09-02</td><td>-35.35</td></tr>
@@ -990,7 +991,7 @@ Small dithers between exposures in a given tile will fill in the UVIS chip gap a
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=12</i>
-<table id="table140564895999888" class="table-striped table-bordered table-condensed">
+<table id="table140113947687568" class="table-striped table-bordered table-condensed">
 <thead><tr><th>ROOTNAME</th><th>ASN_ID</th><th>TARGNAME</th><th>DETECTOR</th><th>FILTER</th><th>EXPTIME</th><th>RA_TARG</th><th>DEC_TARG</th><th>POSTARG1</th><th>POSTARG2</th><th>DATE-OBS</th><th>ORIENTAT</th></tr></thead>
 <thead><tr><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>str32</th><th>float64</th></tr></thead>
 <tr><td>ick905k5q</td><td>ICK905040</td><td>LBN67-UVIS</td><td>UVIS</td><td>F657N</td><td>600.0</td><td>274.7104</td><td>-13.8289</td><td>-65.384</td><td>-74.272</td><td>2014-09-02</td><td>-35.25</td></tr>
@@ -1045,7 +1046,7 @@ Small dithers between exposures in a given tile will fill in the UVIS chip gap a
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><i>Table length=8</i>
-<table id="table140564914484880-407405" class="table-striped table-bordered table-condensed">
+<table id="table140113948411344-379519" class="table-striped table-bordered table-condensed">
 <thead><tr><th>idx</th><th>filename</th><th>DETECTOR</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RApix</th><th>RMS_DECpix</th></tr></thead>
 <tr><td>0</td><td>ick901hzq_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>98</td><td>12.5</td><td>12.8</td><td>0.1</td><td>0.1</td></tr>
 <tr><td>1</td><td>ick901i7q_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>98</td><td>12.5</td><td>12.8</td><td>0.1</td><td>0.1</td></tr>
@@ -1078,14 +1079,14 @@ require.config({paths: {
     datatables: 'https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min'
 }});
 require(["datatables"], function(){
-    console.log("$('#table140564914484880-407405').dataTable()");
+    console.log("$('#table140113948411344-379519').dataTable()");
     
 jQuery.extend( jQuery.fn.dataTableExt.oSort, {
     "optionalnum-asc": astropy_sort_num,
     "optionalnum-desc": function (a,b) { return -astropy_sort_num(a, b); }
 });
 
-    $('#table140564914484880-407405').dataTable({
+    $('#table140113948411344-379519').dataTable({
         order: [],
         pageLength: 50,
         lengthMenu: [[10, 25, 50, 100, 500, 1000, -1], [10, 25, 50, 100, 500, 1000, 'All']],
@@ -1128,7 +1129,7 @@ Next, we look at the WCS for the UVIS data.</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><i>Table length=12</i>
-<table id="table140564908643856-735768" class="table-striped table-bordered table-condensed">
+<table id="table140113970755600-98085" class="table-striped table-bordered table-condensed">
 <thead><tr><th>idx</th><th>filename</th><th>DETECTOR</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RApix</th><th>RMS_DECpix</th></tr></thead>
 <tr><td>0</td><td>ick905k5q_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>159</td><td>4.4</td><td>3.8</td><td>0.11</td><td>0.1</td></tr>
 <tr><td>1</td><td>ick905keq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>159</td><td>4.4</td><td>3.8</td><td>0.11</td><td>0.1</td></tr>
@@ -1165,14 +1166,14 @@ require.config({paths: {
     datatables: 'https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min'
 }});
 require(["datatables"], function(){
-    console.log("$('#table140564908643856-735768').dataTable()");
+    console.log("$('#table140113970755600-98085').dataTable()");
     
 jQuery.extend( jQuery.fn.dataTableExt.oSort, {
     "optionalnum-asc": astropy_sort_num,
     "optionalnum-desc": function (a,b) { return -astropy_sort_num(a, b); }
 });
 
-    $('#table140564908643856-735768').dataTable({
+    $('#table140113970755600-98085').dataTable({
         order: [],
         pageLength: 50,
         lengthMenu: [[10, 25, 50, 100, 500, 1000, -1], [10, 25, 50, 100, 500, 1000, 'All']],
@@ -1236,8 +1237,8 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/ffa2b0a0b967d86f7bd5023e15edb59a0f126494bbfd46330d57dffeff89fda1.png" src="../../../_images/ffa2b0a0b967d86f7bd5023e15edb59a0f126494bbfd46330d57dffeff89fda1.png" />
-<img alt="../../../_images/7f0a8329daf68b87a56d2869c3246292f2a97eb5c7fc2fa622b7da30f516dec1.png" src="../../../_images/7f0a8329daf68b87a56d2869c3246292f2a97eb5c7fc2fa622b7da30f516dec1.png" />
+<img alt="../../../_images/251a6e85a5b6edd188f050fee690e732ac51f7b9f536f5cdfb7fa07db7f608c8.png" src="../../../_images/251a6e85a5b6edd188f050fee690e732ac51f7b9f536f5cdfb7fa07db7f608c8.png" />
+<img alt="../../../_images/8cded87edfe4f94ae50a7b1de48d889921b6fddc7c5dfaae78bd7e3aba7b4317.png" src="../../../_images/8cded87edfe4f94ae50a7b1de48d889921b6fddc7c5dfaae78bd7e3aba7b4317.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1272,7 +1273,7 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=8</i>
-<table id="table140564883863888" class="table-striped table-bordered table-condensed">
+<table id="table140113936677392" class="table-striped table-bordered table-condensed">
 <thead><tr><th>file</th><th>dx</th><th>dy</th><th>rot</th><th>scale</th><th>xrms</th><th>yrms</th></tr></thead>
 <thead><tr><th>str18</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>ick901hzq_flt.fits</td><td>0.02</td><td>0.01</td><td>359.997</td><td>1.00000</td><td>0.05</td><td>0.05</td></tr>
@@ -1317,7 +1318,7 @@ Number of matches for ick904ogq_flt_catalog_fit.match =  52
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=8</i>
-<table id="table140564914484880" class="table-striped table-bordered table-condensed">
+<table id="table140113948411344" class="table-striped table-bordered table-condensed">
 <thead><tr><th>filename</th><th>DETECTOR</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RApix</th><th>RMS_DECpix</th></tr></thead>
 <thead><tr><th>str18</th><th>str2</th><th>str30</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>ick901hzq_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>98</td><td>12.5</td><td>12.8</td><td>0.1</td><td>0.1</td></tr>
@@ -1370,7 +1371,7 @@ Number of matches for ick904ogq_flt_catalog_fit.match =  52
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/5b77707fc3f8671edfa603f1880e8c998b3a38a4defc112f89942a32de8fe732.png" src="../../../_images/5b77707fc3f8671edfa603f1880e8c998b3a38a4defc112f89942a32de8fe732.png" />
+<img alt="../../../_images/71d999247c0e3b6074573e1532cd585bf9d97f335896e2b8c17dce368b526490.png" src="../../../_images/71d999247c0e3b6074573e1532cd585bf9d97f335896e2b8c17dce368b526490.png" />
 </div>
 </div>
 <p>Next, the 4-panel fit residual plots: dx, dy vs X and Y are inspected to verify that the residuals cluster around zero.</p>
@@ -1390,7 +1391,7 @@ Number of matches for ick904ogq_flt_catalog_fit.match =  52
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/1a7af9d7c1b307a6af084b6a612a8f3e64178cb3a3b6184cff4ed2713a0dae80.png" src="../../../_images/1a7af9d7c1b307a6af084b6a612a8f3e64178cb3a3b6184cff4ed2713a0dae80.png" />
+<img alt="../../../_images/696c086485e15587e64e1238eb0561e0d318eeabf218de81cf8c25f05fc403cc.png" src="../../../_images/696c086485e15587e64e1238eb0561e0d318eeabf218de81cf8c25f05fc403cc.png" />
 </div>
 </div>
 <p>We repeat the following for Visits 03 and 04.</p>
@@ -1424,7 +1425,7 @@ Number of matches for ick904ogq_flt_catalog_fit.match =  52
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/e79702b47add6b6313da22f5c6f51b4460078069e6aeb7cdbd595807524b856b.png" src="../../../_images/e79702b47add6b6313da22f5c6f51b4460078069e6aeb7cdbd595807524b856b.png" />
+<img alt="../../../_images/dc0545bb95637dc76183e30154620f4efbe971a5ab0acfb5f15fb700d02dae68.png" src="../../../_images/dc0545bb95637dc76183e30154620f4efbe971a5ab0acfb5f15fb700d02dae68.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1443,7 +1444,7 @@ Number of matches for ick904ogq_flt_catalog_fit.match =  52
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/e68d9bc55588948b44b557a1918cd22844b1f0d327df88db80724dfe38688652.png" src="../../../_images/e68d9bc55588948b44b557a1918cd22844b1f0d327df88db80724dfe38688652.png" />
+<img alt="../../../_images/7057fd3847207de82c8407bfdb3af169d0d0bf752800a1e0ecd92036a3ef1a5d.png" src="../../../_images/7057fd3847207de82c8407bfdb3af169d0d0bf752800a1e0ecd92036a3ef1a5d.png" />
 </div>
 </div>
 <p>The dx,dy residuals for all IR exposures are all clustered around dx,dy=0 and have an RMS less than 0.1 pixels, indicating a good fit. If the alignment needs to be fine-tuned, changing the parameters <code class="docutils literal notranslate"><span class="pre">threshold</span></code>, <code class="docutils literal notranslate"><span class="pre">sigma</span></code>, and <code class="docutils literal notranslate"><span class="pre">searchrad</span></code> may help TweakReg to lock onto an accurate solution.</p>
@@ -1472,8 +1473,8 @@ Number of matches for ick904ogq_flt_catalog_fit.match =  52
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/ffa2b0a0b967d86f7bd5023e15edb59a0f126494bbfd46330d57dffeff89fda1.png" src="../../../_images/ffa2b0a0b967d86f7bd5023e15edb59a0f126494bbfd46330d57dffeff89fda1.png" />
-<img alt="../../../_images/7f0a8329daf68b87a56d2869c3246292f2a97eb5c7fc2fa622b7da30f516dec1.png" src="../../../_images/7f0a8329daf68b87a56d2869c3246292f2a97eb5c7fc2fa622b7da30f516dec1.png" />
+<img alt="../../../_images/251a6e85a5b6edd188f050fee690e732ac51f7b9f536f5cdfb7fa07db7f608c8.png" src="../../../_images/251a6e85a5b6edd188f050fee690e732ac51f7b9f536f5cdfb7fa07db7f608c8.png" />
+<img alt="../../../_images/8cded87edfe4f94ae50a7b1de48d889921b6fddc7c5dfaae78bd7e3aba7b4317.png" src="../../../_images/8cded87edfe4f94ae50a7b1de48d889921b6fddc7c5dfaae78bd7e3aba7b4317.png" />
 </div>
 </div>
 </section>
@@ -1518,10 +1519,10 @@ Number of matches for ick904ogq_flt_catalog_fit.match =  52
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x7fd7d01dcc10&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x7f6ed18ea5d0&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/c47b01cfe6516e0edcd625f3aadbf77aa3bfeb05afeedef187b565f15f6cf24d.png" src="../../../_images/c47b01cfe6516e0edcd625f3aadbf77aa3bfeb05afeedef187b565f15f6cf24d.png" />
+<img alt="../../../_images/1be3310afd9fd03d26cf2e233e212e3520990086940d2c425dc050774de773d8.png" src="../../../_images/1be3310afd9fd03d26cf2e233e212e3520990086940d2c425dc050774de773d8.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1534,10 +1535,10 @@ Number of matches for ick904ogq_flt_catalog_fit.match =  52
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x7fd7d025c7d0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x7f6ed1909390&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/29c9fbeb3c85715078e846d30600b11a4773a1f25ff590d2a3d94c8fe3395940.png" src="../../../_images/29c9fbeb3c85715078e846d30600b11a4773a1f25ff590d2a3d94c8fe3395940.png" />
+<img alt="../../../_images/3f310f06fe2452ff097b422eb54e6d185e1da612cd754a13b3cb579691a0f920.png" src="../../../_images/3f310f06fe2452ff097b422eb54e6d185e1da612cd754a13b3cb579691a0f920.png" />
 </div>
 </div>
 </section>
@@ -1572,8 +1573,8 @@ Number of matches for ick904ogq_flt_catalog_fit.match =  52
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/ceea2eee28227636a55fae77681b57cb0cadf72053f03acdb27106ff08f87d26.png" src="../../../_images/ceea2eee28227636a55fae77681b57cb0cadf72053f03acdb27106ff08f87d26.png" />
-<img alt="../../../_images/97266198acb55a45603c1c389f0e87cf600678ddc5699e9d6ec7abb2b72ed3b5.png" src="../../../_images/97266198acb55a45603c1c389f0e87cf600678ddc5699e9d6ec7abb2b72ed3b5.png" />
+<img alt="../../../_images/005c630dd8770ecd03f04b0e20ac00f422a6861544dc6f3867d31f759c751369.png" src="../../../_images/005c630dd8770ecd03f04b0e20ac00f422a6861544dc6f3867d31f759c751369.png" />
+<img alt="../../../_images/69e7009011ad7e00b3f92b1f2606dde5b56e8208c250161037a4569db487d5a6.png" src="../../../_images/69e7009011ad7e00b3f92b1f2606dde5b56e8208c250161037a4569db487d5a6.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1607,7 +1608,7 @@ Number of matches for ick904ogq_flt_catalog_fit.match =  52
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=12</i>
-<table id="table140564896265680" class="table-striped table-bordered table-condensed">
+<table id="table140113947210320" class="table-striped table-bordered table-condensed">
 <thead><tr><th>file</th><th>dx</th><th>dy</th><th>rot</th><th>scale</th><th>xrms</th><th>yrms</th></tr></thead>
 <thead><tr><th>str18</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>ick905k5q_flc.fits</td><td>-0.01</td><td>0.02</td><td>0.000</td><td>1.00000</td><td>0.06</td><td>0.05</td></tr>
@@ -1660,7 +1661,7 @@ Number of matches for ick908ptq_flc_catalog_fit.match =  77
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=12</i>
-<table id="table140564908643856" class="table-striped table-bordered table-condensed">
+<table id="table140113970755600" class="table-striped table-bordered table-condensed">
 <thead><tr><th>filename</th><th>DETECTOR</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RApix</th><th>RMS_DECpix</th></tr></thead>
 <thead><tr><th>str18</th><th>str4</th><th>str30</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>ick905k5q_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>159</td><td>4.4</td><td>3.8</td><td>0.11</td><td>0.1</td></tr>
@@ -1712,7 +1713,7 @@ Number of matches for ick908ptq_flc_catalog_fit.match =  77
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;ick905k5q to Gaia N = 136 Matches&#39;)
 </pre></div>
 </div>
-<img alt="../../../_images/d17830c18b3ff66b5bd2b746ee13ecba4d2808187af7c8319fc9af7bc3343036.png" src="../../../_images/d17830c18b3ff66b5bd2b746ee13ecba4d2808187af7c8319fc9af7bc3343036.png" />
+<img alt="../../../_images/8f5d1b098e49cf468ce6a57585d70d226691a41b03da39f2631ca8afba1fcb4e.png" src="../../../_images/8f5d1b098e49cf468ce6a57585d70d226691a41b03da39f2631ca8afba1fcb4e.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1796,10 +1797,10 @@ Number of matches for ick908ptq_flc_catalog_fit.match =  77
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fd7d07c0410&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f6ed1de7e10&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/3a07e6d1ebf86b4eb63b4a14ae66f3b33681175dad7c59223ee3db224eb70896.png" src="../../../_images/3a07e6d1ebf86b4eb63b4a14ae66f3b33681175dad7c59223ee3db224eb70896.png" />
+<img alt="../../../_images/e540039a8eb835d89a1672b1f371f5f0094575eacdfb7d2ecd75dc73718d3c8b.png" src="../../../_images/e540039a8eb835d89a1672b1f371f5f0094575eacdfb7d2ecd75dc73718d3c8b.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1811,10 +1812,10 @@ Number of matches for ick908ptq_flc_catalog_fit.match =  77
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fd7d00be250&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f6ed1756550&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/bb020f7e311c0d6ffda0defa56ffe4a5d9018fd4d2ec8d274c35647d1a6a2785.png" src="../../../_images/bb020f7e311c0d6ffda0defa56ffe4a5d9018fd4d2ec8d274c35647d1a6a2785.png" />
+<img alt="../../../_images/4a2a0c1d66f475fae74095600f2285bdbbcf96e3b16546c0f46c21d49d81687d.png" src="../../../_images/4a2a0c1d66f475fae74095600f2285bdbbcf96e3b16546c0f46c21d49d81687d.png" />
 </div>
 </div>
 </section>
