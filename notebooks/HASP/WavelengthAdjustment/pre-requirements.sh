@@ -1,1 +1,1 @@
-conda install -y -c conda-forge hstcal
+conda create -n hstcal==2.7.4 -c conda-forge cmake compilers cfitsio pkgconfig
