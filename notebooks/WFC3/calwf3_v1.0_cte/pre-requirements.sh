@@ -1,1 +1,1 @@
-conda install --yes -c http://ssb.stsci.edu/astroconda hstcal
+conda install -y -c conda-forge hstcal
