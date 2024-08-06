@@ -1,6 +1,1 @@
-#! /bin/bash
-source /usr/share/miniconda/etc/profile.d/conda.sh
-conda create --yes -n hst-env python=3.11 # conda
-conda init bash
-conda activate hst-env
-conda install --yes -c conda-forge hstcal
+conda create --yes -n hstcal -c conda-forge hstcal
