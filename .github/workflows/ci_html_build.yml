@@ -52,6 +52,13 @@ jobs:
           if [ -f "$dir/requirements.txt" ]; then
             pip install -r "$dir/requirements.txt"
           fi
+          if [ "${GITHUB_REPOSITORY}" == "spacetelescope/hst_notebooks" ]; then
+            source /usr/share/miniconda/etc/profile.d/conda.sh
+            conda create --yes --solver=classic -n hstcal -c conda-forge hstcal  
+            source /usr/share/miniconda/etc/profile.d/conda.sh
+            conda init
+            conda activate hstcal
+          fi
           pip install notebook
           jupyter nbconvert --to notebook --execute --inplace "$notebook" 
 
