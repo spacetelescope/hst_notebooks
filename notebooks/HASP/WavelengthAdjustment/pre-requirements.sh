@@ -1,1 +1,1 @@
-conda install -y -c conda-forge hstcal==3.0.3
+conda install -y -c conda-forge hstcal
