@@ -38,7 +38,7 @@ def set_filters(parameters):
     This allows you to enter your filter criteria as a dictionary, 
     which will then be parsed into correct format for searching.
     """
-    return [{"paramName":p, "values":v} for p,v in parameters.items()]
+    return [{"paramName": p, "values": v} for p, v in parameters.items()]
 
 
 def set_min_max(min, max):
@@ -48,7 +48,6 @@ def set_min_max(min, max):
     This is a convenience function to format such a query correctly.
     """
     return [{'min': min, 'max': max}]
-
 
 
 # Downloading functions
@@ -84,7 +83,7 @@ def download_request_file(dataURI_filename):
     resp = requests.get(request_url, params=payload)
     
     # Write response to filename
-    with open(filename,'wb') as FLE:
+    with open(filename, 'wb') as FLE:
         FLE.write(resp.content)
  
     return filename
@@ -166,11 +165,10 @@ def download_request_bundle(dataURIs, filename):
     resp = requests.post(request_url, data=payload)
     
     # Write response to filename
-    with open(filename,'wb') as FLE:
+    with open(filename, 'wb') as FLE:
         FLE.write(resp.content)
  
     return filename
-
 
 
 # Main functions
@@ -402,3 +400,4 @@ def extract_cutouts_pool(dataURLs, cpu_count=0):
     pool.join()
 
     return cutouts
+    
