@@ -12,7 +12,6 @@ DESCRIPTION:
 """
 import numpy as np
 from astropy.table import Table
-import matplotlib.pyplot as plt
 
 
 def downsample_sum(myarr, factor):
