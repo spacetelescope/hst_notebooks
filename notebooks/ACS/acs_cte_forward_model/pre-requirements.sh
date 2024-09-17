@@ -1,1 +1,2 @@
-conda install --yes -c conda-forge hstcal
+pip install numpy
+conda create --yes -n hstcal -c conda-forge hstcal

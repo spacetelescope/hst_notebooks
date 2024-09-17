@@ -1,1 +1,1 @@
-conda install -y -c conda-forge hstcal==2.7.4
+conda create --yes -n hstcal -c conda-forge hstcal
