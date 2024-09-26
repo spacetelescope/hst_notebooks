@@ -29,8 +29,9 @@ Photometry:
 - [Calculating WFC3 Zeropoints with `stsynphot`](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/zeropoints/zeropoints.html)
 - [WFC3/UVIS Pixel Area Map Corrections for Subarrays](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html)
 
-Point Spread Function:
+Point Spread Function (PSF):
  - [HST WFC3 Point Spread Function Modeling](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/point_spread_function/hst_point_spread_function.html)
+ - [Downloading WFC3 and WFPC2 PSF Cutouts from MAST](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/mast_api_psf/download_psf_cutouts.html)
 
 See the [WFC3 Instrument Handbook](https://hst-docs.stsci.edu/wfc3ihb),
 [WFC3 Data Handbook](https://hst-docs.stsci.edu/wfc3dhb),
@@ -53,10 +54,6 @@ it contains libraries necessary for processing and analyzing data from the Hubbl
 Space Telescope (HST) and the James Webb Space Telescope (JWST). To install, see 
 [stenv readthedocs](https://stenv.readthedocs.io/en/latest/) or 
 [stenv GitHub](https://github.com/spacetelescope/stenv). 
-
-`hst_notebooks/notebooks_env` is the default virtual environment for HST Notebooks, 
-which contains the same scientific computing libraries in `stenv`, but not the HST and
-JWST libraries. This environment can also be used as a base, but is not recommended.
 
 In addition, each notebook contains a `requirements.txt` file that needs to be
 installed before running the notebooks. Some notebooks contain a `pre-requirements.sh`
