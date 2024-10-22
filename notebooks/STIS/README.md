@@ -21,6 +21,8 @@ An introductory Jupyter Notebook showing how to create a custom CCD dark referen
 An introductory Jupyter Notebook that shows how to visualize and obtain information about a target acquisition. It provides examples for a successful acquisition and several typical failure cases.
 ### Correcting for Missing Wavecals with Cross-Correlation (cross-correlation)
 A complementary Jupyter Notebook to the Acquisition Notebook, that shows how to find and correct the zero point spectral shift using cross-correlation.
+### Low Count Uncertainties in STIS (low_count_uncertainties)
+A Jupyter Notebook exploring how uncertainties are calculated in the STIS pipeline. This also shows how certain approximations break down in the low flux regime (e.g., dim FUV continua), and demonstrates how users can calculate more robust uncertainties when dealing with low flux data. Lastly, this explores a known bug in calculation of uncertainties when using INTTAG to split exposures into sub-exposures in TIME-TAG files.
 
 
 Each folder has a HTML file that can be opened in a browser after cloning this repository. The HTML file is identical to the notebook, except they contain output plots and tables.
