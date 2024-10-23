@@ -1,0 +1,1519 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Low Count Uncertainties in STIS &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/STIS/low_count_uncertainties/Low_Count_Uncertainties';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="WFC3 Notebooks" href="../../WFC3/README.html" />
+    <link rel="prev" title="1D Spectra Extraction" href="../extraction/1D_Extraction.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="HST Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="HST Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI HST Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">Obtaining Pixel Area Maps for ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html">Focus Diverse ePSFs for ACS/WFC</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ExceptionReport/ExceptionReport.html">What to do when you get an Exception Report for COS</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Improving Astrometry Using Alternate WCS Solutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an Absolute Reference Catalog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/use_ds9_regions_in_tweakreg/use_ds9_regions_in_tweakreg.html">TWEAKREG Tips - Using DS9 Regions for Source Inclusion/Exclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_mosaics/align_mosaics.html">Aligning HST Mosaics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/sky_matching/sky_matching.html">Sky Matching for HST Mosaics <a id="top"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HASP</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/Setup/Setup.html">Installing the Hubble Advanced Spectral Products Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/CoaddTutorial/CoaddTutorial.html">Inputting User Data using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/FluxScaleTutorial/FluxScaleTutorial.html">Scaling Flux while using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/DataDiagnostic/DataDiagnostics.html">HASP Data Diagnostic Notebook</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">STIS-Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Low Count Uncertainties in STIS <a class="tocSkip"></a></a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../WFC3/README.html">WFC3 Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/general_tools.html">General Tools</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/ir_tvb.html">WFC3/IR Time Variable Background (TVB)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/photometry.html">Photometry</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/point_spread_function.html">Point Spread Function (PSF)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/point_spread_function/hst_point_spread_function.html">HST WFC3 Point Spread Function Modeling   </a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/mast_api_psf/download_psf_cutouts.html">Downloading WFC3 and WFPC2 PSF Cutouts from MAST</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/STIS/low_count_uncertainties/Low_Count_Uncertainties.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/STIS/low_count_uncertainties/Low_Count_Uncertainties.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/STIS/low_count_uncertainties/Low_Count_Uncertainties.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Low Count Uncertainties in STIS <a class="tocSkip"></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p><a id=top></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="low-count-uncertainties-in-stis-a-class-tocskip">
+<h1>Low Count Uncertainties in STIS <a class="tocSkip"><a class="headerlink" href="#low-count-uncertainties-in-stis-a-class-tocskip" title="Permalink to this heading">#</a></h1>
+<h2>Learning Goals<span class="tocSkip"></span></h2>
+By the end of this tutorial, you will:
+<ul class="simple">
+<li><p>Understand how the <code class="docutils literal notranslate"><span class="pre">calstis</span></code> pipeline calculates uncertainties with the root-N approximation</p></li>
+<li><p>Know in what situations this approximation breaks down (i.e., low counts)</p></li>
+<li><p>Calculate more appropriate Poisson confidence intervals</p></li>
+<li><p>Compare uncertainties with STIS to those calculated for COS</p></li>
+<li><p>Know about a bug in the uncertainties calculated in <code class="docutils literal notranslate"><span class="pre">inttag</span></code> when making sub-exposures from TIME-TAG data</p></li>
+</ul>
+<div class="toc">
+<ul class="toc-item"><li><span><a href="#Introduction" data-toc-modified-id="0-Introduction-0">0 Introduction</a></span></li></ul>
+<ul class="toc-item"><li><span><a href="#Fetch-and-Read-In-Data" data-toc-modified-id="1-Fetch-and-Read-In-Data-1">1 Fetch and Read In Data</a></span></li></ul>
+<ul class="toc-item"><li><span><a href="#Pipeline-Uncertainties" data-toc-modified-id="2-Pipeline-Uncertainties-2">2 Pipeline Uncertainties</a></span></li></ul>
+<ul class="toc-item"><li><span><a href="#Poisson-Uncertainties" data-toc-modified-id="3-Poisson-Uncertainties-3">3 Poisson Uncertainties</a></span></li></ul>
+<ul class="toc-item"><li><span><a href="#Poisson-Uncertainties-Applied-to-STIS" data-toc-modified-id="4-Poisson-Uncertainties-Applied-to-STIS-4">4 Poisson Uncertainties Applied to STIS</a></span></li></ul>
+<ul class="toc-item"><li><span><a href="#Comparison-to-COS" data-toc-modified-id="5-Comparison-to-COS-5">5 Comparison to COS</a></span></li></ul>
+<ul class="toc-item"><li><span><a href="#Recommendations" data-toc-modified-id="6-Recommendations-6">6 Recommendations</a></span></li></ul>
+<ul class="toc-item"><li><span><a href="#Appendix:-INTTAG" data-toc-modified-id="Appendix:-INTTAG">Appendix: INTTAG</a></span></li></ul>
+</div><section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>The root-N approximation for error calculation is ubiquitous in astronomy and is appropriate for a wide-range of observing scenarios. The root-N approximation means that the 1-<span class="math notranslate nohighlight">\(\sigma\)</span> uncertainty associated with any measurement of counts (i.e., electrons on a CCD detector) can be approximated by just taking the square root of the number of counts, <span class="math notranslate nohighlight">\(N\)</span>. However, this approximation <em>does</em> break down for low counts <span class="math notranslate nohighlight">\(\lesssim10\)</span> (inclusive of dark rate and read noise) sometimes seen in UV observations with instruments like HST/STIS and HST/COS.</p>
+<p>In this notebook, we will look at where and why the root-N approximation breaks down, how the calculate appropriate Poisson confidence intervals, and how to apply that to HST/STIS observations. Some of these issues have been address in the HST/COS pipeline, CalCOS, so we compare to that in Section 5 as well.</p>
+<p>For more information about calstis see:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/stisdhb/chapter-3-stis-calibration">STIS Calibration in the STIS Data Handbook</a></p></li>
+<li><p><a class="reference external" href="https://stistools.readthedocs.io/en/latest/calstis.html">the <code class="docutils literal notranslate"><span class="pre">stistools</span></code> package documentation</a></p></li>
+</ul>
+<section id="import-necessary-packages">
+<h3>Import Necessary Packages<a class="headerlink" href="#import-necessary-packages" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy.io.fits</span></code> for accessing FITS files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astroquery.mast.Observations</span></code> for finding and downloading data from the <a class="reference external" href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST</a> archive</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">os</span></code>, <code class="docutils literal notranslate"><span class="pre">shutil</span></code>, &amp; <code class="docutils literal notranslate"><span class="pre">pathlib</span></code> for managing system paths</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> for plotting data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> to handle array functions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stistools</span></code> for operations on STIS Data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy.stats</span></code> and <code class="docutils literal notranslate"><span class="pre">scipy.stats</span></code> for the Poisson confidence interval function(s)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import for: Reading in fits file</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+
+<span class="c1"># Import for: Downloading necessary files</span>
+<span class="c1"># (Not necessary if you choose to collect data from MAST)</span>
+<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+
+<span class="c1"># Import for: Managing system variables and paths</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+
+<span class="c1"># Import for: Plotting and specifying plotting parameters</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Import for: Operations on STIS Data</span>
+<span class="kn">import</span> <span class="nn">stistools</span>
+
+<span class="c1"># Import numpy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Import astropy and scipy stat stuff</span>
+<span class="kn">from</span> <span class="nn">astropy.stats</span> <span class="kn">import</span> <span class="n">poisson_conf_interval</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">poisson</span>
+
+<span class="c1"># Import for shortened outputs</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">clear_output</span>
+
+<span class="c1"># Using a colorblind friendly style</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;tableau-colorblind10&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following tasks in the stistools package can be run with TEAL:
+   basic2d      calstis     ocrreject     wavecal        x1d          x2d
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/stsci/tools/nmpfit.py:8: UserWarning: NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.
+  warnings.warn(&quot;NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.&quot;)
+/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/stsci/tools/gfit.py:18: UserWarning: GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.Use astropy.modeling instead.
+  warnings.warn(&quot;GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.&quot;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="fetch-and-read-in-data">
+<h2>Fetch and Read In Data<a class="headerlink" href="#fetch-and-read-in-data" title="Permalink to this heading">#</a></h2>
+<p>We’re now going to fetch FUV observations to demonstrate where the root-N approximation breaks down. These observations are one orbit of a four-orbit transit time-series of HST/STIS/G140M that observed the Neptune-sized exoplanet GJ 436b transit across the disk of the M-dwarf host star, GJ 436. These observations were used to find hydrogen gas escaping from the planet’s atmosphere in a comet-like tail (<a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2014ApJ...786..132K/abstract">Kulow et al. 2014</a>, <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2015Natur.522..459E/abstract">Ehrenreich et al. 2015</a>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># remove downlaod directory if it already exists</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;./mastDownload&quot;</span><span class="p">):</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s2">&quot;./mastDownload&quot;</span><span class="p">)</span>
+
+<span class="c1"># Search target object by obs_id</span>
+<span class="n">target_id</span> <span class="o">=</span> <span class="s2">&quot;obgh07020&quot;</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="p">[</span><span class="n">target_id</span><span class="p">])</span>
+
+<span class="c1"># get a list of files assiciated with that target</span>
+<span class="n">target_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+<span class="c1"># download only the x1d file</span>
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">target_list</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;x1d.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># get file path</span>
+<span class="n">file_path_obgh07020</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s1">_x1d.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># read in x1d</span>
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path_obgh07020</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">exptime</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span>
+    <span class="n">darkcount</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;MEANDARK&#39;</span><span class="p">]</span>
+    <span class="n">extrsize</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">]</span>
+    <span class="n">flux</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;FLUX&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">flux_err</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ERROR&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">net_err</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET_ERROR&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">gross</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;GROSS&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">bg</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;BACKGROUND&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">waves</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Print some relevant information for reference...</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TELESCOP&#39;</span><span class="p">],</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;INSTRUME&#39;</span><span class="p">],</span>
+      <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;DETECTOR&#39;</span><span class="p">],</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;OPT_ELEM&#39;</span><span class="p">],</span>
+      <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;APERTURE&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Program: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PROPOSID&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PI: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_F&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_M&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_L&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TARGNAME&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TDATEOBS&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TTIMEOBS&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/obgh07020_x1d.fits to ./mastDownload/HST/obgh07020/obgh07020_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HST STIS FUV-MAMA G140M 52X0.1
+Program: 12034
+PI: James Carswell Green
+Target: GJ436
+Time: 2012-12-07 10:58:55
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="pipeline-uncertainties">
+<h2>Pipeline Uncertainties<a class="headerlink" href="#pipeline-uncertainties" title="Permalink to this heading">#</a></h2>
+<p>Here, we will re-create the root-N approximated uncertainties calculated in the pipeline so that we can be sure of what the pipeline is doing. Let’s first plot the data, just so we know what were dealing with:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let&#39;s plot the flux to see what&#39;s going on</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">gross</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gross&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">net</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">bg</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Background&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="mf">1215.67</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyles</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span>
+          <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Ly-$</span><span class="se">\\</span><span class="s1">alpha$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">1214.5</span><span class="p">,</span> <span class="mi">1220</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">450</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Flux (Counts)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength ($</span><span class="se">\\</span><span class="s1">mathrm{</span><span class="se">\\</span><span class="s1">AA}$)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;GJ-436 with STIS/G140M&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/7afb0b70b261a193d2c9432d224e04a189b7077d18b1f3b0c5452ccb592cda9e.png" src="../../../_images/7afb0b70b261a193d2c9432d224e04a189b7077d18b1f3b0c5452ccb592cda9e.png" />
+</div>
+</div>
+<p>You can see large flux from the star’s Lyman-<span class="math notranslate nohighlight">\(\alpha\)</span> emission. The core of the line is getting absorbed by the interstellar medium, or “ISM”, yet the wide wings of the line do show appreciable flux. This is an important indicator of chromospheric activity in low-mass stars. But if you look outside the line, you’ll see almost no flux! This is because low-mass stars, like GJ436, will have very little UV-continuum, mostly because of their relatively cool temperatures.</p>
+<p>Now let’s look at the uncertainties associated with these measurements. The error in the net counts (and subsequently the flux measurement) is initialized in <code class="docutils literal notranslate"><span class="pre">calstis</span></code>. For MAMA data such as this, the pipeline simply takes the square-root of the counts, <span class="math notranslate nohighlight">\(I\)</span>, as the error in the counts: <span class="math notranslate nohighlight">\(\sigma = \sqrt{I}\)</span>. For CCD data, we must also account for the gain and readnoise, such that <span class="math notranslate nohighlight">\(\sigma = \sqrt{\frac{I-bias}{gain}+(\frac{readnoise}{gain})^2}\)</span>. <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/stis/documentation/instrument-science-reports/_documents/199826.pdf">See ISR 98-26</a>. Note that the square-root must be taken on the <em>counts</em>, not the <em>count rate</em> or the <em>flux</em>.</p>
+<p>Below, we plot the pipeline uncertainty, as well as a re-creation of the uncertainties from the values in the X1D files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let&#39;s recreate the errors by taking square root of counts...</span>
+<span class="c1"># Some of the low flux values may be negative</span>
+<span class="c1"># especially after dark subtraction,</span>
+<span class="c1"># so we place a min error at zero (as does the pipeline)</span>
+<span class="c1"># (Remember, we need to convert to counts, not just the count rate)</span>
+<span class="n">count_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">gross</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gross</span><span class="p">))],</span>
+                           <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="c1"># Let&#39;s also calculate the counts with the mean dark subtracted</span>
+<span class="c1"># count added back in, because that will also contribute to error</span>
+<span class="n">count_err_dark</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">gross</span><span class="o">*</span><span class="n">exptime</span><span class="o">+</span><span class="n">darkcount</span><span class="o">*</span><span class="n">extrsize</span><span class="p">,</span>
+                                 <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gross</span><span class="p">))],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+
+<span class="c1"># Let&#39;s plot the flux to see how we compare to the pipeline</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">net_err</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net Error (Pipeline)&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">count_err</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Calc Error (Root-N)&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">count_err_dark</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Calc Error (Root-N) plus Dark&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">1214.5</span><span class="p">,</span> <span class="mi">1220</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Error (Counts)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength ($</span><span class="se">\\</span><span class="s1">mathrm{</span><span class="se">\\</span><span class="s1">AA}$)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;GJ-436 with STIS/G140M&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/67d1eebe9fbf91df79d45eeca52b75b06044cc2ed8b8db56d85ec9a62c15feb4.png" src="../../../_images/67d1eebe9fbf91df79d45eeca52b75b06044cc2ed8b8db56d85ec9a62c15feb4.png" />
+</div>
+</div>
+<p>As you can see, the pipeline uncertainties are mostly just the square root of the counts. Error from dark subtraction is generally pretty small in the FUV; In our observations, the science header states the the mean dark count was 0.0184 counts per pixel (<code class="docutils literal notranslate"><span class="pre">hdu[1].header['MEANDARK']</span></code>) and that’s over the whole 2,905 s exposure. In the extraction routines, the pipeline defaults to an extraction height of 11 pixels, so the dark rate is still adding less than a count per wavelength. In the NUV, however, dark rates can be as much as 0.002 counts per second per pixel, which can result in dozens of “extra” counts and thus do need to be taken into account in the errors. Errors in the flat-field division will also contribute minutely to the flux error.</p>
+<p>For this notebook, since we’re looking at FUV data, we therefore assume the majority of our error comes from photon noise.</p>
+</section>
+<section id="poisson-uncertainties">
+<h2>Poisson Uncertainties<a class="headerlink" href="#poisson-uncertainties" title="Permalink to this heading">#</a></h2>
+<p>Because we are measuring a discrete, positive number of counts when we read out an astronomical detector, our measurement comes from a Poisson disstribution. The uncertainty associated with a measurement of a variable described by a Poisson distribution is very often assumed to be the square-root of the value measured, as seen above. This is because the Poisson distribution is a univariate distrbution, defined only by its mean, <span class="math notranslate nohighlight">\(\mu\)</span>. The probability of <span class="math notranslate nohighlight">\(N\)</span> events is defined as <span class="math notranslate nohighlight">\(\frac{\lambda^N*e^{-\lambda}}{N!}\)</span>.</p>
+<p>The Poisson distribution has the special feature that its <u>variance</u> is also equal to <span class="math notranslate nohighlight">\(\mu\)</span>. Thus, we usually take the standard-deviation of a measurement to be <span class="math notranslate nohighlight">\(\sqrt{\mu}\)</span>.</p>
+<p>However, the assumption of “square-root N” uncertainties is only valid for large <span class="math notranslate nohighlight">\(N\)</span>. In this large-<span class="math notranslate nohighlight">\(n\)</span> regime, the Poisson distribution is relatively symmetric and well-approximated by a Gaussian distribution with standard deviation of <span class="math notranslate nohighlight">\(\sqrt{N}\)</span>. At low-<span class="math notranslate nohighlight">\(N\)</span>, however, the discrete and positive nature of the Poisson distribution results in the distribution becoming highly asymmetric and the Gaussian approximation breaks down. This is demonstrated in the plot below for <span class="math notranslate nohighlight">\(\mu = 1\)</span> and <span class="math notranslate nohighlight">\(\mu = 15\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define color cycle that we&#39;ll be using</span>
+<span class="c1"># cs = [&#39;#1f77b4&#39;, &#39;#ff7f0e&#39;, &#39;#d62728&#39;, &#39;#2ca02c&#39;, &#39;#9467bd&#39;,</span>
+<span class="c1">#      &#39;#8c564b&#39;, &#39;#e377c2&#39;, &#39;#7f7f7f&#39;, &#39;#bcbd22&#39;, &#39;#17becf&#39;]</span>
+
+<span class="c1"># Tableau colorblind 10 color cycle</span>
+<span class="n">cs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#006BA4&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF800E&#39;</span><span class="p">,</span> <span class="s1">&#39;#ABABAB&#39;</span><span class="p">,</span> <span class="s1">&#39;#595959&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;#5F9ED1&#39;</span><span class="p">,</span> <span class="s1">&#39;#C85200&#39;</span><span class="p">,</span> <span class="s1">&#39;#898989&#39;</span><span class="p">,</span> <span class="s1">&#39;#A2C8EC&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;#FFBC79&#39;</span><span class="p">,</span> <span class="s1">&#39;#CFCFCF&#39;</span><span class="p">]</span>
+
+<span class="c1"># Define figure</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># Define contiuous and discrete N grids (xc and xd)</span>
+<span class="n">xc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">xd</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="c1"># Define and draw our population mean for our first example, mu=1</span>
+<span class="c1"># as well as the Gaussian (i.e., root-N) 1-sigma bounds</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span> <span class="o">/</span>
+         <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="p">))),</span>
+         <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gaussian, $</span><span class="se">\\</span><span class="s1">mu$=1, $</span><span class="se">\\</span><span class="s1">sigma = </span><span class="se">\\</span><span class="s1">sqrt</span><span class="si">{1}</span><span class="s1">$&#39;</span><span class="p">,</span>
+         <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Do the same for mu=15</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="mi">15</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="mi">15</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span> <span class="o">/</span>
+         <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="p">))),</span>
+         <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gaussian, $</span><span class="se">\\</span><span class="s1">mu$=15, $</span><span class="se">\\</span><span class="s1">sigma = </span><span class="se">\\</span><span class="s1">sqrt</span><span class="si">{15}</span><span class="s1">$&#39;</span><span class="p">,</span>
+         <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Draw a limit at N=0 to make clear that Gaussian distribution goes beyond</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+
+<span class="c1"># Now do the same for mu=1 and mu=15 but plotting the Poisson distribution</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)),</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Poisson, $</span><span class="se">\\</span><span class="s1">mu$=1&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)),</span>
+         <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)),</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Poisson, $</span><span class="se">\\</span><span class="s1">mu$=15&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)),</span>
+         <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;PDF/PMF (Normalized to Max=1)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;N&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/28c67fe8d79d2ca4d999f11434c6a854f05376c670f9c99cb546035c81f83001.png" src="../../../_images/28c67fe8d79d2ca4d999f11434c6a854f05376c670f9c99cb546035c81f83001.png" />
+</div>
+</div>
+<p>The asymmetry in the Poisson distribution therefore implies we need a different approach to estimate our uncertainties. For that, we’ll need to define an upper- and lower-limits on the confidence interval (CI). Formally, <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986ApJ...303..336G/abstract">Geherels (1986)</a> defines these, respectively, as:</p>
+<p><span class="math notranslate nohighlight">\(\sum_{x=0}^{N}\frac{\lambda_u^x e^{-\lambda_u}}{x!} = 1 - CL\)</span></p>
+<p><span class="math notranslate nohighlight">\(\sum_{x=0}^{N-1}\frac{\lambda_l^x e^{-\lambda_l}}{x!} = CL \)</span>     <span class="math notranslate nohighlight">\((n \neq 0)\)</span></p>
+<p>Unfortunately, there is no closed form solution to these for <span class="math notranslate nohighlight">\(\lambda_u\)</span> and <span class="math notranslate nohighlight">\(\lambda_l\)</span>. To calculate <span class="math notranslate nohighlight">\(\lambda_u\)</span> and <span class="math notranslate nohighlight">\(\lambda_l\)</span>, various analytic approximations have been developed based on numerical tabulations, as in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986ApJ...303..336G/abstract">Gehrels (1986)</a>. In that work, Neil Gehrels finds the following 1-<span class="math notranslate nohighlight">\(\sigma\)</span> limit approximations that we’ll use:</p>
+<p><span class="math notranslate nohighlight">\(\lambda_u = N + \sqrt{N+\frac{3}{4}} + 1 \)</span></p>
+<p><span class="math notranslate nohighlight">\(\lambda_d = N (1 - \frac{1}{9N} - \frac{1}{3\sqrt{N}})^3 \)</span></p>
+<p>As <span class="math notranslate nohighlight">\(N \to \infty\)</span>, the approximation will approach the Gaussian <span class="math notranslate nohighlight">\(\sqrt{N}\)</span> approximation. Within astropy.stats, these approximations are implemented in “poisson_conf_interval”. To get the correct confidence interval method, we choose “frequentist-confidence”, which recreates these limits closely (confusingly, don’t use the “sherpagehrels” method, which just uses the upper limit symmetrically).</p>
+<p>Let’s see how this is done and compare to root-N estimates.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a function that gives us our 1-sigma Poisson</span>
+<span class="c1"># confidence interval and (subtracting off N)</span>
+<span class="k">def</span> <span class="nf">gehrels_pci</span><span class="p">(</span><span class="n">ns</span><span class="p">):</span>
+    <span class="n">up</span> <span class="o">=</span> <span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ns</span><span class="o">+</span><span class="mf">0.75</span><span class="p">)</span>
+    <span class="n">lo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">-</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">9</span><span class="o">*</span><span class="n">n</span><span class="p">))</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">))))</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+                   <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ns</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">lo</span><span class="p">,</span> <span class="n">up</span><span class="p">]</span>
+
+
+<span class="n">lw</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">ms</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Root-N Approximation&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="o">-</span><span class="n">poisson_conf_interval</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="s1">&#39;frequentist-confidence&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+         <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Astropy Lower PCI&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">poisson_conf_interval</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="s1">&#39;frequentist-confidence&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">N</span><span class="p">,</span>
+         <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Astropy Upper PCI&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">gehrels_pci</span><span class="p">(</span><span class="n">N</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gehrels Upper PCI&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="n">ms</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">gehrels_pci</span><span class="p">(</span><span class="n">N</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gehrels Lower PCI&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="n">ms</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;1-$</span><span class="se">\\</span><span class="s1">sigma$ Uncertainties&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;N&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/f016919c961b8745c3f619d777f6ef4a5372d5ec833a34b7851ae838c788fc41.png" src="../../../_images/f016919c961b8745c3f619d777f6ef4a5372d5ec833a34b7851ae838c788fc41.png" />
+</div>
+</div>
+<p>As you can see, the uncertainties calculated for a measurement from the Poisson distribution are not well-approximated by the Gaussian root-N approximation, especially for the upper bounds. This is because the upper bounds is basically the root-N approximation plus 1. Futhermore, and importantly, at N=0, the root-N approximation says that our uncertinaity goes to zero, which is clearly absurd! If we don’t measure any counts on a pixel, we shouldn’t somehow be inifintely sure there were no photons there. The Poisson distribution handles N=0 with an upper limit of 1.866 (while the lower limit does indeed go to zero; we cannot have negative counts!).</p>
+</section>
+<section id="poisson-uncertainties-applied-to-stis">
+<h2>Poisson Uncertainties Applied to STIS<a class="headerlink" href="#poisson-uncertainties-applied-to-stis" title="Permalink to this heading">#</a></h2>
+<p>As explained above in Section 2, there are some scenarios on STIS where count rates are low enough that the Gaussian approximation should break down. And in Section 3, we saw explicitly how it breaks down and how to properly apply Poisson Confidence Intervals might work. Here, we’ll apply Poisson Confidence Intervals to the same FUV STIS data we saw above.</p>
+<p>Let’s zoom into the wavelengths longward of Ly-<span class="math notranslate nohighlight">\(\alpha\)</span>, where our signal is very, very low.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot our flux longward of Ly-A</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">gross</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gross&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">net</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">bg</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Background&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1217</span><span class="p">,</span> <span class="mi">1220</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Flux (Counts)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;GJ-436 with STIS/G140M&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="c1"># Plot errors in this low-count regime</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">net_err</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net Error (Pipeline)&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">count_err</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Calc Error (Root-N)&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">count_err_dark</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span>
+           <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Calc Error (Root-N) plus Dark&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1217</span><span class="p">,</span> <span class="mi">1220</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Error (Counts)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength ($</span><span class="se">\\</span><span class="s1">mathrm{</span><span class="se">\\</span><span class="s1">AA}$)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/1262e3b5976d25f9f34479edeb88ec8064035cb687215e8050ab5c403f888f34.png" src="../../../_images/1262e3b5976d25f9f34479edeb88ec8064035cb687215e8050ab5c403f888f34.png" />
+</div>
+</div>
+<p>You can see just what we were warning about above at the end of Section 3: when the measured counts go to (or near) zero, our uncertainty now becomes infintesimal… or equivalently, our certainty becomes infinite! So let’s see what the proper Poisson unceratinties are.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">net_err</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net Error&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="n">gross</span><span class="o">*</span><span class="n">exptime</span>
+<span class="c1"># need nan to num b/c some negative values...</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span>
+        <span class="n">N</span><span class="o">-</span><span class="n">poisson_conf_interval</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="s1">&#39;frequentist-confidence&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Astropy Lower PCI&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span>
+        <span class="n">poisson_conf_interval</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="s1">&#39;frequentist-confidence&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">N</span><span class="p">,</span>
+        <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Astropy Upper PCI&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1217</span><span class="p">,</span> <span class="mi">1220</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Error (Counts)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength ($</span><span class="se">\\</span><span class="s1">mathrm{</span><span class="se">\\</span><span class="s1">AA}$)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/3212a435f12957e76d238a1e790d8456d0745f11b16b2a580c9a2db4cf180bc1.png" src="../../../_images/3212a435f12957e76d238a1e790d8456d0745f11b16b2a580c9a2db4cf180bc1.png" />
+</div>
+</div>
+<p>When just assuming root-N errors, as the <code class="docutils literal notranslate"><span class="pre">calstis</span></code> pipeline currently does, we are therefore clearly underestimating the true Poisson uncertainty in this low-count regime.</p>
+</section>
+<section id="comparison-to-cos">
+<h2>Comparison to COS<a class="headerlink" href="#comparison-to-cos" title="Permalink to this heading">#</a></h2>
+<p>STIS is not the only FUV instrument on HST! The Cosmic Origins Spectrograph has similar UV channels where the regime of low-signal will be relevant. <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/cos/documentation/instrument-science-reports-isrs/_documents/COS_ISR_2021_03.pdf">COS ISR 2021-03</a> describes updates to the HST/COS pipeline, <a class="reference external" href="https://github.com/spacetelescope/calcos">CalCOS</a>, that takes into account Poisson uncertainties.</p>
+<p>Let’s take a look at COS observations of our now-favorite exoplanet system, GJ-436.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download a COS file for observations of GJ 436</span>
+<span class="n">target_id</span> <span class="o">=</span> <span class="s2">&quot;LD9M12010&quot;</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="p">[</span><span class="n">target_id</span><span class="p">])</span>
+
+<span class="c1"># get a list of files assiciated with that target</span>
+<span class="n">target_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+<span class="c1"># Download just the x1d file</span>
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">target_list</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;ld9m12erq_x1d.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># get file path</span>
+<span class="n">file_path_ld9m12erq</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="s1">&#39;ld9m12erq&#39;</span><span class="p">,</span> <span class="s1">&#39;ld9m12erq_x1d.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># read in x1d</span>
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path_ld9m12erq</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">exptime</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span>
+    <span class="c1"># no meandark calculated</span>
+    <span class="c1"># darkcount = hdu[1].header[&#39;MEANDARK&#39;]</span>
+    <span class="c1"># extrsize = hdu[1].data[&#39;EXTRSIZE&#39;]</span>
+    <span class="n">flux</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;FLUX&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">flux_err_up</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ERROR&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">flux_err_lo</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ERROR_lower&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">var_counts</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;VARIANCE_COUNTS&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">var_bkg</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;VARIANCE_BKG&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">var_flat</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;VARIANCE_FLAT&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">gross</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;GROSS&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">bg</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;BACKGROUND&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">waves</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Print some relevant information for reference...</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TELESCOP&#39;</span><span class="p">],</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;INSTRUME&#39;</span><span class="p">],</span>
+      <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;DETECTOR&#39;</span><span class="p">],</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;OPT_ELEM&#39;</span><span class="p">],</span>
+      <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;APERTURE&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Program: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PROPOSID&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PI: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_F&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_M&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_L&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TARGNAME&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Date: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/ld9m12erq_x1d.fits to ./mastDownload/HST/ld9m12erq/ld9m12erq_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HST COS FUV G130M PSA
+Program: 14767
+PI: David K. Sing
+Target: GJ-436
+Date: 2024-09-10
+</pre></div>
+</div>
+</div>
+</div>
+<p>For COS, columns have been added to the to the processed files (see the list printed below), giving both the Poisson upper and lower errors as well as the equivalent counts from the flux, background, and flat-fields that contribute to the error. The “equivalent counts” are listed in the “VARIANCE_*” columns in the x1d files can be used to recreate the Poisson confidence interval calculated in the ERROR and ERROR_LOWER columns.</p>
+<p>Also printed below are the maximum and mean VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS values. You can see that the equivalent counts and therefore the subsequent uncertainties are dominated by the measurement of the signal itself, not the background or flat-field reduction steps.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="c1"># Print some invo about the VARIANCE counts</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Max of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">var_bkg</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">var_flat</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">var_counts</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">var_bkg</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">var_flat</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">var_counts</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ColDefs(
+    name = &#39;SEGMENT&#39;; format = &#39;4A&#39;
+    name = &#39;EXPTIME&#39;; format = &#39;1D&#39;; unit = &#39;s&#39;; disp = &#39;F8.3&#39;
+    name = &#39;NELEM&#39;; format = &#39;1J&#39;; disp = &#39;I6&#39;
+    name = &#39;WAVELENGTH&#39;; format = &#39;16384D&#39;; unit = &#39;angstrom&#39;
+    name = &#39;FLUX&#39;; format = &#39;16384E&#39;; unit = &#39;erg /s /cm**2 /angstrom&#39;
+    name = &#39;ERROR&#39;; format = &#39;16384E&#39;; unit = &#39;erg /s /cm**2 /angstrom&#39;
+    name = &#39;ERROR_LOWER&#39;; format = &#39;16384E&#39;; unit = &#39;erg /s /cm**2 /angstrom&#39;
+    name = &#39;VARIANCE_FLAT&#39;; format = &#39;16384E&#39;
+    name = &#39;VARIANCE_COUNTS&#39;; format = &#39;16384E&#39;
+    name = &#39;VARIANCE_BKG&#39;; format = &#39;16384E&#39;
+    name = &#39;GROSS&#39;; format = &#39;16384E&#39;; unit = &#39;count /s&#39;
+    name = &#39;GCOUNTS&#39;; format = &#39;16384E&#39;; unit = &#39;count&#39;
+    name = &#39;NET&#39;; format = &#39;16384E&#39;; unit = &#39;count /s&#39;
+    name = &#39;BACKGROUND&#39;; format = &#39;16384E&#39;; unit = &#39;count /s&#39;
+    name = &#39;DQ&#39;; format = &#39;16384I&#39;
+    name = &#39;DQ_WGT&#39;; format = &#39;16384E&#39;
+    name = &#39;DQ_OUTER&#39;; format = &#39;16384I&#39;
+    name = &#39;BACKGROUND_PER_PIXEL&#39;; format = &#39;16384E&#39;; unit = &#39;count /s /pixel&#39;
+    name = &#39;NUM_EXTRACT_ROWS&#39;; format = &#39;16384I&#39;
+    name = &#39;ACTUAL_EE&#39;; format = &#39;16384D&#39;
+    name = &#39;Y_LOWER_OUTER&#39;; format = &#39;16384D&#39;
+    name = &#39;Y_UPPER_OUTER&#39;; format = &#39;16384D&#39;
+    name = &#39;Y_LOWER_INNER&#39;; format = &#39;16384D&#39;
+    name = &#39;Y_UPPER_INNER&#39;; format = &#39;16384D&#39;
+)
+Max of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
+0.0012501971 0.001131691 55.354454
+Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
+5.521808e-05 3.7044545e-06 0.52990484
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, let’s look at what the spectrum and errors look like. While we’re looking at the same system, GJ 436, these COS observations are taken at a somewhat longer wavelength range, but otherwise the behavior is the similar to what is seen in STIS (i.e., some strong stellar emission lines surrounded by a very low-count FUV continuum).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Now let&#39;s look at what the spectrum and errors really look like</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">gross</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gross Counts&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">999</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">net</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net Counts&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">998</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">var_counts</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Var Counts&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">997</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1290</span><span class="p">,</span> <span class="mi">1310</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Flux (counts)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength ($</span><span class="se">\\</span><span class="s1">mathrm{</span><span class="se">\\</span><span class="s1">AA}$)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="c1"># Zoom in on low_SNR region</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">gross</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gross Counts&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">999</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">net</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net Counts&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">998</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">var_counts</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Var Counts&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">997</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1380</span><span class="p">,</span> <span class="mi">1390</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Flux (counts)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength ($</span><span class="se">\\</span><span class="s1">mathrm{</span><span class="se">\\</span><span class="s1">AA}$)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/a63ac509568196c91039aa5516fe3af6cfb7ef9a89ab4a383c04071892b4caba.png" src="../../../_images/a63ac509568196c91039aa5516fe3af6cfb7ef9a89ab4a383c04071892b4caba.png" />
+<img alt="../../../_images/e3348677bbf6e9bfbe527bf9ac0c66ba92d94a2c96197668909655cc579d4b2c.png" src="../../../_images/e3348677bbf6e9bfbe527bf9ac0c66ba92d94a2c96197668909655cc579d4b2c.png" />
+</div>
+</div>
+<p>You can see that outside of the emission lines seen between 1300 and 1307 Angstrom, counts are varying between 0, 1, or 2. This is the regime where the Gaussian root-N approximation breaks down. Below, we show how the pipeline Poisson Confidence Interval upper and lower limits compare to the root-N approximation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert flux errors to counts/s and then to counts</span>
+<span class="c1"># You&#39;ll get a RuntimeWarning here because some of the values of net and</span>
+<span class="c1"># flux are zero at the edges of the detector, so it is dividing by zero...</span>
+<span class="n">sensitivity</span> <span class="o">=</span> <span class="n">net</span><span class="o">/</span><span class="n">flux</span>  <span class="c1"># counts per second per flux</span>
+<span class="n">count_err_up</span> <span class="o">=</span> <span class="n">flux_err_up</span> <span class="o">*</span> <span class="n">exptime</span> <span class="o">*</span> <span class="n">sensitivity</span>
+<span class="n">count_err_low</span> <span class="o">=</span> <span class="n">flux_err_lo</span> <span class="o">*</span> <span class="n">exptime</span> <span class="o">*</span> <span class="n">sensitivity</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var_counts</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Root-N&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">count_err_up</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;COS Pipeline PCI Upper&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">count_err_low</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;COS Pipeline PCI Lower&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1380</span><span class="p">,</span> <span class="mi">1390</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">2.75</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Error (counts)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength ($</span><span class="se">\\</span><span class="s1">mathrm{</span><span class="se">\\</span><span class="s1">AA}$)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2237/1276255037.py:4: RuntimeWarning: invalid value encountered in divide
+  sensitivity = net/flux  # counts per second per flux
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;Wavelength ($\\mathrm{\\AA}$)&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/c134ff47f0990c49662f41687e689f035eb747cc807cfd4dc8c2e83b95731a3c.png" src="../../../_images/c134ff47f0990c49662f41687e689f035eb747cc807cfd4dc8c2e83b95731a3c.png" />
+</div>
+</div>
+<p>You can see that the COS pipeline gives lower bound uncertainties lower than root-N, but the upper bound uncertainties are significantly higher than root-N (coming from the “extra +1” in the Poisson upper confidence interval, or more fundamentally, from the inherent asymmetry of the Poisson distribution at low-N). This is crucial for quantifying non-detections. For example, the sorts of upper limits you can place on something like the FUV continuum of an M-dwarf can come down to how you treat these sorts of uncertainties.</p>
+<p>Thus, the COS pipeline does indeed give the correct Poisson uncertainties. This must be kept in mind when comparing STIS and COS data- make sure you’re uncertainties are calculated in the way you expect/desire. This may require you to calculate your own uncertainties in some situations.</p>
+</section>
+<section id="recommendations">
+<h2>Recommendations<a class="headerlink" href="#recommendations" title="Permalink to this heading">#</a></h2>
+<p>As of 5/2024, the <code class="docutils literal notranslate"><span class="pre">calstis</span></code> pipeline calculates all errors according to the root-N approximation. In the future, additional columns may be added to the calibrated files that include the Poisson uncertainties (likely through a python <code class="docutils literal notranslate"><span class="pre">stistools</span></code> routine rather than a change to the C code underlying <code class="docutils literal notranslate"><span class="pre">calstis</span></code>.</p>
+<p>For now, STIS users doing science in the very low count regime (e.g., detecting weak FUV lines or continuum) should calculate more statistically-robust uncertainties should by hand. Our recommendation is to use Astropy’s poisson_confidence_interval using the “frequentist-confidence” interval method as used in Section 4 on the measured number of counts in the 1D spectrum (converted from GROSS counts/s column).</p>
+<p>In the NUV, long exposures generally have enough dark counts to be in the regime where the Gaussian approximation is at least somewhat valid. For short exposures, however, measured counts may indeed be <span class="math notranslate nohighlight">\(&lt;10\)</span> and users may want to opt for a Poisson confidence interval. Because the NUV dark rate is significantly higher than in the FUV, users will want to add the dark counts to the measured number of counts before calculating the Poisson confidence intervals. In lieu of the full-frame dark counts, users can use the average dark count subtracted from each pixel, found with the “MEANDARK” keyword in the header of each exposure as we did above. Users will need to multiply this by the extraction box size to get the average number of dark counts subtracted from each column/wavelength.</p>
+</section>
+<section id="appendix-inttag">
+<h2>Appendix: INTTAG<a class="headerlink" href="#appendix-inttag" title="Permalink to this heading">#</a></h2>
+<p>There was recently a bug discovered in the procedure to split STIS TIME-TAG data into sub-exposures. That procedure is carried out with the <a class="reference external" href="https://stistools.readthedocs.io/_/downloads/en/doc_updates_rtd/pdf/"><code class="docutils literal notranslate"><span class="pre">inttag</span></code> task in stistools</a>. <code class="docutils literal notranslate"><span class="pre">inttag</span></code> takes the TIME-TAG table and splits them into sub-exposures with a user-defined duration (<em>increment</em> argument) or into a user-defined number of sub-exposures (<em>rcount</em> argument).</p>
+<p>Let’s download the TIME-TAG file that is associated with the STIS/G140L spectrum of GJ-436 we played with above. Previously, we were just using the orbit-long exposure, but let’s use the .tag file to split up the file into 10 subexposures using <code class="docutils literal notranslate"><span class="pre">inttag</span></code>.</p>
+<p>After we split the file up, we’ll then run <code class="docutils literal notranslate"><span class="pre">calstis</span></code> to compare the new calibrated x1d file to the original, non-split x1d file. To do this, we’ll need to set some paths for the CRDS reference files. You can read more about them here: https://hst-crds.stsci.edu/</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let&#39;s grab the tag file associated with the x1d STIS file</span>
+<span class="c1"># that we downloaded above</span>
+<span class="n">target_id</span> <span class="o">=</span> <span class="s2">&quot;obgh07020&quot;</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="p">[</span><span class="n">target_id</span><span class="p">])</span>
+
+<span class="c1"># get a list of files assiciated with that target</span>
+<span class="n">target_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+<span class="c1"># Download the tag file for this observation</span>
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">target_list</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;tag.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># get file paths</span>
+<span class="n">tag_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s1">_tag.fits&#39;</span><span class="p">)</span>
+<span class="n">raw_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s1">_raw.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># Split up the time-tag file into 10 subexposures</span>
+<span class="n">stistools</span><span class="o">.</span><span class="n">inttag</span><span class="o">.</span><span class="n">inttag</span><span class="p">(</span><span class="n">tag_file</span><span class="p">,</span> <span class="n">raw_file</span><span class="p">,</span> <span class="n">rcount</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># We then want to re-reduced the raw data to get x1d files,</span>
+<span class="c1"># and then we&#39;ll compare:</span>
+<span class="c1"># To do this, we also need to download the *_wav.fits file for the wavcal</span>
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">target_list</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;wav.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># Set up CRDS</span>
+<span class="n">crds_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/crds_cache&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CRDS_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">crds_path</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CRDS_SERVER_URL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;https://hst-crds.stsci.edu&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;oref&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">crds_path</span><span class="p">,</span> <span class="s2">&quot;references/hst/oref/&quot;</span><span class="p">)</span>
+<span class="o">!</span>crds<span class="w"> </span>bestrefs<span class="w"> </span>--update-bestrefs<span class="w"> </span>--sync-references<span class="o">=</span><span class="m">1</span><span class="w"> </span>--files<span class="w"> </span><span class="o">{</span>raw_file<span class="o">}</span>
+
+<span class="c1"># We need to remove the x1d file we downloaded before</span>
+<span class="c1"># because we&#39;ll replace it with the inttag version</span>
+<span class="n">inttag_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="s1">&#39;inttag*.fits&#39;</span><span class="p">)</span>
+<span class="n">inttag_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">inttag_path</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">inttag_files</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No need to remove...&#39;</span><span class="p">)</span>
+
+<span class="c1"># Now run calstis...</span>
+<span class="n">wave_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s1">_wav.fits&#39;</span><span class="p">)</span>
+<span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="s1">&#39;inttag&#39;</span><span class="p">)</span>
+<span class="n">stistools</span><span class="o">.</span><span class="n">calstis</span><span class="o">.</span><span class="n">calstis</span><span class="p">(</span><span class="n">raw_file</span><span class="p">,</span> <span class="n">wavecal</span><span class="o">=</span><span class="n">wave_file</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                          <span class="n">outroot</span><span class="o">=</span><span class="n">output_path</span><span class="p">)</span>
+
+<span class="n">clear_output</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>It was noticed that the uncertainties associated with the subexposures were higher than the root-N expectation. For example, if we plot the uncertainties in the extracted spectrum, the resulting uncertainties on those sub-exposures was far larger than just <span class="math notranslate nohighlight">\(\sqrt{10}\)</span> times the uncertainty on the full exposure. We see this below:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path_obgh07020</span><span class="p">)</span>
+<span class="n">inttag_x1d_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="s1">&#39;inttag_x1d.fits&#39;</span><span class="p">)</span>
+<span class="n">hdu_int</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">inttag_x1d_path</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+         <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET_ERROR&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Full exposure errors&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+         <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET_ERROR&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">sqrt</span><span class="si">{10}</span><span class="s1">$ Sub-exposure expectation&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hdu_int</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+         <span class="n">hdu_int</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET_ERROR&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Sub-exposure pipeline error&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">1210</span><span class="p">,</span> <span class="mi">1220</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Error (counts/s)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength ($</span><span class="se">\\</span><span class="s1">mathrm{</span><span class="se">\\</span><span class="s1">AA}$)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;Wavelength ($\\mathrm{\\AA}$)&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/d70f0ff0bfab63db5ea7499be3973c9c6bafe424b57abf4d9e6bd65c8eea48f4.png" src="../../../_images/d70f0ff0bfab63db5ea7499be3973c9c6bafe424b57abf4d9e6bd65c8eea48f4.png" />
+</div>
+</div>
+<p>Upon further inspection, it was found that this bug was related to these Poisson confidence intervals! When <em>inttag</em> fills the error arrays for the sub-exposure, rather than taking the square-root of the counts (as the pipeline would normally do), <em>inttag</em> actually uses Astropy’s poisson_confidence_interval. Unfortunately, <code class="docutils literal notranslate"><span class="pre">inttag</span></code> uses the incorrect method, choosing “sherpagehrels” over the more correct “frequentist-confidence”. As we explored above, “sherpagehrels” actually gives symmetric lower and upper bounds, fixed to the upper bound calculated in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986ApJ...303..336G/abstract">Gehrels (1986)</a>. This was probably originally done because there was only room for one value in the error array, so the more conservative upper confidence interval was chosen.</p>
+<p>Furthermore, the Poisson errors are calculated at the pixel level, rather than after spectral extraction where the counts have been added up along columns. In the root-N approximation, this doesn’t matter, because adding the root-N errors in quadrature is equivalent to taking the square root of the summed column:</p>
+<p><span class="math notranslate nohighlight">\(\sqrt{\sum_i{(\sqrt{n_i})^2}} = \sqrt{\sum_i{n_i}} = \sqrt{N}\)</span></p>
+<p>In other words, it doesn’t matter how the counts are arranged on a pixel column, all that matters is their sum. <strong>But this is not true for Poisson errors.</strong> Whether all your counts are centered on one pixel or whether your counts are distributed evenly accross your extraction window will change what the uncertainty on your spectrum is!</p>
+<p>You can see that in the following example, where we have to scenarios for how the flux is distributed along a column: either all the flux is in one pixel or it is evenly distributed. We then calculate the uncertainty on the extracted flux using the root-N approximation, first adding the error of each pixel in quadrature and then by summing the column and <em>then</em> calculating the error. These two methods give the same answer.</p>
+<p>Then, we do the same thing but using Poisson confidence intervals with <code class="docutils literal notranslate"><span class="pre">astropy</span></code>. Now, when we calcualte the errors pixel-by-pixel or on the extracted flux, we get different answers!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Take two scenarios for how the counts are distributed across</span>
+<span class="c1"># a fictional extraction window (i.e., column)</span>
+<span class="n">scenario1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">scenario2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+
+
+<span class="c1"># define helper functions for the following print statements</span>
+<span class="k">def</span> <span class="nf">quadrature</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">scenario</span><span class="p">]))</span>
+
+
+<span class="k">def</span> <span class="nf">sum_sq</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">scenario</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">pixel_err</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+        <span class="p">[(</span><span class="n">poisson_conf_interval</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="s1">&#39;frequentist-confidence&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">i</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> 
+         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">scenario</span><span class="p">]))</span>
+
+
+<span class="k">def</span> <span class="nf">upper_err</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">poisson_conf_interval</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">scenario</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="s1">&#39;frequentist-confidence&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">scenario</span><span class="p">))</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scenario 1: &#39;</span><span class="p">,</span> <span class="n">scenario1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scenario 2: &#39;</span><span class="p">,</span> <span class="n">scenario2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Root-N Approximation&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scenario 1&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Root-N approximation, add in quadrature: &#39;</span><span class="p">,</span> <span class="n">quadrature</span><span class="p">(</span><span class="n">scenario1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Root-N approximation, sum column, then take sqrt: &#39;</span><span class="p">,</span> <span class="n">sum_sq</span><span class="p">(</span><span class="n">scenario1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Poisson, pixel-by-pixel error calculation: &#39;</span><span class="p">,</span> <span class="n">pixel_err</span><span class="p">(</span><span class="n">scenario1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Poisson upper limit, sum column, then calculate error: &#39;</span><span class="p">,</span> <span class="n">upper_err</span><span class="p">(</span><span class="n">scenario1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scenario 2&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Root-N approximation, add in quadrature: &#39;</span><span class="p">,</span> <span class="n">quadrature</span><span class="p">(</span><span class="n">scenario2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Root-N approximation, sum column, then take sqrt: &#39;</span><span class="p">,</span> <span class="n">sum_sq</span><span class="p">(</span><span class="n">scenario2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Poisson, pixel-by-pixel error calculation: &#39;</span><span class="p">,</span> <span class="n">pixel_err</span><span class="p">(</span><span class="n">scenario2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Poisson upper limit, sum column, then calculate error: &#39;</span><span class="p">,</span> <span class="n">upper_err</span><span class="p">(</span><span class="n">scenario2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Scenario 1:  [0, 0, 10, 0, 0]
+Scenario 2:  [2, 2, 2, 2, 2]
+---
+Root-N Approximation
+---
+Scenario 1
+---
+Root-N approximation, add in quadrature:  3.1622776601683795
+Root-N approximation, sum column, then take sqrt:  3.1622776601683795
+---
+Poisson, pixel-by-pixel error calculation:  5.63598288256348
+Poisson upper limit, sum column, then calculate error:  4.266949761009391
+---
+Scenario 2
+---
+Root-N approximation, add in quadrature:  3.1622776601683795
+Root-N approximation, sum column, then take sqrt:  3.1622776601683795
+---
+Poisson, pixel-by-pixel error calculation:  5.898433433147927
+Poisson upper limit, sum column, then calculate error:  4.266949761009391
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the end, our recommendation is to use the Poisson confidence intervals, but not at the pixel level because each measurement along a column are not independent events. You would therefore be justified in calculating the Poisson confidence interval on the summed flux at each wavelength/column.</p>
+<p>Because this behavior can catch the users by surprise, as of 5/2024 there is a branch in <code class="docutils literal notranslate"><span class="pre">stistools</span></code> <a class="reference external" href="https://github.com/spacetelescope/stistools/tree/sl_inttag-errors">here</a> with a fix for this <code class="docutils literal notranslate"><span class="pre">inttag</span></code> bug, where the errors revert to the pipeline’s root-N approximation default. In lieu of using that branch, users should recalculate their uncertainties when using <code class="docutils literal notranslate"><span class="pre">inttag</span></code>, especially on low-SNR data.</p>
+</section>
+<hr class="docutils" />
+<section id="about-this-notebook-a-class-tocskip">
+<h2>About this Notebook <a class="tocSkip"><a class="headerlink" href="#about-this-notebook-a-class-tocskip" title="Permalink to this heading">#</a></h2>
+<p><strong>Author:</strong> <span class="xref myst">Joshua Lothringer</span> with help from <span class="xref myst">Leo dos Santos</span></p>
+<p><strong>Updated On:</strong> 2024-05-14</p>
+<blockquote>
+<div><p><em>This tutorial was generated to be in compliance with the <a class="reference external" href="https://github.com/spacetelescope/style-guides">STScI style guides</a> and would like to cite the <a class="reference external" href="https://github.com/spacetelescope/style-guides/blob/master/templates/example_notebook.ipynb">Jupyter guide</a> in particular.</em></p>
+</div></blockquote>
+</section>
+<section id="citations-a-class-tocskip">
+<h2>Citations <a class="tocSkip"><a class="headerlink" href="#citations-a-class-tocskip" title="Permalink to this heading">#</a></h2>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy</span></code>, or <code class="docutils literal notranslate"><span class="pre">numpy</span></code> for published research, please cite the
+authors. Follow these links for more information about citations:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://scipy.org/citing-scipy/">Citing <code class="docutils literal notranslate"><span class="pre">scipy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/users/project/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+</ul>
+<hr class="docutils" />
+<p><span class="xref myst">Top of Page</span>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/STIS/low_count_uncertainties"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../extraction/1D_Extraction.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">1D Spectra Extraction <a class="tocSkip"></p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../WFC3/README.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">WFC3 Notebooks</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
