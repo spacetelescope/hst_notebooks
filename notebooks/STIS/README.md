@@ -7,6 +7,8 @@ The current operational notebooks with a short description:
 
 ### STIS Coronagraphic Visualization Tool (CoronagraphyViz)
 Jupyter Notebook that assists users in planning and preparing STIS coronagraphic observations.
+### STIS Coronagraphic Observation Feasibility (constrast_sensitivity)
+A complimentary notebook to the Coronagraphic Visualization Tool, that acts as a guide to assess the feasibility of high-contrast imaging observations of point sources (i.e. exoplanets, brown dwarf companions) and/or disks around stars for a given expected contrast at the 1, 3 and 5 $\sigma$ level with STIS coronagraphy.
 ### STIS DrizzlePac Tutorial (drizpac_notebook)
 Jupyter Notebook for aligning and combining STIS images with [DrizzlePac](https://www.stsci.edu/scientific-community/software/drizzlepac.html). 
 ### Viewing STIS Data (view_data)
