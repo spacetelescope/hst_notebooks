@@ -756,7 +756,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-rw-r--r-- 1 runner docker 350644 Sep  4 17:47 archived_drkcfiles.txt
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-rw-r--r-- 1 runner docker 350644 Nov 12 01:56 archived_drkcfiles.txt
 </pre></div>
 </div>
 </div>
@@ -839,7 +839,7 @@ After downloading the image, we move it to the current working directory (cwd).<
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-rw-r--r-- 1 runner docker 34891200 Sep  4 17:48 idv404axq_raw.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-rw-r--r-- 1 runner docker 34891200 Nov 12 01:57 idv404axq_raw.fits
 </pre></div>
 </div>
 </div>
@@ -873,353 +873,498 @@ After downloading the image, we move it to the current working directory (cwd).<
 <p>The cell below calls <a class="reference external" href="https://hst-crds.stsci.edu/static/users_guide/basic_use.html">CRDS bestref</a>, which will copy the necessary reference files from CRDS over to your local machine, if you do not already have <br> them. Without running this command we would not be able to calibrate the image with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bestref_input</span> <span class="o">=</span> <span class="s1">&#39;crds bestrefs --update-bestrefs --sync-references=1 --files idv404axq_raw.fits&#39;</span>
-<span class="n">run_bestref</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">bestref_input</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">run_bestref</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bestref failed with exit code: </span><span class="si">{</span><span class="n">run_bestref</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>crds<span class="w"> </span>bestrefs<span class="w"> </span>--update-bestrefs<span class="w"> </span>--sync-references<span class="o">=</span><span class="m">1</span><span class="w"> </span>--files<span class="w"> </span>idv404axq_raw.fits
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_wf4tfile_0250.rmap         678 bytes  (1 / 142 files) (0 / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_shadfile_0250.rmap         977 bytes  (2 / 142 files) (678 / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_wf4tfile_0250.rmap         678 bytes  (1 / 142 files) (0 / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_offtab_0250.rmap           642 bytes  (3 / 142 files) (1.7 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_maskfile_0250.rmap         685 bytes  (4 / 142 files) (2.3 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_shadfile_0250.rmap         977 bytes  (2 / 142 files) (678 / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_idctab_0250.rmap           696 bytes  (5 / 142 files) (3.0 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_flatfile_0250.rmap      30.0 K bytes  (6 / 142 files) (3.7 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_offtab_0250.rmap           642 bytes  (3 / 142 files) (1.7 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_dgeofile_0250.rmap         801 bytes  (7 / 142 files) (33.7 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_darkfile_0250.rmap     178.4 K bytes  (8 / 142 files) (34.5 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_maskfile_0250.rmap         685 bytes  (4 / 142 files) (2.3 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_biasfile_0250.rmap       3.3 K bytes  (9 / 142 files) (212.8 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_atodfile_0250.rmap         874 bytes  (10 / 142 files) (216.1 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_idctab_0250.rmap           696 bytes  (5 / 142 files) (3.0 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_0250.imap                  782 bytes  (11 / 142 files) (217.0 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_snkcfile_0003.rmap          681 bytes  (12 / 142 files) (217.8 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_flatfile_0250.rmap      30.0 K bytes  (6 / 142 files) (3.7 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_satufile_0002.rmap        1.0 K bytes  (13 / 142 files) (218.5 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_pfltfile_0253.rmap       34.2 K bytes  (14 / 142 files) (219.5 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_dgeofile_0250.rmap         801 bytes  (7 / 142 files) (33.7 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_pctetab_0004.rmap           698 bytes  (15 / 142 files) (253.7 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_oscntab_0250.rmap           747 bytes  (16 / 142 files) (254.4 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_darkfile_0250.rmap     178.4 K bytes  (8 / 142 files) (34.5 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_npolfile_0254.rmap        4.0 K bytes  (17 / 142 files) (255.1 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_nlinfile_0250.rmap          726 bytes  (18 / 142 files) (259.2 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_biasfile_0250.rmap       3.3 K bytes  (9 / 142 files) (212.8 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_mdriztab_0254.rmap          845 bytes  (19 / 142 files) (259.9 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_imphttab_0256.rmap          683 bytes  (20 / 142 files) (260.7 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_atodfile_0250.rmap         874 bytes  (10 / 142 files) (216.1 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_idctab_0254.rmap            661 bytes  (21 / 142 files) (261.4 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_flshfile_0256.rmap        5.8 K bytes  (22 / 142 files) (262.1 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfpc2_0250.imap                  782 bytes  (11 / 142 files) (217.0 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_drkcfile_0194.rmap      234.8 K bytes  (23 / 142 files) (267.9 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_snkcfile_0003.rmap          681 bytes  (12 / 142 files) (217.8 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_dfltfile_0002.rmap       17.1 K bytes  (24 / 142 files) (502.7 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_darkfile_0492.rmap      276.0 K bytes  (25 / 142 files) (519.8 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_satufile_0002.rmap        1.0 K bytes  (13 / 142 files) (218.5 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_d2imfile_0251.rmap          605 bytes  (26 / 142 files) (795.8 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_crrejtab_0250.rmap          803 bytes  (27 / 142 files) (796.4 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_pfltfile_0253.rmap       34.2 K bytes  (14 / 142 files) (219.5 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_ccdtab_0250.rmap            799 bytes  (28 / 142 files) (797.2 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_bpixtab_0310.rmap        11.7 K bytes  (29 / 142 files) (798.0 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_pctetab_0004.rmap           698 bytes  (15 / 142 files) (253.7 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_biasfile_0267.rmap       23.4 K bytes  (30 / 142 files) (809.7 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_biacfile_0003.rmap          692 bytes  (31 / 142 files) (833.1 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_oscntab_0250.rmap           747 bytes  (16 / 142 files) (254.4 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_atodtab_0250.rmap           651 bytes  (32 / 142 files) (833.8 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_0595.imap                 1.3 K bytes  (33 / 142 files) (834.4 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_npolfile_0254.rmap        4.0 K bytes  (17 / 142 files) (255.1 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_tmttab_0002.rmap         745 bytes  (34 / 142 files) (835.7 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_tmgtab_0012.rmap         767 bytes  (35 / 142 files) (836.4 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_nlinfile_0250.rmap          726 bytes  (18 / 142 files) (259.2 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_tmctab_0052.rmap         743 bytes  (36 / 142 files) (837.2 K / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_thruput_0056.rmap    329.6 K bytes  (37 / 142 files) (837.9 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_mdriztab_0254.rmap          845 bytes  (19 / 142 files) (259.9 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_thermal_0003.rmap     20.4 K bytes  (38 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_obsmodes_0004.rmap       743 bytes  (39 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_imphttab_0256.rmap          683 bytes  (20 / 142 files) (260.7 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_0067.imap                579 bytes  (40 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_xtractab_0250.rmap          815 bytes  (41 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_idctab_0254.rmap            661 bytes  (21 / 142 files) (261.4 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_wcptab_0251.rmap            578 bytes  (42 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_teltab_0250.rmap            745 bytes  (43 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_flshfile_0256.rmap        5.8 K bytes  (22 / 142 files) (262.1 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_tdstab_0254.rmap            921 bytes  (44 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_tdctab_0252.rmap            650 bytes  (45 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_drkcfile_0196.rmap      237.6 K bytes  (23 / 142 files) (267.9 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_srwtab_0250.rmap            745 bytes  (46 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_sptrctab_0251.rmap          895 bytes  (47 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_dfltfile_0002.rmap       17.1 K bytes  (24 / 142 files) (505.5 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_sdctab_0251.rmap            889 bytes  (48 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_riptab_0254.rmap            877 bytes  (49 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_darkfile_0495.rmap      284.9 K bytes  (25 / 142 files) (522.6 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_phottab_0258.rmap         1.6 K bytes  (50 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_pfltfile_0250.rmap       23.7 K bytes  (51 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_d2imfile_0251.rmap          605 bytes  (26 / 142 files) (807.5 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_pctab_0250.rmap           3.1 K bytes  (52 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_mofftab_0250.rmap           747 bytes  (53 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_crrejtab_0250.rmap          803 bytes  (27 / 142 files) (808.1 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_mlintab_0250.rmap           601 bytes  (54 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_lfltfile_0250.rmap       11.8 K bytes  (55 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_ccdtab_0250.rmap            799 bytes  (28 / 142 files) (808.9 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_lamptab_0250.rmap           610 bytes  (56 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_inangtab_0250.rmap          815 bytes  (57 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_bpixtab_0312.rmap        11.8 K bytes  (29 / 142 files) (809.7 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_imphttab_0252.rmap          616 bytes  (58 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_idctab_0251.rmap            775 bytes  (59 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_biasfile_0267.rmap       23.4 K bytes  (30 / 142 files) (821.5 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_halotab_0250.rmap           747 bytes  (60 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_gactab_0250.rmap            651 bytes  (61 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_biacfile_0003.rmap          692 bytes  (31 / 142 files) (844.9 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_exstab_0250.rmap            745 bytes  (62 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_echsctab_0250.rmap          749 bytes  (63 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_atodtab_0250.rmap           651 bytes  (32 / 142 files) (845.6 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_disptab_0250.rmap           813 bytes  (64 / 142 files) (1.2 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_darkfile_0353.rmap       59.7 K bytes  (65 / 142 files) (1.2 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_wfc3_0600.imap                 1.3 K bytes  (33 / 142 files) (846.2 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_crrejtab_0250.rmap          711 bytes  (66 / 142 files) (1.3 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_cdstab_0250.rmap            745 bytes  (67 / 142 files) (1.3 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_tmttab_0002.rmap         745 bytes  (34 / 142 files) (847.5 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_ccdtab_0252.rmap            893 bytes  (68 / 142 files) (1.3 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_bpixtab_0250.rmap           845 bytes  (69 / 142 files) (1.3 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_tmgtab_0012.rmap         767 bytes  (35 / 142 files) (848.3 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_biasfile_0355.rmap      119.5 K bytes  (70 / 142 files) (1.3 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_tmctab_0055.rmap         743 bytes  (36 / 142 files) (849.0 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_apertab_0250.rmap           588 bytes  (71 / 142 files) (1.4 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_apdestab_0252.rmap          636 bytes  (72 / 142 files) (1.4 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_thruput_0059.rmap    329.6 K bytes  (37 / 142 files) (849.8 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_0369.imap                 1.7 K bytes  (73 / 142 files) (1.4 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_zprattab_0250.rmap        646 bytes  (74 / 142 files) (1.4 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_thermal_0003.rmap     20.4 K bytes  (38 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_tempfile_0250.rmap      1.1 K bytes  (75 / 142 files) (1.4 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_tdffile_0250.rmap       8.9 K bytes  (76 / 142 files) (1.4 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_obsmodes_0004.rmap       743 bytes  (39 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_saadfile_0250.rmap        771 bytes  (77 / 142 files) (1.4 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_saacntab_0250.rmap        594 bytes  (78 / 142 files) (1.4 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_synphot_0070.imap                579 bytes  (40 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_rnlcortb_0250.rmap        771 bytes  (79 / 142 files) (1.4 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_pmskfile_0250.rmap        603 bytes  (80 / 142 files) (1.4 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_xtractab_0250.rmap          815 bytes  (41 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_pmodfile_0250.rmap        603 bytes  (81 / 142 files) (1.4 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_phottab_0250.rmap         862 bytes  (82 / 142 files) (1.4 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_wcptab_0251.rmap            578 bytes  (42 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_pedsbtab_0250.rmap        594 bytes  (83 / 142 files) (1.4 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_noisfile_0250.rmap      2.6 K bytes  (84 / 142 files) (1.4 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_teltab_0250.rmap            745 bytes  (43 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_nlinfile_0250.rmap      1.7 K bytes  (85 / 142 files) (1.4 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_maskfile_0250.rmap      1.2 K bytes  (86 / 142 files) (1.4 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_tdstab_0254.rmap            921 bytes  (44 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_illmfile_0250.rmap      5.8 K bytes  (87 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_idctab_0250.rmap          767 bytes  (88 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_tdctab_0252.rmap            650 bytes  (45 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_flatfile_0250.rmap     11.0 K bytes  (89 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_darkfile_0250.rmap     14.9 K bytes  (90 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_srwtab_0250.rmap            745 bytes  (46 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_0250.imap               1.1 K bytes  (91 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_ywlkfile_0003.rmap           922 bytes  (92 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_sptrctab_0251.rmap          895 bytes  (47 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_xwlkfile_0002.rmap           922 bytes  (93 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_xtractab_0269.rmap         1.6 K bytes  (94 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_sdctab_0251.rmap            889 bytes  (48 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_wcptab_0257.rmap           1.3 K bytes  (95 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_twozxtab_0277.rmap           990 bytes  (96 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_riptab_0254.rmap            877 bytes  (49 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_tracetab_0276.rmap           998 bytes  (97 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_tdstab_0271.rmap             803 bytes  (98 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_phottab_0258.rmap         1.6 K bytes  (50 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_spwcstab_0255.rmap         1.1 K bytes  (99 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_spottab_0006.rmap            766 bytes  (100 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_pfltfile_0250.rmap       23.7 K bytes  (51 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_proftab_0276.rmap          1.0 K bytes  (101 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_phatab_0250.rmap             668 bytes  (102 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_pctab_0250.rmap           3.1 K bytes  (52 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_lamptab_0264.rmap          1.4 K bytes  (103 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_hvtab_0259.rmap              567 bytes  (104 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_mofftab_0250.rmap           747 bytes  (53 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_hvdstab_0002.rmap          1.0 K bytes  (105 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_gsagtab_0259.rmap            712 bytes  (106 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_mlintab_0250.rmap           601 bytes  (54 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_geofile_0250.rmap            670 bytes  (107 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_fluxtab_0282.rmap          1.7 K bytes  (108 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_lfltfile_0250.rmap       11.8 K bytes  (55 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_flatfile_0264.rmap         1.8 K bytes  (109 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_disptab_0276.rmap          1.7 K bytes  (110 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_lamptab_0250.rmap           610 bytes  (56 / 142 files) (1.2 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_dgeofile_0002.rmap           909 bytes  (111 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_deadtab_0250.rmap            711 bytes  (112 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_inangtab_0250.rmap          815 bytes  (57 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_brsttab_0250.rmap            696 bytes  (113 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_brftab_0250.rmap             614 bytes  (114 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_imphttab_0252.rmap          616 bytes  (58 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_bpixtab_0260.rmap            773 bytes  (115 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_badttab_0252.rmap            643 bytes  (116 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_idctab_0251.rmap            775 bytes  (59 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_0357.imap                  1.4 K bytes  (117 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_spottab_0251.rmap            641 bytes  (118 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_halotab_0250.rmap           747 bytes  (60 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_snkcfile_0097.rmap         7.3 K bytes  (119 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_shadfile_0251.rmap           531 bytes  (120 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_gactab_0250.rmap            651 bytes  (61 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_satufile_0002.rmap         1.2 K bytes  (121 / 142 files) (1.5 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_pfltfile_0253.rmap        69.2 K bytes  (122 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_exstab_0250.rmap            745 bytes  (62 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_pctetab_0253.rmap            615 bytes  (123 / 142 files) (1.6 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_oscntab_0251.rmap            781 bytes  (124 / 142 files) (1.6 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_echsctab_0250.rmap          749 bytes  (63 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_npolfile_0253.rmap         3.2 K bytes  (125 / 142 files) (1.6 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_mlintab_0250.rmap            646 bytes  (126 / 142 files) (1.6 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_disptab_0250.rmap           813 bytes  (64 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_mdriztab_0253.rmap           769 bytes  (127 / 142 files) (1.6 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_imphttab_0260.rmap           769 bytes  (128 / 142 files) (1.6 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_darkfile_0355.rmap       60.1 K bytes  (65 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_idctab_0256.rmap           1.5 K bytes  (129 / 142 files) (1.6 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_flshfile_0268.rmap         3.4 K bytes  (130 / 142 files) (1.6 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_crrejtab_0250.rmap          711 bytes  (66 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_drkcfile_0448.rmap        14.8 K bytes  (131 / 142 files) (1.6 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_dgeofile_0250.rmap         3.2 K bytes  (132 / 142 files) (1.6 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_cdstab_0250.rmap            745 bytes  (67 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_darkfile_0439.rmap        86.8 K bytes  (133 / 142 files) (1.6 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_ccdtab_0252.rmap            893 bytes  (68 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_d2imfile_0253.rmap           601 bytes  (134 / 142 files) (1.7 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_crrejtab_0251.rmap           945 bytes  (135 / 142 files) (1.7 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_bpixtab_0250.rmap           845 bytes  (69 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_cfltfile_0250.rmap         1.2 K bytes  (136 / 142 files) (1.7 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_ccdtab_0256.rmap           1.4 K bytes  (137 / 142 files) (1.7 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_biasfile_0357.rmap      120.2 K bytes  (70 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_bpixtab_0252.rmap          1.0 K bytes  (138 / 142 files) (1.7 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_biasfile_0437.rmap        56.9 K bytes  (139 / 142 files) (1.7 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_apertab_0250.rmap           588 bytes  (71 / 142 files) (1.4 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_atodtab_0251.rmap            528 bytes  (140 / 142 files) (1.8 M / 1.8 M bytes)
-CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_0538.imap                  1.3 K bytes  (141 / 142 files) (1.8 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_apdestab_0252.rmap          636 bytes  (72 / 142 files) (1.4 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_1177.pmap                        495 bytes  (142 / 142 files) (1.8 M / 1.8 M bytes)
-CRDS - INFO -  No comparison context or source comparison requested.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_stis_0371.imap                 1.7 K bytes  (73 / 142 files) (1.4 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  ===&gt; Processing idv404axq_raw.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_zprattab_0250.rmap        646 bytes  (74 / 142 files) (1.4 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/2731450pi_idc.fits         40.3 K bytes  (1 / 18 files) (0 / 1.3 G bytes)
-CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/27d1518pi_npl.fits         49.0 K bytes  (2 / 18 files) (40.3 K / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_tempfile_0250.rmap      1.1 K bytes  (75 / 142 files) (1.4 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/2ck18260i_mdz.fits        118.1 K bytes  (3 / 18 files) (89.3 K / 1.3 G bytes)
-CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/3a32019bi_bpx.fits          1.7 M bytes  (4 / 18 files) (207.4 K / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_tdffile_0250.rmap       8.9 K bytes  (76 / 142 files) (1.4 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/42h2117di_bia.fits        174.2 M bytes  (5 / 18 files) (1.9 M / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_saadfile_0250.rmap        771 bytes  (77 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/51c1638pi_imp.fits        397.4 K bytes  (6 / 18 files) (176.1 M / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_saacntab_0250.rmap        594 bytes  (78 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/54l1347ei_cte.fits          1.2 M bytes  (7 / 18 files) (176.5 M / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_rnlcortb_0250.rmap        771 bytes  (79 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/6c82013hi_fls.fits        209.0 M bytes  (8 / 18 files) (177.6 M / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_pmskfile_0250.rmap        603 bytes  (80 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/7b21735ti_sat.fits        174.2 M bytes  (9 / 18 files) (386.6 M / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_pmodfile_0250.rmap        603 bytes  (81 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/7bg1930ki_dkc.fits        168.1 M bytes  (10 / 18 files) (560.8 M / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_phottab_0250.rmap         862 bytes  (82 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/7bg1956fi_drk.fits        168.1 M bytes  (11 / 18 files) (728.9 M / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_pedsbtab_0250.rmap        594 bytes  (83 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/n9i1435li_crr.fits         11.5 K bytes  (12 / 18 files) (897.0 M / 1.3 G bytes)
-CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/q911321oi_osc.fits         25.9 K bytes  (13 / 18 files) (897.0 M / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_noisfile_0250.rmap      2.6 K bytes  (84 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/t291659mi_ccd.fits        247.7 K bytes  (14 / 18 files) (897.0 M / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_nlinfile_0250.rmap      1.7 K bytes  (85 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/y7b1516hi_d2i.fits         51.8 K bytes  (15 / 18 files) (897.3 M / 1.3 G bytes)
-CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/zcv20544i_pfl.fits        168.1 M bytes  (16 / 18 files) (897.3 M / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_maskfile_0250.rmap      1.2 K bytes  (86 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/zcv2057ni_bic.fits        174.2 M bytes  (17 / 18 files) (1.1 G / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_illmfile_0250.rmap      5.8 K bytes  (87 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/zcv2057oi_snk.fits         69.7 M bytes  (18 / 18 files) (1.2 G / 1.3 G bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_idctab_0250.rmap          767 bytes  (88 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  0 errors
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_flatfile_0250.rmap     11.0 K bytes  (89 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_darkfile_0250.rmap     14.9 K bytes  (90 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_nicmos_0250.imap               1.1 K bytes  (91 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_ywlkfile_0003.rmap           922 bytes  (92 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_xwlkfile_0002.rmap           922 bytes  (93 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_xtractab_0269.rmap         1.6 K bytes  (94 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_wcptab_0257.rmap           1.3 K bytes  (95 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_twozxtab_0277.rmap           990 bytes  (96 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_tracetab_0276.rmap           998 bytes  (97 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_tdstab_0272.rmap             803 bytes  (98 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_spwcstab_0255.rmap         1.1 K bytes  (99 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_spottab_0006.rmap            766 bytes  (100 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_proftab_0276.rmap          1.0 K bytes  (101 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_phatab_0250.rmap             668 bytes  (102 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_lamptab_0264.rmap          1.4 K bytes  (103 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_hvtab_0259.rmap              567 bytes  (104 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_hvdstab_0002.rmap          1.0 K bytes  (105 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_gsagtab_0261.rmap            712 bytes  (106 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_geofile_0250.rmap            670 bytes  (107 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_fluxtab_0282.rmap          1.7 K bytes  (108 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_flatfile_0264.rmap         1.8 K bytes  (109 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_disptab_0276.rmap          1.7 K bytes  (110 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_dgeofile_0002.rmap           909 bytes  (111 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_deadtab_0250.rmap            711 bytes  (112 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_brsttab_0250.rmap            696 bytes  (113 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_brftab_0250.rmap             614 bytes  (114 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_bpixtab_0260.rmap            773 bytes  (115 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_badttab_0252.rmap            643 bytes  (116 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_cos_0359.imap                  1.4 K bytes  (117 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_spottab_0251.rmap            641 bytes  (118 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_snkcfile_0100.rmap         7.5 K bytes  (119 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_shadfile_0251.rmap           531 bytes  (120 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_satufile_0002.rmap         1.2 K bytes  (121 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_pfltfile_0253.rmap        69.2 K bytes  (122 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_pctetab_0253.rmap            615 bytes  (123 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_oscntab_0251.rmap            781 bytes  (124 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_npolfile_0253.rmap         3.2 K bytes  (125 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_mlintab_0250.rmap            646 bytes  (126 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_mdriztab_0253.rmap           769 bytes  (127 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_imphttab_0260.rmap           769 bytes  (128 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_idctab_0256.rmap           1.5 K bytes  (129 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_flshfile_0268.rmap         3.4 K bytes  (130 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_drkcfile_0451.rmap        15.0 K bytes  (131 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_dgeofile_0250.rmap         3.2 K bytes  (132 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_darkfile_0442.rmap        87.0 K bytes  (133 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_d2imfile_0253.rmap           601 bytes  (134 / 142 files) (1.7 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_crrejtab_0251.rmap           945 bytes  (135 / 142 files) (1.7 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_cfltfile_0250.rmap         1.2 K bytes  (136 / 142 files) (1.7 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_ccdtab_0256.rmap           1.4 K bytes  (137 / 142 files) (1.7 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_bpixtab_0252.rmap          1.0 K bytes  (138 / 142 files) (1.7 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_biasfile_0440.rmap        57.0 K bytes  (139 / 142 files) (1.7 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_atodtab_0251.rmap            528 bytes  (140 / 142 files) (1.8 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_acs_0541.imap                  1.3 K bytes  (141 / 142 files) (1.8 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/mappings/hst/hst_1192.pmap                        495 bytes  (142 / 142 files) (1.8 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  No comparison context or source comparison requested.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  ===&gt; Processing idv404axq_raw.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/2731450pi_idc.fits         40.3 K bytes  (1 / 18 files) (0 / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/27d1518pi_npl.fits         49.0 K bytes  (2 / 18 files) (40.3 K / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/2ck18260i_mdz.fits        118.1 K bytes  (3 / 18 files) (89.3 K / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/3a32019bi_bpx.fits          1.7 M bytes  (4 / 18 files) (207.4 K / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/42h2117di_bia.fits        174.2 M bytes  (5 / 18 files) (1.9 M / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/51c1638pi_imp.fits        397.4 K bytes  (6 / 18 files) (176.1 M / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/54l1347ei_cte.fits          1.2 M bytes  (7 / 18 files) (176.5 M / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/6c82013hi_fls.fits        209.0 M bytes  (8 / 18 files) (177.6 M / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/7b21735ti_sat.fits        174.2 M bytes  (9 / 18 files) (386.6 M / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/7bg1930ki_dkc.fits        168.1 M bytes  (10 / 18 files) (560.8 M / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/7bg1956fi_drk.fits        168.1 M bytes  (11 / 18 files) (728.9 M / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/n9i1435li_crr.fits         11.5 K bytes  (12 / 18 files) (897.0 M / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/q911321oi_osc.fits         25.9 K bytes  (13 / 18 files) (897.0 M / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/t291659mi_ccd.fits        247.7 K bytes  (14 / 18 files) (897.0 M / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/y7b1516hi_d2i.fits         51.8 K bytes  (15 / 18 files) (897.3 M / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/zcv20544i_pfl.fits        168.1 M bytes  (16 / 18 files) (897.3 M / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/zcv2057ni_bic.fits        174.2 M bytes  (17 / 18 files) (1.1 G / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/zcv2057oi_snk.fits         69.7 M bytes  (18 / 18 files) (1.2 G / 1.3 G bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  0 errors
 CRDS - INFO -  0 warnings
 CRDS - INFO -  162 infos
 </pre></div>
@@ -1262,7 +1407,7 @@ At this step, you should see: <br></p>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=1</i>
-<table id="table140485124418768" class="table-striped table-bordered table-condensed">
+<table id="table140040972083024" class="table-striped table-bordered table-condensed">
 <thead><tr><th>file</th><th>date-obs</th><th>expstart</th><th>pctetab</th><th>drkcfile</th><th>pctecorr</th></tr></thead>
 <thead><tr><th>str18</th><th>str10</th><th>float64</th><th>str23</th><th>str23</th><th>str7</th></tr></thead>
 <tr><td>idv404axq_raw.fits</td><td>2019-07-29</td><td>58693.181643</td><td>iref$54l1347ei_cte.fits</td><td>iref$7bg1930ki_dkc.fits</td><td>PERFORM</td></tr>
@@ -1318,7 +1463,7 @@ At this step, you should see: <br></p>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=1</i>
-<table id="table140485124044944" class="table-striped table-bordered table-condensed">
+<table id="table140040020571920" class="table-striped table-bordered table-condensed">
 <thead><tr><th>filename</th><th>date-obs</th><th>dkc-filename</th><th>dkc-useafter</th><th>dkc-activation</th></tr></thead>
 <thead><tr><th>str18</th><th>str10</th><th>str18</th><th>str10</th><th>str10</th></tr></thead>
 <tr><td>idv404axq_raw.fits</td><td>2019-07-29</td><td>3961719li_dkc.fits</td><td>2019-07-28</td><td>2019-09-09</td></tr>
@@ -1340,7 +1485,7 @@ At this step, you should see: <br></p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-operational&#39; resolves to &#39;hst_1177.pmap&#39;
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-latest&#39; resolves to &#39;hst_1192.pmap&#39;
 CRDS - INFO -  Reorganizing 0 references from &#39;instrument&#39; to &#39;flat&#39;
 CRDS - INFO -  Reorganizing from &#39;instrument&#39; to &#39;flat&#39; cache,  removing instrument directories.
 CRDS - INFO -  Syncing explicitly listed files.
@@ -1384,7 +1529,7 @@ CRDS - INFO -  5 infos
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-operational&#39; resolves to &#39;hst_1177.pmap&#39;
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-latest&#39; resolves to &#39;hst_1192.pmap&#39;
 CRDS - INFO -  Reorganizing 26 references from &#39;flat&#39; to &#39;flat&#39;
 CRDS - INFO -  Syncing explicitly listed files.
 CRDS - INFO -  Fetching  crds_cache/references/hst/wfc3/zcv2057mi_cte.fits          1.2 M bytes  (1 / 1 files) (0 / 1.2 M bytes)
@@ -1442,7 +1587,7 @@ CRDS - INFO -  4 infos
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=1</i>
-<table id="table140485123846160" class="table-striped table-bordered table-condensed">
+<table id="table140040020373072" class="table-striped table-bordered table-condensed">
 <thead><tr><th>file</th><th>date-obs</th><th>expstart</th><th>pctetab</th><th>drkcfile</th><th>pctecorr</th></tr></thead>
 <thead><tr><th>str18</th><th>str10</th><th>float64</th><th>str23</th><th>str23</th><th>str7</th></tr></thead>
 <tr><td>idv404axq_raw.fits</td><td>2019-07-29</td><td>58693.181643</td><td>iref$zcv2057mi_cte.fits</td><td>iref$3961719li_dkc.fits</td><td>PERFORM</td></tr>
@@ -1473,7 +1618,7 @@ HEAD @: e098818105734475101120a544dfe468207bc690
 
 CALBEG*** CALWF3 -- Version 3.7.1 (Oct-18-2023) ***
 
-Begin    04-Sep-2024 17:50:24 UTC
+Begin    12-Nov-2024 01:59:30 UTC
 
 
 
@@ -1501,7 +1646,7 @@ Setting max threads to 4 of 4 cpus
 
 CALBEG*** WFC3CTE -- Version 3.7.1 (Oct-18-2023) ***
 
-Begin    04-Sep-2024 17:50:24 UTC
+Begin    12-Nov-2024 01:59:30 UTC
 
 Input    idv404axq_raw.fits
 
@@ -1601,7 +1746,7 @@ PCTERNOI saved to header
 
 CALBEG*** WF3CCD -- Version 3.7.1 (Oct-18-2023) ***
 
-Begin    04-Sep-2024 17:55:22 UTC
+Begin    12-Nov-2024 02:04:27 UTC
 
 Input:   idv404axq_rac_tmp.fits
 
@@ -1621,7 +1766,7 @@ DETECTOR UVIS
 
 
 
-Imset 1  Begin 17:55:22 UTC
+Imset 1  Begin 02:04:27 UTC
 
 CCDTAB   iref$t291659mi_ccd.fits
 
@@ -1741,13 +1886,13 @@ FLSHFILE DESCRIP =Post-flash created from in-flight WFC3/UVIS frames.-----------
 
 FLSHCORR COMPLETE
 
-Imset 1  End 17:55:23 UTC
+Imset 1  End 02:04:27 UTC
 
 
 
 
 
-Imset 2  Begin 17:55:23 UTC
+Imset 2  Begin 02:04:27 UTC
 
 CCDTAB   iref$t291659mi_ccd.fits
 
@@ -1841,7 +1986,7 @@ Mean of post-flash image (MEANFLSH) = 12.0962
 
 FLSHCORR COMPLETE
 
-Imset 2  End 17:55:23 UTC
+Imset 2  End 02:04:28 UTC
 
 Setting Bias Keywords in header
 
@@ -1849,7 +1994,7 @@ Setting Bias Keywords in header
 
 
 
-End      04-Sep-2024 17:55:23 UTC
+End      12-Nov-2024 02:04:28 UTC
 
 *** WF3CCD complete ***
 
@@ -1859,7 +2004,7 @@ End      04-Sep-2024 17:55:23 UTC
 
 CALBEG*** WF3CCD -- Version 3.7.1 (Oct-18-2023) ***
 
-Begin    04-Sep-2024 17:55:23 UTC
+Begin    12-Nov-2024 02:04:28 UTC
 
 Revising existing trailer file `idv404axq.tra&#39;.
 
@@ -1881,7 +2026,7 @@ DETECTOR UVIS
 
 
 
-Imset 1  Begin 17:55:23 UTC
+Imset 1  Begin 02:04:28 UTC
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CCDTAB   iref$t291659mi_ccd.fits
@@ -2002,13 +2147,13 @@ FLSHFILE DESCRIP =Post-flash created from in-flight WFC3/UVIS frames.-----------
 
 FLSHCORR COMPLETE
 
-Imset 1  End 17:55:24 UTC
+Imset 1  End 02:04:29 UTC
 
 
 
 
 
-Imset 2  Begin 17:55:24 UTC
+Imset 2  Begin 02:04:29 UTC
 
 CCDTAB   iref$t291659mi_ccd.fits
 
@@ -2102,7 +2247,7 @@ Mean of post-flash image (MEANFLSH) = 12.0962
 
 FLSHCORR COMPLETE
 
-Imset 2  End 17:55:24 UTC
+Imset 2  End 02:04:29 UTC
 
 Setting Bias Keywords in header
 
@@ -2110,7 +2255,7 @@ Setting Bias Keywords in header
 
 
 
-End      04-Sep-2024 17:55:24 UTC
+End      12-Nov-2024 02:04:29 UTC
 
 *** WF3CCD complete ***
 
@@ -2120,7 +2265,7 @@ End      04-Sep-2024 17:55:24 UTC
 
 CALBEG*** WF32D -- Version 3.7.1 (Oct-18-2023) ***
 
-Begin    04-Sep-2024 17:55:24 UTC
+Begin    12-Nov-2024 02:04:29 UTC
 
 Input    idv404axq_blv_tmp.fits
 
@@ -2140,7 +2285,7 @@ DETECTOR UVIS
 
 
 
-Imset 1  Begin 17:55:24 UTC
+Imset 1  Begin 02:04:29 UTC
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CCDTAB   iref$t291659mi_ccd.fits
@@ -2234,13 +2379,13 @@ IMPHTTAB DESCRIP =2020 Time-dependent Inverse Sensitivity with updated calspec m
 
 PHOTCORR COMPLETE
 
-Imset 1  End 17:55:25 UTC
+Imset 1  End 02:04:30 UTC
 
 
 
 
 
-Imset 2  Begin 17:55:25 UTC
+Imset 2  Begin 02:04:30 UTC
 
 CCDTAB   iref$t291659mi_ccd.fits
 
@@ -2316,10 +2461,10 @@ IMPHTTAB DESCRIP =2020 Time-dependent Inverse Sensitivity with updated calspec m
 PHOTCORR COMPLETE
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 2  End 17:55:25 UTC
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 2  End 02:04:30 UTC
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024248175526-I--------------- Image statistics recomputed: IDV404AXQ ----------
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024317020430-I--------------- Image statistics recomputed: IDV404AXQ ----------
 
 FLUXCORR PERFORM
 
@@ -2329,7 +2474,7 @@ FLUXCORR COMPLETE
 
 
 
-End      04-Sep-2024 17:55:26 UTC
+End      12-Nov-2024 02:04:30 UTC
 
 *** WF32D complete ***
 
@@ -2339,7 +2484,7 @@ End      04-Sep-2024 17:55:26 UTC
 
 CALBEG*** WF32D -- Version 3.7.1 (Oct-18-2023) ***
 
-Begin    04-Sep-2024 17:55:26 UTC
+Begin    12-Nov-2024 02:04:30 UTC
 
 Input    idv404axq_blc_tmp.fits
 
@@ -2359,7 +2504,7 @@ DETECTOR UVIS
 
 
 
-Imset 1  Begin 17:55:26 UTC
+Imset 1  Begin 02:04:30 UTC
 
 CCDTAB   iref$t291659mi_ccd.fits
 
@@ -2453,13 +2598,13 @@ IMPHTTAB DESCRIP =2020 Time-dependent Inverse Sensitivity with updated calspec m
 PHOTCORR COMPLETE
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 1  End 17:55:26 UTC
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 1  End 02:04:31 UTC
 
 
 
 
 
-Imset 2  Begin 17:55:26 UTC
+Imset 2  Begin 02:04:31 UTC
 
 CCDTAB   iref$t291659mi_ccd.fits
 
@@ -2534,10 +2679,10 @@ IMPHTTAB DESCRIP =2020 Time-dependent Inverse Sensitivity with updated calspec m
 
 PHOTCORR COMPLETE
 
-Imset 2  End 17:55:26 UTC
+Imset 2  End 02:04:31 UTC
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024248175527-I--------------- Image statistics recomputed: IDV404AXQ ----------
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024317020431-I--------------- Image statistics recomputed: IDV404AXQ ----------
 
 FLUXCORR PERFORM
 
@@ -2547,7 +2692,7 @@ FLUXCORR COMPLETE
 
 
 
-End      04-Sep-2024 17:55:27 UTC
+End      12-Nov-2024 02:04:32 UTC
 
 *** WF32D complete ***
 
@@ -2555,7 +2700,7 @@ End      04-Sep-2024 17:55:27 UTC
 
 
 
-End      04-Sep-2024 17:55:27 UTC
+End      12-Nov-2024 02:04:32 UTC
 
 *** CALWF3 complete ***
 
@@ -2572,9 +2717,9 @@ CALWF3 completion for idv404axq_raw.fits
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-rw-r--r-- 1 runner docker  34891200 Sep  4 17:50 idv404axq_raw.fits
--rw-r--r-- 1 runner docker 168079680 Sep  4 17:55 idv404axq_flt.fits
--rw-r--r-- 1 runner docker 168079680 Sep  4 17:55 idv404axq_flc.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-rw-r--r-- 1 runner docker  34891200 Nov 12 01:59 idv404axq_raw.fits
+-rw-r--r-- 1 runner docker 168079680 Nov 12 02:04 idv404axq_flt.fits
+-rw-r--r-- 1 runner docker 168079680 Nov 12 02:04 idv404axq_flc.fits
 </pre></div>
 </div>
 </div>
@@ -2607,7 +2752,7 @@ CALWF3 completion for idv404axq_raw.fits
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=1</i>
-<table id="table140485124033040" class="table-striped table-bordered table-condensed">
+<table id="table140040656799056" class="table-striped table-bordered table-condensed">
 <thead><tr><th>file</th><th>pctetab</th><th>drkcfile</th><th>pctecorr</th><th>cal_ver</th><th>cte_name</th><th>cte_ver</th></tr></thead>
 <thead><tr><th>str18</th><th>str23</th><th>str23</th><th>str8</th><th>str19</th><th>str13</th><th>str3</th></tr></thead>
 <tr><td>idv404axq_flc.fits</td><td>iref$zcv2057mi_cte.fits</td><td>iref$3961719li_dkc.fits</td><td>COMPLETE</td><td>3.7.1 (Oct-18-2023)</td><td>pixelCTE 2012</td><td>1.0</td></tr>
@@ -2966,7 +3111,7 @@ Follow these links for more information about citing the libraries below:</p>
 <li><p><a class="reference external" href="https://github.com/astropy/astroquery/blob/main/astroquery/CITATION">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
 <li><p><a class="reference external" href="https://matplotlib.org/stable/users/project/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
 <li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
-<li><p><a class="reference external" href="https://photutils.readthedocs.io/en/stable/citation.html">Citing <code class="docutils literal notranslate"><span class="pre">photutils</span></code></a></p></li>
+<li><p><a class="reference external" href="https://photutils.readthedocs.io/en/stable/getting_started/citation.html">Citing <code class="docutils literal notranslate"><span class="pre">photutils</span></code></a></p></li>
 <li><p><a class="reference external" href="https://scipy.org/citing-scipy/">Citing <code class="docutils literal notranslate"><span class="pre">scipy</span></code></a>
 <br></p></li>
 </ul>
