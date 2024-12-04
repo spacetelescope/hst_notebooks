@@ -7,6 +7,8 @@ The current operational notebooks with a short description:
 
 ### STIS Coronagraphic Visualization Tool (CoronagraphyViz)
 Jupyter Notebook that assists users in planning and preparing STIS coronagraphic observations.
+### STIS Coronagraphic Observation Feasibility (constrast_sensitivity)
+A complimentary notebook to the Coronagraphic Visualization Tool, that acts as a guide to assess the feasibility of high-contrast imaging observations of point sources (i.e. exoplanets, brown dwarf companions) and/or disks around stars for a given expected contrast at the 1, 3 and 5 $\sigma$ level with STIS coronagraphy.
 ### STIS DrizzlePac Tutorial (drizpac_notebook)
 Jupyter Notebook for aligning and combining STIS images with [DrizzlePac](https://www.stsci.edu/scientific-community/software/drizzlepac.html). 
 ### Viewing STIS Data (view_data)
@@ -21,6 +23,8 @@ An introductory Jupyter Notebook showing how to create a custom CCD dark referen
 An introductory Jupyter Notebook that shows how to visualize and obtain information about a target acquisition. It provides examples for a successful acquisition and several typical failure cases.
 ### Correcting for Missing Wavecals with Cross-Correlation (cross-correlation)
 A complementary Jupyter Notebook to the Acquisition Notebook, that shows how to find and correct the zero point spectral shift using cross-correlation.
+### Low Count Uncertainties in STIS (low_count_uncertainties)
+A Jupyter Notebook exploring how uncertainties are calculated in the STIS pipeline. This also shows how certain approximations break down in the low flux regime (e.g., dim FUV continua), and demonstrates how users can calculate more robust uncertainties when dealing with low flux data. Lastly, this explores a known bug in calculation of uncertainties when using INTTAG to split exposures into sub-exposures in TIME-TAG files.
 
 
 Each folder has a HTML file that can be opened in a browser after cloning this repository. The HTML file is identical to the notebook, except they contain output plots and tables.

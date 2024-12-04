@@ -63,6 +63,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/STIS/README';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -526,6 +528,7 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter-notebook-tutorials-for-working-with-space-telescope-imaging-spectrograph-stis-data-and-observation-planning">Jupyter Notebook Tutorials for Working with Space Telescope Imaging Spectrograph (STIS) Data and observation planning.</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stis-coronagraphic-visualization-tool-coronagraphyviz">STIS Coronagraphic Visualization Tool (CoronagraphyViz)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stis-coronagraphic-observation-feasibility-constrast-sensitivity">STIS Coronagraphic Observation Feasibility (constrast_sensitivity)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stis-drizzlepac-tutorial-drizpac-notebook">STIS DrizzlePac Tutorial (drizpac_notebook)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#viewing-stis-data-view-data">Viewing STIS Data (view_data)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-spectra-extraction-extraction">1D Spectra Extraction (extraction)</a></li>
@@ -533,6 +536,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-ccd-darks-custom-ccd-darks">Custom CCD Darks (custom_ccd_darks)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluating-stis-target-acquisitions-target-acquisition">Evaluating STIS Target Acquisitions (target_acquisition)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correcting-for-missing-wavecals-with-cross-correlation-cross-correlation">Correcting for Missing Wavecals with Cross-Correlation (cross-correlation)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#low-count-uncertainties-in-stis-low-count-uncertainties">Low Count Uncertainties in STIS (low_count_uncertainties)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-requirements">Basic Requirements</a><ul class="nav section-nav flex-column">
@@ -571,6 +575,10 @@ document.write(`
 <h3>STIS Coronagraphic Visualization Tool (CoronagraphyViz)<a class="headerlink" href="#stis-coronagraphic-visualization-tool-coronagraphyviz" title="Permalink to this heading">#</a></h3>
 <p>Jupyter Notebook that assists users in planning and preparing STIS coronagraphic observations.</p>
 </section>
+<section id="stis-coronagraphic-observation-feasibility-constrast-sensitivity">
+<h3>STIS Coronagraphic Observation Feasibility (constrast_sensitivity)<a class="headerlink" href="#stis-coronagraphic-observation-feasibility-constrast-sensitivity" title="Permalink to this heading">#</a></h3>
+<p>A complimentary notebook to the Coronagraphic Visualization Tool, that acts as a guide to assess the feasibility of high-contrast imaging observations of point sources (i.e. exoplanets, brown dwarf companions) and/or disks around stars for a given expected contrast at the 1, 3 and 5 <span class="math notranslate nohighlight">\(\sigma\)</span> level with STIS coronagraphy.</p>
+</section>
 <section id="stis-drizzlepac-tutorial-drizpac-notebook">
 <h3>STIS DrizzlePac Tutorial (drizpac_notebook)<a class="headerlink" href="#stis-drizzlepac-tutorial-drizpac-notebook" title="Permalink to this heading">#</a></h3>
 <p>Jupyter Notebook for aligning and combining STIS images with <a class="reference external" href="https://www.stsci.edu/scientific-community/software/drizzlepac.html">DrizzlePac</a>.</p>
@@ -598,6 +606,10 @@ document.write(`
 <section id="correcting-for-missing-wavecals-with-cross-correlation-cross-correlation">
 <h3>Correcting for Missing Wavecals with Cross-Correlation (cross-correlation)<a class="headerlink" href="#correcting-for-missing-wavecals-with-cross-correlation-cross-correlation" title="Permalink to this heading">#</a></h3>
 <p>A complementary Jupyter Notebook to the Acquisition Notebook, that shows how to find and correct the zero point spectral shift using cross-correlation.</p>
+</section>
+<section id="low-count-uncertainties-in-stis-low-count-uncertainties">
+<h3>Low Count Uncertainties in STIS (low_count_uncertainties)<a class="headerlink" href="#low-count-uncertainties-in-stis-low-count-uncertainties" title="Permalink to this heading">#</a></h3>
+<p>A Jupyter Notebook exploring how uncertainties are calculated in the STIS pipeline. This also shows how certain approximations break down in the low flux regime (e.g., dim FUV continua), and demonstrates how users can calculate more robust uncertainties when dealing with low flux data. Lastly, this explores a known bug in calculation of uncertainties when using INTTAG to split exposures into sub-exposures in TIME-TAG files.</p>
 <p>Each folder has a HTML file that can be opened in a browser after cloning this repository. The HTML file is identical to the notebook, except they contain output plots and tables.</p>
 </section>
 </section>
@@ -735,6 +747,7 @@ document.write(`
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter-notebook-tutorials-for-working-with-space-telescope-imaging-spectrograph-stis-data-and-observation-planning">Jupyter Notebook Tutorials for Working with Space Telescope Imaging Spectrograph (STIS) Data and observation planning.</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stis-coronagraphic-visualization-tool-coronagraphyviz">STIS Coronagraphic Visualization Tool (CoronagraphyViz)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stis-coronagraphic-observation-feasibility-constrast-sensitivity">STIS Coronagraphic Observation Feasibility (constrast_sensitivity)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stis-drizzlepac-tutorial-drizpac-notebook">STIS DrizzlePac Tutorial (drizpac_notebook)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#viewing-stis-data-view-data">Viewing STIS Data (view_data)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-spectra-extraction-extraction">1D Spectra Extraction (extraction)</a></li>
@@ -742,6 +755,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-ccd-darks-custom-ccd-darks">Custom CCD Darks (custom_ccd_darks)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluating-stis-target-acquisitions-target-acquisition">Evaluating STIS Target Acquisitions (target_acquisition)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correcting-for-missing-wavecals-with-cross-correlation-cross-correlation">Correcting for Missing Wavecals with Cross-Correlation (cross-correlation)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#low-count-uncertainties-in-stis-low-count-uncertainties">Low Count Uncertainties in STIS (low_count_uncertainties)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-requirements">Basic Requirements</a><ul class="nav section-nav flex-column">
