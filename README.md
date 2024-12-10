@@ -9,6 +9,3 @@
 ```
 
 The repository is currently under construction and not yet complete. As a result, it is recommended that the [older version](https://github.com/spacetelescope/notebooks) be reviewed and referenced instead. While this may cause inconvenience, it is important to ensure that the final version is of the highest quality possible. 
-
-# notebook_ci_template
-Structural template for notebook CI system
