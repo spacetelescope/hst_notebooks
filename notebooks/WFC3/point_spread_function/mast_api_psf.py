@@ -16,11 +16,19 @@ This module is intended to be imported in a Jupyter notebook:
 
 Author
 ------
-Fred Dauphin, February 2024
+Fred Dauphin, July 2024
 """
 
+import datetime
+import multiprocessing
+import os
 import requests
+
+import tqdm
+from astropy.io import fits
 from astroquery.mast import Mast
+
+REQUEST_URL_PREFIX = 'https://mast.stsci.edu/api/v0.1/Download'
 
 
 # Helper functions from https://mast.stsci.edu/api/v0/pyex.html
@@ -42,37 +50,121 @@ def set_min_max(min, max):
     return [{'min': min, 'max': max}]
 
 
-def download_request(payload, filename, download_type="file"):
+# Downloading functions
+def download_request_file(dataURI_filename):
     """
     Performs a get request to download a specified file from the MAST server.
 
-    The load and download limits for a single query are 50,000 and 500,000, 
-    respectively. It is recommended to download all files as a .tar.gz:
-    ```
-    download_requests(payload=payload, 
-                      filename='filename.tar.gz',
-                      download_type='bundle.tar.gz')
-    ```
+    This function is intended for downloading single cutouts. The load and
+    download limits for a single query are 50,000 and 500,000, respectively.
+    The file is intended to be downloaded as a .fits:
 
     Parameters
     ----------
-    payload : list
-        The dataURIs to be downloaded.
-    filename : str
-        The name of the downloaded file. To download a .tar.gz (recommended), 
-        include '.tar.gz' as the file extension.
-    download_type : str, default="file"
-        The type of file to download. To download a .tar.gz (recommended), use
-        'bundle.tar.gz'.
+    dataURI_filename : list
+        The dataURI to be downloaded and the name of the downloaded fits file.
+        This is one parameter instead of two so a progress bar can be applied
+        to multiprocessing.
     
     Returns
     -------
     filename : str
         The name of the downloaded file.
     """
-    request_url = 'https://mast.stsci.edu/api/v0.1/Download/' + download_type
-    resp = requests.post(request_url, data=payload)
+    dataURI = dataURI_filename[0]
+    filename = dataURI_filename[1]
+
+    # Specify download type
+    download_type = 'file'
+    request_url = f'{REQUEST_URL_PREFIX}/{download_type}'
+
+    # Request payload
+    payload = {'uri': dataURI}
+    resp = requests.get(request_url, params=payload)
+    
+    # Write response to filename
+    with open(filename, 'wb') as FLE:
+        FLE.write(resp.content)
  
+    return filename
+
+
+def download_request_pool(dataURIs, cpu_count=0):
+    """
+    Performs a get request to download a specified file from the MAST server.
+
+    This function is intended for downloading multiple cutouts. The load and
+    download limits for a single query are 50,000 and 500,000, respectively.
+    This function is optimized by pooling and shows a progress bar.
+
+    Parameters
+    ----------
+    dataURIs : list
+        The dataURIs to be downloaded.
+
+    cpu_count : int, default=0
+        The number of cpus for multiprocessing. If 0, set to all available cpus.
+
+    Returns
+    -------
+    path_dir : str
+        The directory path to the downloaded cutouts.
+    """
+    # Make PSF directory if necessary for downloads
+    now = datetime.datetime.now().strftime('MAST_%Y-%m-%dT%H%M')
+    if 'WFC3' in dataURIs[0]:
+        ins_psf = 'WFC3PSF'
+    else:
+        ins_psf = 'WFPC2PSF'
+    path_dir = f'{now}/{ins_psf}'
+    if not os.path.isdir(path_dir):
+        os.makedirs(path_dir)
+    
+    # Prepare arguments for pooling
+    filenames = [f'{path_dir}/{dataURI.split("/")[-1]}' for dataURI in dataURIs]
+    args = zip(dataURIs, filenames)
+    
+    # Pool using a progress bar
+    if cpu_count == 0:
+        cpu_count = os.cpu_count()
+    total = len(filenames)
+    pool = multiprocessing.Pool(processes=cpu_count)
+    _ = list(tqdm.tqdm(pool.imap(download_request_file, args), total=total))
+    pool.close()
+    pool.join()
+
+    return path_dir
+
+
+def download_request_bundle(dataURIs, filename):
+    """
+    Performs a get request to download a specified file from the MAST server.
+
+    This function is intended for downloading multiple cutouts. The load and
+    download limits for a single query are 50,000 and 500,000, respectively.
+    The file downloaded is a .tar.gz:
+
+    Parameters
+    ----------
+    dataURIs : list
+        The dataURIs to be downloaded.
+    filename : str
+        The name of the downloaded '.tar.gz' file.
+    
+    Returns
+    -------
+    filename : str
+        The name of the downloaded file.
+    """
+    # Specify download type
+    download_type = 'bundle.tar.gz'
+    request_url = f'{REQUEST_URL_PREFIX}/{download_type}'
+
+    # Request payload
+    payload = [("uri", dataURI) for dataURI in dataURIs]
+    resp = requests.post(request_url, data=payload)
+    
+    # Write response to filename
     with open(filename, 'wb') as FLE:
         FLE.write(resp.content)
  
@@ -110,28 +202,27 @@ def mast_query_psf_database(detector, filts, columns=['*']):
         columns applied.
     """
     # Check types
-    if type(detector) is not str:
+    if not isinstance(detector, str):
         raise TypeError('detector must be a string.')
-    if type(filts) is not list:
+    if not isinstance(filts, list):
         raise TypeError('filts must be a list.')
-    if type(columns) is not list:
+    if not isinstance(columns, list):
         raise TypeError('columns must be a list.')
     
-    # Check detectors
-    valid_detectors = ['UVIS', 'IR', 'WFPC2']
+    # Determine service for database
     detector = detector.upper()
-    if detector not in valid_detectors:
+    service_base = 'Mast.Catalogs.Filtered'
+    detector_databases = {
+        'UVIS': 'Wfc3Psf.Uvis', 
+        'IR': 'Wfc3Psf.Ir', 
+        'WFPC2': 'Wfpc2Psf.Uvis'
+    }
+    try:
+        database = detector_databases[detector]
+    except KeyError:
+        valid_detectors = list(detector_databases.keys())
         raise ValueError(f'{detector} is not a valid detector. ' 
                          f'Choose from {valid_detectors}.')
-    
-    # Determine service for database
-    service_base = 'Mast.Catalogs.Filtered'
-    if detector == 'UVIS':
-        database = 'Wfc3Psf.Uvis'
-    elif detector == 'IR':
-        database = 'Wfc3Psf.Ir'
-    else:
-        database = 'Wfpc2Psf.Uvis'
     service = f'{service_base}.{database}'
     
     # If WFPC2, change filter to filter_1
@@ -157,7 +248,7 @@ def mast_query_psf_database(detector, filts, columns=['*']):
     return obs
 
 
-def make_dataURIs(obs, detector, file_suffix, sizes={'unsat': 51, 'sat': 101}):
+def make_dataURIs(obs, detector, file_suffix, unsat_size=51, sat_size=101):
     """
     Make dataURIs for the WFC3 and WFPC2 PSF databases' sources.
     
@@ -178,21 +269,21 @@ def make_dataURIs(obs, detector, file_suffix, sizes={'unsat': 51, 'sat': 101}):
         The detector of the queried sources. Allowed values are UVIS, IR, and 
         WFPC2.
     file_suffix : list
-        The file suffixes to prepare for download.
-    sizes : dict, default={'unsat':51, 'sat':101}
-        The sizes for unsaturated (qfit>0;n_sat_pixels==0) and saturated 
-        (qfit==0;n_sat_pixels>0) cutouts.
+        The file suffixes to prepare for download. Allowed values are raw, d0m, 
+        flt, c0m, and flc.
+    unsat_size : int, default=51
+        The size for unsaturated (qfit>0;n_sat_pixels==0) cutouts.
+    sat_size : int, default=101
+        The size for saturated (qfit==0;n_sat_pixels>0) cutouts.
     
     Returns
     -------
     dataURIs : list
-        The dataURIs made from the queried sources as ('uri', dataURI).
+        The dataURIs made from the queried sources.
     """
     # Check type
-    if type(file_suffix) is not list:
+    if not isinstance(file_suffix, list):
         raise TypeError('detector must be a list.')
-    if type(sizes) is not dict:
-        raise TypeError('sizes must be a dictionary.')
     
     # Check suffixes (make sure there isn't a wrong suffix)
     valid_suffixes = ['raw', 'd0m', 'flt', 'c0m', 'flc']
@@ -200,13 +291,6 @@ def make_dataURIs(obs, detector, file_suffix, sizes={'unsat': 51, 'sat': 101}):
         if suffix not in valid_suffixes:
             raise ValueError(f'{suffix} is not a valid suffix. '
                              f'Choose from {valid_suffixes}.')
-
-    # Check sizes (make sure unsat and sat are in sizes)
-    valid_sizes = ['unsat', 'sat']
-    for size in valid_sizes:
-        if size not in sizes.keys():
-            raise ValueError(f'{size} needs to be included. '
-                             f'Choose an appropriate value.')
     
     # Determine database that was queried
     detector = detector.upper()
@@ -219,9 +303,7 @@ def make_dataURIs(obs, detector, file_suffix, sizes={'unsat': 51, 'sat': 101}):
 
     # Loop through obs to make dataURIs
     dataURIs = []
-    pixel_offset = 1 # centers sources
-    mask_full_frame = (obs['subarray'] == 0).data # only support full frame
-    for row in obs[mask_full_frame]:
+    for row in tqdm.tqdm(obs, total=len(obs)):
         # Unpack values
         iden = row['id']
         root = row['rootname']
@@ -229,35 +311,92 @@ def make_dataURIs(obs, detector, file_suffix, sizes={'unsat': 51, 'sat': 101}):
             filt = row['filter_1']
         else:
             filt = row['filter']
-        x = row['psf_x_center'] - pixel_offset
-        y = row['psf_y_center'] - pixel_offset
         chip = row['chip']
         qfit = row['qfit']
         if qfit > 0:
-            size = sizes['unsat']
+            size = unsat_size
         else:
-            size = sizes['sat']
-            
-        # If UVIS use chip to asign correct sci ext
+            size = sat_size
+        subarray = row['subarray']
+        
+        # If UVIS use chip to assign correct fits ext
         if detector == 'UVIS':
-            if chip == '2':
-                sci_ext = 1
-            elif chip == '1':
-                sci_ext = 4
-                if y >= 2051:
-                    y -= 2051 - 3 # another offset to center UVIS1 sources
-        # Else chip is the correct sci ext
+            if chip == '1' and subarray == 0:
+                fits_ext = 4
+            else:
+                fits_ext = 1
+        # Else chip is the correct fits ext
         else:
-            sci_ext = chip
+            fits_ext = chip
             
         # Make dataURIs for each suffix
         for suffix in file_suffix:
-            file_read = f'red={root}_{suffix}[{sci_ext}]'
+            if suffix in ['raw', 'd0m']:
+                coord_suffix = 'raw'
+            else:
+                coord_suffix = 'cal'
+            x = row[f'x_{coord_suffix}']
+            y = row[f'y_{coord_suffix}']
+
+            file_read = f'red={root}_{suffix}[{fits_ext}]'
             cutout = f'size={size}&x={x}&y={y}&format=fits'
             file_save = f'{root}_{iden}_{filt}_{suffix}_cutout.fits'
             dataURI = f'{dataURI_base}?{file_read}&{cutout}/{file_save}'
-            dataURIs.append(("uri", dataURI))
+            dataURIs.append(dataURI)
     
-    n_subarray_sources = (~mask_full_frame).sum()
-    print(f'Found {n_subarray_sources} subarray sources in queried data.')
     return dataURIs
+
+
+def convert_dataURIs_to_dataURLs(dataURIs):
+    """
+    Convert dataURIs to URLs for the WFC3 and WFPC2 PSF databases' sources.
+
+    Use the archive url, the hla folder, and the imagename parameter.
+    
+    Parameters
+    ----------
+    dataURIs : list
+        The dataURIs made from the queried sources.
+    
+    Returns
+    -------
+    dataURLs : list
+        The dataURLs for the queried sources.
+    """
+    # Convert to dataURLs
+    dataURL_base = 'https://archive.stsci.edu/cgi-bin/hla'
+    dataURLs = []
+    for dataURI in tqdm.tqdm(dataURIs, total=len(dataURIs)):
+        dataURL_split = dataURI.split('/')
+        file_cutout = f'{dataURL_split[3]}&imagename={dataURL_split[4]}'
+        dataURL = f'{dataURL_base}/{file_cutout}'
+        dataURLs.append(dataURL)
+    return dataURLs
+
+
+def extract_cutouts_pool(dataURLs, cpu_count=0):
+    """
+    Extract cutouts from dataURLs using multiprocessing. 
+    
+    Parameters
+    ----------
+    dataURIs : list
+        The dataURLs made from the queried sources.
+    cpu_count : int, default=0
+        The number of cpus for multiprocessing. If 0, set to all available cpus.
+    
+    Returns
+    -------
+    cutouts : list
+        The queried sources.
+    """
+    # Pool using a progress bar
+    if cpu_count == 0:
+        cpu_count = os.cpu_count()
+    total = len(dataURLs)
+    pool = multiprocessing.Pool(processes=cpu_count)
+    cutouts = list(tqdm.tqdm(pool.imap(fits.getdata, dataURLs), total=total))
+    pool.close()
+    pool.join()
+
+    return cutouts
