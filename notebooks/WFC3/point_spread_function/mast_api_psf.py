@@ -400,3 +400,4 @@ def extract_cutouts_pool(dataURLs, cpu_count=0):
     pool.join()
 
     return cutouts
+    
