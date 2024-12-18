@@ -19,6 +19,7 @@ Drizzling Features:
 - [Creating HST mosaics observed with multiple detectors](https://spacetelescope.github.io/hst_notebooks/notebooks/DrizzlePac/align_mosaics/align_mosaics.html)
 - [Using Sky Matching features for HST mosaics](https://spacetelescope.github.io/hst_notebooks/notebooks/DrizzlePac/sky_matching/sky_matching.html)
 - [Masking satellite trails prior to drizzling](https://spacetelescope.github.io/hst_notebooks/notebooks/DrizzlePac/mask_satellite/mask_satellite.html)
+- [Drizzling new WFPC2 flt data products](https://spacetelescope.github.io/hst_notebooks/notebooks/DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.ipynb)
 
 For more information, see the [DrizzlePac Handbook](https://hst-docs.stsci.edu/drizzpac) and the [readthedocs](https://drizzlepac.readthedocs.io/en/latest/) software documentation. For additional assistance with DrizzlePac tools, users may submit a ticket to the [STScI Help Desk](https://stsci.service-now.com/hst?id=hst_index) and should select the DrizzlePac category.
 
