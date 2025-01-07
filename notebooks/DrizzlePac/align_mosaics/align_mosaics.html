@@ -757,29 +757,45 @@ Small dithers between exposures in a given tile will fill in the UVIS chip gap a
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">matplotlib.image</span> <span class="k">as</span> <span class="nn">mpimg</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.image</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpimg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">ascii</span><span class="p">,</span> <span class="n">fits</span>
-<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
-<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">ZScaleInterval</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">ascii</span><span class="p">,</span> <span class="n">fits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZScaleInterval</span>
 
-<span class="kn">from</span> <span class="nn">drizzlepac.astrodrizzle</span> <span class="kn">import</span> <span class="n">AstroDrizzle</span> <span class="k">as</span> <span class="n">adriz</span>
-<span class="kn">from</span> <span class="nn">drizzlepac.haputils.astrometric_utils</span> <span class="kn">import</span> <span class="n">create_astrometric_catalog</span>  
-<span class="kn">from</span> <span class="nn">drizzlepac</span> <span class="kn">import</span> <span class="n">tweakreg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">drizzlepac.astrodrizzle</span><span class="w"> </span><span class="kn">import</span> <span class="n">AstroDrizzle</span> <span class="k">as</span> <span class="n">adriz</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">drizzlepac.haputils.astrometric_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_astrometric_catalog</span>  
+<span class="kn">from</span><span class="w"> </span><span class="nn">drizzlepac</span><span class="w"> </span><span class="kn">import</span> <span class="n">tweakreg</span>
 
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">clear_output</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">clear_output</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
 
-<span class="kn">from</span> <span class="nn">astroquery.gaia</span> <span class="kn">import</span> <span class="n">Gaia</span>
-<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.gaia</span><span class="w"> </span><span class="kn">import</span> <span class="n">Gaia</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.mast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observations</span>
 <span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39; # Improves the resolution of figures rendered in notebooks.
 <span class="n">Gaia</span><span class="o">.</span><span class="n">MAIN_GAIA_TABLE</span> <span class="o">=</span> <span class="s1">&#39;gaiadr3.gaia_source&#39;</span>   <span class="c1"># Change if different data release is desired</span>
 <span class="n">Gaia</span><span class="o">.</span><span class="n">ROW_LIMIT</span> <span class="o">=</span> <span class="mi">100000</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following task in the stsci.skypac package can be run with TEAL:
+                                    skymatch                                    
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following tasks in the drizzlepac package can be run with TEAL:
+    astrodrizzle       config_testbed      imagefindpars           mapreg       
+       photeq            pixreplace           pixtopix            pixtosky      
+  refimagefindpars       resetbits          runastrodriz          skytopix      
+     tweakback            tweakreg           updatenpol
 </pre></div>
 </div>
 </div>
@@ -831,6 +847,18 @@ Small dithers between exposures in a given tile will fill in the UVIS chip gap a
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;ick901hzq_flt.fits&#39;,
+ &#39;ick901i7q_flt.fits&#39;,
+ &#39;ick902n9q_flt.fits&#39;,
+ &#39;ick902neq_flt.fits&#39;,
+ &#39;ick903n4q_flt.fits&#39;,
+ &#39;ick903ncq_flt.fits&#39;,
+ &#39;ick904obq_flt.fits&#39;,
+ &#39;ick904ogq_flt.fits&#39;]
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="wfc3-uvis">
@@ -872,6 +900,22 @@ Small dithers between exposures in a given tile will fill in the UVIS chip gap a
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;ick905k5q_flc.fits&#39;,
+ &#39;ick905keq_flc.fits&#39;,
+ &#39;ick905knq_flc.fits&#39;,
+ &#39;ick906kwq_flc.fits&#39;,
+ &#39;ick906l5q_flc.fits&#39;,
+ &#39;ick906leq_flc.fits&#39;,
+ &#39;ick907nkq_flc.fits&#39;,
+ &#39;ick907o1q_flc.fits&#39;,
+ &#39;ick907ouq_flc.fits&#39;,
+ &#39;ick908pbq_flc.fits&#39;,
+ &#39;ick908pkq_flc.fits&#39;,
+ &#39;ick908ptq_flc.fits&#39;]
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 </section>
@@ -910,6 +954,20 @@ Small dithers between exposures in a given tile will fill in the UVIS chip gap a
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=8</i>
+<table id="table140272564480016" class="table-striped table-bordered table-condensed">
+<thead><tr><th>ROOTNAME</th><th>ASN_ID</th><th>TARGNAME</th><th>DETECTOR</th><th>FILTER</th><th>EXPTIME</th><th>RA_TARG</th><th>DEC_TARG</th><th>POSTARG1</th><th>POSTARG2</th><th>DATE-OBS</th><th>ORIENTAT</th></tr></thead>
+<thead><tr><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>str32</th><th>float64</th></tr></thead>
+<tr><td>ick901hzq</td><td>ICK901030</td><td>LBN67-IR</td><td>IR</td><td>F160W</td><td>702.9</td><td>274.7172</td><td>-13.8361</td><td>-62.566</td><td>-62.047</td><td>2014-09-02</td><td>-35.35</td></tr>
+<tr><td>ick901i7q</td><td>ICK901030</td><td>LBN67-IR</td><td>IR</td><td>F160W</td><td>702.9</td><td>274.7172</td><td>-13.8361</td><td>-62.566</td><td>-54.847</td><td>2014-09-02</td><td>-35.36</td></tr>
+<tr><td>ick902n9q</td><td>ICK902030</td><td>LBN67-IR</td><td>IR</td><td>F160W</td><td>702.9</td><td>274.7172</td><td>-13.8361</td><td>62.566</td><td>-62.047</td><td>2014-09-02</td><td>-35.36</td></tr>
+<tr><td>ick902neq</td><td>ICK902030</td><td>LBN67-IR</td><td>IR</td><td>F160W</td><td>702.9</td><td>274.7172</td><td>-13.8361</td><td>62.566</td><td>-54.847</td><td>2014-09-02</td><td>-35.36</td></tr>
+<tr><td>ick903n4q</td><td>ICK903030</td><td>LBN67-IR</td><td>IR</td><td>F160W</td><td>702.9</td><td>274.7172</td><td>-13.8361</td><td>-62.566</td><td>54.847</td><td>2014-09-07</td><td>-35.36</td></tr>
+<tr><td>ick903ncq</td><td>ICK903030</td><td>LBN67-IR</td><td>IR</td><td>F160W</td><td>702.9</td><td>274.7172</td><td>-13.8361</td><td>-62.566</td><td>62.047</td><td>2014-09-07</td><td>-35.35</td></tr>
+<tr><td>ick904obq</td><td>ICK904030</td><td>LBN67-IR</td><td>IR</td><td>F160W</td><td>702.9</td><td>274.7172</td><td>-13.8361</td><td>62.566</td><td>54.847</td><td>2014-09-07</td><td>-35.36</td></tr>
+<tr><td>ick904ogq</td><td>ICK904030</td><td>LBN67-IR</td><td>IR</td><td>F160W</td><td>702.9</td><td>274.7172</td><td>-13.8361</td><td>62.566</td><td>62.047</td><td>2014-09-07</td><td>-35.36</td></tr>
+</table></div></div></div>
 </div>
 </section>
 <section id="uvis-detector-a-id-uvis-dither-a">
@@ -943,6 +1001,24 @@ Small dithers between exposures in a given tile will fill in the UVIS chip gap a
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=12</i>
+<table id="table140272584448400" class="table-striped table-bordered table-condensed">
+<thead><tr><th>ROOTNAME</th><th>ASN_ID</th><th>TARGNAME</th><th>DETECTOR</th><th>FILTER</th><th>EXPTIME</th><th>RA_TARG</th><th>DEC_TARG</th><th>POSTARG1</th><th>POSTARG2</th><th>DATE-OBS</th><th>ORIENTAT</th></tr></thead>
+<thead><tr><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>str32</th><th>float64</th></tr></thead>
+<tr><td>ick905k5q</td><td>ICK905040</td><td>LBN67-UVIS</td><td>UVIS</td><td>F657N</td><td>600.0</td><td>274.7104</td><td>-13.8289</td><td>-65.384</td><td>-74.272</td><td>2014-09-02</td><td>-35.25</td></tr>
+<tr><td>ick905keq</td><td>ICK905040</td><td>LBN67-UVIS</td><td>UVIS</td><td>F657N</td><td>600.0</td><td>274.7104</td><td>-13.8289</td><td>-60.312</td><td>-63.396</td><td>2014-09-02</td><td>-35.25</td></tr>
+<tr><td>ick905knq</td><td>ICK905040</td><td>LBN67-UVIS</td><td>UVIS</td><td>F657N</td><td>600.0</td><td>274.7104</td><td>-13.8289</td><td>-55.241</td><td>-52.521</td><td>2014-09-02</td><td>-35.25</td></tr>
+<tr><td>ick906kwq</td><td>ICK906040</td><td>LBN67-UVIS</td><td>UVIS</td><td>F657N</td><td>600.0</td><td>274.7104</td><td>-13.8289</td><td>65.384</td><td>-65.128</td><td>2014-09-02</td><td>-35.25</td></tr>
+<tr><td>ick906l5q</td><td>ICK906040</td><td>LBN67-UVIS</td><td>UVIS</td><td>F657N</td><td>600.0</td><td>274.7104</td><td>-13.8289</td><td>70.455</td><td>-54.252</td><td>2014-09-02</td><td>-35.26</td></tr>
+<tr><td>ick906leq</td><td>ICK906040</td><td>LBN67-UVIS</td><td>UVIS</td><td>F657N</td><td>600.0</td><td>274.7104</td><td>-13.8289</td><td>75.527</td><td>-43.377</td><td>2014-09-02</td><td>-35.26</td></tr>
+<tr><td>ick907nkq</td><td>ICK907040</td><td>LBN67-UVIS</td><td>UVIS</td><td>F657N</td><td>600.0</td><td>274.7104</td><td>-13.8289</td><td>-65.384</td><td>65.128</td><td>2014-09-03</td><td>-35.25</td></tr>
+<tr><td>ick907o1q</td><td>ICK907040</td><td>LBN67-UVIS</td><td>UVIS</td><td>F657N</td><td>600.0</td><td>274.7104</td><td>-13.8289</td><td>-60.312</td><td>76.004</td><td>2014-09-03</td><td>-35.25</td></tr>
+<tr><td>ick907ouq</td><td>ICK907040</td><td>LBN67-UVIS</td><td>UVIS</td><td>F657N</td><td>600.0</td><td>274.7104</td><td>-13.8289</td><td>-55.241</td><td>86.879</td><td>2014-09-03</td><td>-35.25</td></tr>
+<tr><td>ick908pbq</td><td>ICK908040</td><td>LBN67-UVIS</td><td>UVIS</td><td>F657N</td><td>600.0</td><td>274.7104</td><td>-13.8289</td><td>65.384</td><td>74.272</td><td>2014-09-03</td><td>-35.26</td></tr>
+<tr><td>ick908pkq</td><td>ICK908040</td><td>LBN67-UVIS</td><td>UVIS</td><td>F657N</td><td>600.0</td><td>274.7104</td><td>-13.8289</td><td>70.455</td><td>85.148</td><td>2014-09-03</td><td>-35.26</td></tr>
+<tr><td>ick908ptq</td><td>ICK908040</td><td>LBN67-UVIS</td><td>UVIS</td><td>F657N</td><td>600.0</td><td>274.7104</td><td>-13.8289</td><td>75.527</td><td>96.024</td><td>2014-09-03</td><td>-35.26</td></tr>
+</table></div></div></div>
 </div>
 </section>
 </section>
@@ -980,6 +1056,20 @@ Small dithers between exposures in a given tile will fill in the UVIS chip gap a
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=8</i>
+<table id="table140272568372944" class="table-striped table-bordered table-condensed">
+<thead><tr><th>filename</th><th>DETECTOR</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RApix</th><th>RMS_DECpix</th></tr></thead>
+<thead><tr><th>str18</th><th>str2</th><th>str30</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>ick901hzq_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>96</td><td>20.1</td><td>17.6</td><td>0.16</td><td>0.14</td></tr>
+<tr><td>ick901i7q_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>96</td><td>20.1</td><td>17.6</td><td>0.16</td><td>0.14</td></tr>
+<tr><td>ick902n9q_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>102</td><td>12.0</td><td>11.1</td><td>0.09</td><td>0.09</td></tr>
+<tr><td>ick902neq_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>102</td><td>12.0</td><td>11.1</td><td>0.09</td><td>0.09</td></tr>
+<tr><td>ick903n4q_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>57</td><td>11.0</td><td>9.7</td><td>0.09</td><td>0.08</td></tr>
+<tr><td>ick903ncq_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>57</td><td>11.0</td><td>9.7</td><td>0.09</td><td>0.08</td></tr>
+<tr><td>ick904obq_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>60</td><td>19.8</td><td>19.0</td><td>0.15</td><td>0.15</td></tr>
+<tr><td>ick904ogq_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>60</td><td>19.8</td><td>19.0</td><td>0.15</td><td>0.15</td></tr>
+</table></div></div></div>
 </div>
 <p>Here we see the the images have a <b>FIT-REL-GAIAeDR3</b> solution which means the HST images in a given visit and filter were realigned to one another and then aligned as a set relative to Gaia eDR3. <br>
 <br>
@@ -1011,6 +1101,24 @@ Next, we look at the WCS for the UVIS data.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=12</i>
+<table id="table140272572435536" class="table-striped table-bordered table-condensed">
+<thead><tr><th>filename</th><th>DETECTOR</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RApix</th><th>RMS_DECpix</th></tr></thead>
+<thead><tr><th>str18</th><th>str4</th><th>str30</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>ick905k5q_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>159</td><td>4.4</td><td>3.8</td><td>0.11</td><td>0.1</td></tr>
+<tr><td>ick905keq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>159</td><td>4.4</td><td>3.8</td><td>0.11</td><td>0.1</td></tr>
+<tr><td>ick905knq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>159</td><td>4.4</td><td>3.8</td><td>0.11</td><td>0.1</td></tr>
+<tr><td>ick906kwq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>153</td><td>4.4</td><td>4.0</td><td>0.11</td><td>0.1</td></tr>
+<tr><td>ick906l5q_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>153</td><td>4.4</td><td>4.0</td><td>0.11</td><td>0.1</td></tr>
+<tr><td>ick906leq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>153</td><td>4.4</td><td>4.0</td><td>0.11</td><td>0.1</td></tr>
+<tr><td>ick907nkq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>77</td><td>2.4</td><td>3.6</td><td>0.06</td><td>0.09</td></tr>
+<tr><td>ick907o1q_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>77</td><td>2.4</td><td>3.6</td><td>0.06</td><td>0.09</td></tr>
+<tr><td>ick907ouq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>77</td><td>2.4</td><td>3.6</td><td>0.06</td><td>0.09</td></tr>
+<tr><td>ick908pbq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>101</td><td>5.2</td><td>4.2</td><td>0.13</td><td>0.11</td></tr>
+<tr><td>ick908pkq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>101</td><td>5.2</td><td>4.2</td><td>0.13</td><td>0.11</td></tr>
+<tr><td>ick908ptq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>101</td><td>5.2</td><td>4.2</td><td>0.13</td><td>0.11</td></tr>
+</table></div></div></div>
 </div>
 <p>Here we see the the images have a <b>FIT-REL-GAIAeDR3</b> solution which means the HST images in a given visit and filter were realigned to one another and then aligned as a set relative to Gaia eDR3. <br>
 <br>
@@ -1024,6 +1132,15 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gaia_pm_cat</span> <span class="o">=</span> <span class="n">create_astrometric_catalog</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*flc.fits&#39;</span><span class="p">)))</span>
 
 <span class="n">gaia_pm_cat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;gaia_pm.cat&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.no_header&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024366164930 INFO src=drizzlepac.haputils.astrometric_utils- Getting catalog using: 
+    http://gsss.stsci.edu/webservices/vo/CatalogSearch.aspx?RA=274.7202282494018&amp;DEC=-13.840002895709132&amp;SR=0.06355961441785501&amp;FORMAT=CSV&amp;CAT=GAIAedr3&amp;MINDET=5&amp;EPOCH=2014.668
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024366164931 INFO src=drizzlepac.haputils.astrometric_utils- Created catalog &#39;ref_cat.ecsv&#39; with 1061  sources
 </pre></div>
 </div>
 </div>
@@ -1064,6 +1181,10 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/e81b21431b715f199079976a0addb49a89ebb0524a0caaae76365f40fa2a8f5f.png" src="../../../_images/e81b21431b715f199079976a0addb49a89ebb0524a0caaae76365f40fa2a8f5f.png" />
+<img alt="../../../_images/2e9c7a24e4ebd488d538999747be9c01850592b11cd243beb81842dcc026be4a.png" src="../../../_images/2e9c7a24e4ebd488d538999747be9c01850592b11cd243beb81842dcc026be4a.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1095,6 +1216,20 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=8</i>
+<table id="table140272564361488" class="table-striped table-bordered table-condensed">
+<thead><tr><th>file</th><th>dx</th><th>dy</th><th>rot</th><th>scale</th><th>xrms</th><th>yrms</th></tr></thead>
+<thead><tr><th>str18</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>ick901hzq_flt.fits</td><td>0.04</td><td>0.06</td><td>359.996</td><td>0.99993</td><td>0.05</td><td>0.05</td></tr>
+<tr><td>ick901i7q_flt.fits</td><td>0.01</td><td>0.07</td><td>0.001</td><td>0.99997</td><td>0.05</td><td>0.05</td></tr>
+<tr><td>ick902n9q_flt.fits</td><td>-0.00</td><td>0.01</td><td>0.001</td><td>1.00004</td><td>0.05</td><td>0.04</td></tr>
+<tr><td>ick902neq_flt.fits</td><td>0.01</td><td>0.01</td><td>360.000</td><td>1.00002</td><td>0.05</td><td>0.04</td></tr>
+<tr><td>ick903n4q_flt.fits</td><td>0.00</td><td>0.02</td><td>360.000</td><td>1.00001</td><td>0.06</td><td>0.03</td></tr>
+<tr><td>ick903ncq_flt.fits</td><td>-0.00</td><td>-0.01</td><td>359.998</td><td>1.00000</td><td>0.07</td><td>0.04</td></tr>
+<tr><td>ick904obq_flt.fits</td><td>-0.03</td><td>0.08</td><td>359.995</td><td>0.99999</td><td>0.04</td><td>0.03</td></tr>
+<tr><td>ick904ogq_flt.fits</td><td>-0.05</td><td>0.07</td><td>359.997</td><td>0.99994</td><td>0.05</td><td>0.03</td></tr>
+</table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1106,6 +1241,18 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of matches for ick901hzq_flt_catalog_fit.match =  107
+Number of matches for ick901i7q_flt_catalog_fit.match =  106
+Number of matches for ick902n9q_flt_catalog_fit.match =  104
+Number of matches for ick902neq_flt_catalog_fit.match =  107
+Number of matches for ick903n4q_flt_catalog_fit.match =  51
+Number of matches for ick903ncq_flt_catalog_fit.match =  49
+Number of matches for ick904obq_flt_catalog_fit.match =  65
+Number of matches for ick904ogq_flt_catalog_fit.match =  52
+</pre></div>
+</div>
+</div>
 </div>
 <p>Compare the RMS and number of Matches from <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> with the MAST alignment results. <br></p>
 <div class="cell docutils container">
@@ -1114,6 +1261,20 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=8</i>
+<table id="table140272568372944" class="table-striped table-bordered table-condensed">
+<thead><tr><th>filename</th><th>DETECTOR</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RApix</th><th>RMS_DECpix</th></tr></thead>
+<thead><tr><th>str18</th><th>str2</th><th>str30</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>ick901hzq_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>96</td><td>20.1</td><td>17.6</td><td>0.16</td><td>0.14</td></tr>
+<tr><td>ick901i7q_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>96</td><td>20.1</td><td>17.6</td><td>0.16</td><td>0.14</td></tr>
+<tr><td>ick902n9q_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>102</td><td>12.0</td><td>11.1</td><td>0.09</td><td>0.09</td></tr>
+<tr><td>ick902neq_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>102</td><td>12.0</td><td>11.1</td><td>0.09</td><td>0.09</td></tr>
+<tr><td>ick903n4q_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>57</td><td>11.0</td><td>9.7</td><td>0.09</td><td>0.08</td></tr>
+<tr><td>ick903ncq_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>57</td><td>11.0</td><td>9.7</td><td>0.09</td><td>0.08</td></tr>
+<tr><td>ick904obq_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>60</td><td>19.8</td><td>19.0</td><td>0.15</td><td>0.15</td></tr>
+<tr><td>ick904ogq_flt.fits</td><td>IR</td><td>IDC_w3m18525i-FIT_REL_GAIAeDR3</td><td>60</td><td>19.8</td><td>19.0</td><td>0.15</td><td>0.15</td></tr>
+</table></div></div></div>
 </div>
 <p>Note that while similar numbers of stars were matched during MAST processing and in our custom alignment, the fit RMS is ~2x lower. Before updating the WCS solutions, we inspect the quality of the fitting in the next section.</p>
 </section>
@@ -1154,6 +1315,9 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/81dbfc9fdede48de53308ebf3349292eb8dcf9ea007148c38cbb9f9731f7bb91.png" src="../../../_images/81dbfc9fdede48de53308ebf3349292eb8dcf9ea007148c38cbb9f9731f7bb91.png" />
+</div>
 </div>
 <p>Next, the 4-panel fit residual plots: dx, dy vs X and Y are inspected to verify that the residuals cluster around zero.</p>
 <div class="cell docutils container">
@@ -1170,6 +1334,9 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/7c9df3984ac2517c4ca0af10b915b0f5a03f4f4519a0bce73cd52d11233ea8f0.png" src="../../../_images/7c9df3984ac2517c4ca0af10b915b0f5a03f4f4519a0bce73cd52d11233ea8f0.png" />
 </div>
 </div>
 <p>We repeat the following for Visits 03 and 04.</p>
@@ -1202,6 +1369,9 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/97a2f82a6b1303c3d8dfc4aa212a9566350b04d96b245aa09b567bd4655bbb15.png" src="../../../_images/97a2f82a6b1303c3d8dfc4aa212a9566350b04d96b245aa09b567bd4655bbb15.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1217,6 +1387,9 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/36bd3eee0ff3a06b8b0bef7c8d3c36658fec5ddf12a6fa7954ecba8746de315b.png" src="../../../_images/36bd3eee0ff3a06b8b0bef7c8d3c36658fec5ddf12a6fa7954ecba8746de315b.png" />
 </div>
 </div>
 <p>The dx,dy residuals for all IR exposures are all clustered around dx,dy=0 and have an RMS less than 0.1 pixels, indicating a good fit. If the alignment needs to be fine-tuned, changing the parameters <code class="docutils literal notranslate"><span class="pre">threshold</span></code>, <code class="docutils literal notranslate"><span class="pre">sigma</span></code>, and <code class="docutils literal notranslate"><span class="pre">searchrad</span></code> may help TweakReg to lock onto an accurate solution.</p>
@@ -1243,6 +1416,10 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 <span class="n">clear_output</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/e81b21431b715f199079976a0addb49a89ebb0524a0caaae76365f40fa2a8f5f.png" src="../../../_images/e81b21431b715f199079976a0addb49a89ebb0524a0caaae76365f40fa2a8f5f.png" />
+<img alt="../../../_images/2e9c7a24e4ebd488d538999747be9c01850592b11cd243beb81842dcc026be4a.png" src="../../../_images/2e9c7a24e4ebd488d538999747be9c01850592b11cd243beb81842dcc026be4a.png" />
 </div>
 </div>
 </section>
@@ -1286,6 +1463,12 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x7f93c4ec54d0&gt;
+</pre></div>
+</div>
+<img alt="../../../_images/3d3c529753a22d4873ac3d497cdc12e0aca0d3bbc0edfbd333016ab71653ff6c.png" src="../../../_images/3d3c529753a22d4873ac3d497cdc12e0aca0d3bbc0edfbd333016ab71653ff6c.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1295,6 +1478,12 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">shrink</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.colorbar.Colorbar at 0x7f93c031cf90&gt;
+</pre></div>
+</div>
+<img alt="../../../_images/d8aace62a373fb9a38811171d066072a6c7893aedd1b603e27c216a958a1051f.png" src="../../../_images/d8aace62a373fb9a38811171d066072a6c7893aedd1b603e27c216a958a1051f.png" />
 </div>
 </div>
 </section>
@@ -1328,6 +1517,10 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/859e7b991172a38f4a10a7af9ef7a1fdce4b04881c574e4d0fddcebb9b9b1395.png" src="../../../_images/859e7b991172a38f4a10a7af9ef7a1fdce4b04881c574e4d0fddcebb9b9b1395.png" />
+<img alt="../../../_images/0a3fbd5f9416e92e1d98bb4df2cbf19f2113f1dcdf6a15234b25201be66c9250.png" src="../../../_images/0a3fbd5f9416e92e1d98bb4df2cbf19f2113f1dcdf6a15234b25201be66c9250.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1358,6 +1551,24 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=12</i>
+<table id="table140272556951056" class="table-striped table-bordered table-condensed">
+<thead><tr><th>file</th><th>dx</th><th>dy</th><th>rot</th><th>scale</th><th>xrms</th><th>yrms</th></tr></thead>
+<thead><tr><th>str18</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>ick905k5q_flc.fits</td><td>-0.00</td><td>0.01</td><td>0.000</td><td>1.00000</td><td>0.06</td><td>0.05</td></tr>
+<tr><td>ick905keq_flc.fits</td><td>0.01</td><td>0.04</td><td>0.000</td><td>0.99999</td><td>0.05</td><td>0.04</td></tr>
+<tr><td>ick905knq_flc.fits</td><td>0.03</td><td>0.02</td><td>360.000</td><td>0.99999</td><td>0.05</td><td>0.04</td></tr>
+<tr><td>ick906kwq_flc.fits</td><td>0.04</td><td>0.07</td><td>360.000</td><td>1.00000</td><td>0.06</td><td>0.06</td></tr>
+<tr><td>ick906l5q_flc.fits</td><td>0.03</td><td>0.04</td><td>360.000</td><td>1.00000</td><td>0.06</td><td>0.05</td></tr>
+<tr><td>ick906leq_flc.fits</td><td>0.02</td><td>0.02</td><td>360.000</td><td>1.00000</td><td>0.05</td><td>0.05</td></tr>
+<tr><td>ick907nkq_flc.fits</td><td>-0.00</td><td>0.06</td><td>359.999</td><td>1.00001</td><td>0.06</td><td>0.04</td></tr>
+<tr><td>ick907o1q_flc.fits</td><td>-0.02</td><td>-0.06</td><td>359.999</td><td>1.00000</td><td>0.05</td><td>0.04</td></tr>
+<tr><td>ick907ouq_flc.fits</td><td>0.01</td><td>0.06</td><td>0.000</td><td>1.00000</td><td>0.05</td><td>0.05</td></tr>
+<tr><td>ick908pbq_flc.fits</td><td>0.00</td><td>0.02</td><td>0.000</td><td>1.00001</td><td>0.03</td><td>0.03</td></tr>
+<tr><td>ick908pkq_flc.fits</td><td>0.01</td><td>0.02</td><td>0.000</td><td>1.00001</td><td>0.04</td><td>0.04</td></tr>
+<tr><td>ick908ptq_flc.fits</td><td>0.02</td><td>0.02</td><td>0.000</td><td>1.00000</td><td>0.04</td><td>0.04</td></tr>
+</table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1369,6 +1580,22 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of matches for ick905k5q_flc_catalog_fit.match =  137
+Number of matches for ick905keq_flc_catalog_fit.match =  132
+Number of matches for ick905knq_flc_catalog_fit.match =  119
+Number of matches for ick906kwq_flc_catalog_fit.match =  143
+Number of matches for ick906l5q_flc_catalog_fit.match =  136
+Number of matches for ick906leq_flc_catalog_fit.match =  135
+Number of matches for ick907nkq_flc_catalog_fit.match =  71
+Number of matches for ick907o1q_flc_catalog_fit.match =  76
+Number of matches for ick907ouq_flc_catalog_fit.match =  75
+Number of matches for ick908pbq_flc_catalog_fit.match =  78
+Number of matches for ick908pkq_flc_catalog_fit.match =  81
+Number of matches for ick908ptq_flc_catalog_fit.match =  77
+</pre></div>
+</div>
+</div>
 </div>
 <p>Compare the RMS and number of Matches from <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> with the MAST alignment results.</p>
 <div class="cell docutils container">
@@ -1377,6 +1604,24 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=12</i>
+<table id="table140272572435536" class="table-striped table-bordered table-condensed">
+<thead><tr><th>filename</th><th>DETECTOR</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RApix</th><th>RMS_DECpix</th></tr></thead>
+<thead><tr><th>str18</th><th>str4</th><th>str30</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>ick905k5q_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>159</td><td>4.4</td><td>3.8</td><td>0.11</td><td>0.1</td></tr>
+<tr><td>ick905keq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>159</td><td>4.4</td><td>3.8</td><td>0.11</td><td>0.1</td></tr>
+<tr><td>ick905knq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>159</td><td>4.4</td><td>3.8</td><td>0.11</td><td>0.1</td></tr>
+<tr><td>ick906kwq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>153</td><td>4.4</td><td>4.0</td><td>0.11</td><td>0.1</td></tr>
+<tr><td>ick906l5q_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>153</td><td>4.4</td><td>4.0</td><td>0.11</td><td>0.1</td></tr>
+<tr><td>ick906leq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>153</td><td>4.4</td><td>4.0</td><td>0.11</td><td>0.1</td></tr>
+<tr><td>ick907nkq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>77</td><td>2.4</td><td>3.6</td><td>0.06</td><td>0.09</td></tr>
+<tr><td>ick907o1q_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>77</td><td>2.4</td><td>3.6</td><td>0.06</td><td>0.09</td></tr>
+<tr><td>ick907ouq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>77</td><td>2.4</td><td>3.6</td><td>0.06</td><td>0.09</td></tr>
+<tr><td>ick908pbq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>101</td><td>5.2</td><td>4.2</td><td>0.13</td><td>0.11</td></tr>
+<tr><td>ick908pkq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>101</td><td>5.2</td><td>4.2</td><td>0.13</td><td>0.11</td></tr>
+<tr><td>ick908ptq_flc.fits</td><td>UVIS</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>101</td><td>5.2</td><td>4.2</td><td>0.13</td><td>0.11</td></tr>
+</table></div></div></div>
 </div>
 <p>Note that there are similar numbers of stars matched during MAST processing and in our custom alignment, with no significant shift rotation or scale resiuals in the shift file.  To verify this, we inspect the quality of the fitting in the next section.</p>
 </section>
@@ -1409,6 +1654,12 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;ick905k5q to Gaia N = 137 Matches&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/cdb1d8329353c8ac3294a249eb4ffa03d95a8d40f0335b6f934e8df6fe68e06b.png" src="../../../_images/cdb1d8329353c8ac3294a249eb4ffa03d95a8d40f0335b6f934e8df6fe68e06b.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1416,6 +1667,9 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;residuals_</span><span class="si">{</span><span class="n">rootname</span><span class="si">}</span><span class="s1">_flc.png&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/991e7aac4105cecd5a55f5d715b30207edc63a74ac7eef37de0945279c64d69c.png" src="../../../_images/991e7aac4105cecd5a55f5d715b30207edc63a74ac7eef37de0945279c64d69c.png" />
 </div>
 </div>
 <p>Below is the <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> call to update the header WCS. However since the shift file shows that the MAST alignment is good, we will not need to run this cell.</p>
@@ -1487,6 +1741,12 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f93bf901710&gt;
+</pre></div>
+</div>
+<img alt="../../../_images/4015e7e2d566d870684403375bfbb2e411513d47a54d6fa2895fb8ffdad2fc64.png" src="../../../_images/4015e7e2d566d870684403375bfbb2e411513d47a54d6fa2895fb8ffdad2fc64.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1495,6 +1755,12 @@ Note that each visit has a different number of matches to Gaia (between 80-160) 
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f93c0294e90&gt;
+</pre></div>
+</div>
+<img alt="../../../_images/e19fb651c9a5243b73fe5252e4458ac3aed69d3f367e229e5ca0e019fdc4ae6a.png" src="../../../_images/e19fb651c9a5243b73fe5252e4458ac3aed69d3f367e229e5ca0e019fdc4ae6a.png" />
 </div>
 </div>
 </section>

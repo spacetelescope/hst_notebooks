@@ -627,35 +627,35 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load packages</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">ascii</span>
-<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
-<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">ZScaleInterval</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tempfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">TemporaryDirectory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">ascii</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZScaleInterval</span>
 
 <span class="c1"># STScI packages</span>
-<span class="kn">from</span> <span class="nn">drizzlepac</span> <span class="kn">import</span> <span class="n">tweakreg</span>
-<span class="kn">from</span> <span class="nn">drizzlepac</span> <span class="kn">import</span> <span class="n">astrodrizzle</span> <span class="k">as</span> <span class="n">ad</span>
-<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">drizzlepac</span><span class="w"> </span><span class="kn">import</span> <span class="n">tweakreg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">drizzlepac</span><span class="w"> </span><span class="kn">import</span> <span class="n">astrodrizzle</span> <span class="k">as</span> <span class="n">ad</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.mast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observations</span>
 
 <span class="c1"># Custom package, copy_files.py should be in the same directory</span>
-<span class="kn">import</span> <span class="nn">copy_files</span> <span class="k">as</span> <span class="nn">cf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy_files</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cf</span>
 
 <span class="c1"># STIS packages</span>
-<span class="kn">from</span> <span class="nn">stis_cti</span> <span class="kn">import</span> <span class="n">stis_cti</span><span class="p">,</span> <span class="n">archive_dark_query</span>
-<span class="kn">from</span> <span class="nn">stis_cti</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">stis_cti_version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stis_cti</span><span class="w"> </span><span class="kn">import</span> <span class="n">stis_cti</span><span class="p">,</span> <span class="n">archive_dark_query</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stis_cti</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">stis_cti_version</span>
 
 <span class="c1"># Notebook settings</span>
-<span class="kn">from</span> <span class="nn">IPython.core.interactiveshell</span> <span class="kn">import</span> <span class="n">InteractiveShell</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.core.interactiveshell</span><span class="w"> </span><span class="kn">import</span> <span class="n">InteractiveShell</span>
 <span class="n">InteractiveShell</span><span class="o">.</span><span class="n">ast_node_interactivity</span> <span class="o">=</span> <span class="s2">&quot;all&quot;</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;stis_cti v</span><span class="si">{</span><span class="n">stis_cti_version</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -692,7 +692,7 @@ document.write(`
 <p>Set root directory for project (<code class="docutils literal notranslate"><span class="pre">root_dir</span></code>), a reference file directory (<code class="docutils literal notranslate"><span class="pre">ref_dir</span></code>, explained in more detail below but set this path to any existing reference file directories if present), and a cache directory for temporary data storage for downloads (<code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>). The remaining directories will be nested within the root directory and are created below.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">check_mkdir</span><span class="p">(</span><span class="n">new_dir</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">check_mkdir</span><span class="p">(</span><span class="n">new_dir</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check for and make directory.</span>
 <span class="sd">    </span>
 <span class="sd">    Function to check for a directory and make it if it doesn&#39;t exist.</span>
@@ -830,7 +830,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_oids</span><span class="p">(</span><span class="n">pids</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_oids</span><span class="p">(</span><span class="n">pids</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get observation IDs from proposal IDs.</span>
 <span class="sd">    </span>
 <span class="sd">    From a list of input proposal IDs (``pids``) get a list of observation IDs </span>
@@ -869,7 +869,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">download_data</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">product_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">download_data</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">product_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;Downloads MAST data products into a flattened location.</span>
 <span class="sd">    </span>
 <span class="sd">    Downloads data products (``product_type``) from input observation IDs (``ids``) </span>
@@ -929,7 +929,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find and update the headers with the best reference files and download them</span>
-<span class="k">def</span> <span class="nf">download_ref_files</span><span class="p">(</span><span class="n">image_list</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">download_ref_files</span><span class="p">(</span><span class="n">image_list</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Downloading reference files for:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_list</span><span class="p">))</span>
     <span class="n">images</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_list</span><span class="p">)</span>
     <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="s1">&#39;crds bestrefs --files </span><span class="si">{}</span><span class="s1"> --sync-references=1 --update-bestrefs&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">images</span><span class="p">),</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">)</span>
@@ -1615,7 +1615,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">crop_edges</span><span class="p">(</span><span class="n">dq</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="mf">0.2</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">crop_edges</span><span class="p">(</span><span class="n">dq</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="mf">0.2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Crop edges of distortion-corrected STIS data.</span>
 <span class="sd">    </span>
 <span class="sd">    Function to crop edges of a distortion-corrected STIS image using its data</span>

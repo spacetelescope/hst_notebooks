@@ -621,35 +621,47 @@ By the end of this tutorial, you will:
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import for: Reading in fits file</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span>
 
 <span class="c1"># Import for: Downloading necessary files</span>
 <span class="c1"># (Not necessary if you choose to collect data from MAST)</span>
-<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.mast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observations</span>
 
 <span class="c1"># Import for: Managing system variables and paths</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
 
 <span class="c1"># Import for: Plotting and specifying plotting parameters</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
 <span class="c1"># Import for: Operations on STIS Data</span>
-<span class="kn">import</span> <span class="nn">stistools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">stistools</span>
 
 <span class="c1"># Import numpy</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="c1"># Import astropy and scipy stat stuff</span>
-<span class="kn">from</span> <span class="nn">astropy.stats</span> <span class="kn">import</span> <span class="n">poisson_conf_interval</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">poisson</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">poisson_conf_interval</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">poisson</span>
 
 <span class="c1"># Import for shortened outputs</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">clear_output</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_output</span>
 
 <span class="c1"># Using a colorblind friendly style</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;tableau-colorblind10&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following tasks in the stistools package can be run with TEAL:
+   basic2d      calstis     ocrreject     wavecal        x1d          x2d
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.11.11/x64/lib/python3.11/site-packages/stsci/tools/nmpfit.py:8: UserWarning: NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.
+  warnings.warn(&quot;NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.&quot;)
+/opt/hostedtoolcache/Python/3.11.11/x64/lib/python3.11/site-packages/stsci/tools/gfit.py:18: UserWarning: GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.Use astropy.modeling instead.
+  warnings.warn(&quot;GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.&quot;
 </pre></div>
 </div>
 </div>
@@ -704,6 +716,21 @@ By the end of this tutorial, you will:
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/obgh07020_x1d.fits to ./mastDownload/HST/obgh07020/obgh07020_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HST STIS FUV-MAMA G140M 52X0.1
+Program: 12034
+PI: James Carswell Green
+Target: GJ436
+Time: 2012-12-07 10:58:55
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="pipeline-uncertainties">
@@ -732,6 +759,9 @@ By the end of this tutorial, you will:
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/f618868a2cc3fa5e9187bcdc8b32ac0b17e4f128956db7da936ade77d9714f7b.png" src="../../../_images/f618868a2cc3fa5e9187bcdc8b32ac0b17e4f128956db7da936ade77d9714f7b.png" />
 </div>
 </div>
 <p>You can see large flux from the star’s Lyman-<span class="math notranslate nohighlight">\(\alpha\)</span> emission. The core of the line is getting absorbed by the interstellar medium, or “ISM”, yet the wide wings of the line do show appreciable flux. This is an important indicator of chromospheric activity in low-mass stars. But if you look outside the line, you’ll see almost no flux! This is because low-mass stars, like GJ436, will have very little UV-continuum, mostly because of their relatively cool temperatures.</p>
@@ -770,6 +800,9 @@ By the end of this tutorial, you will:
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/4b5ee7f6fc7a82491b0263572963303b971419025c1b83a46944f4cb9f107584.png" src="../../../_images/4b5ee7f6fc7a82491b0263572963303b971419025c1b83a46944f4cb9f107584.png" />
 </div>
 </div>
 <p>As you can see, the pipeline uncertainties are mostly just the square root of the counts. Error from dark subtraction is generally pretty small in the FUV; In our observations, the science header states the the mean dark count was 0.0184 counts per pixel (<code class="docutils literal notranslate"><span class="pre">hdu[1].header['MEANDARK']</span></code>) and that’s over the whole 2,905 s exposure. In the extraction routines, the pipeline defaults to an extraction height of 11 pixels, so the dark rate is still adding less than a count per wavelength. In the NUV, however, dark rates can be as much as 0.002 counts per second per pixel, which can result in dozens of “extra” counts and thus do need to be taken into account in the errors. Errors in the flat-field division will also contribute minutely to the flux error.</p>
@@ -846,6 +879,9 @@ By the end of this tutorial, you will:
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/37ce345c185b21dea82596d47a45e82b35ba94c176faa3548675f558cb0c0ca9.png" src="../../../_images/37ce345c185b21dea82596d47a45e82b35ba94c176faa3548675f558cb0c0ca9.png" />
+</div>
 </div>
 <p>The asymmetry in the Poisson distribution therefore implies we need a different approach to estimate our uncertainties. For that, we’ll need to define an upper- and lower-limits on the confidence interval (CI). Formally, <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986ApJ...303..336G/abstract">Geherels (1986)</a> defines these, respectively, as:</p>
 <p><span class="math notranslate nohighlight">\(\sum_{x=0}^{N}\frac{\lambda_u^x e^{-\lambda_u}}{x!} = 1 - CL\)</span></p>
@@ -859,7 +895,7 @@ By the end of this tutorial, you will:
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a function that gives us our 1-sigma Poisson</span>
 <span class="c1"># confidence interval and (subtracting off N)</span>
-<span class="k">def</span> <span class="nf">gehrels_pci</span><span class="p">(</span><span class="n">ns</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gehrels_pci</span><span class="p">(</span><span class="n">ns</span><span class="p">):</span>
     <span class="n">up</span> <span class="o">=</span> <span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ns</span><span class="o">+</span><span class="mf">0.75</span><span class="p">)</span>
     <span class="n">lo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">n</span><span class="o">-</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">9</span><span class="o">*</span><span class="n">n</span><span class="p">))</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">))))</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
                    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ns</span><span class="p">])</span>
@@ -884,6 +920,9 @@ By the end of this tutorial, you will:
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/e80d32d42cb53ce4602bf153699047544f46ccac5e8462eb923102f19d5c41b8.png" src="../../../_images/e80d32d42cb53ce4602bf153699047544f46ccac5e8462eb923102f19d5c41b8.png" />
 </div>
 </div>
 <p>As you can see, the uncertainties calculated for a measurement from the Poisson distribution are not well-approximated by the Gaussian root-N approximation, especially for the upper bounds. This is because the upper bounds is basically the root-N approximation plus 1. Futhermore, and importantly, at N=0, the root-N approximation says that our uncertinaity goes to zero, which is clearly absurd! If we don’t measure any counts on a pixel, we shouldn’t somehow be inifintely sure there were no photons there. The Poisson distribution handles N=0 with an upper limit of 1.866 (while the lower limit does indeed go to zero; we cannot have negative counts!).</p>
@@ -930,6 +969,9 @@ By the end of this tutorial, you will:
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/54e6d9e0ec877438d853cea1248aeb2dceddf3edda7d8182023720aaae828716.png" src="../../../_images/54e6d9e0ec877438d853cea1248aeb2dceddf3edda7d8182023720aaae828716.png" />
+</div>
 </div>
 <p>You can see just what we were warning about above at the end of Section 3: when the measured counts go to (or near) zero, our uncertainty now becomes infintesimal… or equivalently, our certainty becomes infinite! So let’s see what the proper Poisson unceratinties are.</p>
 <div class="cell docutils container">
@@ -959,6 +1001,9 @@ By the end of this tutorial, you will:
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/e3be9308820824b2dc963879ccbe85c82b07e5fa746f2ee0a85aaa11376b03e5.png" src="../../../_images/e3be9308820824b2dc963879ccbe85c82b07e5fa746f2ee0a85aaa11376b03e5.png" />
 </div>
 </div>
 <p>When just assuming root-N errors, as the <code class="docutils literal notranslate"><span class="pre">calstis</span></code> pipeline currently does, we are therefore clearly underestimating the true Poisson uncertainty in this low-count regime.</p>
@@ -1012,6 +1057,21 @@ By the end of this tutorial, you will:
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/ld9m12erq_x1d.fits to ./mastDownload/HST/ld9m12erq/ld9m12erq_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HST COS FUV G130M PSA
+Program: 14767
+PI: David K. Sing
+Target: GJ-436
+Date: 2024-09-10
+</pre></div>
+</div>
+</div>
 </div>
 <p>For COS, columns have been added to the to the processed files (see the list printed below), giving both the Poisson upper and lower errors as well as the equivalent counts from the flux, background, and flat-fields that contribute to the error. The “equivalent counts” are listed in the “VARIANCE_*” columns in the x1d files can be used to recreate the Poisson confidence interval calculated in the ERROR and ERROR_LOWER columns.</p>
 <p>Also printed below are the maximum and mean VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS values. You can see that the equivalent counts and therefore the subsequent uncertainties are dominated by the measurement of the signal itself, not the background or flat-field reduction steps.</p>
@@ -1025,6 +1085,40 @@ By the end of this tutorial, you will:
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">var_bkg</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">var_flat</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">var_counts</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ColDefs(
+    name = &#39;SEGMENT&#39;; format = &#39;4A&#39;
+    name = &#39;EXPTIME&#39;; format = &#39;1D&#39;; unit = &#39;s&#39;; disp = &#39;F8.3&#39;
+    name = &#39;NELEM&#39;; format = &#39;1J&#39;; disp = &#39;I6&#39;
+    name = &#39;WAVELENGTH&#39;; format = &#39;16384D&#39;; unit = &#39;angstrom&#39;
+    name = &#39;FLUX&#39;; format = &#39;16384E&#39;; unit = &#39;erg /s /cm**2 /angstrom&#39;
+    name = &#39;ERROR&#39;; format = &#39;16384E&#39;; unit = &#39;erg /s /cm**2 /angstrom&#39;
+    name = &#39;ERROR_LOWER&#39;; format = &#39;16384E&#39;; unit = &#39;erg /s /cm**2 /angstrom&#39;
+    name = &#39;VARIANCE_FLAT&#39;; format = &#39;16384E&#39;
+    name = &#39;VARIANCE_COUNTS&#39;; format = &#39;16384E&#39;
+    name = &#39;VARIANCE_BKG&#39;; format = &#39;16384E&#39;
+    name = &#39;GROSS&#39;; format = &#39;16384E&#39;; unit = &#39;count /s&#39;
+    name = &#39;GCOUNTS&#39;; format = &#39;16384E&#39;; unit = &#39;count&#39;
+    name = &#39;NET&#39;; format = &#39;16384E&#39;; unit = &#39;count /s&#39;
+    name = &#39;BACKGROUND&#39;; format = &#39;16384E&#39;; unit = &#39;count /s&#39;
+    name = &#39;DQ&#39;; format = &#39;16384I&#39;
+    name = &#39;DQ_WGT&#39;; format = &#39;16384E&#39;
+    name = &#39;DQ_OUTER&#39;; format = &#39;16384I&#39;
+    name = &#39;BACKGROUND_PER_PIXEL&#39;; format = &#39;16384E&#39;; unit = &#39;count /s /pixel&#39;
+    name = &#39;NUM_EXTRACT_ROWS&#39;; format = &#39;16384I&#39;
+    name = &#39;ACTUAL_EE&#39;; format = &#39;16384D&#39;
+    name = &#39;Y_LOWER_OUTER&#39;; format = &#39;16384D&#39;
+    name = &#39;Y_UPPER_OUTER&#39;; format = &#39;16384D&#39;
+    name = &#39;Y_LOWER_INNER&#39;; format = &#39;16384D&#39;
+    name = &#39;Y_UPPER_INNER&#39;; format = &#39;16384D&#39;
+)
+Max of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
+0.0012501971 0.001131691 55.354454
+Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
+5.521808e-05 3.7044545e-06 0.52990484
 </pre></div>
 </div>
 </div>
@@ -1068,6 +1162,10 @@ By the end of this tutorial, you will:
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/d0aba1f5f3ffc83a193c9acedb5c4b1b503e2f96dc579dc0d8fba64b7f924fec.png" src="../../../_images/d0aba1f5f3ffc83a193c9acedb5c4b1b503e2f96dc579dc0d8fba64b7f924fec.png" />
+<img alt="../../../_images/ece6a1e08f9f9f9e610c2d905d9ee44f80151917af7965cd476f5d8feb6b4be0.png" src="../../../_images/ece6a1e08f9f9f9e610c2d905d9ee44f80151917af7965cd476f5d8feb6b4be0.png" />
+</div>
 </div>
 <p>You can see that outside of the emission lines seen between 1300 and 1307 Angstrom, counts are varying between 0, 1, or 2. This is the regime where the Gaussian root-N approximation breaks down. Below, we show how the pipeline Poisson Confidence Interval upper and lower limits compare to the root-N approximation.</p>
 <div class="cell docutils container">
@@ -1091,6 +1189,16 @@ By the end of this tutorial, you will:
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength ($</span><span class="se">\\</span><span class="s1">mathrm{</span><span class="se">\\</span><span class="s1">AA}$)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_1985/1276255037.py:4: RuntimeWarning: invalid value encountered in divide
+  sensitivity = net/flux  # counts per second per flux
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;Wavelength ($\\mathrm{\\AA}$)&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/49ae24230bdc6a03c983e1be746bd76f52b5dc203b054f36138b5cc0acaf15d0.png" src="../../../_images/49ae24230bdc6a03c983e1be746bd76f52b5dc203b054f36138b5cc0acaf15d0.png" />
 </div>
 </div>
 <p>You can see that the COS pipeline gives lower bound uncertainties lower than root-N, but the upper bound uncertainties are significantly higher than root-N (coming from the “extra +1” in the Poisson upper confidence interval, or more fundamentally, from the inherent asymmetry of the Poisson distribution at low-N). This is crucial for quantifying non-detections. For example, the sorts of upper limits you can place on something like the FUV continuum of an M-dwarf can come down to how you treat these sorts of uncertainties.</p>
@@ -1186,6 +1294,12 @@ By the end of this tutorial, you will:
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;Wavelength ($\\mathrm{\\AA}$)&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/112861ba68e9cff62d80be714c86ed41babf414ed6a2cb2a30f66c18d5c9490c.png" src="../../../_images/112861ba68e9cff62d80be714c86ed41babf414ed6a2cb2a30f66c18d5c9490c.png" />
+</div>
 </div>
 <p>Upon further inspection, it was found that this bug was related to these Poisson confidence intervals! When <em>inttag</em> fills the error arrays for the sub-exposure, rather than taking the square-root of the counts (as the pipeline would normally do), <em>inttag</em> actually uses Astropy’s poisson_confidence_interval. Unfortunately, <code class="docutils literal notranslate"><span class="pre">inttag</span></code> uses the incorrect method, choosing “sherpagehrels” over the more correct “frequentist-confidence”. As we explored above, “sherpagehrels” actually gives symmetric lower and upper bounds, fixed to the upper bound calculated in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986ApJ...303..336G/abstract">Gehrels (1986)</a>. This was probably originally done because there was only room for one value in the error array, so the more conservative upper confidence interval was chosen.</p>
 <p>Furthermore, the Poisson errors are calculated at the pixel level, rather than after spectral extraction where the counts have been added up along columns. In the root-N approximation, this doesn’t matter, because adding the root-N errors in quadrature is equivalent to taking the square root of the summed column:</p>
@@ -1202,21 +1316,21 @@ By the end of this tutorial, you will:
 
 
 <span class="c1"># define helper functions for the following print statements</span>
-<span class="k">def</span> <span class="nf">quadrature</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">quadrature</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">scenario</span><span class="p">]))</span>
 
 
-<span class="k">def</span> <span class="nf">sum_sq</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sum_sq</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">scenario</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">pixel_err</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pixel_err</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
         <span class="p">[(</span><span class="n">poisson_conf_interval</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="s1">&#39;frequentist-confidence&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">i</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> 
          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">scenario</span><span class="p">]))</span>
 
 
-<span class="k">def</span> <span class="nf">upper_err</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">upper_err</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">poisson_conf_interval</span><span class="p">(</span>
             <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">scenario</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="s1">&#39;frequentist-confidence&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
             <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">scenario</span><span class="p">))</span>
@@ -1242,6 +1356,30 @@ By the end of this tutorial, you will:
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Poisson, pixel-by-pixel error calculation: &#39;</span><span class="p">,</span> <span class="n">pixel_err</span><span class="p">(</span><span class="n">scenario2</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Poisson upper limit, sum column, then calculate error: &#39;</span><span class="p">,</span> <span class="n">upper_err</span><span class="p">(</span><span class="n">scenario2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Scenario 1:  [0, 0, 10, 0, 0]
+Scenario 2:  [2, 2, 2, 2, 2]
+---
+Root-N Approximation
+---
+Scenario 1
+---
+Root-N approximation, add in quadrature:  3.1622776601683795
+Root-N approximation, sum column, then take sqrt:  3.1622776601683795
+---
+Poisson, pixel-by-pixel error calculation:  5.63598288256348
+Poisson upper limit, sum column, then calculate error:  4.266949761009391
+---
+Scenario 2
+---
+Root-N approximation, add in quadrature:  3.1622776601683795
+Root-N approximation, sum column, then take sqrt:  3.1622776601683795
+---
+Poisson, pixel-by-pixel error calculation:  5.898433433147927
+Poisson upper limit, sum column, then calculate error:  4.266949761009391
 </pre></div>
 </div>
 </div>

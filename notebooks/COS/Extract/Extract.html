@@ -643,6 +643,7 @@ document.write(`
 <p>- 3.1. <span class="xref myst">Editing the <code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code> header value</span></p>
 <p>- 3.2. <span class="xref myst">Running the pipeline</span></p>
 <p><strong>4. <span class="xref myst">Example using FUV Data</span></strong></p>
+<p><font color="red">This notebook currently fails to execute, use as reference only</font></p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="introduction">
 <h1>0. Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h1>
@@ -671,41 +672,41 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import for array manipulation</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="c1"># Import for reading FITS files</span>
-<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span>
 
 <span class="c1"># Import for downloading the data</span>
-<span class="kn">from</span> <span class="nn">astroquery.mast</span> <span class="kn">import</span> <span class="n">Observations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.mast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observations</span>
 
 <span class="c1"># Import for plotting</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="c1"># Import for showing images from within Python</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">image</span> <span class="k">as</span> <span class="n">mpimg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">image</span> <span class="k">as</span> <span class="n">mpimg</span>
 
 <span class="c1"># Import for dealing with system files</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
 <span class="c1"># Import for running the CalCOS pipeline</span>
-<span class="kn">import</span> <span class="nn">calcos</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">calcos</span>
 
 <span class="c1"># Import for comparing the old and new CalCOS values</span>
-<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span> 
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp1d</span> 
 
 <span class="c1"># Import for working with system paths</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># We will also suppress a warning that won&#39;t affect our data processing</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span> 
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span>
                         <span class="n">category</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">VisibleDeprecationWarning</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">clear_output</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_output</span>
 </pre></div>
 </div>
 </div>
@@ -923,7 +924,7 @@ To begin, we select and plot the raw counts data from the 0th rawtag file:</p>
 <p><strong>First, we’ll write a function to read in the relavent extraction boxes from an <code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>:</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">readxtractab</span><span class="p">(</span><span class="n">xtractab</span><span class="p">,</span> <span class="n">grat</span><span class="p">,</span> <span class="n">cw</span><span class="p">,</span> <span class="n">aper</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">readxtractab</span><span class="p">(</span><span class="n">xtractab</span><span class="p">,</span> <span class="n">grat</span><span class="p">,</span> <span class="n">cw</span><span class="p">,</span> <span class="n">aper</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads in an XTRACTAB row of a particular COS mode and</span>
 <span class="sd">    returns extraction box sizes and locations.</span>
@@ -1056,7 +1057,7 @@ To begin, we select and plot the raw counts data from the 0th rawtag file:</p>
 <p>The second function: <code class="docutils literal notranslate"><span class="pre">collapsey()</span></code> takes a list of either <code class="docutils literal notranslate"><span class="pre">_rawtag</span></code> or <code class="docutils literal notranslate"><span class="pre">_corrtag</span></code> exposure files, as well as an <code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code> file, and creates a summary plot, with the 2D spectrum collapsed onto the y-axis.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">makeims</span><span class="p">(</span><span class="n">xarr</span><span class="p">,</span> <span class="n">yarr</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">makeims</span><span class="p">(</span><span class="n">xarr</span><span class="p">,</span> <span class="n">yarr</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper function for collapsey(): converts list of counts to image.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1085,7 +1086,7 @@ To begin, we select and plot the raw counts data from the 0th rawtag file:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># collapsey() assumes corrtag, but will work with rawtag if raw=True</span>
-<span class="k">def</span> <span class="nf">collapsey</span><span class="p">(</span><span class="n">tagfiles</span><span class="p">,</span> <span class="n">xtractab</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">savename</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fignum</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">collapsey</span><span class="p">(</span><span class="n">tagfiles</span><span class="p">,</span> <span class="n">xtractab</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">savename</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fignum</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes a corrtag (default) or RAWTAG and makes a plot of the 2D spectrum collapsed to the y axis</span>
 <span class="sd">    i.e. summed over rows of pixels along the dispersion direction</span>
@@ -1316,7 +1317,7 @@ To begin, we select and plot the raw counts data from the 0th rawtag file:</p>
 <h2>2.1. Defining an editing function<a class="headerlink" href="#defining-an-editing-function" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">edit_xtractab</span><span class="p">(</span><span class="n">xtractab</span><span class="p">,</span> <span class="n">gratlist</span><span class="p">,</span> <span class="n">cwlist</span><span class="p">,</span> <span class="n">h_dict</span><span class="p">,</span> <span class="n">b_dict</span><span class="p">,</span> <span class="n">new_filename</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">edit_xtractab</span><span class="p">(</span><span class="n">xtractab</span><span class="p">,</span> <span class="n">gratlist</span><span class="p">,</span> <span class="n">cwlist</span><span class="p">,</span> <span class="n">h_dict</span><span class="p">,</span> <span class="n">b_dict</span><span class="p">,</span> <span class="n">new_filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to actually edit the XTRACTAB itself.</span>
 <span class="sd">    Change the height and y-intercepts of the extraction boxes,</span>
