@@ -581,11 +581,12 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-image-header-data">2. Check image header data</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-useful-keywords">2.1 Inspect useful keywords</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-dither-pattern">2.2 Inspect the dither pattern</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-alignment">2.3 Inspect the alignment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-mast-alignment">2.3 Inspect the MAST alignment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-the-wcs-solution">2.4 Reset the WCS solution</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#drizzling">3. Drizzling</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">4. Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-the-results">4. Inspecting the Results</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-final-pixfrac-parameter">5. Optimizing the <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> parameter</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#final-thoughts">6. Final thoughts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
@@ -611,15 +612,16 @@ document.write(`
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Introduction</span> <br>
 <span class="xref myst">Import Packages</span><br></p>
-<p><span class="xref myst">1. Retrieve Observations</span> <br></p>
-<p><span class="xref myst">2. Check image header data</span> <br>
+<p><span class="xref myst">1. Retrieve Observations</span> <br>
+<span class="xref myst">2. Check image header data</span> <br>
     <span class="xref myst">2.1 Inspect useful keywords</span><br>
     <span class="xref myst">2.2 Inspect the dither pattern</span><br>
-    <span class="xref myst">2.3 Inspect the alignment</span><br></p>
-<p><span class="xref myst">3. Drizzling</span> <br></p>
-<p><span class="xref myst">4. Results</span> <br></p>
-<p><span class="xref myst">5. Optimizing the final_pixfrac parameter</span> <br></p>
-<p><span class="xref myst">6. Final Thoughts</span> <br></p>
+    <span class="xref myst">2.3 Inspect the MAST alignment</span><br>
+    <span class="xref myst">2.4 Reset the WCS solution</span><br>
+<span class="xref myst">3. Drizzling</span> <br>
+<span class="xref myst">4. Inspecting the Results</span> <br>
+<span class="xref myst">5. Optimizing the final_pixfrac parameter</span> <br>
+<span class="xref myst">6. Final Thoughts</span> <br></p>
 <p><span class="xref myst">About this notebook</span><br>
 <span class="xref myst">Additional resources</span><br></p>
 <p><a id="intro"></a></p>
@@ -649,6 +651,7 @@ document.write(`
 <li><p><a class="reference external" href="https://www.astropy.org"><strong>astropy</strong></a> - file handling, tables, units, WCS, statistics</p></li>
 <li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/"><strong>astroquery</strong></a> - download data and query databases</p></li>
 <li><p><a class="reference external" href="https://www.stsci.edu/scientific-community/software/drizzlepac"><strong>drizzlepac</strong></a> - align and combine HST images</p></li>
+<li><p>[<strong>stwcs</strong>] - tools for manipulating headerlets</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -667,10 +670,11 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy</span><span class="w"> </span><span class="kn">import</span> <span class="n">wcs</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">stwcs.wcsutil</span><span class="w"> </span><span class="kn">import</span> <span class="n">headerlet</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">drizzlepac</span>
 
 <span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39; # Improves the resolution of figures rendered in notebooks.
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39; # Greatly improves the resolution of figures rendered in notebooks.
 
 <span class="c1"># Set the locations of reference files.  and retrieve the MDRIZTAB recommended drizzle parameters.</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
@@ -758,7 +762,7 @@ document.write(`
 </pre></div>
 </div>
 <div class="output text_html"><div><i>Table length=4</i>
-<table id="table139994797141648" class="table-striped table-bordered table-condensed">
+<table id="table139896132531408" class="table-striped table-bordered table-condensed">
 <thead><tr><th>Local Path</th><th>Status</th><th>Message</th><th>URL</th></tr></thead>
 <thead><tr><th>str47</th><th>str8</th><th>object</th><th>object</th></tr></thead>
 <tr><td>./mastDownload/HST/ib1f19l6q/ib1f19l6q_flt.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
@@ -791,6 +795,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flt_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*fl?.fits&#39;</span><span class="p">))</span>
+
 <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">keywords_ext0</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ROOTNAME&quot;</span><span class="p">,</span> <span class="s2">&quot;ASN_ID&quot;</span><span class="p">,</span> <span class="s2">&quot;TARGNAME&quot;</span><span class="p">,</span> <span class="s2">&quot;DETECTOR&quot;</span><span class="p">,</span> <span class="s2">&quot;FILTER&quot;</span><span class="p">,</span> <span class="s2">&quot;EXPTIME&quot;</span><span class="p">,</span> 
                  <span class="s2">&quot;RA_TARG&quot;</span><span class="p">,</span> <span class="s2">&quot;DEC_TARG&quot;</span><span class="p">,</span> <span class="s2">&quot;POSTARG1&quot;</span><span class="p">,</span> <span class="s2">&quot;POSTARG2&quot;</span><span class="p">,</span> <span class="s2">&quot;DATE-OBS&quot;</span><span class="p">]</span>
@@ -816,7 +821,7 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=4</i>
-<table id="table139994784881296" class="table-striped table-bordered table-condensed">
+<table id="table139896147999440" class="table-striped table-bordered table-condensed">
 <thead><tr><th>ROOTNAME</th><th>ASN_ID</th><th>TARGNAME</th><th>DETECTOR</th><th>FILTER</th><th>EXPTIME</th><th>RA_TARG</th><th>DEC_TARG</th><th>POSTARG1</th><th>POSTARG2</th><th>DATE-OBS</th><th>ORIENTAT</th></tr></thead>
 <thead><tr><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>str32</th><th>float64</th></tr></thead>
 <tr><td>ib1f19l6q</td><td>IB1F19010</td><td>NGC-3370</td><td>IR</td><td>F160W</td><td>502.9</td><td>161.7694</td><td>17.2732</td><td>0.000</td><td>0.000</td><td>2010-04-04</td><td>5.62</td></tr>
@@ -872,10 +877,9 @@ document.write(`
 </div>
 <p><a id="inspect_wcs"></a></p>
 </section>
-<section id="inspect-the-alignment">
-<h3>2.3 Inspect the alignment<a class="headerlink" href="#inspect-the-alignment" title="Permalink to this heading">#</a></h3>
-<p>Check the active WCS solution in the image header. If the image is aligned to a catalog, list the number of matches and the fit RMS in mas. <br>
-Convert the fit RMS values to pixels for comparison with the alignment results performed later in this notebook.</p>
+<section id="inspect-the-mast-alignment">
+<h3>2.3 Inspect the MAST alignment<a class="headerlink" href="#inspect-the-mast-alignment" title="Permalink to this heading">#</a></h3>
+<p>Check the active WCS solution in the FITS image header. If the image is aligned to a catalog, list the number of matches and the fit RMS in milli-arcseconds and in pixels.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ext_0_kws</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DETECTOR&#39;</span><span class="p">,</span> <span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span>
@@ -911,7 +915,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=4</i>
-<table id="table139994773084368" class="table-striped table-bordered table-condensed">
+<table id="table139896127146704" class="table-striped table-bordered table-condensed">
 <thead><tr><th>filename</th><th>DETECTOR</th><th>EXPTIME</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RA_pix</th><th>RMS_DEC_pix</th></tr></thead>
 <thead><tr><th>str18</th><th>str2</th><th>float64</th><th>str28</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>ib1f19l6q_flt.fits</td><td>IR</td><td>502.936462</td><td>IDC_w3m18525i-FIT_REL_GSC242</td><td>26</td><td>109.0</td><td>102.9</td><td>0.85</td><td>0.8</td></tr>
@@ -921,17 +925,67 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 </table></div></div></div>
 </div>
 <p>Here we see that the four FLC images have a “FIT_REL_GSC242” WCS solution, which means they were aligned as a set to the reference catalog ‘GSC v2.4.2’ using the drizzled-combined (DRC) image, and that WCS was propogated back to the original FLCs.  This is reflected in the fact that the number of matches and fit rms values are the same for each FLC frame.</p>
-<p>For more details on absolute astrometry in HST images, see <a class="reference external" href="https://hst-docs.stsci.edu/drizzpac/chapter-4-astrometric-information-in-the-header/4-5-absolute-astrometry">Section 4.5 in the DrizzlePac Handbook</a></p>
-<p>Since the relative alignment of the individual FLC frames is preserved, we do not need run <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> before drizzling the images.</p>
+<p>Note that the alignment was based on 26 matches to the GSC v2.4.2 catalog.  This means that the target did not successfully align to the Gaia eDR3 solution since there are very few stars in the frame.</p>
+<p>We can various functions within the <code class="docutils literal notranslate"><span class="pre">headerlet</span></code> of the <code class="docutils literal notranslate"><span class="pre">stwcs</span></code> package to find, list, and ultimately update the WCS solutions in an image. Let’s make a list of the images and then print out all the WCS solutions in the first image in the list.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wcsnames</span> <span class="o">=</span> <span class="n">headerlet</span><span class="o">.</span><span class="n">get_headerlet_kw_names</span><span class="p">(</span><span class="n">flt_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kw</span><span class="o">=</span><span class="s1">&#39;WCSNAME&#39;</span><span class="p">)</span>
+<span class="n">wcsnames</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;OPUS&#39;,
+ &#39;IDC_w3m18525i&#39;,
+ &#39;IDC_w3m18525i-GSC240&#39;,
+ &#39;IDC_w3m18525i-HSC30&#39;,
+ &#39;IDC_w3m18525i&#39;,
+ &#39;IDC_w3m18525i-FIT_REL_GSC242&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>For more details on the WCS naming convention, see <a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/mast_data_products/astrometry.html#interpreting-wcs-names">DrizzlePac readthedocs</a></p>
+<p>For more discussion on absolute astrometry, see <a class="reference external" href="https://hst-docs.stsci.edu/drizzpac/chapter-4-astrometric-information-in-the-header/4-5-absolute-astrometry">Section 4.5 in the DrizzlePac Handbook</a></p>
+<p><a id="reset_wcs"></a></p>
+</section>
+<section id="reset-the-wcs-solution">
+<h3>2.4 Reset the WCS solution<a class="headerlink" href="#reset-the-wcs-solution" title="Permalink to this heading">#</a></h3>
+<p>Next, we find the index of the WCS solution we want to use, and then apply that solution to each of the science images. Because the program was designed to have precise dithers, we reset the WCS to the “a priori” (distortion-only) solution to preserve relative alignment and get the sharpest PSFs when drizzling the images together.</p>
+<p>In this example, the “a priori” solution is named <strong>IDC_w3m18525i-GSC240</strong>, in which the coordinates of the guide stars were corrected to the coordinates reported in GAIA DR1, with no additional catalog fitting.</p>
+<p>Here we first grab the index of list element with value ‘IDC_w3m18525i-GSC240’. The index in this list + 1 is the same as the EXTVER of the corresponding HDRLET. We need to add 1 because lists are 0-indexed, while EXTVER’s are 1 indexed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">flt_file</span> <span class="ow">in</span> <span class="n">flt_files</span><span class="p">:</span>
+    
+    <span class="n">chosen_ext</span> <span class="o">=</span> <span class="n">wcsnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;IDC_w3m18525i-GSC240&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
+    <span class="n">headerlet</span><span class="o">.</span><span class="n">restore_from_headerlet</span><span class="p">(</span><span class="n">flt_file</span><span class="p">,</span> <span class="n">hdrext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;HDRLET&#39;</span><span class="p">,</span> <span class="n">chosen_ext</span><span class="p">),</span> <span class="n">archive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Image: </span><span class="si">{</span><span class="n">flt_file</span><span class="si">}</span><span class="s1"> WCSNAME: </span><span class="si">{</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">flt_file</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;wcsname&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Image: ib1f19l6q_flt.fits WCSNAME: IDC_w3m18525i-GSC240
+Image: ib1f19l7q_flt.fits WCSNAME: IDC_w3m18525i-GSC240
+Image: ib1f19l9q_flt.fits WCSNAME: IDC_w3m18525i-GSC240
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Image: ib1f19laq_flt.fits WCSNAME: IDC_w3m18525i-GSC240
+</pre></div>
+</div>
+</div>
+</div>
+<p>Since the relative alignment of the individual FLC frames is preserved with the ‘a priori’ solution, we do not need run <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> before drizzling the images.</p>
 <p><a id="drizzle"></a></p>
 </section>
 </section>
 <section id="drizzling">
 <h2>3. Drizzling<a class="headerlink" href="#drizzling" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Table of Contents</span></p>
-<p>Before drizzling can be performed, a plate scale for the output image should be chosen. This will usually be dictated by the science needs. In theory, critical sampling of a PSF occurs with 2.355 pixels. The FWHM of the WFC3/IR detector at 1600 nm is ~0.151” (Table 7.5 of <a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb/chapter-7-ir-imaging-with-wfc3/7-6-ir-optical-performance">WFC Instrument Handbook</a>). Using these values, a plate scale of 0.065”/pix will be selected for the drizzled output frame, approximately half of the native plate scale (0.1283”/pix).</p>
+<p>Before drizzling can be performed, a plate scale for the output image should be chosen. This will usually be dictated by the science needs. In theory, critical sampling of a PSF occurs with 2.355 pixels. The FWHM of the WFC3/IR detector at 1600 nm is ~0.151” (Table 7.5 of <a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb/chapter-7-ir-imaging-with-wfc3/7-6-ir-optical-performance">WFC Instrument Handbook</a>).</p>
+<p><b>Using these values, we select a plate scale of 0.065”/pix for the drizzled output frame, approximately half of the native plate scale (0.1283”/pix).</p>
 <p>The mechanism by which the <em>drizzle</em> algorithm improves sampling in the output image is by shrinking the input pixels before adding them to the output pixel grid (see Figure 2 in <a class="reference external" href="http://iopscience.iop.org/article/10.1086/338393/pdf">Fruchter and Hook (2002)</a>). In practice this process is controlled in the <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> package by adjusting the <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> parameter, which is the fractional size of the pixel to be used.
-Below <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> is called twice. The first time, no changes are made to the plate scale or the size of the drop. In the second call, the plate scale and pixfrac are reduced. For a four point dither stack, a <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value of 0.8 is usually optimal.</p>
+Below <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> is called twice. The first time, no changes are made to the plate scale or the size of the drop. In the second call, the plate scale and pixfrac are reduced.</p>
 <p>Next, we get some recommended values for drizzling from the MDRIZTAB reference file.  The parameters in this file are different for each detector and are based on the number of input frames. These are a good starting point for drizzling and may be adjusted accordingly.</p>
 <p>To see the full list of <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> parameters, consult the <a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/drizzlepac_api/astrodrizzle.html">DrizzlePac readthedocs</a> page.</p>
 <div class="cell docutils container">
@@ -946,7 +1000,7 @@ Below <code class="docutils literal notranslate"><span class="pre">AstroDrizzle<
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Searching for the MDRIZTAB file: 3562021pi_mdz.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-latest&#39; resolves to &#39;hst_1202.pmap&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-latest&#39; resolves to &#39;hst_1203.pmap&#39;
 CRDS - INFO -  Reorganizing 0 references from &#39;instrument&#39; to &#39;flat&#39;
 CRDS - INFO -  Reorganizing from &#39;instrument&#39; to &#39;flat&#39; cache,  removing instrument directories.
 CRDS - INFO -  Syncing explicitly listed files.
@@ -1034,8 +1088,8 @@ final_bits 528
 </div>
 <p><a id="results"></a></p>
 </section>
-<section id="results">
-<h2>4. Results<a class="headerlink" href="#results" title="Permalink to this heading">#</a></h2>
+<section id="inspecting-the-results">
+<h2>4. Inspecting the Results<a class="headerlink" href="#inspecting-the-results" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Table of Contents</span></p>
 <p>The drizzled science and weight images produced from the first call to AstroDrizzle with no optimization of the plate scale and pixfrac are plotted below.</p>
 <div class="cell docutils container">
@@ -1053,10 +1107,10 @@ final_bits 528
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f5312f3e750&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f3c1c3b3910&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/e59e5814b75de13833591197230719e5fecef1d44dbd1c44700c38d281579bf2.png" src="../../../_images/e59e5814b75de13833591197230719e5fecef1d44dbd1c44700c38d281579bf2.png" />
+<img alt="../../../_images/1b332f489d47d611b3fb51286782da675ba125a6aaec7c5fb7e8f312b9d0017d.png" src="../../../_images/1b332f489d47d611b3fb51286782da675ba125a6aaec7c5fb7e8f312b9d0017d.png" />
 </div>
 </div>
 <p>The drizzled science image is on the left and the associated weight image is on the right, both without optimization of the plate scale and pixfrac.</p>
@@ -1088,10 +1142,10 @@ final_bits 528
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1835.4481178795827, 1934.1019662345113)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1835.4481178802962, 1934.101966235267)
 </pre></div>
 </div>
-<img alt="../../../_images/841c479932823b0653bf5e3019f993cab509f9a5592058355475c973cdece206.png" src="../../../_images/841c479932823b0653bf5e3019f993cab509f9a5592058355475c973cdece206.png" />
+<img alt="../../../_images/976d74c0327f0905529a527fbdff7e05affe8ae46d678afb7b182cac68c27fac.png" src="../../../_images/976d74c0327f0905529a527fbdff7e05affe8ae46d678afb7b182cac68c27fac.png" />
 </div>
 </div>
 <p>The image on the left is without improved plate scale and pixfrac, and shows that the detector undersamples the PSF. The image on the right is the image with optimized parameters where the resolution is greatly improved.</p>
@@ -1102,7 +1156,7 @@ final_bits 528
 <p><span class="xref myst">Table of Contents</span></p>
 <p>While the optimized <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> in the example above was chosen from experience with using a four-point dither, the value that should be used is not known <em>a priori</em>. The value could be different depending on several factors. For example, if the number of images is greater than four, the value used for <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> could be smaller since more images are available to fill in holes in the output grid. On the other hand, it is possible that no dithering was used during the observations. In that case, <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> should be left at 1.0, since shrinking the size of the drop could be detrimental.</p>
 <p>Below, a series of experiments will be run to determine the best <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value for the selected output plate scale, by varying pixfrac in steps of 0.1 over a range of values from 0.1 to 1.0.</p>
-<div class="alert alert-block alert-warning" style="color:black" >  This cell may take a few minutes to execute. </div><div class="cell docutils container">
+<div class="alert alert-block alert-warning" style="color:black" >  This cell may take a several minutes to execute. </div><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pixfracs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
 
@@ -1111,9 +1165,11 @@ final_bits 528
     <span class="n">drizzlepac</span><span class="o">.</span><span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="n">flt_files</span><span class="p">,</span>
                                          <span class="n">output</span><span class="o">=</span><span class="n">outname</span><span class="p">,</span>
                                          <span class="o">**</span><span class="n">selected_params</span><span class="p">,</span>
-                                         <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">build</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>      
+                                         <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+                                         <span class="n">build</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+                                         <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>      
                                          <span class="n">skymethod</span><span class="o">=</span><span class="s1">&#39;match&#39;</span><span class="p">,</span>
-                                         <span class="n">driz_separate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">driz_cr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                         <span class="n">driz_separate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">driz_cr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># CR-rej off</span>
                                          <span class="n">final_pixfrac</span><span class="o">=</span><span class="n">pixfrac</span><span class="p">,</span>
                                          <span class="n">final_wcs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                          <span class="n">final_rot</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
@@ -1131,7 +1187,7 @@ final_bits 528
     <span class="n">sci1</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
     <span class="n">wht1</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
     
-<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;f160w_0.8_drz.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu2</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;f160w_0.6_drz.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu2</span><span class="p">:</span>
     <span class="n">sci2</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
     <span class="n">wht2</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
     
@@ -1146,7 +1202,7 @@ final_bits 528
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1640</span><span class="p">,</span> <span class="mi">1920</span><span class="p">,</span> <span class="s1">&#39;final_pixfrac=0.1&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;maroon&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci2</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1640</span><span class="p">,</span> <span class="mi">1920</span><span class="p">,</span> <span class="s1">&#39;final_pixfrac=0.8&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;maroon&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1640</span><span class="p">,</span> <span class="mi">1920</span><span class="p">,</span> <span class="s1">&#39;final_pixfrac=0.6&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;maroon&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci3</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1640</span><span class="p">,</span> <span class="mi">1920</span><span class="p">,</span> <span class="s1">&#39;final_pixfrac=1.0&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;maroon&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wht1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
@@ -1158,14 +1214,16 @@ final_bits 528
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1835.4481178795827, 1934.1019662345113)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1835.4481178802962, 1934.101966235267)
 </pre></div>
 </div>
-<img alt="../../../_images/53d02d6790c76f11604d6759da87cd63cf7c286304e6273387296ef1fac72dd7.png" src="../../../_images/53d02d6790c76f11604d6759da87cd63cf7c286304e6273387296ef1fac72dd7.png" />
+<img alt="../../../_images/fc0ba5eb549b91e76d1b80c1e0d0898bb493858ef219c3809f3fd490ca0edd80.png" src="../../../_images/fc0ba5eb549b91e76d1b80c1e0d0898bb493858ef219c3809f3fd490ca0edd80.png" />
 </div>
 </div>
-<p>This figure above shows the central region of the science and weight images produced by <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> values (left to right) of 0.1, 0.8 and 1.0. The top row is the science frame, the bottom is the weight image. The science image with the smallest <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value of 0.1 shows a noisy background and holes in the image where no input pixels fall into the output grid because pixfrac is too small. Inspection of the weight map corresponding to the smallest <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value shows many places with weights of zero, indicating that a <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value of 0.1 is clearly too small and was only included in this example for illustrative purposes.</p>
+<p>This figure above shows the central region of the science and weight images produced by <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> values (left to right) of 0.1, 0.8 and 1.0. The top row is the science frame, the bottom is the weight image. The science image with the smallest <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value of 0.1 shows a noisy background and holes in the image where no input pixels fall into the output grid because pixfrac is too small.</p>
+<p>Inspection of the weight map corresponding to the smallest <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value shows many places with weights of zero, indicating that a <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value of 0.1 is clearly too small and was only included in this example for illustrative purposes.</p>
 <p>Another piece of information that can be useful is the amount of noise in the weight image. As suggested in the <a class="reference external" href="https://hst-docs.stsci.edu/drizzpac/chapter-7-data-quality-checks-and-trouble-shooting-problems/7-3-inspecting-drizzled-products-after-user-reprocessing">DrizzlePac Handbook</a> Section 7.3, statistics performed on the drizzled weight image should yield a RMS/median value less than ~0.2. This threshold controls the trade-off between improving image resolution versus increasing background noise due to pixel resampling.</p>
+<p>The final_pixfrac value should be small enough to avoid degrading the final drizzle-combined image, but large enough that when all images are “dropped” onto the final frame, coverage of the output frame is fairly uniform. In general, final_pixfrac should be slightly larger than the final output scale to allow some “spillover” to adjacent pixels. This will help avoid “holes” in the final product when a given pixel has been flagged as bad in several frames.</p>
 <p>The figure below shows the RMS/median as a function of <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code>. One should take care to use the same region in the weight image as the region where the object of interest is located in the science image. If one is using the entire image for scientific analysis, then one should measure the statistics of the weight image where there is more variance.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1193,37 +1251,38 @@ final_bits 528
 <span class="c1"># Plotting commands              </span>
 <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">1.025</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.025</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">fraclist</span><span class="p">,</span> <span class="n">std_med</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;pixfrac&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;rms/median&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">,</span> <span class="s1">&#39;Scale=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">nimg</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; images&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.28</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.26</span><span class="p">,</span> <span class="s1">&#39;Scale=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.24</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">nimg</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; images&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(1.0, 0.75, &#39;4 images&#39;)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.95, 0.24, &#39;4 images&#39;)
 </pre></div>
 </div>
-<img alt="../../../_images/6de5633d1818e2303506835191d9bb4532df0372df6b98da172f1fa87137b94d.png" src="../../../_images/6de5633d1818e2303506835191d9bb4532df0372df6b98da172f1fa87137b94d.png" />
+<img alt="../../../_images/84a930739f7e72ad355d6191cd3fd2d964c7e2da6cf404f77d23085dfac51e92.png" src="../../../_images/84a930739f7e72ad355d6191cd3fd2d964c7e2da6cf404f77d23085dfac51e92.png" />
 </div>
 </div>
-<p>The RMS/median increases steadily down to <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value of 0.3, where there is a change in the slope of the function, indicating that something odd might be happening beyond that point. The RMS remains below 20% of the median all the way down to <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> of 0.8, but the science and weight images should be inspected at all values to ensure no quality degradation has occurred.</p>
+<p>Note that none of the test images have RMS/median greater than 0.2, so this does not seem to be a good metric for WFC3/IR in which the PSF is undersampled. (We suspect that this recommendation from the DrizzlePac Handbook was based on WFC3/UVIS or ACS/WFC dithered frames.)</p>
+<p>The RMS/median increases steadily to a <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value of 0.5, where there is a change in the slope of the function. For an output scale of  0.065”/pix (0.5 times the native plate scale) thus select the pixfrac 0.6 for the final drizzled image.</p>
 <p><a id="final"></a></p>
 </section>
 <section id="final-thoughts">
 <h2>6. Final thoughts<a class="headerlink" href="#final-thoughts" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Table of Contents</span></p>
-<p>The <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value has to be small enough to avoid degrading the combined output image, but large enough that when all images are “dropped” onto the final frame, coverage of the output frame is fairly uniform. In general, <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> should be slightly larger than the final output scale to allow some “spillover” to adjacent pixels. This will help avoid “holes” in the final product when a given pixel has been flagged as “bad” in several frames. As a rule of thumb, statistics performed on the drizzled weight image in the region of interest should yield an RMS value (standard deviation) that is less than 20% of the median value. This threshold is a balance between the benefits of improving the image resolution at the expense of increasing noise in the background.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value has to be small enough to avoid degrading the combined output image, but large enough that when all images are “dropped” onto the final frame, coverage of the output frame is fairly uniform. In general, <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> should be slightly larger than the final output scale to allow some “spillover” to adjacent pixels. This will help avoid “holes” in the final product when a given pixel has been flagged as “bad” in several frames.  Optimizing the final drizzle parameters is a balance between the benefits of improving the image resolution and PSFs at the expense of increasing noise in the background.</p>
 <p><a id="about"></a></p>
 </section>
 <section id="about-this-notebook">
 <h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Created: 12 Dec 2018;     R. Avila
-Updated: 29 Apr 2024;     R. Avila &amp; J. Mack
+Updated: 30 Dec 2024;     R. Avila &amp; J. Mack
 </pre></div>
 </div>
 <p><strong>Source:</strong> GitHub <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks">spacetelescope/hst_notebooks</a></p>
@@ -1329,11 +1388,12 @@ Updated: 29 Apr 2024;     R. Avila &amp; J. Mack
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-image-header-data">2. Check image header data</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-useful-keywords">2.1 Inspect useful keywords</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-dither-pattern">2.2 Inspect the dither pattern</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-alignment">2.3 Inspect the alignment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-mast-alignment">2.3 Inspect the MAST alignment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-the-wcs-solution">2.4 Reset the WCS solution</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#drizzling">3. Drizzling</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">4. Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-the-results">4. Inspecting the Results</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-final-pixfrac-parameter">5. Optimizing the <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> parameter</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#final-thoughts">6. Final thoughts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
