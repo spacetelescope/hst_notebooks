@@ -28,6 +28,7 @@ If you don't want to run the Notebooks for yourself but just want to see rendere
 |SplitTag|Breaking COS TIME-TAG data into multiple sub-exposures|[SplitTag.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/SplitTag/SplitTag.ipynb)|[SplitTag.html](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/SplitTag/SplitTag.html)|
 |LSF|Working with the COS Line Spread Function (LSF)|[LSF.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/LSF/LSF.ipynb)|[LSF.html](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/LSF/LSF.html)|
 |Extract|Editing the extraction boxes in a BOXCAR-method spectral extraction file (XTRACTAB)|[Extract.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/Extract/Extract.ipynb)|[Extract.html](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/Extract/Extract.html)|
+|ExceptionReport|Investigate the cause of an Exception Report|[ExceptionReport.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/main/notebooks/COS/ExceptionReport/ExceptionReport.ipynb)|[ExceptionReport.html](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/ExceptionReport/ExceptionReport.html)|
 
 ##### For Notebooks with exercises, you can find worked solutions at the end of the Notebook.
 
