@@ -24,3 +24,10 @@ persistence in the calibrated (FLT) science images. When the images are
 sufficiently dithered to step over the observed persistence artifacts, 
 AstroDrizzle may be used to exclude those flagged pixels when combining the FLT 
 frames. 
+
+## Analyzing WFC3/UVIS G280 Exoplanet Transit Observations
+We present the reduction and analysis of exoplanet transit observations of the 
+hot Jupiter HAT-P-41b taken with the WFC3/UVIS G280 grism. The notebook
+demonstrates source finding, background subtraction, cosmic ray rejection, 
+subarray embedding, spectral trace fitting, spectum extraction, and light curve
+generation.
