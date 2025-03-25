@@ -175,9 +175,6 @@ def embedsub_uvis(path, sub_dir):
     # Define axes
     y_axis = 2051
     x_axis = 4096
-
-    # Extract data from path
-    data = fits.getdata(path)
     
     # Make a copy of the file
     file_f = os.path.basename(path.replace('flt.fits', 'f_flt.fits'))
@@ -207,7 +204,7 @@ def embedsub_uvis(path, sub_dir):
         x_max = x_min + naxis1
 
         # Embed subarray onto full frame extensions
-        sci[y_min:y_max, x_min:x_max] = data
+        sci[y_min:y_max, x_min:x_max] = hdu['SCI', 1].data
         err[y_min:y_max, x_min:x_max] = hdu['ERR', 1].data
         dq[y_min:y_max, x_min:x_max] = hdu['DQ', 1].data
 
@@ -336,7 +333,7 @@ def extract_spectrum(path, y_min, y_max, trace_x):
     data_aperture_trace = data[y_min:y_max, x_min:x_max]
     err_aperture_trace = err[y_min:y_max, x_min:x_max]
 
-    # Get spectral flux and error
+    # Get spectral counts and error
     counts = np.sum(data_aperture_trace, axis=0)
     counts_err = np.sqrt(np.sum(err_aperture_trace ** 2, axis=0))
     
@@ -354,16 +351,16 @@ def make_light_curve(wavelength, time_series_counts, wl_min=2000, wl_max=8000):
     time_series_counts : np.array
         Time series of 1D spectrum counts.
     wl_min : float, default=2000
-        Minimum wavelength for flux measurement.
+        Minimum wavelength for counts measurement.
     wl_max : float, default=8000
-        Maximum wavelength for flux measurement.
+        Maximum wavelength for counts measurement.
 
     Returns
     ------- 
-    lc_flux : np.array
-        Normalized light curve counts.
-    lc_flux_err : np.array
-        Normalized light curve count error.
+    lc_counts : np.array
+        Light curve counts.
+    lc_counts_err : np.array
+        Light curve count error.
     """
 
     # Mask wavelengths
@@ -374,8 +371,5 @@ def make_light_curve(wavelength, time_series_counts, wl_min=2000, wl_max=8000):
 
     # Approximate light curve count errors
     lc_counts_err = np.sqrt(lc_counts) / lc_counts
-
-    # Normalize counts by mean of first 10 measurements
-    lc_counts /= np.mean(lc_counts[0:10])
     
     return lc_counts, lc_counts_err
