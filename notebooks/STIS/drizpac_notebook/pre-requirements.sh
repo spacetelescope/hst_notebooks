@@ -1,3 +1,5 @@
+# Install numpy
+pip install --force-reinstall -v 'numpy<2.0.0'
 # Install stis_cti
 pip install --no-cache-dir stis_cti
 # Install hstcal
