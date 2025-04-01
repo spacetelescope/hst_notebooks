@@ -1,0 +1,1074 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Getting HST Ephemeris and Related Data for an Observation &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/ACS/hst_orbits_ephem/hst_orbits_ephem';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="HST Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="HST Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI HST Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">ACS Notebooks</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_pixel_area_maps/acs_pixel_area_maps.html">Obtaining Pixel Area Maps for ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html">Focus Diverse ePSFs for ACS/WFC</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ExceptionReport/ExceptionReport.html">What to do when you get an Exception Report for COS</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Improving Astrometry Using Alternate WCS Solutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an Absolute Reference Catalog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/use_ds9_regions_in_tweakreg/use_ds9_regions_in_tweakreg.html">TWEAKREG Tips - Using DS9 Regions for Source Inclusion/Exclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_mosaics/align_mosaics.html">Aligning HST Mosaics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/sky_matching/sky_matching.html">Sky Matching for HST Mosaics <a id="top"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling new WFPC2 FLT data products with chip-normalization   </a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HASP</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/Setup/Setup.html">Installing the Hubble Advanced Spectral Products Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/CoaddTutorial/CoaddTutorial.html">Inputting User Data using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/FluxScaleTutorial/FluxScaleTutorial.html">Scaling Flux while using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/DataDiagnostic/DataDiagnostics.html">HASP Data Diagnostic Notebook</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/README.html">STIS-Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/low_count_uncertainties/Low_Count_Uncertainties.html">Low Count Uncertainties in STIS <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/contrast_sensitivity/STIS_Coronagraphic_Observation_Feasibility.html">STIS Coronagraphic Observation Feasibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../WFC3/README.html">WFC3 Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/general_tools.html">General Tools</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_g280_transit/G280_Exoplanet_Transits.html">Analyzing WFC3/UVIS G280 Exoplanet Transit Observations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/ir_tvb.html">WFC3/IR Time Variable Background (TVB)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/photometry.html">Photometry</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/point_spread_function.html">Point Spread Function (PSF)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/point_spread_function/hst_point_spread_function.html">HST WFC3 Point Spread Function Modeling   </a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/mast_api_psf/download_psf_cutouts.html">Downloading WFC3 and WFPC2 PSF Cutouts from MAST</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/ACS/hst_orbits_ephem/hst_orbits_ephem.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/ACS/hst_orbits_ephem/hst_orbits_ephem.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/ACS/hst_orbits_ephem/hst_orbits_ephem.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Getting HST Ephemeris and Related Data for an Observation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#worked-examples-for-an-acs-sbc-observation">Worked Examples for an ACS/SBC Observation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#by-chris-clark-esa-aura-space-telescope-science-institute-cclark-stsci-edu-last-edited-28th-march-2025">By Chris Clark (ESA/AURA, Space Telescope Science Institute; <code class="docutils literal notranslate"><span class="pre">cclark@stsci.edu</span></code>), last edited 28th March 2025</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#earth-limb-angle">1. Earth Limb Angle</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hst-lattude-longitude-during-observation">2. HST Lattude &amp; Longitude During Observation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solar-time-solar-altitude-and-solar-cycles">3. Solar Time, Solar Altitude, and Solar Cycles</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="getting-hst-ephemeris-and-related-data-for-an-observation">
+<h1>Getting HST Ephemeris and Related Data for an Observation<a class="headerlink" href="#getting-hst-ephemeris-and-related-data-for-an-observation" title="Permalink to this heading">#</a></h1>
+<section id="worked-examples-for-an-acs-sbc-observation">
+<h2>Worked Examples for an ACS/SBC Observation<a class="headerlink" href="#worked-examples-for-an-acs-sbc-observation" title="Permalink to this heading">#</a></h2>
+<section id="by-chris-clark-esa-aura-space-telescope-science-institute-cclark-stsci-edu-last-edited-28th-march-2025">
+<h3>By Chris Clark (ESA/AURA, Space Telescope Science Institute; <code class="docutils literal notranslate"><span class="pre">cclark&#64;stsci.edu</span></code>), last edited 28th March 2025<a class="headerlink" href="#by-chris-clark-esa-aura-space-telescope-science-institute-cclark-stsci-edu-last-edited-28th-march-2025" title="Permalink to this heading">#</a></h3>
+<p>This notebook walks through how to get various information about where HST is, and where it is pointing, in relation to Earth and the Sun, for a given observation.</p>
+<p>The methods laid out in this notebook do not necessarily represent the “official” way that one would extract these quantities from the full NASA engineering data. However, interacting with the engineering data can be non-trivial, and there is often limited documentation.</p>
+<p>Therefore, this notebook aims to provide ways to calculate various ephemeris (and related) quantities in ways that are reliable, whilst also still being relatively straightforward.</p>
+<p>Some of the examples laid out in this notebook use information available in the FITS header, and some use the JPL <code class="docutils literal notranslate"><span class="pre">Horizons</span></code> service or <code class="docutils literal notranslate"><span class="pre">pvlib</span></code> package. To run this notebook, you will require <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, and <code class="docutils literal notranslate"><span class="pre">pvlib</span></code> to be installed (along with their dependences).</p>
+<p>In this example, we will be using an observation from the ACS/SBC - namely <code class="docutils literal notranslate"><span class="pre">jec0c6aeq_flc.fits</span></code>. It’s an observation of part of nearby galaxy NGC7793, looking at a bunch of young stars and star-forming regions. This file will be downloaded from MAST, and put in a directory your current working directory (in general, this will automatically be the same directory as the notebook itself, under standard notebook kernel server settings).</p>
+<p>Note that the methods demonstrated in this notebook <em>require</em> you to be working with a file associated with an individual expoure (ie, a <code class="docutils literal notranslate"><span class="pre">raw</span></code>, <code class="docutils literal notranslate"><span class="pre">flt</span></code>, or <code class="docutils literal notranslate"><span class="pre">flc</span></code> file). This is because a drizzled file, or other combined data product, will consist of data from different observations, where the telescope, Earth, and Sun will have been in different relative positions.</p>
+</section>
+<section id="table-of-contents">
+<h3>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><span class="xref myst">Earth Limb Angle</span></p></li>
+<li><p><span class="xref myst">HST Lattude &amp; Longitude During Observation</span></p></li>
+<li><p><span class="xref myst">Solar Time, Solar Altitude, and Solar Cycles</span></p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Required imports all here</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy.io.fits</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy.wcs</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy.time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy.convolution</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy.units</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">u</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy.coordinates</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astroquery.mast</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.jplhorizons</span><span class="w"> </span><span class="kn">import</span> <span class="n">Horizons</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pvlib</span>
+
+<span class="c1"># Report to user where data folder will be palced</span>
+<span class="n">data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Data for this notebook will be downloaded to:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data for this notebook will be downloaded to:
+/home/runner/work/hst_notebooks/hst_notebooks/notebooks/ACS/hst_orbits_ephem
+</pre></div>
+</div>
+</div>
+</div>
+<p>Before we get going, we’ll download the obesrvation we want from MAST, and read in its headers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create folder for holding downloaded files, etc</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+
+<span class="c1"># Download our exmaple observation</span>
+<span class="n">flt_filename</span> <span class="o">=</span> <span class="s1">&#39;jec0c6aeq_flt.fits&#39;</span>
+<span class="n">flt_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">flt_filename</span><span class="p">)</span>
+<span class="n">mast_msg</span> <span class="o">=</span> <span class="n">astroquery</span><span class="o">.</span><span class="n">mast</span><span class="o">.</span><span class="n">Observations</span><span class="o">.</span><span class="n">download_file</span><span class="p">(</span><span class="s1">&#39;mast:HST/product/&#39;</span><span class="o">+</span><span class="n">flt_filename</span><span class="p">,</span>
+                                                      <span class="n">local_path</span><span class="o">=</span><span class="n">flt_path</span><span class="p">,</span>
+                                                      <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mast_msg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Read in headers for our observation; we will require info from the primary and image headers</span>
+<span class="n">flt_hdr_0</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">flt_path</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">flt_hdr_1</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">flt_path</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jec0c6aeq_flt.fits to /home/runner/work/hst_notebooks/hst_notebooks/notebooks/ACS/hst_orbits_ephem/jec0c6aeq_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>COMPLETE
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="earth-limb-angle">
+<h2>1. Earth Limb Angle<a class="headerlink" href="#earth-limb-angle" title="Permalink to this heading">#</a></h2>
+<p>Earth Limb Angle (ELA) is the angle between the locaiton where the telescope is pointing, and the limb of the Earth. As ELA gets smaller, the atmosphere can have an increasing effect on HST observations in certain wavelenghts (especially the IR and UV). So knowing the ELA is worthwhile for understanding backgrounds, etc.</p>
+<p>Establishing ELA for a given observation is a somewhat involved process, so we will deal with it first.</p>
+<p>To get the ELA, we need to get the jitter file (ie, <code class="docutils literal notranslate"><span class="pre">_jit.fits</span></code> file for this observation. If this observation was not part of an association, then the <code class="docutils literal notranslate"><span class="pre">jit</span></code> file should have the same rootname (ie, <code class="docutils literal notranslate"><span class="pre">jec0c6aeq</span></code>) as the <code class="docutils literal notranslate"><span class="pre">flt</span></code> file. However, if this oabservation was part of an assocation, then the <code class="docutils literal notranslate"><span class="pre">jit</span></code> file will have the same rootname as the associaiton. So we will check for both</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First, check if jit file exists with same rootname as flt</span>
+<span class="n">jit_filename</span> <span class="o">=</span> <span class="n">flt_filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_flt.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;_jit.fits&#39;</span><span class="p">)</span>
+<span class="n">jit_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">jit_filename</span><span class="p">)</span>
+<span class="n">mast_msg</span> <span class="o">=</span> <span class="n">astroquery</span><span class="o">.</span><span class="n">mast</span><span class="o">.</span><span class="n">Observations</span><span class="o">.</span><span class="n">download_file</span><span class="p">(</span><span class="s1">&#39;mast:HST/product/&#39;</span><span class="o">+</span><span class="n">jit_filename</span><span class="p">,</span>
+                                                      <span class="n">local_path</span><span class="o">=</span><span class="n">jit_path</span><span class="p">,</span>
+                                                      <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">jit_path</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">mast_msg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">):</span>
+    <span class="n">jit_data</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">jit_path</span><span class="p">)</span>
+
+<span class="c1"># Otherwise, get the jit file by finding the association of this observation</span>
+<span class="k">elif</span> <span class="s1">&#39;HTTPError: 404 Client Error: Not Found for url&#39;</span> <span class="ow">in</span> <span class="n">mast_msg</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="n">asn_id</span> <span class="o">=</span> <span class="n">flt_hdr_0</span><span class="p">[</span><span class="s1">&#39;ASN_ID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">jit_filename</span> <span class="o">=</span> <span class="n">asn_id</span><span class="o">+</span><span class="s1">&#39;_jit.fits&#39;</span>
+    <span class="n">jit_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">jit_filename</span><span class="p">)</span>
+    <span class="n">mast_msg</span> <span class="o">=</span> <span class="n">astroquery</span><span class="o">.</span><span class="n">mast</span><span class="o">.</span><span class="n">Observations</span><span class="o">.</span><span class="n">download_file</span><span class="p">(</span><span class="s1">&#39;mast:HST/product/&#39;</span><span class="o">+</span><span class="n">jit_filename</span><span class="p">,</span>
+                                                          <span class="n">local_path</span><span class="o">=</span><span class="n">jit_path</span><span class="p">,</span>
+                                                          <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">jit_data</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">jit_path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mast_msg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jec0c6010_jit.fits to /home/runner/work/hst_notebooks/hst_notebooks/notebooks/ACS/hst_orbits_ephem/jec0c6010_jit.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>COMPLETE
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we have the <code class="docutils literal notranslate"><span class="pre">jit</span></code> file read it, we grab the ELA data from it. This consists of an array of ELA values, as the ELA changes continually throughout the exposure.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get ELA data from JIT file</span>
+<span class="n">ela_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">jit_data</span><span class="p">[</span><span class="s1">&#39;LimbAng&#39;</span><span class="p">])</span>
+
+<span class="c1"># Check that ELA data is good (can be an empty array for certain engineering data, etc)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">ela_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">ela_arr</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ELA array is empty&#39;</span><span class="p">)</span>
+
+<span class="c1"># Assuming ELA data is good, get some summary statistics</span>
+<span class="n">ela_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">ela_arr</span><span class="p">)</span>
+<span class="n">ela_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ela_arr</span><span class="p">)</span>
+<span class="n">ela_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ela_arr</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ELA ranges from </span><span class="si">{</span><span class="n">ela_min</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> deg to </span><span class="si">{</span><span class="n">ela_max</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> deg, with a mean of </span><span class="si">{</span><span class="n">ela_mean</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> deg&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ELA ranges from 39.6 deg to 52.9 deg, with a mean of 46.3 deg
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="hst-lattude-longitude-during-observation">
+<h2>2. HST Lattude &amp; Longitude During Observation<a class="headerlink" href="#hst-lattude-longitude-during-observation" title="Permalink to this heading">#</a></h2>
+<p>If you want to know the position of HST over the Earth during a given observation, you have to account for the fact that HST is continually moving in three dimensions around the Earth, which is continually moving in three dimensions around the Sun (thanks, Copernicus). This is a whole bunch of 3D ephemeris maths we’d rather not do by hand.</p>
+<p>Fortunately, we don’t have to! We can use <code class="docutils literal notranslate"><span class="pre">astropy.coordinates</span></code> and the JPL <code class="docutils literal notranslate"><span class="pre">Horizons</span></code> service instead.</p>
+<p>First, we have to know exactly when the observation was taken, which we can get from the header. We then use that to construct an <code class="docutils literal notranslate"><span class="pre">astropy.time.Time</span></code> object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get observation date and time fromt the header</span>
+<span class="n">date_string</span> <span class="o">=</span> <span class="n">flt_hdr_0</span><span class="p">[</span><span class="s1">&#39;DATE-OBS&#39;</span><span class="p">]</span>
+<span class="n">time_string</span> <span class="o">=</span> <span class="n">flt_hdr_0</span><span class="p">[</span><span class="s1">&#39;TIME-OBS&#39;</span><span class="p">]</span>
+
+<span class="c1"># Convert into an astropy Time object</span>
+<span class="n">datetime_obs_start</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">(</span><span class="n">date_string</span><span class="o">+</span><span class="s1">&#39;T&#39;</span><span class="o">+</span><span class="n">time_string</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;isot&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;utc&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we use the datetime, and the exposure time, to find the mid-point time of the exposure, and construct an array sampling the whole duration of the observation. We also compute the Modified Julian Date (MJD) of the mid-point of the exposure, as this will be a useful number later</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use duration of exposure to find time in middle of exposure</span>
+<span class="n">exp_time</span> <span class="o">=</span> <span class="n">flt_hdr_0</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">second</span>
+<span class="n">datetime_mid_delta</span> <span class="o">=</span> <span class="n">exp_time</span> <span class="o">*</span> <span class="mf">0.5</span>
+<span class="n">datetime_obs_mid</span> <span class="o">=</span> <span class="n">datetime_obs_start</span> <span class="o">+</span> <span class="n">datetime_mid_delta</span>
+
+<span class="c1"># Make array densely sampling time throughot the observation (1000 points is a good arbitrary dense sampling)</span>
+<span class="n">datetime_obs_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">datetime_obs_start</span><span class="p">,</span> <span class="p">(</span><span class="n">datetime_obs_start</span> <span class="o">+</span> <span class="n">exp_time</span><span class="p">),</span> <span class="n">num</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># Record date and time info</span>
+<span class="n">mjd_obs_mid</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">(</span><span class="n">datetime_obs_mid</span><span class="p">)</span><span class="o">.</span><span class="n">mjd</span>
+
+<span class="c1"># Report summary of observation time</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Exposure started at </span><span class="si">{</span><span class="n">datetime_obs_arr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">, and ended at </span><span class="si">{</span><span class="n">datetime_obs_arr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The mid-point time of the exposure was at MJD of </span><span class="si">{</span><span class="n">mjd_obs_mid</span><span class="si">:</span><span class="s1">.5f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Exposure started at 2022-04-25T03:18:51.000, and ended at 2022-04-25T03:22:41.000
+The mid-point time of the exposure was at MJD of 59694.13942
+</pre></div>
+</div>
+</div>
+</div>
+<p>With all this date &amp; time info ready, we can now use the JPL <code class="docutils literal notranslate"><span class="pre">Horizons</span></code> service to work out exactly where HST was during this exposure.</p>
+<p>We can query the service via <code class="docutils literal notranslate"><span class="pre">astroquery.jplhorizons.Horizons</span></code>. The <code class="docutils literal notranslate"><span class="pre">Horizons</span></code> service uses Navigation and Ancillary Information Facility (NAIF) ID codes to identify objects and coordinates. HST has a dedicated NAIF ID code: namely, -48. We set the <code class="docutils literal notranslate"><span class="pre">location</span></code> of the query to <code class="docutils literal notranslate"><span class="pre">500&#64;399</span></code>; this is combination of NAIF ID codes that corresponds to the location of Earth (the <code class="docutils literal notranslate"><span class="pre">&#64;339</span></code> part), described in a Geocentric frame (the <code class="docutils literal notranslate"><span class="pre">500</span></code> part). The <code class="docutils literal notranslate"><span class="pre">Horizons</span></code> and <code class="docutils literal notranslate"><span class="pre">astropy.coordinates</span></code> systems are smart enough that nothing critically depends on choosing the ‘correct’ <code class="docutils literal notranslate"><span class="pre">location</span></code> here - but as HST orbits the Earth, this reference frame will make all the numbers involved a little more easily interpretable.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Query JPL Horizons, getting values for middle of observation</span>
+<span class="n">jplhz_hst_id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">48</span>
+<span class="n">jplhz_obj_obs_mid</span> <span class="o">=</span> <span class="n">Horizons</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">jplhz_hst_id</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s1">&#39;500@399&#39;</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">datetime_obs_mid</span><span class="o">.</span><span class="n">jd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we extract the 3D position of HST in relation to Earth, in the International Terrestrial Reference System (ITRS), and use this to construct an <code class="docutils literal notranslate"><span class="pre">astropy.coordinates</span></code> object for Earth’s location.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get HST vectors from Horizons object</span>
+<span class="n">jplhz_vector</span> <span class="o">=</span> <span class="n">jplhz_obj_obs_mid</span><span class="o">.</span><span class="n">vectors</span><span class="p">()</span>
+
+<span class="c1"># Extract position in ITRS (International Terrestrial Reference System)</span>
+<span class="n">hst_geo_x</span> <span class="o">=</span> <span class="n">jplhz_vector</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">AU</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span>
+<span class="n">hst_geo_y</span> <span class="o">=</span> <span class="n">jplhz_vector</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">AU</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span>
+<span class="n">hst_geo_z</span> <span class="o">=</span> <span class="n">jplhz_vector</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">AU</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span>
+
+<span class="c1"># Create an EarthLocation object for the HST</span>
+<span class="n">hst_location</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">EarthLocation</span><span class="o">.</span><span class="n">from_geocentric</span><span class="p">(</span><span class="n">hst_geo_x</span><span class="p">,</span> <span class="n">hst_geo_y</span><span class="p">,</span> <span class="n">hst_geo_z</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In order to use this to work out the terrestrial latitude and longitude that HST was above during observations, we need to convert to geodetic coordinates, and use that to build a <code class="docutils literal notranslate"><span class="pre">astropy.coordinates.EarthLocation</span></code> object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute HST location in map coordiantes</span>
+<span class="n">hst_location</span> <span class="o">=</span> <span class="n">hst_location</span><span class="o">.</span><span class="n">to_geodetic</span><span class="p">()</span>
+<span class="n">hst_location</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">EarthLocation</span><span class="o">.</span><span class="n">from_geodetic</span><span class="p">(</span><span class="n">lat</span><span class="o">=</span><span class="n">hst_location</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
+                                                               <span class="n">lon</span><span class="o">=</span><span class="n">hst_location</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span>
+                                                               <span class="n">height</span><span class="o">=</span><span class="n">hst_location</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+
+<span class="c1"># Report location to user</span>
+<span class="n">hst_location_lat</span> <span class="o">=</span> <span class="n">hst_location</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">value</span>
+<span class="n">hst_location_lon</span> <span class="o">=</span> <span class="n">hst_location</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">value</span>
+<span class="n">hst_location_height</span> <span class="o">=</span> <span class="n">hst_location</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">km</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;During exposure mid-point, HST was above lat = </span><span class="si">{</span><span class="n">hst_location_lat</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, lon = </span><span class="si">{</span><span class="n">hst_location_lon</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, at </span><span class="si">{</span><span class="n">hst_location_height</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>During exposure mid-point, HST was above lat = -46.67, lon = 46.65, at 547 km
+</pre></div>
+</div>
+</div>
+</div>
+<p>As an example use-case of this, we can compute <em>rough</em> distance from the South Atlantic Anomaly (SAA). Note that the SAA is not symmetric, and that any proper SAA calculations should take account of its contours. And the central point of the SAA changes. So this for illustrative purposes only.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Give approxiamte coords of centre of SAA</span>
+<span class="n">saa_lat</span><span class="p">,</span> <span class="n">saa_lon</span> <span class="o">=</span> <span class="o">-</span><span class="mf">25.603</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="o">-</span><span class="mf">40.287</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span> <span class="c1"># Approximate coords, but good enough</span>
+<span class="n">saa_location</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">EarthLocation</span><span class="o">.</span><span class="n">from_geodetic</span><span class="p">(</span><span class="n">lat</span><span class="o">=</span><span class="n">saa_lat</span><span class="p">,</span> <span class="n">lon</span><span class="o">=</span><span class="n">saa_lon</span><span class="p">)</span>
+
+<span class="c1"># Compute separation between SAA and HST, in degrees, and report to user</span>
+<span class="n">saa_itrs</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">SkyCoord</span><span class="p">(</span><span class="n">saa_location</span><span class="o">.</span><span class="n">get_itrs</span><span class="p">())</span>
+<span class="n">hst_itrs</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">SkyCoord</span><span class="p">(</span><span class="n">hst_location</span><span class="o">.</span><span class="n">get_itrs</span><span class="p">())</span>
+<span class="n">saa_distance</span> <span class="o">=</span> <span class="n">saa_itrs</span><span class="o">.</span><span class="n">separation</span><span class="p">(</span><span class="n">hst_itrs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;HST was </span><span class="si">{</span><span class="n">saa_distance</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> from the middle of the SAA&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HST was 69.8 deg from the middle of the SAA
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="solar-time-solar-altitude-and-solar-cycles">
+<h2>3. Solar Time, Solar Altitude, and Solar Cycles<a class="headerlink" href="#solar-time-solar-altitude-and-solar-cycles" title="Permalink to this heading">#</a></h2>
+<p>Now we can do a bunch of Solar maths regarding where, and when, HST peformed this exposure.</p>
+<p>To start off, let’s calculate Solar time. This is the time system where the Sun is overhead at 12 noon at whatever your location happens to be.  This can be relevant in filters where the atmosphere gets excited by Solar radiation during the course of the day, resulting in increased airglow at dusk vs dawn (even though comparable dust and dawn times may have the same Solar altitude).</p>
+<p>We get the Sun’s location using the package <code class="docutils literal notranslate"><span class="pre">pvlib</span></code>, which is designed for Solar maths. Then we compute the ‘equation of time’ for HST during the exposure. The ‘equation of time’ is the difference between apparent Solar time and mean Solar time for a given time &amp; place.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First, find the Sun&#39;s location </span>
+<span class="n">sun_location</span> <span class="o">=</span> <span class="n">pvlib</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="n">hst_location</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">hst_location</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">get_solarposition</span><span class="p">(</span><span class="n">datetime_obs_mid</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span>
+
+<span class="c1"># Find the equation of time for HST, and thence the longitude correction required to get actual Solar time from HST&#39;s position</span>
+<span class="n">hst_eot</span> <span class="o">=</span> <span class="p">(</span><span class="n">sun_location</span><span class="o">.</span><span class="n">equation_of_time</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">minute</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">hour</span><span class="p">)</span>
+<span class="n">hst_lon_corr</span> <span class="o">=</span> <span class="n">hst_location</span><span class="o">.</span><span class="n">lon</span> <span class="o">/</span> <span class="mf">15.0</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">hour</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span>
+
+<span class="c1"># Use the equation fof time to calculate solar time at HST&#39;s location, as an astropy.time.Time object</span>
+<span class="n">datetime_obs_mid_solar</span> <span class="o">=</span> <span class="n">datetime_obs_mid</span> <span class="o">+</span> <span class="n">hst_eot</span> <span class="o">+</span> <span class="n">hst_lon_corr</span>
+
+<span class="c1"># Get out the solar time as an actual number, hours</span>
+<span class="n">hst_solar_time_hr</span> <span class="o">=</span> <span class="n">datetime_obs_mid_solar</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">hour</span> <span class="o">+</span> <span class="p">(</span><span class="n">datetime_obs_mid_solar</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">minute</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">datetime_obs_mid_solar</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">second</span> <span class="o">/</span> <span class="mf">3600.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Solar time for HST during exposure was </span><span class="si">{</span><span class="n">hst_solar_time_hr</span><span class="si">:</span><span class="s1">05.2f</span><span class="si">}</span><span class="s1"> hours (in 24-hour notation)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Solar time for HST during exposure was 06.49 hours (in 24-hour notation)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we’ll calculate the altitude and azimuth of the Sun, from the position of HST. Turns out that <code class="docutils literal notranslate"><span class="pre">astropy.coordinates</span></code> has a built-in function for this, assuming you construct the right coordinate frame first.</p>
+<p>Note that the altitude and azimuth will be for the plane of HST <em>tangent</em> to the surface of the Earth, at the location of HST. Therefore, the Earth limb will be at a negative altitude, due to the height of HST’s orbit above the surface.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use astropy coordinates to construct an alt-az reference frame object at the place and time of the exposure</span>
+<span class="n">altaz_frame</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">AltAz</span><span class="p">(</span><span class="n">obstime</span><span class="o">=</span><span class="n">datetime_obs_mid</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">hst_location</span><span class="p">)</span>
+
+<span class="c1"># Now use astropy function to compute Solar position in this reference frame</span>
+<span class="n">sun_altaz</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">get_sun</span><span class="p">(</span><span class="n">datetime_obs_mid</span><span class="p">)</span><span class="o">.</span><span class="n">transform_to</span><span class="p">(</span><span class="n">altaz_frame</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Sun</span><span class="se">\&#39;</span><span class="s1">s position during exposure was altitude = </span><span class="si">{</span><span class="n">sun_altaz</span><span class="o">.</span><span class="n">alt</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, azimuth = </span><span class="si">{</span><span class="n">sun_altaz</span><span class="o">.</span><span class="n">az</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sun&#39;s position during exposure was altitude = -4.61 deg, azimuth = 75.68 deg
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now to finish with a couple of easy calculations. Firstly, lets find out how far the observations are from the closest Solar cycle maximum (either forward or backward in time). The atmosphere extends to higher altitudes during Solar maxima, so this can once again be a relevant quantitity for airglow.</p>
+<p>We take the dates of past maxima from the International Sunspot Numbers v2.0, as available at SILSO. (Maxima dates are reported as months only in ISNv2.0; here we take the middle of each month as the peak for each, for convenience.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First, state the dates of of the Solar maxima  the once before HST launch</span>
+<span class="n">solar_cycle_peaks_mjd</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;2024-06-15&#39;</span><span class="p">,</span> <span class="s1">&#39;2014-04-15&#39;</span><span class="p">,</span> <span class="s1">&#39;2001-11-15&#39;</span><span class="p">,</span> <span class="s1">&#39;1989-11-15&#39;</span><span class="p">]</span>
+
+<span class="c1"># Convert this date strings into astropy.time.Time objects</span>
+<span class="n">solar_cycle_peaks_mjd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">astropy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">(</span><span class="n">solar_cycle_peak_mjd</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;iso&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mjd</span> <span class="k">for</span> <span class="n">solar_cycle_peak_mjd</span> <span class="ow">in</span> <span class="n">solar_cycle_peaks_mjd</span><span class="p">])</span>
+
+<span class="c1"># Calculate how many days, in MJD, separate our HST observation from the closest solar maximum (forward or backward in time)</span>
+<span class="n">solar_peak_gap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mjd_obs_mid</span> <span class="o">-</span> <span class="n">solar_cycle_peaks_mjd</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Observation happened </span><span class="si">{</span><span class="n">solar_peak_gap</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1"> days away from nearest Solar maximum&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Observation happened 782 days away from nearest Solar maximum
+</pre></div>
+</div>
+</div>
+</div>
+<p>Lastly, let’s convert the ra and dec of our HST observations to ecliptic coordinates. This can be useful if we’re worrdied about the potential for zodiacal light to affect our observations. For this calculation, we’re going to grab the centre coord of the image in our <code class="docutils literal notranslate"><span class="pre">flt</span></code> file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get ra and dec from header; here we just use the WCS reference coord (you may want to be more precise)</span>
+<span class="n">ra</span> <span class="o">=</span> <span class="n">flt_hdr_1</span><span class="p">[</span><span class="s1">&#39;CRVAL1A&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span>
+<span class="n">dec</span> <span class="o">=</span> <span class="n">flt_hdr_1</span><span class="p">[</span><span class="s1">&#39;CRVAL2A&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span>
+
+<span class="c1"># Convert coordinates to ecliptic frame, and report to user</span>
+<span class="n">icrs_coords</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">SkyCoord</span><span class="p">(</span><span class="n">ra</span><span class="o">=</span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="n">dec</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="s1">&#39;icrs&#39;</span><span class="p">)</span>
+<span class="n">ecliptic_coords</span> <span class="o">=</span> <span class="n">icrs_coords</span><span class="o">.</span><span class="n">transform_to</span><span class="p">(</span><span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">GeocentricTrueEcliptic</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Reference pixel of observation has ecliptic coords of lat = </span><span class="si">{</span><span class="n">ecliptic_coords</span><span class="o">.</span><span class="n">lat</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, lon = </span><span class="si">{</span><span class="n">ecliptic_coords</span><span class="o">.</span><span class="n">lon</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reference pixel of observation has ecliptic coords of lat = -29.42 deg, lon = 345.26 deg
+</pre></div>
+</div>
+</div>
+</div>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">astropy</span></code> or <code class="docutils literal notranslate"><span class="pre">pvlib</span></code> for published research, please cite the authors. Follow these links for more information about citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code> or <code class="docutils literal notranslate"><span class="pre">pvlib</span></code>:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://pvlib-python.readthedocs.io/en/stable/index.html#citing-pvlib-python">Citing <code class="docutils literal notranslate"><span class="pre">pvlib</span></code></a></p></li>
+</ul>
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/ACS/hst_orbits_ephem"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#worked-examples-for-an-acs-sbc-observation">Worked Examples for an ACS/SBC Observation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#by-chris-clark-esa-aura-space-telescope-science-institute-cclark-stsci-edu-last-edited-28th-march-2025">By Chris Clark (ESA/AURA, Space Telescope Science Institute; <code class="docutils literal notranslate"><span class="pre">cclark@stsci.edu</span></code>), last edited 28th March 2025</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#earth-limb-angle">1. Earth Limb Angle</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hst-lattude-longitude-during-observation">2. HST Lattude &amp; Longitude During Observation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solar-time-solar-altitude-and-solar-cycles">3. Solar Time, Solar Altitude, and Solar Cycles</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
