@@ -49,8 +49,30 @@ jobs:
         run: |
           notebook="${{ matrix.notebook }}"
           dir=$(dirname "$notebook")
-          if [ -f "$dir/requirements.txt" ]; then
-            pip install -r "$dir/requirements.txt"
+          export PYDEVD_DISABLE_FILE_VALIDATION=1
+          export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+          python -m pip install --upgrade pip
+          pip install pytest
+          pip install nbval
+          pip install nbconvert
+          echo "Path to req's: $(dirname ${{ matrix.notebook }})/requirements.txt"
+          ls $(dirname ${{ matrix.notebook }})
+          echo ---
+          if [ -f $(dirname "${{ matrix.notebook }}")/pre-install.sh ]; then
+            chmod +x $(dirname "${{ matrix.notebook }}")/pre-install.sh
+            ./$(dirname "${{ matrix.notebook }}")/pre-install.sh
+          fi
+          if [ -f $(dirname "${{ matrix.notebook }}")/pre-requirements.sh ]; then
+            chmod +x $(dirname "${{ matrix.notebook }}")/pre-requirements.sh
+            ./$(dirname "${{ matrix.notebook }}")/pre-requirements.sh
+          fi
+          if [ -f pre-requirements.txt ]; then
+            pip install -r pre-requirements.txt
+          fi
+          pip install -r $(dirname ${{ matrix.notebook }})/requirements.txt
+          if [ "${GITHUB_REPOSITORY}" == "spacetelescope/hst_notebooks" ]; then
+            source /usr/share/miniconda/etc/profile.d/conda.sh
+            conda create --yes --solver=classic -n hstcal -c conda-forge hstcal          
           fi
           if [ "${GITHUB_REPOSITORY}" == "spacetelescope/hst_notebooks" ]; then
             source /usr/share/miniconda/etc/profile.d/conda.sh
@@ -59,8 +81,24 @@ jobs:
             conda init
             conda activate hstcal
           fi
-          pip install notebook
-          jupyter nbconvert --to notebook --execute --inplace "$notebook" 
+          
+      - name: Execute notebook
+        id: execute
+        run: |
+          if [ "${GITHUB_REPOSITORY}" == "spacetelescope/hst_notebooks" ]; then
+            source /usr/share/miniconda/etc/profile.d/conda.sh
+            conda init
+            conda activate hstcal
+          fi
+          export CASJOBS_PW=${{ secrets.CASJOBS_PW }}
+          export CASJOBS_USERID=${{ secrets.CASJOBS_USERID }}
+          export PYDEVD_DISABLE_FILE_VALIDATION=1
+          export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+          if [ "${{ matrix.notebook }}" != "notebooks/preimaging/preimaging_01_mirage.ipynb" ]; then
+            if ! jupyter nbconvert --to notebook --execute --inplace ${{ matrix.notebook }}; then
+              python .github/scripts/insert_failure_message.py ${{ matrix.notebook }}
+            fi
+          fi
 
       - name: Commit modified file on current branch
         run: |
