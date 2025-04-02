@@ -13,6 +13,7 @@ General Tools:
 - [Exception Report Checklist - WFC3](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/exception_report/wfc3_exception_report.html)
 - [Processing WFC3/UVIS Data with `calwf3` Using the v1.0 CTE-Correction](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html)
 - [Masking Persistence in WFC3/IR Images](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/persistence/wfc3_ir_persistence.html)
+- [Analyzing WFC3/UVIS G280 Exoplanet Transit Observations](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/uvis_g280_transit/G280_Exoplanet_Transits.html)
 
 WFC3/IR Time Variable Background (TVB):
 - [WFC3/IR IMA Visualization Tools with an Example of Time Variable Background](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html)
