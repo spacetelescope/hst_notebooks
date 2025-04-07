@@ -190,7 +190,9 @@ def mast_query_psf_database(detector, filts, columns=['*']):
         The detector of the database to query. Allowed values are UVIS, IR, and 
         WFPC2.
     filts : list of dicts
-        The filters applied to the query. Can be made using `set_filters`.
+        The filters applied to the query. Can be made using `set_filters`, i.e.
+        filts = mast_api_psf.set_filters(parameters), where parameters is a 
+        dictionary of MAST API recognized parameter values.
     columns : list, default=['*']
         The columns to return for the query. If '*' is in `columns`, then all 
         columns are returned.
