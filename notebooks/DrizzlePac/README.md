@@ -1,4 +1,4 @@
-DrizzlePac Notebooks
+DrizzlePac Notebooks 
 =================
 
 An updated set of HST drizzling and alignment tutorials are now available and compatible with the latest STScI distributed software environment [stenv](https://stenv.readthedocs.io/en/latest/). These notebooks include a new recommended workflow for MAST data retrieved after December 2019, which includes updated astrometric information included as additional FITS extensions.  Alternatively, the new World Coordinate System (WCS) solutions may be downloaded directly from MAST as small 'headerlet' files and applied to existing data. For example, the Hubble Advanced Product 'Single Visit Mosaics' may have improved relative alignment for different filters acquired in the same visit. These headerlets may be used to update the WCS in the FITS images prior to drizzling. For details on the alignment of HST data in MAST, see Section 4.5 [Absolute Astrometry](https://hst-docs.stsci.edu/drizzpac/chapter-4-astrometric-information-in-the-header/4-5-absolute-astrometry) in the DrizzlePac Handbook.  
