@@ -45,23 +45,53 @@ jobs:
         with:
           python-version:  ${{ vars.PYTHON_VERSION }}
 
-      - name: Install Dependencies (if requirements.txt exists) and Execute Notebook
+      - name: Add conda to system path
         run: |
-          notebook="${{ matrix.notebook }}"
-          dir=$(dirname "$notebook")
-          if [ -f "$dir/requirements.txt" ]; then
-            pip install -r "$dir/requirements.txt"
+          echo $CONDA/bin >> $GITHUB_PATH
+        
+      - name: Install dependencies
+        run: |
+          echo DEBUG ---
+          pwd
+          echo "Path to req's: $(dirname ${{ matrix.notebook }})/requirements.txt"
+          ls $(dirname ${{ matrix.notebook }})
+          echo ---
+          if [ -f $(dirname "${{ matrix.notebook }}")/pre-requirements.sh ]; then
+            chmod +x $(dirname "${{ matrix.notebook }}")/pre-requirements.sh
+            ./$(dirname "${{ matrix.notebooks }}")/pre-requirements.sh
           fi
+          if [ -f pre-requirements.txt ]; then
+            pip install -r pre-requirements.txt
+          fi
+          if [ -f $(dirname "${{ matrix.notebook }}")/pre-install.sh ]; then
+            chmod +x $(dirname "${{ matrix.notebook }}")/pre-install.sh
+            ./$(dirname "${{ matrix.notebook }}")/pre-install.sh
+          fi
+          
+          pip install -r $(dirname ${{ matrix.notebook }})/requirements.txt
+          pip install pytest
+          pip install nbval
+          pip install nbconvert
+          pip install bandit
           if [ "${GITHUB_REPOSITORY}" == "spacetelescope/hst_notebooks" ]; then
             source /usr/share/miniconda/etc/profile.d/conda.sh
-            conda create --yes --solver=classic -n hstcal -c conda-forge hstcal  
+            conda create --yes --solver=classic -n hstcal -c conda-forge hstcal          
+          fi
+          
+      - name: Execute notebooks
+        id: execute
+        run: |
+         if [ "${GITHUB_REPOSITORY}" == "spacetelescope/hst_notebooks" ]; then
             source /usr/share/miniconda/etc/profile.d/conda.sh
             conda init
             conda activate hstcal
+         fi        
+          export CASJOBS_PW=${{ secrets.CASJOBS_PW }}
+          export CASJOBS_USERID=${{ secrets.CASJOBS_USERID }}
+          if ! jupyter nbconvert --to notebook --execute --inplace ${{ matrix.notebook }}; then
+            python .github/scripts/insert_failure_message.py ${{ matrix.notebook }}
           fi
-          pip install notebook
-          jupyter nbconvert --to notebook --execute --inplace "$notebook" 
-
+          
       - name: Commit modified file on current branch
         run: |
           git config user.name 'CI Bot'
