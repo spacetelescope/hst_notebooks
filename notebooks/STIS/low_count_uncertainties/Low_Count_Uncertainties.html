@@ -597,8 +597,9 @@ By the end of this tutorial, you will:
 <ul class="toc-item"><li><span><a href="#Pipeline-Uncertainties" data-toc-modified-id="2-Pipeline-Uncertainties-2">2 Pipeline Uncertainties</a></span></li></ul>
 <ul class="toc-item"><li><span><a href="#Poisson-Uncertainties" data-toc-modified-id="3-Poisson-Uncertainties-3">3 Poisson Uncertainties</a></span></li></ul>
 <ul class="toc-item"><li><span><a href="#Poisson-Uncertainties-Applied-to-STIS" data-toc-modified-id="4-Poisson-Uncertainties-Applied-to-STIS-4">4 Poisson Uncertainties Applied to STIS</a></span></li></ul>
-<ul class="toc-item"><li><span><a href="#Comparison-to-COS" data-toc-modified-id="5-Comparison-to-COS-5">5 Comparison to COS</a></span></li></ul>
-<ul class="toc-item"><li><span><a href="#Recommendations" data-toc-modified-id="6-Recommendations-6">6 Recommendations</a></span></li></ul>
+<ul class="toc-item"><li><span><a href="#New-stistools-Functionality" data-toc-modified-id="5-New-stistools-Functionality-5">5 New stistools Functionality</a><span></li></ul>
+<ul class="toc-item"><li><span><a href="#Comparison-to-COS" data-toc-modified-id="6-Comparison-to-COS-6">6 Comparison to COS</a></span></li></ul>
+<ul class="toc-item"><li><span><a href="#Recommendations" data-toc-modified-id="7-Recommendations-7">7 Recommendations</a></span></li></ul>
 <ul class="toc-item"><li><span><a href="#Appendix:-INTTAG" data-toc-modified-id="Appendix:-INTTAG">Appendix: INTTAG</a></span></li></ul>
 </div><section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
@@ -617,7 +618,7 @@ By the end of this tutorial, you will:
 <li><p><code class="docutils literal notranslate"><span class="pre">os</span></code>, <code class="docutils literal notranslate"><span class="pre">shutil</span></code>, &amp; <code class="docutils literal notranslate"><span class="pre">pathlib</span></code> for managing system paths</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> for plotting data</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> to handle array functions</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">stistools</span></code> for operations on STIS Data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stistools</span></code> for operations on STIS Data, including the new poisson_err.py</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">astropy.stats</span></code> and <code class="docutils literal notranslate"><span class="pre">scipy.stats</span></code> for the Poisson confidence interval function(s)</p></li>
 </ul>
 <div class="cell docutils container">
@@ -636,6 +637,7 @@ By the end of this tutorial, you will:
 
 <span class="c1"># Import for: Plotting and specifying plotting parameters</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
 
 <span class="c1"># Import for: Operations on STIS Data</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">stistools</span>
@@ -647,8 +649,8 @@ By the end of this tutorial, you will:
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">poisson_conf_interval</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">poisson</span>
 
-<span class="c1"># Import for shortened outputs</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_output</span>
+<span class="c1"># Import for image display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
 
 <span class="c1"># Using a colorblind friendly style</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;tableau-colorblind10&#39;</span><span class="p">)</span>
@@ -660,9 +662,9 @@ By the end of this tutorial, you will:
    basic2d      calstis     ocrreject     wavecal        x1d          x2d
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.11.11/x64/lib/python3.11/site-packages/stsci/tools/nmpfit.py:8: UserWarning: NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/lib/python3.12/site-packages/stsci/tools/nmpfit.py:8: UserWarning: NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.
   warnings.warn(&quot;NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.&quot;)
-/opt/hostedtoolcache/Python/3.11.11/x64/lib/python3.11/site-packages/stsci/tools/gfit.py:18: UserWarning: GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.Use astropy.modeling instead.
+/usr/share/miniconda/lib/python3.12/site-packages/stsci/tools/gfit.py:18: UserWarning: GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.Use astropy.modeling instead.
   warnings.warn(&quot;GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.&quot;
 </pre></div>
 </div>
@@ -690,7 +692,8 @@ By the end of this tutorial, you will:
 <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">target_list</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;x1d.fits&#39;</span><span class="p">)</span>
 
 <span class="c1"># get file path</span>
-<span class="n">file_path_obgh07020</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s1">_x1d.fits&#39;</span><span class="p">)</span>
+<span class="n">file_path_obgh07020</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s1">_x1d.fits&#39;</span><span class="p">)</span>
 
 <span class="c1"># read in x1d</span>
 <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path_obgh07020</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
@@ -712,7 +715,8 @@ By the end of this tutorial, you will:
       <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;DETECTOR&#39;</span><span class="p">],</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;OPT_ELEM&#39;</span><span class="p">],</span>
       <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;APERTURE&#39;</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Program: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PROPOSID&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PI: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_F&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_M&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_L&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PI: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_F&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_M&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="se">\</span>
+<span class="s2">      </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_L&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TARGNAME&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TDATEOBS&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TTIMEOBS&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
@@ -727,7 +731,7 @@ By the end of this tutorial, you will:
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HST STIS FUV-MAMA G140M 52X0.1
 Program: 12034
-PI: James Carswell Green
+PI: James Carswell       Green
 Target: GJ436
 Time: 2012-12-07 10:58:55
 </pre></div>
@@ -762,9 +766,6 @@ Time: 2012-12-07 10:58:55
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/f618868a2cc3fa5e9187bcdc8b32ac0b17e4f128956db7da936ade77d9714f7b.png" src="../../../_images/f618868a2cc3fa5e9187bcdc8b32ac0b17e4f128956db7da936ade77d9714f7b.png" />
-</div>
 </div>
 <p>You can see large flux from the star’s Lyman-<span class="math notranslate nohighlight">\(\alpha\)</span> emission. The core of the line is getting absorbed by the interstellar medium, or “ISM”, yet the wide wings of the line do show appreciable flux. This is an important indicator of chromospheric activity in low-mass stars. But if you look outside the line, you’ll see almost no flux! This is because low-mass stars, like GJ436, will have very little UV-continuum, mostly because of their relatively cool temperatures.</p>
 <p>Now let’s look at the uncertainties associated with these measurements. The error in the net counts (and subsequently the flux measurement) is initialized in <code class="docutils literal notranslate"><span class="pre">calstis</span></code>. For MAMA data such as this, the pipeline simply takes the square-root of the counts, <span class="math notranslate nohighlight">\(I\)</span>, as the error in the counts: <span class="math notranslate nohighlight">\(\sigma = \sqrt{I}\)</span>. For CCD data, we must also account for the gain and readnoise, such that <span class="math notranslate nohighlight">\(\sigma = \sqrt{\frac{I-bias}{gain}+(\frac{readnoise}{gain})^2}\)</span>. <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/stis/documentation/instrument-science-reports/_documents/199826.pdf">See ISR 98-26</a>. Note that the square-root must be taken on the <em>counts</em>, not the <em>count rate</em> or the <em>flux</em>.</p>
@@ -788,7 +789,8 @@ Time: 2012-12-07 10:58:55
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">net_err</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net Error (Pipeline)&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">count_err</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Calc Error (Root-N)&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">count_err_dark</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Calc Error (Root-N) plus Dark&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">count_err_dark</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Calc Error (Root-N) plus Dark&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">1214.5</span><span class="p">,</span> <span class="mi">1220</span><span class="p">)</span>
 
@@ -803,18 +805,15 @@ Time: 2012-12-07 10:58:55
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/4b5ee7f6fc7a82491b0263572963303b971419025c1b83a46944f4cb9f107584.png" src="../../../_images/4b5ee7f6fc7a82491b0263572963303b971419025c1b83a46944f4cb9f107584.png" />
-</div>
 </div>
 <p>As you can see, the pipeline uncertainties are mostly just the square root of the counts. Error from dark subtraction is generally pretty small in the FUV; In our observations, the science header states the the mean dark count was 0.0184 counts per pixel (<code class="docutils literal notranslate"><span class="pre">hdu[1].header['MEANDARK']</span></code>) and that’s over the whole 2,905 s exposure. In the extraction routines, the pipeline defaults to an extraction height of 11 pixels, so the dark rate is still adding less than a count per wavelength. In the NUV, however, dark rates can be as much as 0.002 counts per second per pixel, which can result in dozens of “extra” counts and thus do need to be taken into account in the errors. Errors in the flat-field division will also contribute minutely to the flux error.</p>
 <p>For this notebook, since we’re looking at FUV data, we therefore assume the majority of our error comes from photon noise.</p>
 </section>
 <section id="poisson-uncertainties">
 <h2>Poisson Uncertainties<a class="headerlink" href="#poisson-uncertainties" title="Permalink to this heading">#</a></h2>
-<p>Because we are measuring a discrete, positive number of counts when we read out an astronomical detector, our measurement comes from a Poisson disstribution. The uncertainty associated with a measurement of a variable described by a Poisson distribution is very often assumed to be the square-root of the value measured, as seen above. This is because the Poisson distribution is a univariate distrbution, defined only by its mean, <span class="math notranslate nohighlight">\(\mu\)</span>. The probability of <span class="math notranslate nohighlight">\(N\)</span> events is defined as <span class="math notranslate nohighlight">\(\frac{\lambda^N*e^{-\lambda}}{N!}\)</span>.</p>
-<p>The Poisson distribution has the special feature that its <u>variance</u> is also equal to <span class="math notranslate nohighlight">\(\mu\)</span>. Thus, we usually take the standard-deviation of a measurement to be <span class="math notranslate nohighlight">\(\sqrt{\mu}\)</span>.</p>
-<p>However, the assumption of “square-root N” uncertainties is only valid for large <span class="math notranslate nohighlight">\(N\)</span>. In this large-<span class="math notranslate nohighlight">\(n\)</span> regime, the Poisson distribution is relatively symmetric and well-approximated by a Gaussian distribution with standard deviation of <span class="math notranslate nohighlight">\(\sqrt{N}\)</span>. At low-<span class="math notranslate nohighlight">\(N\)</span>, however, the discrete and positive nature of the Poisson distribution results in the distribution becoming highly asymmetric and the Gaussian approximation breaks down. This is demonstrated in the plot below for <span class="math notranslate nohighlight">\(\mu = 1\)</span> and <span class="math notranslate nohighlight">\(\mu = 15\)</span>:</p>
+<p>Because we are measuring a discrete, positive number of counts when we read out an astronomical detector, our measurement comes from a Poisson disstribution. The uncertainty associated with a measurement of a variable described by a Poisson distribution is very often assumed to be the square-root of the value measured, as seen above. This is because the Poisson distribution is a univariate distrbution, defined only by its mean, <span class="math notranslate nohighlight">\(\lambda\)</span>. The probability of <span class="math notranslate nohighlight">\(N\)</span> events is defined as <span class="math notranslate nohighlight">\(\frac{\lambda^N*e^{-\lambda}}{N!}\)</span>.</p>
+<p>The Poisson distribution has the special feature that its <u>variance</u> is also equal to <span class="math notranslate nohighlight">\(\lambda\)</span>. Thus, we usually take the standard-deviation of a measurement to be <span class="math notranslate nohighlight">\(\sqrt{\lambda}\)</span>.</p>
+<p>However, the assumption of “square-root N” uncertainties is only valid for large <span class="math notranslate nohighlight">\(N\)</span>. In this large-<span class="math notranslate nohighlight">\(n\)</span> regime, the Poisson distribution is relatively symmetric and well-approximated by a Gaussian distribution with standard deviation of <span class="math notranslate nohighlight">\(\sqrt{N}\)</span>. At low-<span class="math notranslate nohighlight">\(N\)</span>, however, the discrete and positive nature of the Poisson distribution results in the distribution becoming highly asymmetric and the Gaussian approximation breaks down. This is demonstrated in the plot below for <span class="math notranslate nohighlight">\(\lambda = 1\)</span> and <span class="math notranslate nohighlight">\(\lambda = 15\)</span>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define color cycle that we&#39;ll be using</span>
@@ -833,7 +832,7 @@ Time: 2012-12-07 10:58:55
 <span class="n">xc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
 <span class="n">xd</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
 
-<span class="c1"># Define and draw our population mean for our first example, mu=1</span>
+<span class="c1"># Define and draw our population mean for our first example, mu=lambda=1</span>
 <span class="c1"># as well as the Gaussian (i.e., root-N) 1-sigma bounds</span>
 <span class="n">mu</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.15</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
@@ -842,7 +841,7 @@ Time: 2012-12-07 10:58:55
 
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span> <span class="o">/</span>
          <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="p">))),</span>
-         <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gaussian, $</span><span class="se">\\</span><span class="s1">mu$=1, $</span><span class="se">\\</span><span class="s1">sigma = </span><span class="se">\\</span><span class="s1">sqrt</span><span class="si">{1}</span><span class="s1">$&#39;</span><span class="p">,</span>
+         <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gaussian, $</span><span class="se">\\</span><span class="s1">lambda$=1, $</span><span class="se">\\</span><span class="s1">sigma = </span><span class="se">\\</span><span class="s1">sqrt</span><span class="si">{1}</span><span class="s1">$&#39;</span><span class="p">,</span>
          <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
 <span class="c1"># Do the same for mu=15</span>
@@ -853,7 +852,7 @@ Time: 2012-12-07 10:58:55
 
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="p">))</span> <span class="o">/</span>
          <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="p">))),</span>
-         <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gaussian, $</span><span class="se">\\</span><span class="s1">mu$=15, $</span><span class="se">\\</span><span class="s1">sigma = </span><span class="se">\\</span><span class="s1">sqrt</span><span class="si">{15}</span><span class="s1">$&#39;</span><span class="p">,</span>
+         <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gaussian, $</span><span class="se">\\</span><span class="s1">lambda$=15, $</span><span class="se">\\</span><span class="s1">sigma = </span><span class="se">\\</span><span class="s1">sqrt</span><span class="si">{15}</span><span class="s1">$&#39;</span><span class="p">,</span>
          <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
 <span class="c1"># Draw a limit at N=0 to make clear that Gaussian distribution goes beyond</span>
@@ -862,12 +861,12 @@ Time: 2012-12-07 10:58:55
 <span class="c1"># Now do the same for mu=1 and mu=15 but plotting the Poisson distribution</span>
 <span class="n">mu</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)),</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Poisson, $</span><span class="se">\\</span><span class="s1">mu$=1&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Poisson, $</span><span class="se">\\</span><span class="s1">lambda$=1&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)),</span>
          <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
 <span class="n">mu</span> <span class="o">=</span> <span class="mi">15</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)),</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Poisson, $</span><span class="se">\\</span><span class="s1">mu$=15&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Poisson, $</span><span class="se">\\</span><span class="s1">lambda$=15&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">poisson</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="n">mu</span><span class="p">)),</span>
          <span class="n">color</span><span class="o">=</span><span class="n">cs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
 
@@ -881,14 +880,11 @@ Time: 2012-12-07 10:58:55
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/37ce345c185b21dea82596d47a45e82b35ba94c176faa3548675f558cb0c0ca9.png" src="../../../_images/37ce345c185b21dea82596d47a45e82b35ba94c176faa3548675f558cb0c0ca9.png" />
-</div>
 </div>
 <p>The asymmetry in the Poisson distribution therefore implies we need a different approach to estimate our uncertainties. For that, we’ll need to define an upper- and lower-limits on the confidence interval (CI). Formally, <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986ApJ...303..336G/abstract">Geherels (1986)</a> defines these, respectively, as:</p>
 <p><span class="math notranslate nohighlight">\(\sum_{x=0}^{N}\frac{\lambda_u^x e^{-\lambda_u}}{x!} = 1 - CL\)</span></p>
 <p><span class="math notranslate nohighlight">\(\sum_{x=0}^{N-1}\frac{\lambda_l^x e^{-\lambda_l}}{x!} = CL \)</span>     <span class="math notranslate nohighlight">\((n \neq 0)\)</span></p>
-<p>Unfortunately, there is no closed form solution to these for <span class="math notranslate nohighlight">\(\lambda_u\)</span> and <span class="math notranslate nohighlight">\(\lambda_l\)</span>. To calculate <span class="math notranslate nohighlight">\(\lambda_u\)</span> and <span class="math notranslate nohighlight">\(\lambda_l\)</span>, various analytic approximations have been developed based on numerical tabulations, as in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986ApJ...303..336G/abstract">Gehrels (1986)</a>. In that work, Neil Gehrels finds the following 1-<span class="math notranslate nohighlight">\(\sigma\)</span> limit approximations that we’ll use:</p>
+<p>Unfortunately, there is no closed form solution to these for <span class="math notranslate nohighlight">\(\lambda_u\)</span> and <span class="math notranslate nohighlight">\(\lambda_l\)</span>. To calculate <span class="math notranslate nohighlight">\(\lambda_u\)</span> and <span class="math notranslate nohighlight">\(\lambda_l\)</span>, various analytic approximations have been developed based on numerical tabulations, as in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986ApJ...303..336G/abstract">Gehrels (1986)</a>. In that work, Neil Gehrels finds the following 1-<span class="math notranslate nohighlight">\(\sigma\)</span> limit approximations that we’ll demonsrate here:</p>
 <p><span class="math notranslate nohighlight">\(\lambda_u = N + \sqrt{N+\frac{3}{4}} + 1 \)</span></p>
 <p><span class="math notranslate nohighlight">\(\lambda_d = N (1 - \frac{1}{9N} - \frac{1}{3\sqrt{N}})^3 \)</span></p>
 <p>As <span class="math notranslate nohighlight">\(N \to \infty\)</span>, the approximation will approach the Gaussian <span class="math notranslate nohighlight">\(\sqrt{N}\)</span> approximation. Within astropy.stats, these approximations are implemented in “poisson_conf_interval”. To get the correct confidence interval method, we choose “frequentist-confidence”, which recreates these limits closely (confusingly, don’t use the “sherpagehrels” method, which just uses the upper limit symmetrically).</p>
@@ -922,9 +918,6 @@ Time: 2012-12-07 10:58:55
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/e80d32d42cb53ce4602bf153699047544f46ccac5e8462eb923102f19d5c41b8.png" src="../../../_images/e80d32d42cb53ce4602bf153699047544f46ccac5e8462eb923102f19d5c41b8.png" />
 </div>
 </div>
 <p>As you can see, the uncertainties calculated for a measurement from the Poisson distribution are not well-approximated by the Gaussian root-N approximation, especially for the upper bounds. This is because the upper bounds is basically the root-N approximation plus 1. Futhermore, and importantly, at N=0, the root-N approximation says that our uncertinaity goes to zero, which is clearly absurd! If we don’t measure any counts on a pixel, we shouldn’t somehow be inifintely sure there were no photons there. The Poisson distribution handles N=0 with an upper limit of 1.866 (while the lower limit does indeed go to zero; we cannot have negative counts!).</p>
@@ -971,9 +964,6 @@ Time: 2012-12-07 10:58:55
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/54e6d9e0ec877438d853cea1248aeb2dceddf3edda7d8182023720aaae828716.png" src="../../../_images/54e6d9e0ec877438d853cea1248aeb2dceddf3edda7d8182023720aaae828716.png" />
-</div>
 </div>
 <p>You can see just what we were warning about above at the end of Section 3: when the measured counts go to (or near) zero, our uncertainty now becomes infintesimal… or equivalently, our certainty becomes infinite! So let’s see what the proper Poisson unceratinties are.</p>
 <div class="cell docutils container">
@@ -1004,11 +994,110 @@ Time: 2012-12-07 10:58:55
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/e3be9308820824b2dc963879ccbe85c82b07e5fa746f2ee0a85aaa11376b03e5.png" src="../../../_images/e3be9308820824b2dc963879ccbe85c82b07e5fa746f2ee0a85aaa11376b03e5.png" />
-</div>
 </div>
 <p>When just assuming root-N errors, as the <code class="docutils literal notranslate"><span class="pre">calstis</span></code> pipeline currently does, we are therefore clearly underestimating the true Poisson uncertainty in this low-count regime.</p>
+</section>
+<section id="new-stistools-functionality">
+<h2>New <code class="docutils literal notranslate"><span class="pre">stistools</span></code> Functionality<a class="headerlink" href="#new-stistools-functionality" title="Permalink to this heading">#</a></h2>
+<p>To address this concern, we have implemented a new function within <code class="docutils literal notranslate"><span class="pre">stistools</span></code> to calculate these Poisson confidence intervals for you. <code class="docutils literal notranslate"><span class="pre">stistools.poisson_err.poisson_err(x1dfile,</span> <span class="pre">output,</span>&#160; <span class="pre">verbose=True)</span></code> takes in any _x1d.fits file, calculates the Poisson confidence interval, and adds new columns for the upper and lower error intervals for the net count rate (<code class="docutils literal notranslate"><span class="pre">NET_ERROR_PCI_UP</span></code> and <code class="docutils literal notranslate"><span class="pre">NET_ERROR_PCI_LOW</span></code>) and fluxes (<code class="docutils literal notranslate"><span class="pre">ERROR_PCI_UP</span></code> and <code class="docutils literal notranslate"><span class="pre">ERROR_PCI_LOW</span></code>). We have also added a <code class="docutils literal notranslate"><span class="pre">N_COUNTS</span></code> column with the number of counts used to calculate these errors with Astropy (N = (NET_ERROR*exptime)<span class="math notranslate nohighlight">\(^2\)</span>). By calculating the total counts from the net error, we can include the counts from the dark frame that were included in the noise calculation.</p>
+<p>Let’s try it out on our file:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x1dfile</span> <span class="o">=</span> <span class="s1">&#39;mastDownload/HST/obgh07020/obgh07020_x1d.fits&#39;</span>
+<span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;mastDownload/HST/obgh07020/obgh07020_PCI_x1d.fits&#39;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">stistools</span><span class="o">.</span><span class="n">poisson_err</span><span class="o">.</span><span class="n">poisson_err</span><span class="p">(</span><span class="n">x1dfile</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Need to install latest version of stistools (&gt;=1.4.5)&#39;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+    <span class="n">new_header</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+    <span class="n">new_exptime</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span>
+    <span class="n">new_extrsize</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">]</span>
+    <span class="n">new_flux</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;FLUX&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">new_flux_err</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ERROR&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">new_net</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">new_net_err</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET_ERROR&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">new_net_err_pci_up</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET_ERROR_PCI_UP&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">new_net_err_pci_low</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET_ERROR_PCI_LOW&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">new_waves</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Added ERROR_PCI_LOW, ERROR_PCI_UP, NET_ERROR_PCI_LOW, NET_ERROR_PCI_UP, and N_counts columns to mastDownload/HST/obgh07020/obgh07020_x1d.fits in mastDownload/HST/obgh07020/obgh07020_PCI_x1d.fits
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">net_err</span><span class="o">*</span><span class="n">exptime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net Error&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="p">(</span><span class="n">net_err</span><span class="o">*</span><span class="n">exptime</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="c1"># need nan to num b/c some negative values...</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span>
+        <span class="n">N</span><span class="o">-</span><span class="n">poisson_conf_interval</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="s1">&#39;frequentist-confidence&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Manual Astropy Lower PCI&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">waves</span><span class="p">,</span>
+        <span class="n">poisson_conf_interval</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="s1">&#39;frequentist-confidence&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">N</span><span class="p">,</span>
+        <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Manual Astropy Upper PCI&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">new_waves</span><span class="p">,</span> <span class="n">new_net_err_pci_low</span><span class="o">*</span><span class="n">new_exptime</span><span class="p">,</span>
+        <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;stistools Lower PCI&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">new_waves</span><span class="p">,</span> <span class="n">new_net_err_pci_up</span><span class="o">*</span><span class="n">new_exptime</span><span class="p">,</span>
+        <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;stistools Upper PCI&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1217</span><span class="p">,</span> <span class="mi">1220</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Error (Counts)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength ($</span><span class="se">\\</span><span class="s1">mathrm{</span><span class="se">\\</span><span class="s1">AA}$)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ColDefs(
+    name = &#39;SPORDER&#39;; format = &#39;1I&#39;; null = -32767; disp = &#39;I11&#39;
+    name = &#39;NELEM&#39;; format = &#39;1I&#39;; null = -32767; disp = &#39;I11&#39;
+    name = &#39;WAVELENGTH&#39;; format = &#39;1024D&#39;; unit = &#39;Angstroms&#39;; disp = &#39;G25.16&#39;
+    name = &#39;GROSS&#39;; format = &#39;1024E&#39;; unit = &#39;Counts/s&#39;; disp = &#39;G15.7&#39;
+    name = &#39;BACKGROUND&#39;; format = &#39;1024E&#39;; unit = &#39;Counts/s&#39;; disp = &#39;G15.7&#39;
+    name = &#39;NET&#39;; format = &#39;1024E&#39;; unit = &#39;Counts/s&#39;; disp = &#39;G15.7&#39;
+    name = &#39;FLUX&#39;; format = &#39;1024E&#39;; unit = &#39;erg/s/cm**2/Angstrom&#39;; disp = &#39;G15.7&#39;
+    name = &#39;ERROR&#39;; format = &#39;1024E&#39;; unit = &#39;erg/s/cm**2/Angstrom&#39;; disp = &#39;G15.7&#39;
+    name = &#39;NET_ERROR&#39;; format = &#39;1024E&#39;; unit = &#39;Counts/s&#39;; disp = &#39;G15.7&#39;
+    name = &#39;DQ&#39;; format = &#39;1024I&#39;; null = -32767; disp = &#39;I11&#39;
+    name = &#39;A2CENTER&#39;; format = &#39;1E&#39;; unit = &#39;pixel&#39;; disp = &#39;G15.7&#39;
+    name = &#39;EXTRSIZE&#39;; format = &#39;1E&#39;; unit = &#39;pixel&#39;; disp = &#39;G15.7&#39;
+    name = &#39;MAXSRCH&#39;; format = &#39;1I&#39;; unit = &#39;pixel&#39;; null = -32767; disp = &#39;I11&#39;
+    name = &#39;BK1SIZE&#39;; format = &#39;1E&#39;; unit = &#39;pixel&#39;; disp = &#39;G15.7&#39;
+    name = &#39;BK2SIZE&#39;; format = &#39;1E&#39;; unit = &#39;pixel&#39;; disp = &#39;G15.7&#39;
+    name = &#39;BK1OFFST&#39;; format = &#39;1E&#39;; unit = &#39;pixel&#39;; disp = &#39;G15.7&#39;
+    name = &#39;BK2OFFST&#39;; format = &#39;1E&#39;; unit = &#39;pixel&#39;; disp = &#39;G15.7&#39;
+    name = &#39;EXTRLOCY&#39;; format = &#39;1024E&#39;; unit = &#39;pixel&#39;; disp = &#39;G15.7&#39;
+    name = &#39;OFFSET&#39;; format = &#39;1E&#39;; unit = &#39;pixel&#39;; disp = &#39;G15.7&#39;
+    name = &#39;NET_ERROR_PCI_LOW&#39;; format = &#39;1024E&#39;; unit = &#39;Counts/s&#39;; disp = &#39;G15.7&#39;
+    name = &#39;NET_ERROR_PCI_UP&#39;; format = &#39;1024E&#39;; unit = &#39;Counts/s&#39;; disp = &#39;G15.7&#39;
+    name = &#39;ERROR_PCI_LOW&#39;; format = &#39;1024E&#39;; unit = &#39;erg/s/cm**2/Angstrom&#39;; disp = &#39;G15.7&#39;
+    name = &#39;ERROR_PCI_UP&#39;; format = &#39;1024E&#39;; unit = &#39;erg/s/cm**2/Angstrom&#39;; disp = &#39;G15.7&#39;
+    name = &#39;N_COUNTS&#39;; format = &#39;1024E&#39;; unit = &#39;Counts&#39;; disp = &#39;G15.7&#39;
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>As you can see, the stistools.poisson_err.poisson_err function re-creates our manual calculation of the Poisson confidence interval with Astropy.</p>
 </section>
 <section id="comparison-to-cos">
 <h2>Comparison to COS<a class="headerlink" href="#comparison-to-cos" title="Permalink to this heading">#</a></h2>
@@ -1027,7 +1116,8 @@ Time: 2012-12-07 10:58:55
 <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">target_list</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;ld9m12erq_x1d.fits&#39;</span><span class="p">)</span>
 
 <span class="c1"># get file path</span>
-<span class="n">file_path_ld9m12erq</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="s1">&#39;ld9m12erq&#39;</span><span class="p">,</span> <span class="s1">&#39;ld9m12erq_x1d.fits&#39;</span><span class="p">)</span>
+<span class="n">file_path_ld9m12erq</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="s1">&#39;ld9m12erq&#39;</span><span class="p">,</span> <span class="s1">&#39;ld9m12erq_x1d.fits&#39;</span><span class="p">)</span>
 
 <span class="c1"># read in x1d</span>
 <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path_ld9m12erq</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
@@ -1053,7 +1143,8 @@ Time: 2012-12-07 10:58:55
       <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;DETECTOR&#39;</span><span class="p">],</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;OPT_ELEM&#39;</span><span class="p">],</span>
       <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;APERTURE&#39;</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Program: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PROPOSID&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PI: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_F&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_M&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_L&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PI: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_F&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_M&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\</span>
+<span class="s2">      </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PR_INV_L&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;TARGNAME&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Date: </span><span class="si">{</span><span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;DATE&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1068,9 +1159,9 @@ Time: 2012-12-07 10:58:55
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HST COS FUV G130M PSA
 Program: 14767
-PI: David K. Sing
+PI: David K.      Sing
 Target: GJ-436
-Date: 2024-09-10
+Date: 2025-03-11
 </pre></div>
 </div>
 </div>
@@ -1120,7 +1211,7 @@ Date: 2024-09-10
 Max of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 0.0012501971 0.001131691 55.354454
 Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
-5.521808e-05 3.7044545e-06 0.52990484
+5.522401e-05 3.703917e-06 0.52982837
 </pre></div>
 </div>
 </div>
@@ -1164,10 +1255,6 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../../../_images/d0aba1f5f3ffc83a193c9acedb5c4b1b503e2f96dc579dc0d8fba64b7f924fec.png" src="../../../_images/d0aba1f5f3ffc83a193c9acedb5c4b1b503e2f96dc579dc0d8fba64b7f924fec.png" />
-<img alt="../../../_images/ece6a1e08f9f9f9e610c2d905d9ee44f80151917af7965cd476f5d8feb6b4be0.png" src="../../../_images/ece6a1e08f9f9f9e610c2d905d9ee44f80151917af7965cd476f5d8feb6b4be0.png" />
-</div>
 </div>
 <p>You can see that outside of the emission lines seen between 1300 and 1307 Angstrom, counts are varying between 0, 1, or 2. This is the regime where the Gaussian root-N approximation breaks down. Below, we show how the pipeline Poisson Confidence Interval upper and lower limits compare to the root-N approximation.</p>
 <div class="cell docutils container">
@@ -1193,29 +1280,27 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2013/1276255037.py:4: RuntimeWarning: invalid value encountered in divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2302/1276255037.py:4: RuntimeWarning: invalid value encountered in divide
   sensitivity = net/flux  # counts per second per flux
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;Wavelength ($\\mathrm{\\AA}$)&#39;)
 </pre></div>
 </div>
-<img alt="../../../_images/49ae24230bdc6a03c983e1be746bd76f52b5dc203b054f36138b5cc0acaf15d0.png" src="../../../_images/49ae24230bdc6a03c983e1be746bd76f52b5dc203b054f36138b5cc0acaf15d0.png" />
 </div>
 </div>
-<p>You can see that the COS pipeline gives lower bound uncertainties lower than root-N, but the upper bound uncertainties are significantly higher than root-N (coming from the “extra +1” in the Poisson upper confidence interval, or more fundamentally, from the inherent asymmetry of the Poisson distribution at low-N). This is crucial for quantifying non-detections. For example, the sorts of upper limits you can place on something like the FUV continuum of an M-dwarf can come down to how you treat these sorts of uncertainties.</p>
-<p>Thus, the COS pipeline does indeed give the correct Poisson uncertainties. This must be kept in mind when comparing STIS and COS data- make sure you’re uncertainties are calculated in the way you expect/desire. This may require you to calculate your own uncertainties in some situations.</p>
+<p>You can see that the COS pipeline gives lower bound uncertainties lower than root-N, but the upper bound uncertainties are significantly higher than root-N (coming from the “extra +1” in the Poisson upper confidence interval, related to the “continuity correction” between the discrete Poisson and continuous Gaussian distributions). This is crucial for quantifying non-detections. For example, the sorts of upper limits you can place on something like the FUV continuum of an M-dwarf can come down to how you treat these sorts of uncertainties.</p>
+<p>Thus, the COS pipeline does indeed give the correct Poisson uncertainties. This must be kept in mind when comparing STIS and COS data, especially when taken directly from the pipelines. Make sure you’re uncertainties are calculated in the way you expect/desire.</p>
 </section>
 <section id="recommendations">
 <h2>Recommendations<a class="headerlink" href="#recommendations" title="Permalink to this heading">#</a></h2>
-<p>As of 5/2024, the <code class="docutils literal notranslate"><span class="pre">calstis</span></code> pipeline calculates all errors according to the root-N approximation. In the future, additional columns may be added to the calibrated files that include the Poisson uncertainties (likely through a python <code class="docutils literal notranslate"><span class="pre">stistools</span></code> routine rather than a change to the C code underlying <code class="docutils literal notranslate"><span class="pre">calstis</span></code>.</p>
-<p>For now, STIS users doing science in the very low count regime (e.g., detecting weak FUV lines or continuum) should calculate more statistically-robust uncertainties should by hand. Our recommendation is to use Astropy’s poisson_confidence_interval using the “frequentist-confidence” interval method as used in Section 4 on the measured number of counts in the 1D spectrum (converted from GROSS counts/s column).</p>
-<p>In the NUV, long exposures generally have enough dark counts to be in the regime where the Gaussian approximation is at least somewhat valid. For short exposures, however, measured counts may indeed be <span class="math notranslate nohighlight">\(&lt;10\)</span> and users may want to opt for a Poisson confidence interval. Because the NUV dark rate is significantly higher than in the FUV, users will want to add the dark counts to the measured number of counts before calculating the Poisson confidence intervals. In lieu of the full-frame dark counts, users can use the average dark count subtracted from each pixel, found with the “MEANDARK” keyword in the header of each exposure as we did above. Users will need to multiply this by the extraction box size to get the average number of dark counts subtracted from each column/wavelength.</p>
+<p>As of 04/2025, the <code class="docutils literal notranslate"><span class="pre">calstis</span></code> pipeline calculates all errors according to the root-N approximation. We have therefore implemented a <code class="docutils literal notranslate"><span class="pre">stistools</span></code> function, <code class="docutils literal notranslate"><span class="pre">poisson_err.poisson_err</span></code> that calculates Poisson confidence intervals for STIS data. The function adds columns with the new errors to any x1d file.</p>
+<p>In the NUV, long exposures generally have enough dark counts to be in the regime where the Gaussian approximation is at least somewhat valid. For short exposures, however, measured counts may indeed be and users may want to opt for a Poisson confidence interval. Because the FUV dark rate is significantly lower than in the NUV, users will want to add the dark counts to the measured number of counts for NUV observations before calculating the Poisson confidence intervals, which is done in <code class="docutils literal notranslate"><span class="pre">poisson_err.poisson_err</span></code> by reconstructing the measured counts from the NET_ERROR, which will include the wavelength-specific dark counts as well.</p>
 </section>
 <section id="appendix-inttag">
 <h2>Appendix: INTTAG<a class="headerlink" href="#appendix-inttag" title="Permalink to this heading">#</a></h2>
-<p>There was recently a bug discovered in the procedure to split STIS TIME-TAG data into sub-exposures. That procedure is carried out with the <a class="reference external" href="https://stistools.readthedocs.io/_/downloads/en/doc_updates_rtd/pdf/"><code class="docutils literal notranslate"><span class="pre">inttag</span></code> task in stistools</a>. <code class="docutils literal notranslate"><span class="pre">inttag</span></code> takes the TIME-TAG table and splits them into sub-exposures with a user-defined duration (<em>increment</em> argument) or into a user-defined number of sub-exposures (<em>rcount</em> argument).</p>
-<p>Let’s download the TIME-TAG file that is associated with the STIS/G140L spectrum of GJ-436 we played with above. Previously, we were just using the orbit-long exposure, but let’s use the .tag file to split up the file into 10 subexposures using <code class="docutils literal notranslate"><span class="pre">inttag</span></code>.</p>
+<p>There was recently a bug discovered in the procedure to split STIS TIME-TAG data into sub-exposures. That procedure is carried out with the <a class="reference external" href="https://stistools.readthedocs.io/_/downloads/en/doc_updates_rtd/pdf/"><code class="docutils literal notranslate"><span class="pre">inttag</span></code> task in stistools</a>. <code class="docutils literal notranslate"><span class="pre">inttag</span></code> takes the TIME-TAG table and splits them into sub-exposures with a user-defined duration (<em>increment</em> argument) or into a user-defined number of sub-exposures (<em>rcount</em> argument). The bug was resulting in errors that were significantly inflated, especially in regions of low flux.</p>
+<p>Let’s download the TIME-TAG file that is associated with the STIS/G140L spectrum of GJ-436 we used above. Previously, we were just using the orbit-long exposure, but let’s use the .tag file to split up the file into 3 subexposures using <code class="docutils literal notranslate"><span class="pre">inttag</span></code>.</p>
 <p>After we split the file up, we’ll then run <code class="docutils literal notranslate"><span class="pre">calstis</span></code> to compare the new calibrated x1d file to the original, non-split x1d file. To do this, we’ll need to set some paths for the CRDS reference files. You can read more about them here: https://hst-crds.stsci.edu/</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1231,11 +1316,13 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">target_list</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;tag.fits&#39;</span><span class="p">)</span>
 
 <span class="c1"># get file paths</span>
-<span class="n">tag_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s1">_tag.fits&#39;</span><span class="p">)</span>
-<span class="n">raw_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s1">_raw.fits&#39;</span><span class="p">)</span>
+<span class="n">tag_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s1">_tag.fits&#39;</span><span class="p">)</span>
+<span class="n">raw_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s1">_raw.fits&#39;</span><span class="p">)</span>
 
 <span class="c1"># Split up the time-tag file into 10 subexposures</span>
-<span class="n">stistools</span><span class="o">.</span><span class="n">inttag</span><span class="o">.</span><span class="n">inttag</span><span class="p">(</span><span class="n">tag_file</span><span class="p">,</span> <span class="n">raw_file</span><span class="p">,</span> <span class="n">rcount</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">stistools</span><span class="o">.</span><span class="n">inttag</span><span class="o">.</span><span class="n">inttag</span><span class="p">(</span><span class="n">tag_file</span><span class="p">,</span> <span class="n">raw_file</span><span class="p">,</span> <span class="n">rcount</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
 <span class="c1"># We then want to re-reduced the raw data to get x1d files,</span>
 <span class="c1"># and then we&#39;ll compare:</span>
@@ -1251,7 +1338,8 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 
 <span class="c1"># We need to remove the x1d file we downloaded before</span>
 <span class="c1"># because we&#39;ll replace it with the inttag version</span>
-<span class="n">inttag_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="s1">&#39;inttag*.fits&#39;</span><span class="p">)</span>
+<span class="n">inttag_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="s1">&#39;inttag*.fits&#39;</span><span class="p">)</span>
 <span class="n">inttag_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">inttag_path</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">inttag_files</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
@@ -1260,55 +1348,677 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No need to remove...&#39;</span><span class="p">)</span>
 
 <span class="c1"># Now run calstis...</span>
-<span class="n">wave_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s1">_wav.fits&#39;</span><span class="p">)</span>
-<span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="s1">&#39;inttag&#39;</span><span class="p">)</span>
+<span class="n">wave_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_id</span><span class="si">}</span><span class="s1">_wav.fits&#39;</span><span class="p">)</span>
+<span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="s1">&#39;inttag&#39;</span><span class="p">)</span>
 <span class="n">stistools</span><span class="o">.</span><span class="n">calstis</span><span class="o">.</span><span class="n">calstis</span><span class="p">(</span><span class="n">raw_file</span><span class="p">,</span> <span class="n">wavecal</span><span class="o">=</span><span class="n">wave_file</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                           <span class="n">outroot</span><span class="o">=</span><span class="n">output_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/obgh07020_tag.fits to ./mastDownload/HST/obgh07020/obgh07020_tag.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>imset: 1, start: 0.092375, stop: 968.4659166666667, exposure time: 968.3735416666667
+imset: 2, start: 968.4659166666667, stop: 1936.8394583333334, exposure time: 968.3735416666667
+imset: 3, start: 1936.8394583333334, stop: 2905.213, exposure time: 968.3735416666668
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/obgh07020_wav.fits to ./mastDownload/HST/obgh07020/obgh07020_wav.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  No comparison context or source comparison requested.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  ===&gt; Processing ./mastDownload/HST/obgh07020/obgh07020_raw.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  0 errors
+CRDS - INFO -  0 warnings
+CRDS - INFO -  2 infos
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    20-Apr-2025 03:31:21 UTC
 
-<span class="n">clear_output</span><span class="p">()</span>
+Input    ./mastDownload/HST/obgh07020/obgh07020_raw.fits
+Outroot  ./mastDownload/HST/obgh07020/inttag
+Wavecal  ./mastDownload/HST/obgh07020/obgh07020_wav.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    20-Apr-2025 03:31:21 UTC
+Input    ./mastDownload/HST/obgh07020/obgh07020_raw.fits
+Output   ./mastDownload/HST/obgh07020/inttag_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 03:31:21 UTC
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 1  End 03:31:21 UTC
+
+Imset 2  Begin 03:31:21 UTC
+
+DQICORR  PERFORM
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DARKCORR COMPLETE
+
+FLATCORR PERFORM
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 2  End 03:31:21 UTC
+
+Imset 3  Begin 03:31:21 UTC
+
+DQICORR  PERFORM
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DARKCORR COMPLETE
+
+FLATCORR PERFORM
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 3  End 03:31:22 UTC
+
+End      20-Apr-2025 03:31:22 UTC
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    20-Apr-2025 03:31:22 UTC
+Input    ./mastDownload/HST/obgh07020/obgh07020_wav.fits
+Output   ./mastDownload/HST/obgh07020/inttag_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 03:31:22 UTC
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 03:31:22 UTC
+
+Imset 2  Begin 03:31:22 UTC
+
+DQICORR  PERFORM
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+FLATCORR COMPLETE
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 2  End 03:31:22 UTC
+
+End      20-Apr-2025 03:31:22 UTC
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    20-Apr-2025 03:31:22 UTC
+Input    ./mastDownload/HST/obgh07020/inttag_fwv_tmp.fits
+Output   ./mastDownload/HST/obgh07020/inttag_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 03:31:22 UTC
+
+Order 1  Begin 03:31:22 UTC
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$77o1827do_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 30/06/1998
+SPTRCTAB DESCRIP =New traces for select echelle secondary modes
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 03:31:22 UTC
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 1  End 03:31:22 UTC
+Imset 2  Begin 03:31:22 UTC
+
+Order 1  Begin 03:31:22 UTC
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 03:31:22 UTC
+Imset 2  End 03:31:22 UTC
+
+End      20-Apr-2025 03:31:22 UTC
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    20-Apr-2025 03:31:22 UTC
+Input    ./mastDownload/HST/obgh07020/inttag_w2d_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 03:31:22 UTC
+
+WAVECORR PERFORM
+WCPTAB   oref$16j1600co_wcp.fits
+WCPTAB   PEDIGREE=INFLIGHT 09/11/1998 13/06/2017
+WCPTAB   DESCRIP =Force G140M and G230L SHIFTA2 into single-bar mode via SP_TRIM2.---
+WCPTAB   DESCRIP =TRIM values modified, WL_RANGE and SP_RANGE increased
+LAMPTAB  oref$l421050oo_lmp.fits
+LAMPTAB  PEDIGREE=GROUND
+LAMPTAB  DESCRIP =Ground+Inflight Cal PT lamp, 3.8 &amp; 10 mA
+LAMPTAB  DESCRIP =Ground Cal for non-PRISM, PT lamp 10 mA
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0.0208563 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+         Shift in dispersion direction is -2.254 pixels.
+         Shift in spatial direction is 6.357 pixels.
+WAVECORR COMPLETE
+Imset 1  End 03:31:22 UTC
+
+Imset 2  Begin 03:31:22 UTC
+
+WAVECORR PERFORM
+Warning  Skipping current occulting bar ... \
+Warning  Peak of cross correlation is 0.0244969 of the expected value, \
+Warning  which is outside the allowed range 0.5 to 1.5
+         Shift in dispersion direction is -2.312 pixels.
+         Shift in spatial direction is 7.221 pixels.
+WAVECORR COMPLETE
+Imset 2  End 03:31:22 UTC
+
+End      20-Apr-2025 03:31:22 UTC
+
+*** CALSTIS-4 complete ***
+
+*** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    20-Apr-2025 03:31:22 UTC
+Wavecal  ./mastDownload/HST/obgh07020/inttag_w2d_tmp.fits
+Science  ./mastDownload/HST/obgh07020/inttag_flt.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 03:31:22 UTC
+         SHIFTA1 set to -2.29187
+         SHIFTA2 set to 6.92031
+Imset 1  End 03:31:22 UTC
+Imset 2  Begin 03:31:22 UTC
+         SHIFTA1 set to -2.29918
+         SHIFTA2 set to 7.03006
+Imset 2  End 03:31:22 UTC
+Imset 3  Begin 03:31:22 UTC
+         SHIFTA1 set to -2.30648
+         SHIFTA2 set to 7.1398
+Imset 3  End 03:31:22 UTC
+
+End      20-Apr-2025 03:31:22 UTC
+
+*** CALSTIS-12 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    20-Apr-2025 03:31:22 UTC
+Input    ./mastDownload/HST/obgh07020/inttag_flt.fits
+Output   ./mastDownload/HST/obgh07020/inttag_x2d.fits
+OBSMODE  TIME-TAG
+APERTURE 52X0.1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 03:31:22 UTC
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 03:31:22 UTC
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$77o1827do_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 30/06/1998
+SPTRCTAB DESCRIP =New traces for select echelle secondary modes
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$64719317o_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Updated sensitivity curves for G140L and E140M
+PHOTTAB  DESCRIP =Bostroem Sensitivity of 01-Nov-2011
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$93q1947bo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 06/02/2025
+TDSTAB   DESCRIP =Updated time and slope arrays for all optical elements.
+Warning  Keyword `BUNIT&#39; is being added to header.
+Warning  Keyword `BUNIT&#39; is being added to header.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 03:31:22 UTC
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 1  End 03:31:22 UTC
+Imset 2  Begin 03:31:22 UTC
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 03:31:22 UTC
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>X2DCORR  PERFORM
+DISPCORR PERFORM
+
+FLUXCORR PERFORM
+Warning  Keyword `BUNIT&#39; is being added to header.
+Warning  Keyword `BUNIT&#39; is being added to header.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 03:31:22 UTC
+Imset 2  End 03:31:22 UTC
+Imset 3  Begin 03:31:22 UTC
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 03:31:22 UTC
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+
+FLUXCORR PERFORM
+Warning  Keyword `BUNIT&#39; is being added to header.
+Warning  Keyword `BUNIT&#39; is being added to header.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 03:31:22 UTC
+Imset 3  End 03:31:22 UTC
+
+End      20-Apr-2025 03:31:22 UTC
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    20-Apr-2025 03:31:22 UTC
+
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    ./mastDownload/HST/obgh07020/inttag_flt.fits
+Output   ./mastDownload/HST/obgh07020/inttag_x1d.fits
+Rootname obgh07020
+OBSMODE  TIME-TAG
+APERTURE 52X0.1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$n7p10323o_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$77o1827do_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 01/12/2009
+SPTRCTAB DESCRIP =New traces for select echelle secondary modes
+
+Imset 1  Begin 03:31:22 UTC
+         Input read into memory.
+Order 1  Begin 03:31:22 UTC
+X1DCORR  PERFORM
+BACKCORR PERFORM
+******** Calling Slfit ***********BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 404.909
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$64719317o_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 13/05/2019
+PHOTTAB  DESCRIP =Updated sensitivity curves for G140L and E140M
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$93q1947bo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 06/02/2025
+TDSTAB   DESCRIP =Updated time and slope arrays for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 03:31:22 UTC
+
+Imset 1  End 03:31:22 UTC
+
+Imset 2  Begin 03:31:22 UTC
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>         Input read into memory.
+Order 1  Begin 03:31:22 UTC
+X1DCORR  PERFORM
+BACKCORR PERFORM
+******** Calling Slfit ***********BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 405.962
+
+DISPCORR PERFORM
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 03:31:23 UTC
+
+Imset 2  End 03:31:23 UTC
+
+Imset 3  Begin 03:31:23 UTC
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>         Input read into memory.
+Order 1  Begin 03:31:23 UTC
+X1DCORR  PERFORM
+BACKCORR PERFORM
+******** Calling Slfit ***********BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 405.22
+
+DISPCORR PERFORM
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 03:31:23 UTC
+
+Imset 3  End 03:31:23 UTC
+
+Warning  Keyword `XTRACALG&#39; is being added to header.
+End      20-Apr-2025 03:31:23 UTC
+
+*** CALSTIS-6 complete ***
+
+End      20-Apr-2025 03:31:23 UTC
+
+*** CALSTIS-0 complete ***
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0
 </pre></div>
 </div>
 </div>
 </div>
-<p>It was noticed that the uncertainties associated with the subexposures were higher than the root-N expectation. For example, if we plot the uncertainties in the extracted spectrum, the resulting uncertainties on those sub-exposures was far larger than just <span class="math notranslate nohighlight">\(\sqrt{10}\)</span> times the uncertainty on the full exposure. We see this below:</p>
+<p>It was noticed that the uncertainties associated with the subexposures were higher than the root-N expectation. For example, if we plot the uncertainties in the extracted spectrum, the resulting uncertainties on those sub-exposures was far larger than just <span class="math notranslate nohighlight">\(\sqrt{N_\mathrm{frames}}\)</span> times the uncertainty on the full exposure. We see this below.</p>
+<p>The top plot shows the errors from the new <code class="docutils literal notranslate"><span class="pre">inttag</span></code> script, while the bottom plot shows the errors from the former implimentation. As you can see, the former implementation was greatly overestimating the errors in the low-flux region.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path_obgh07020</span><span class="p">)</span>
-<span class="n">inttag_x1d_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="s1">&#39;inttag_x1d.fits&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read in the files</span>
+<span class="n">hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path_obgh07020</span><span class="p">)</span>
+<span class="n">inttag_x1d_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="s1">&#39;inttag_x1d.fits&#39;</span><span class="p">)</span>
 <span class="n">hdu_int</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">inttag_x1d_path</span><span class="p">)</span>
 
+<span class="c1"># Plot the files</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
          <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET_ERROR&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
          <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Full exposure errors&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-         <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET_ERROR&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
-         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">sqrt</span><span class="si">{10}</span><span class="s1">$ Sub-exposure expectation&#39;</span><span class="p">)</span>
+         <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET_ERROR&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">sqrt</span><span class="si">{3}</span><span class="s1">$ Sub-exposure expectation&#39;</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hdu_int</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-         <span class="n">hdu_int</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET_ERROR&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hdu_int</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+         <span class="n">hdu_int</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;NET_ERROR&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
          <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Sub-exposure pipeline error&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">1210</span><span class="p">,</span> <span class="mi">1220</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Error (counts/s)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength ($</span><span class="se">\\</span><span class="s1">mathrm{</span><span class="se">\\</span><span class="s1">AA}$)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;New INTTAG Implementation&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;Wavelength ($\\mathrm{\\AA}$)&#39;)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;New INTTAG Implementation&#39;)
 </pre></div>
 </div>
-<img alt="../../../_images/112861ba68e9cff62d80be714c86ed41babf414ed6a2cb2a30f66c18d5c9490c.png" src="../../../_images/112861ba68e9cff62d80be714c86ed41babf414ed6a2cb2a30f66c18d5c9490c.png" />
 </div>
 </div>
-<p>Upon further inspection, it was found that this bug was related to these Poisson confidence intervals! When <em>inttag</em> fills the error arrays for the sub-exposure, rather than taking the square-root of the counts (as the pipeline would normally do), <em>inttag</em> actually uses Astropy’s poisson_confidence_interval. Unfortunately, <code class="docutils literal notranslate"><span class="pre">inttag</span></code> uses the incorrect method, choosing “sherpagehrels” over the more correct “frequentist-confidence”. As we explored above, “sherpagehrels” actually gives symmetric lower and upper bounds, fixed to the upper bound calculated in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986ApJ...303..336G/abstract">Gehrels (1986)</a>. This was probably originally done because there was only room for one value in the error array, so the more conservative upper confidence interval was chosen.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;STIS_GJ436b_inttag.png&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/1b712544629e7cb8a06abd1229ef85d130208c8c6687eb0af5312a3df419d559.png" src="../../../_images/1b712544629e7cb8a06abd1229ef85d130208c8c6687eb0af5312a3df419d559.png" />
+</div>
+</div>
+<p>Upon further inspection, it was found that this bug was related to these Poisson confidence intervals! When <code class="docutils literal notranslate"><span class="pre">inttag</span></code> fills the error arrays for the sub-exposure, rather than taking the square-root of the counts (as the pipeline would normally do), <em>inttag</em> actually used to use Astropy’s poisson_confidence_interval. Unfortunately, <code class="docutils literal notranslate"><span class="pre">inttag</span></code> uses the incorrect method, choosing “sherpagehrels” over the more correct “frequentist-confidence”. As we explored above, “sherpagehrels” actually gives symmetric lower and upper bounds, fixed to the upper bound calculated in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986ApJ...303..336G/abstract">Gehrels (1986)</a>. This was probably originally done because there was only room for one value in the error array, so the more conservative upper confidence interval was chosen.</p>
 <p>Furthermore, the Poisson errors are calculated at the pixel level, rather than after spectral extraction where the counts have been added up along columns. In the root-N approximation, this doesn’t matter, because adding the root-N errors in quadrature is equivalent to taking the square root of the summed column:</p>
-<p><span class="math notranslate nohighlight">\(\sqrt{\sum_i{(\sqrt{n_i})^2}} = \sqrt{\sum_i{n_i}} = \sqrt{N}\)</span></p>
-<p>In other words, it doesn’t matter how the counts are arranged on a pixel column, all that matters is their sum. <strong>But this is not true for Poisson errors.</strong> Whether all your counts are centered on one pixel or whether your counts are distributed evenly accross your extraction window will change what the uncertainty on your spectrum is!</p>
-<p>You can see that in the following example, where we have to scenarios for how the flux is distributed along a column: either all the flux is in one pixel or it is evenly distributed. We then calculate the uncertainty on the extracted flux using the root-N approximation, first adding the error of each pixel in quadrature and then by summing the column and <em>then</em> calculating the error. These two methods give the same answer.</p>
-<p>Then, we do the same thing but using Poisson confidence intervals with <code class="docutils literal notranslate"><span class="pre">astropy</span></code>. Now, when we calcualte the errors pixel-by-pixel or on the extracted flux, we get different answers!</p>
+<p><span class="math notranslate nohighlight">\(\sqrt{\sum_i{(\sqrt{n_i})^2}} = \sqrt{\sum_i{n_i}} = \sqrt{N}\)</span>,</p>
+<p>where <span class="math notranslate nohighlight">\(n_i\)</span> is the count measured on the <span class="math notranslate nohighlight">\(i\)</span>th pixel of a column and <span class="math notranslate nohighlight">\(N\)</span> is the count for the entire column. In other words, it doesn’t matter how the counts are arranged on a pixel column, all that matters is their sum. <strong>But this is not true for Poisson errors.</strong> Whether all your counts are centered on one pixel or whether your counts are distributed evenly accross your extraction window will change what the uncertainty on your spectrum is!</p>
+<p>You can see that in the following example, where we have to scenarios for how the flux is distributed along a column: either all the flux is in one pixel or it is evenly distributed. We then calculate the uncertainty on the extracted flux using the root-N approximation, first adding the error of each pixel in quadrature and then by summing the column and <em>then</em> calculating the error. These two methods give the same answer in both scenarios.</p>
+<p>Then, we do the same thing but using Poisson confidence intervals with <code class="docutils literal notranslate"><span class="pre">astropy</span></code>. Now, when we calculate the errors pixel-by-pixel or on the extracted flux, we get different answers depending on how the counts are distributed and depending on how we add them up!</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Take two scenarios for how the counts are distributed across</span>
@@ -1328,7 +2038,7 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 
 <span class="k">def</span><span class="w"> </span><span class="nf">pixel_err</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-        <span class="p">[(</span><span class="n">poisson_conf_interval</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="s1">&#39;frequentist-confidence&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">i</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> 
+        <span class="p">[(</span><span class="n">poisson_conf_interval</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="s1">&#39;frequentist-confidence&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">i</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">scenario</span><span class="p">]))</span>
 
 
@@ -1338,6 +2048,7 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
             <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">scenario</span><span class="p">))</span>
 
 
+<span class="c1"># Print the errors calculated in the various scenarios</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scenario 1: &#39;</span><span class="p">,</span> <span class="n">scenario1</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scenario 2: &#39;</span><span class="p">,</span> <span class="n">scenario2</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
@@ -1349,7 +2060,8 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Root-N approximation, sum column, then take sqrt: &#39;</span><span class="p">,</span> <span class="n">sum_sq</span><span class="p">(</span><span class="n">scenario1</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Poisson, pixel-by-pixel error calculation: &#39;</span><span class="p">,</span> <span class="n">pixel_err</span><span class="p">(</span><span class="n">scenario1</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Poisson upper limit, sum column, then calculate error: &#39;</span><span class="p">,</span> <span class="n">upper_err</span><span class="p">(</span><span class="n">scenario1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Poisson upper limit, sum column, then calculate error: &#39;</span><span class="p">,</span>
+      <span class="n">upper_err</span><span class="p">(</span><span class="n">scenario1</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scenario 2&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
@@ -1357,7 +2069,8 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Root-N approximation, sum column, then take sqrt: &#39;</span><span class="p">,</span> <span class="n">sum_sq</span><span class="p">(</span><span class="n">scenario2</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Poisson, pixel-by-pixel error calculation: &#39;</span><span class="p">,</span> <span class="n">pixel_err</span><span class="p">(</span><span class="n">scenario2</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Poisson upper limit, sum column, then calculate error: &#39;</span><span class="p">,</span> <span class="n">upper_err</span><span class="p">(</span><span class="n">scenario2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Poisson upper limit, sum column, then calculate error: &#39;</span><span class="p">,</span>
+      <span class="n">upper_err</span><span class="p">(</span><span class="n">scenario2</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1386,14 +2099,14 @@ Poisson upper limit, sum column, then calculate error:  4.266949761009391
 </div>
 </div>
 </div>
-<p>In the end, our recommendation is to use the Poisson confidence intervals, but not at the pixel level because each measurement along a column are not independent events. You would therefore be justified in calculating the Poisson confidence interval on the summed flux at each wavelength/column.</p>
-<p>Because this behavior can catch the users by surprise, as of 5/2024 there is a branch in <code class="docutils literal notranslate"><span class="pre">stistools</span></code> <a class="reference external" href="https://github.com/spacetelescope/stistools/tree/sl_inttag-errors">here</a> with a fix for this <code class="docutils literal notranslate"><span class="pre">inttag</span></code> bug, where the errors revert to the pipeline’s root-N approximation default. In lieu of using that branch, users should recalculate their uncertainties when using <code class="docutils literal notranslate"><span class="pre">inttag</span></code>, especially on low-SNR data.</p>
+<p><strong>Recommendation:</strong> In the end, our recommendation is to use the Poisson confidence intervals, but not at the pixel level because measurements along a column are not independent events. You would therefore be justified in calculating the Poisson confidence interval on the summed flux at each wavelength/column.</p>
+<p>This bug has been fixed in <code class="docutils literal notranslate"><span class="pre">stistools.inttag</span></code> <a class="reference external" href="https://github.com/spacetelescope/stistools/tree/sl_inttag-errors">here</a>.</p>
 </section>
 <hr class="docutils" />
 <section id="about-this-notebook-a-class-tocskip">
 <h2>About this Notebook <a class="tocSkip"><a class="headerlink" href="#about-this-notebook-a-class-tocskip" title="Permalink to this heading">#</a></h2>
 <p><strong>Author:</strong> <span class="xref myst">Joshua Lothringer</span> with help from <span class="xref myst">Leo dos Santos</span></p>
-<p><strong>Updated On:</strong> 2024-05-14</p>
+<p><strong>Updated On:</strong> 2025-04-10</p>
 <blockquote>
 <div><p><em>This tutorial was generated to be in compliance with the <a class="reference external" href="https://github.com/spacetelescope/style-guides">STScI style guides</a> and would like to cite the <a class="reference external" href="https://github.com/spacetelescope/style-guides/blob/master/templates/example_notebook.ipynb">Jupyter guide</a> in particular.</em></p>
 </div></blockquote>
