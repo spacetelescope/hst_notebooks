@@ -56,16 +56,21 @@ jobs:
           echo "Path to req's: $(dirname ${{ matrix.notebook }})/requirements.txt"
           ls $(dirname ${{ matrix.notebook }})
           echo ---
-          if [ -f $(dirname "${{ matrix.notebook }}")/pre-requirements.sh ]; then
-            chmod +x $(dirname "${{ matrix.notebook }}")/pre-requirements.sh
-            ./$(dirname "${{ matrix.notebooks }}")/pre-requirements.sh
+          NB_PATH="${{ matrix.notebook }}"
+          NB_DIR="$(dirname "$NB_PATH")"
+          
+          if [ -f "$NB_DIR/pre-requirements.sh" ]; then
+            chmod +x "$NB_DIR/pre-requirements.sh"
+            "$NB_DIR/pre-requirements.sh"
           fi
-          if [ -f pre-requirements.txt ]; then
-            pip install -r pre-requirements.txt
+          
+          if [ -f "$NB_DIR/pre-requirements.txt" ]; then
+            pip install -r "$NB_DIR/pre-requirements.txt"
           fi
-          if [ -f $(dirname "${{ matrix.notebook }}")/pre-install.sh ]; then
-            chmod +x $(dirname "${{ matrix.notebook }}")/pre-install.sh
-            ./$(dirname "${{ matrix.notebook }}")/pre-install.sh
+          
+          if [ -f "$NB_DIR/pre-install.sh" ]; then
+            chmod +x "$NB_DIR/pre-install.sh"
+            "$NB_DIR/pre-install.sh"
           fi
           
           pip install -r $(dirname ${{ matrix.notebook }})/requirements.txt
