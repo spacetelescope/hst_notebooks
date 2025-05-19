@@ -35,85 +35,97 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        notebook: ${{fromJson(needs.prepare_matrix.outputs.matrix)}}
+        notebooks: ${{fromJson(needs.prepare_matrix.outputs.matrix)}}
 
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Python
-        uses: actions/setup-python@v3
+      - uses: actions/checkout@v4
         with:
-          python-version:  ${{ vars.PYTHON_VERSION }}
+          fetch-depth: 0
+            
+      - name: Set up micromamba and install dependencies
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-name: hstcal
+          create-args: >-
+            -c conda-forge
+            python=${{ inputs.python-version }}
+            numpy=1.26.0
+            hstcal
+            jupyter
+            pytest
+            nbval
+            nbconvert
+            bandit
 
-      - name: Add conda to system path
-        run: |
-          echo $CONDA/bin >> $GITHUB_PATH
-        
+      
+      - name: Set up Python ${{ inputs.python-version }}
+        uses: astral-sh/setup-uv@v6.0.1
+        with:
+          version: "0.7.3"
+          python-version: ${{ inputs.python-version }}
+          enable-cache: true
+      
       - name: Install dependencies
+        env:
+          PYDEVD_DISABLE_FILE_VALIDATION: 1
+          SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL: True
         run: |
-          echo DEBUG ---
-          pwd
-          echo "Path to req's: $(dirname ${{ matrix.notebook }})/requirements.txt"
-          ls $(dirname ${{ matrix.notebook }})
+          eval "$(micromamba shell hook -s posix)"
+          micromamba activate hstcal
+          
+          # Verify numpy version (for debugging)
+          python -c "import numpy; print(f'NumPy version: {numpy.__version__}')"
+          
+          echo "Path to req's: $(dirname ${{ matrix.notebooks }})/requirements.txt"
+          ls $(dirname ${{ matrix.notebooks }})
           echo ---
-          NB_PATH="${{ matrix.notebook }}"
-          NB_DIR="$(dirname "$NB_PATH")"
-          
-          if [ -f "$NB_DIR/pre-requirements.sh" ]; then
-            chmod +x "$NB_DIR/pre-requirements.sh"
-            "$NB_DIR/pre-requirements.sh"
+          if [ -f $(dirname "${{ matrix.notebooks }}")/pre-installl.sh ]; then
+            chmod +x $(dirname "${{ matrix.notebooks }}")/pre-install.sh
+            ./$(dirname "${{ matrix.notebooks }}")/pre-install.sh
           fi
-          
-          if [ -f "$NB_DIR/pre-requirements.txt" ]; then
-            pip install -r "$NB_DIR/pre-requirements.txt"
+          if [ -f $(dirname "${{ matrix.notebooks }}")/pre-requirements.sh ]; then
+            chmod +x $(dirname "${{ matrix.notebooks }}")/pre-requirements.sh
+            ./$(dirname "${{ matrix.notebooks }}")/pre-requirements.sh
           fi
-          
-          if [ -f "$NB_DIR/pre-install.sh" ]; then
-            chmod +x "$NB_DIR/pre-install.sh"
-            "$NB_DIR/pre-install.sh"
+          if [ -f $(dirname "${{ matrix.notebooks }}")/pre-requirements.txt ]; then
+            uv pip install --system --no-build-isolation -r $(dirname "${{ matrix.notebooks }}")/pre-requirements.txt
           fi
+          if [ -f $(dirname ${{ matrix.notebooks }})/requirements.txt ]; then
+            uv pip install --system --no-build-isolation -r $(dirname ${{ matrix.notebooks }})/requirements.txt
+          fi         
           
-          pip install -r $(dirname ${{ matrix.notebook }})/requirements.txt
-          pip install pytest
-          pip install nbval
-          pip install nbconvert
-          pip install bandit
-          if [ "${GITHUB_REPOSITORY}" == "spacetelescope/hst_notebooks" ]; then
-            source /usr/share/miniconda/etc/profile.d/conda.sh
-            conda create --yes --solver=classic -n hstcal -c conda-forge hstcal          
-          fi
-          
+          uv pip install --system pytest
+          uv pip install --system nbval
+          uv pip install --system nbconvert
+          uv pip install --system bandit
+
+
       - name: Execute notebooks
         id: execute
         run: |
-         if [ "${GITHUB_REPOSITORY}" == "spacetelescope/hst_notebooks" ]; then
-            source /usr/share/miniconda/etc/profile.d/conda.sh
-            conda init
-            conda activate hstcal
-         fi        
-          export CASJOBS_PW=${{ secrets.CASJOBS_PW }}
-          export CASJOBS_USERID=${{ secrets.CASJOBS_USERID }}
-          if ! jupyter nbconvert --to notebook --execute --inplace ${{ matrix.notebook }}; then
-            python .github/scripts/insert_failure_message.py ${{ matrix.notebook }}
+          eval "$(micromamba shell hook -s posix)"
+          micromamba activate hstcal
+          if ! jupyter nbconvert --to notebook --execute --inplace ${{ matrix.notebooks }}; then
+            python .github/scripts/insert_failure_message.py ${{ matrix.notebooks }}
           fi
           
       - name: Commit modified file on current branch
         run: |
           git config user.name 'CI Bot'
           git config user.email 'action@github.com'
-          git add "${{ matrix.notebook }}"
-          git commit -m "Storing executed notebook ${{ matrix.notebook }}"
+          git add "${{ matrix.notebooks }}"
+          git commit -m "Storing executed notebook ${{ matrix.notebooks }}"
 
       - name: Checkout only the file to the target branch
         run: |
           git fetch
           git pull
           git checkout -f gh-storage
-          git checkout @{-1} "${{ matrix.notebook }}"
+          git checkout @{-1} "${{ matrix.notebooks }}"
 
       - name: Commit and push modifications to target branch
         run: |
-          git commit -m "Storing executed notebook ${{ matrix.notebook }}"
+          git commit -m "Storing executed notebook ${{ matrix.notebooks }}"
 
           MAX_RETRIES=5
           RETRY_DELAY=10s
