@@ -436,11 +436,10 @@ def plot_cutouts(data, rpix):
     figure : matplotlib.figure.Figure
         A figure showing each star on linear, lognorm, and log10 scales.
     """
-    
     figure, mysubplot = plt.subplots(1, 4, figsize=(11, 11), sharex=True, sharey=True)
     mysubplot[0].imshow(data, vmin=0.0, vmax=np.amax(data), origin='lower', aspect='equal')
     mysubplot[1].imshow(data, vmin=0.0, vmax=np.amax(data)/100.0, origin='lower', aspect='equal')
-    vmin = np.percentile(data, 0.0)
+    vmin = float(np.maximum(np.percentile(data, 0.0), 1.0e-6)) # Incase vmin < 0.
     vmax = np.percentile(data, 98.5)
     mysubplot[2].imshow(data, norm=LogNorm(vmin=vmin, vmax=vmax), origin='lower', aspect='equal')
     mysubplot[3].imshow(np.log10(data), origin='lower', aspect='equal')
