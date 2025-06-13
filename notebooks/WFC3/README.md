@@ -50,16 +50,9 @@ command in terminal:
 git clone https://github.com/spacetelescope/hst_notebooks
 ```
 
-`stenv` is the preferred base virtual environment for running WFC3 Noteboks since 
-it contains libraries necessary for processing and analyzing data from the Hubble 
-Space Telescope (HST) and the James Webb Space Telescope (JWST). To install, see 
-[stenv readthedocs](https://stenv.readthedocs.io/en/latest/) or 
-[stenv GitHub](https://github.com/spacetelescope/stenv). 
+It is recommended that you use a base virtual environment. Each notebook contains a `requirements.txt` file that needs to be installed before running the notebooks. If you are already using a virtual environment, please ensure that you use the most up-to-date versions of the packages listed in the `requirements.txt` file in said notebook folder.
 
-In addition, each notebook contains a `requirements.txt` file that needs to be
-installed before running the notebooks. Some notebooks contain a `pre-requirements.sh`
-file, usually to install [HSTCAL](https://github.com/spacetelescope/hstcal), which
-is the calibration software for HST. Here is a common set of commands to run 
+Some notebooks contain a `pre-requirements.sh` file, usually to install [HSTCAL](https://github.com/spacetelescope/hstcal), which is the calibration software for HST. Here is a common set of commands to run 
 before executing the notebooks (assuming your virtual environment is activated):
 
 ```
