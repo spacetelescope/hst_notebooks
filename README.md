@@ -33,47 +33,84 @@ Installation Instructions
 
 You can view rendered versions of the notebooks in this repository,
 it requires no special tools beyond your web browser.
+See [this website](https://spacetelescope.github.io/hst_notebooks/
 
 To download and execute the notebooks, we recommend you clone
 the `hst_notebooks <https://github.com/spacetelescope/hst_notebooks>`_
-repository to your local computer. You can also click the "Download ZIP"
-option for the entire repository listed under the green "Code" button at
-the top of the repository landing page. You could download individual notebooks,
+repository to your local computer. 
+
+You can also click the "Download ZIP" option for the entire repository listed under the green "Code" button at the top of the repository landing page. You could download individual notebooks,
 but it is not as straight forward or recommended, so we do not provide details here.
 
 Most notebooks have additional associated files in their folder,
-including a requirements document that lists packages necessary to run the notebooks.
-These packages can be installed using `pip <https://pip.pypa.io/en/stable/>`_. 
-The version dependencies are listed in the environment.yaml and in the requirements file in 
-each notebook folder. Please use the minimum supported version of the Python language.
+including a requirements file that lists packages necessary to run the notebooks.
+These packages in the requirements file can be installed using `pip <https://pip.pypa.io/en/stable/>`_ . 
 
-Create Your Local Environment and Clone the Repo
-------------------------------------------------
+Any version dependencies are contained in the requirements file in 
+each notebook folder. Please use at least the minimum supported
+version of the Python language.
 
-You may want to consider installing your notebooks in a new virtual or conda environment
-to avoid version conflicts with other packages you may have installed, for example::
+Some notebooks use HSTCAL. The folders for these notebooks will also contain a shell
+script that contains the command to pull the hstcal package from conda-forge instead of pypi.
 
-    conda create -n hst-nb python=3.11
-    conda activate hst-nb
 
-Once you've changed to the directory where you cloned this repository, as below:
+Clone the Repository
+--------------------
+
+Once you've changed to the directory where you cloned this repository, and go to
+the notebook directory you are interested in using, as below:
 
     git clone https://github.com/spacetelescope/hst_notebooks.git
+    cd hst_notebooks/notebooks/ACS/acs_cte_forward_model
 
 You can then proceed to install the requirements for the specific notebook you are interested in using.
 
-Pip Install Notebook Requirements
----------------------------------
 
-Next, move into the directory of the notebook you want to install and set up the requirements::
+Run the notebook in an appropriate environment
+----------------------------------------------
+
+Once you are in the directory of the notebook you want to use, make sure you have a populated environment::
 
     cd hst_notebooks/notebooks/<whatever-notebook>
-    pip install -r pre-requirements.txt (if necessary)
+
+You may want to consider installing your notebooks in a new conda/mamba environment
+to avoid version conflicts with other packages you may have installed, for example::
+
+    conda create -n hstnb
+    conda activate hstnb
+
+
+In the case that there is no pre-requirements.sh file:
+
+    conda create --name hstnb
+    conda activate hstnb
     pip install -r requirements.txt
     pip install jupyter
-    jupyter notebook
-    ## Alternatively, you can use jupyter lab
+    jupyter notebook <whatever-notebook>
     
+
+In the case that there is a pre-requirements.sh file, this file is likely
+only used to install hstcal. You can create the appropriate environment using 
+the following:
+
+    conda create --yes -n hstcal -c conda-forge hstcal
+    conda activate hstcal
+    pip install -r requirements.txt
+    pip install jupyter
+    jupyter notebook <whatever-notebook>
+
+
+It's possible that you also have the `stenv` environment available locally.
+In this case, `stenv` should already have hstcal installed. You
+can activate the environment and update the environment to use the notebooks requirements file:
+
+    conda activate stenv
+    pip install -r requirments.txt
+ 
+If pip reports conflicts, then you might need to follow the above instructions to create
+a new, isolated environment instead of using `stcal`
+
+
 Help
 ====
 If you uncover any issues or bugs, you can [open an issue on GitHub](https://github.com/spacetelescope/hst_notebooks/issues/new).  
