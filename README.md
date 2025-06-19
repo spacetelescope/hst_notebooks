@@ -39,18 +39,17 @@ To download and execute the notebooks, we recommend you clone
 the `hst_notebooks <https://github.com/spacetelescope/hst_notebooks>`_
 repository to your local computer. 
 
-You can also click the "Download ZIP" option for the entire repository listed under the green "Code" button at the top of the repository landing page. You could download individual notebooks,
-but it is not as straight forward or recommended, so we do not provide details here.
+You can also click the "Download ZIP" option for the entire repository listed under the green "Code" button at the top of the repository landing page. You are also able to download individual notebooks, but it is not as straight forward or recommended, so we do not provide details here.
 
 Most notebooks have additional associated files in their folder,
 including a requirements file that lists packages necessary to run the notebooks.
-These packages in the requirements file can be installed using `pip <https://pip.pypa.io/en/stable/>`_ . 
+The packages in the requirements file can be installed using `pip <https://pip.pypa.io/en/stable/>`_ . 
 
 Any version dependencies are contained in the requirements file in 
 each notebook folder. Please use at least the minimum supported
-version of the Python language.
+version of the Python language in your active environment.
 
-Some notebooks use HSTCAL. The folders for these notebooks will also contain a shell
+Some notebooks use the HSTCAL package. The folders for these notebooks will also contain a shell
 script that contains the command to pull the hstcal package from conda-forge instead of pypi.
 
 
@@ -58,7 +57,8 @@ Clone the Repository
 --------------------
 
 Once you've changed to the directory where you cloned this repository, and go to
-the notebook directory you are interested in using, as below:
+the notebook directory you are interested in using, and go to your selected 
+notebook, as below:
 
     git clone https://github.com/spacetelescope/hst_notebooks.git
     cd hst_notebooks/notebooks/ACS/acs_cte_forward_model
@@ -69,40 +69,43 @@ You can then proceed to install the requirements for the specific notebook you a
 Run the notebook in an appropriate environment
 ----------------------------------------------
 
-Once you are in the directory of the notebook you want to use, make sure you have a populated environment::
+Once you are in the directory of the notebook you want to use, make sure you have a populated environment that contains the required pacages::
 
     cd hst_notebooks/notebooks/<whatever-notebook>
 
 You may want to consider installing your notebooks in a new conda/mamba environment
 to avoid version conflicts with other packages you may have installed, for example::
 
-    conda create -n hstnb
+    conda create -n hstnb python pip jupyter
     conda activate hstnb
 
 
 In the case that there is no pre-requirements.sh file:
 
-    conda create --name hstnb
+    conda create --name hstnb python pip jupyter
     conda activate hstnb
     pip install -r requirements.txt
-    pip install jupyter
-    jupyter notebook <whatever-notebook>
     
 
 In the case that there is a pre-requirements.sh file, this file is likely
-only used to install hstcal. You can create the appropriate environment using 
-the following:
+only used to install hstcal. You can either install hstcal in the `hstnb`
+environment you created above... 
+    
+    conda install --yes -c conda-forge hstcal
+
+
+or you can create the appropriate environment starting 
+with hstcal using the following:
 
     conda create --yes -n hstcal -c conda-forge hstcal
     conda activate hstcal
     pip install -r requirements.txt
     pip install jupyter
-    jupyter notebook <whatever-notebook>
 
 
 It's possible that you also have the `stenv` environment available locally.
 In this case, `stenv` should already have hstcal installed. You
-can activate the environment and update the environment to use the notebooks requirements file:
+can activate the environment, and then update it to use the notebooks requirements file:
 
     conda activate stenv
     pip install -r requirments.txt
