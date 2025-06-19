@@ -23,24 +23,7 @@ Drizzling Features:
 
 For more information, see the [DrizzlePac Handbook](https://hst-docs.stsci.edu/drizzpac) and the [readthedocs](https://drizzlepac.readthedocs.io/en/latest/) software documentation. For additional assistance with DrizzlePac tools, users may submit a ticket to the [STScI Help Desk](https://stsci.service-now.com/hst?id=hst_index) and should select the DrizzlePac category.
 
+## For general instructions on creating an environment
+that can run the notebooks, see the repository [README](https://github.com/spacetelescope/hst_notebooks/blob/main/README.md)
 
-Installation
-------------
 
-It is recommended to clone the entire repository. To do so, run the following command in a terminal:
-
-```
-git clone https://github.com/spacetelescope/hst_notebooks
-```
-
-It is also recommended that you use a base virtual environment. Each notebook contains a `requirements.txt` file that needs to be installed before running the notebooks. If you are already using a virtual environment, please ensure that you use the most up-to-date versions of the packages listed in the `requirements.txt` file in said notebook folder.
-
-Here is a common set of commands to run before executing the notebooks (assuming your virtual environment is activated):
-
-```
-pip install -r requirements.txt
-pip install notebook
-```
-
-With the environment activated and additional libraries installed based on the
-individual requirement files, you will be able to complete the notebooks. 
