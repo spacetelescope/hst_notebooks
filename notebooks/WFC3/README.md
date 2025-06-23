@@ -40,29 +40,8 @@ See the [WFC3 Instrument Handbook](https://hst-docs.stsci.edu/wfc3ihb),
 [WFC3 Software Tools](https://www.stsci.edu/hst/instrumentation/wfc3/software-tools)
 for more information on instrumentation, data, calibration, and software.
 
-Installation
-------------
-
-It is recommended to clone the entire repository. To do so, run the following
-command in terminal:
-
-```
-git clone https://github.com/spacetelescope/hst_notebooks
-```
-
-It is recommended that you use a base virtual environment. Each notebook contains a `requirements.txt` file that needs to be installed before running the notebooks. If you are already using a virtual environment, please ensure that you use the most up-to-date versions of the packages listed in the `requirements.txt` file in said notebook folder.
-
-Some notebooks contain a `pre-requirements.sh` file, usually to install [HSTCAL](https://github.com/spacetelescope/hstcal), which is the calibration software for HST. Here is a common set of commands to run 
-before executing the notebooks (assuming your virtual environment is activated):
-
-```
-bash pre-requirements.sh
-pip install -r requirements.txt
-pip install notebook
-```
-
-With the environment activated and additional libraries installed based on the
-individual requirement files, you will be able to complete the notebooks.
+## For general instructions on creating an environment
+that can run the notebooks, see the repository [README](https://github.com/spacetelescope/hst_notebooks/blob/main/README.md)
 
 Contributing
 ------------
@@ -82,6 +61,7 @@ the the `astropy`
 [contributing](https://www.astropy.org/contribute.html)
 and [developer](https://docs.astropy.org/en/stable/index.html#developer-documentation) 
 documentation.
+
 
 License
 -------

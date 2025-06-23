@@ -3,6 +3,9 @@
 ## Jupyter Notebook Tutorials for Working with Space Telescope Imaging Spectrograph (STIS) Data and Observation Planning.
 The [Space Telescope Imaging Spectrograph](https://www.stsci.edu/hst/instrumentation/stis) (STIS) is an instrument on board the [Hubble Space Telescope](https://www.stsci.edu/hst/about) (HST). This is a repository of interactive tutorials for working with STIS data and planning observations.  A complete list of available tools can be found on the [STIS data and software tools website](https://www.stsci.edu/hst/instrumentation/stis/data-analysis-and-software-tools).
 
+## For general instructions on creating an environment
+that can run the notebooks, see the repository [README](https://github.com/spacetelescope/hst_notebooks/blob/main/README.md)
+
 #### [Currently Operational Notebooks](#ch1)
 #### [Basic Requirements](#ch2)
 #### [Notes for those new to `Python`/`Jupyter` Coding](#ch3)
