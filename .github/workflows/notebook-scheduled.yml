@@ -1,0 +1,45 @@
+# Scheduled workflow for hellouniverse repository
+# Copy this file to your repository's .github/workflows/ directory
+
+name: Notebook CI - Scheduled
+
+on:
+  # Run weekly on Sundays at 2 AM UTC
+  schedule:
+    - cron: '0 2 * * 0'
+
+jobs:
+  notebook-ci:
+    uses: spacetelescope/notebook-ci-actions/.github/workflows/notebook-ci-unified.yml@dev-actions-v2
+    with:
+      # Repository-specific configuration
+      notebook_path: 'notebooks'
+      python_version: '3.11'
+      
+      # Scheduled execution settings
+      execution_mode: 'force_execute'
+      notebook_pattern: ''
+      
+      # Environment settings
+      environment_file: 'requirements.txt'
+      conda_environment_file: ''
+      
+      # Security and validation
+      security_check: true
+      notebook_validation: true
+      
+      # Documentation generation
+      generate_docs: true
+      docs_artifact: 'hellouniverse-scheduled-docs'
+      
+      # Artifact settings
+      artifact_retention_days: 30
+      
+      # Performance settings
+      timeout_minutes: 60
+      max_parallel: 3
+      
+      # Scheduled-specific settings
+      collect_execution_stats: true
+      
+    secrets: inherit
