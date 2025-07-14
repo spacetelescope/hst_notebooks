@@ -145,7 +145,7 @@ def copy_files_check(src_dir, dst_dir, files='*', rename=False, src_str='', dst_
     # Print the command to copy the files or a summary of the copied files
     if print_cmd:
         # Check if all the specified files with the string extension provided need to be copied/moved
-        if isinstance(files_ext, str) and ('*' in files_ext) and (len(files) == n) and (rename == False):
+        if isinstance(files_ext, str) and ('*' in files_ext) and (len(files) == n) and (rename is False):
             all_files = os.path.join(src_dir_full, files_ext)
             print("Command to {} all {} '{}' files:".format(mode, n, files_ext))
             cmd = '{} {} {}'.format(md, all_files, dst_dir_full)
