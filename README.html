@@ -531,8 +531,8 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installation-instructions">Installation Instructions</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-your-local-environment-and-clone-the-repo">Create Your Local Environment and Clone the Repo</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pip-install-notebook-requirements">Pip Install Notebook Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-the-repository">Clone the Repository</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-notebook-in-an-appropriate-environment">Run the notebook in an appropriate environment</a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#help">Help</a></li>
@@ -574,43 +574,72 @@ document.write(`
 <section class="tex2jax_ignore mathjax_ignore" id="installation-instructions">
 <h1>Installation Instructions<a class="headerlink" href="#installation-instructions" title="Permalink to this heading">#</a></h1>
 <p>You can view rendered versions of the notebooks in this repository,
-it requires no special tools beyond your web browser.</p>
+it requires no special tools beyond your web browser.
+See [this website](https://spacetelescope.github.io/hst_notebooks/</p>
 <p>To download and execute the notebooks, we recommend you clone
 the <code class="docutils literal notranslate"><span class="pre">hst_notebooks</span> <span class="pre">&lt;https://github.com/spacetelescope/hst_notebooks&gt;</span></code>_
-repository to your local computer. You can also click the “Download ZIP”
-option for the entire repository listed under the green “Code” button at
-the top of the repository landing page. You could download individual notebooks,
-but it is not as straight forward or recommended, so we do not provide details here.</p>
+repository to your local computer.</p>
+<p>You can also click the “Download ZIP” option for the entire repository listed under the green “Code” button at the top of the repository landing page. You are also able to download individual notebooks, but it is not as straight forward or recommended, so we do not provide details here.</p>
 <p>Most notebooks have additional associated files in their folder,
-including a requirements document that lists packages necessary to run the notebooks.
-These packages can be installed using <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">&lt;https://pip.pypa.io/en/stable/&gt;</span></code>_.
-The version dependencies are listed in the environment.yaml and in the requirements file in
-each notebook folder. Please use the minimum supported version of the Python language.</p>
-<section id="create-your-local-environment-and-clone-the-repo">
-<h2>Create Your Local Environment and Clone the Repo<a class="headerlink" href="#create-your-local-environment-and-clone-the-repo" title="Permalink to this heading">#</a></h2>
-<p>You may want to consider installing your notebooks in a new virtual or conda environment
-to avoid version conflicts with other packages you may have installed, for example::</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda create -n hst-nb python=3.11
-conda activate hst-nb
-</pre></div>
-</div>
-<p>Once you’ve changed to the directory where you cloned this repository, as below:</p>
+including a requirements file that lists packages necessary to run the notebooks.
+The packages in the requirements file can be installed using <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">&lt;https://pip.pypa.io/en/stable/&gt;</span></code>_ .</p>
+<p>Any version dependencies are contained in the requirements file in
+each notebook folder. Please use at least the minimum supported
+version of the Python language in your active environment.</p>
+<p>Some notebooks use the HSTCAL package. The folders for these notebooks will also contain a shell
+script that contains the command to pull the hstcal package from conda-forge instead of pypi.</p>
+<section id="clone-the-repository">
+<h2>Clone the Repository<a class="headerlink" href="#clone-the-repository" title="Permalink to this heading">#</a></h2>
+<p>Once you’ve changed to the directory where you cloned this repository, and go to
+the notebook directory you are interested in using, and go to your selected
+notebook, as below:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/spacetelescope/hst_notebooks.git
+cd hst_notebooks/notebooks/ACS/acs_cte_forward_model
 </pre></div>
 </div>
 <p>You can then proceed to install the requirements for the specific notebook you are interested in using.</p>
 </section>
-<section id="pip-install-notebook-requirements">
-<h2>Pip Install Notebook Requirements<a class="headerlink" href="#pip-install-notebook-requirements" title="Permalink to this heading">#</a></h2>
-<p>Next, move into the directory of the notebook you want to install and set up the requirements::</p>
+<section id="run-the-notebook-in-an-appropriate-environment">
+<h2>Run the notebook in an appropriate environment<a class="headerlink" href="#run-the-notebook-in-an-appropriate-environment" title="Permalink to this heading">#</a></h2>
+<p>Once you are in the directory of the notebook you want to use, make sure you have a populated environment that contains the required pacages::</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd hst_notebooks/notebooks/&lt;whatever-notebook&gt;
-pip install -r pre-requirements.txt (if necessary)
-pip install -r requirements.txt
-pip install jupyter
-jupyter notebook
-## Alternatively, you can use jupyter lab
 </pre></div>
 </div>
+<p>You may want to consider installing your notebooks in a new conda/mamba environment
+to avoid version conflicts with other packages you may have installed, for example::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda create -n hstnb python pip jupyter
+conda activate hstnb
+</pre></div>
+</div>
+<p>In the case that there is no pre-requirements.sh file:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda create --name hstnb python pip jupyter
+conda activate hstnb
+pip install -r requirements.txt
+</pre></div>
+</div>
+<p>In the case that there is a pre-requirements.sh file, this file is likely
+only used to install hstcal. You can either install hstcal in the <code class="docutils literal notranslate"><span class="pre">hstnb</span></code>
+environment you created above…</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda install --yes -c conda-forge hstcal
+</pre></div>
+</div>
+<p>or you can create the appropriate environment starting
+with hstcal using the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda create --yes -n hstcal -c conda-forge hstcal
+conda activate hstcal
+pip install -r requirements.txt
+pip install jupyter
+</pre></div>
+</div>
+<p>It’s possible that you also have the <code class="docutils literal notranslate"><span class="pre">stenv</span></code> environment available locally.
+In this case, <code class="docutils literal notranslate"><span class="pre">stenv</span></code> should already have hstcal installed. You
+can activate the environment, and then update it to use the notebooks requirements file:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda activate stenv
+pip install -r requirments.txt
+</pre></div>
+</div>
+<p>If pip reports conflicts, then you might need to follow the above instructions to create
+a new, isolated environment instead of using <code class="docutils literal notranslate"><span class="pre">stcal</span></code></p>
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="help">
@@ -678,8 +707,8 @@ to assist. Questions can also be sent through the <a class="reference external" 
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installation-instructions">Installation Instructions</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-your-local-environment-and-clone-the-repo">Create Your Local Environment and Clone the Repo</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pip-install-notebook-requirements">Pip Install Notebook Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-the-repository">Clone the Repository</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-notebook-in-an-appropriate-environment">Run the notebook in an appropriate environment</a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#help">Help</a></li>
