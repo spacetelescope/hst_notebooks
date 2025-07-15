@@ -5,8 +5,7 @@
 import os
 import glob
 import shutil
-import numpy as np
-import pandas as pd
+
 
 def copy_files_check(src_dir, dst_dir, files='*', rename=False, src_str='', dst_str='', move=False, print_cmd=False):
     """Check for and copy or move files.
@@ -63,12 +62,12 @@ def copy_files_check(src_dir, dst_dir, files='*', rename=False, src_str='', dst_
     os.chdir(src_dir_full)
 
     # Set mode to copy or move
-    if move == False:
-        mode = 'copy'
-        md = 'cp'
-    else:
+    if move:
         mode = '~move~'
         md = 'mv'
+    else:
+        mode = 'copy'
+        md = 'cp'
     
     # Check for files to copy
     # If a string is provided for the files, make a list with glob, else assume a list/array/pandas Series provided 
@@ -81,10 +80,11 @@ def copy_files_check(src_dir, dst_dir, files='*', rename=False, src_str='', dst_
     # Print summary
     print('=====================================================================')
     print('{} files to {} from {} to {}'.format(len(files), mode, src_dir, dst_dir))
-    if rename == True: 
+    if rename:
         print('Renaming {} to {} in files'.format(src_str, dst_str))
         rnm_str, rnmd_str = ' and renaming ', ' and renamed '
-    else: rnm_str = rnmd_str = ''
+    else:
+        rnm_str = rnmd_str = ''
     print('=====================================================================')
     
     # Check for destination directory and make it if it doesn't exist
@@ -95,10 +95,11 @@ def copy_files_check(src_dir, dst_dir, files='*', rename=False, src_str='', dst_
         print('Created destination directory:', dst_dir)  
     
     # If printing the copy command, set the starting cmd variable
-    if print_cmd == True: cmd = ''
+    if print_cmd:
+        cmd = ''
         
     # Loop over each file, create a source and destination, check if it exists, and copy/move if not 
-    n=0
+    n = 0
     for file in files:
         if os.path.isfile(file):
             # Define source and destination paths for each file
@@ -106,43 +107,45 @@ def copy_files_check(src_dir, dst_dir, files='*', rename=False, src_str='', dst_
             src = os.path.join(src_dir, file)                        # Relative path for printing
 
             # If a file is to be renamed with a replacement extension
-            if rename == False:
+            if rename: 
+                # Replace the specified component with the new component
+                dst_full = os.path.join(dst_dir_full, file.replace(src_str, dst_str)) 
+                dst = os.path.join(dst_dir, file.replace(src_str, dst_str))
+            else:
                 dst_full = os.path.join(dst_dir_full, file)   # Full estination filepath of file to be copied/moved and renamed
                 dst = os.path.join(dst_dir, file) 
-            else: 
-                # Replace the specified component with the new component
-                dst_full = os.path.join(ddst_dir_full, file.replace(src_str, dst_str)) 
-                dst = os.path.join(dst_dir, file.replace(src_str, dst_str))
 
             # Check if the file is already in the destination directory, if not it is copied/moved
             if not os.path.exists(dst_full):
                 # Either copy/move the files or add to the cmd variable
-                if print_cmd == False:
-                    if move == False:
-                        print('Copying{} {} to {}'.format(rnm_str, src, dst))
-                        shutil.copy(src_full, dst_full)
-                    else:
+                if print_cmd:
+                    # Set command to copy/move the file to print for command line
+                    if n > 0:
+                        cmd += ' && '
+                    cmd += '{} {} {}'.format(md, src_full, dst_full)
+                else:
+                    if move:
                         print('~Moving~{} {} to {}'.format(rnm_str, src, dst))
                         shutil.move(src_full, dst_full)
-                # Or set command to copy/move the file to print for command line
-                else:
-                    if n > 0: cmd += ' && '
-                    cmd += '{} {} {}'.format(md, src_full, dst_full)
+                    else:
+                        print('Copying{} {} to {}'.format(rnm_str, src, dst))
+                        shutil.copy(src_full, dst_full)
                 n += 1
             else:
-                if move == False:
-                    print('File exists: {}, not copying from {}'.format(dst, src_dir))
-                else:
+                if move:
                     print('File exists: {}, not ~moving~ from {}'.format(dst, src_dir))
-        else: print('WARNING: {} is not a file, skipping...'.format(file))
+                else:
+                    print('File exists: {}, not copying from {}'.format(dst, src_dir))
+        else:
+            print('WARNING: {} is not a file, skipping...'.format(file))
 
     # Move back into working directory
     os.chdir(cwd)
 
     # Print the command to copy the files or a summary of the copied files
-    if print_cmd == True:
+    if print_cmd:
         # Check if all the specified files with the string extension provided need to be copied/moved
-        if isinstance(files_ext, str) and ('*' in files_ext) and (len(files) == n) and (rename == False):
+        if isinstance(files_ext, str) and ('*' in files_ext) and (len(files) == n) and (rename is False):
             all_files = os.path.join(src_dir_full, files_ext)
             print("Command to {} all {} '{}' files:".format(mode, n, files_ext))
             cmd = '{} {} {}'.format(md, all_files, dst_dir_full)
@@ -153,10 +156,10 @@ def copy_files_check(src_dir, dst_dir, files='*', rename=False, src_str='', dst_
         print(cmd)
         return cmd
     else:
-        if move == False:
-            print('Copied{} {} files to {}'.format(rnmd_str, n, dst_dir))
-        else: 
+        if move: 
             print('~Moved~{} {} files to {}'.format(rnmd_str, n, dst_dir))
+        else:
+            print('Copied{} {} files to {}'.format(rnmd_str, n, dst_dir))
         
         
 def rename(direc, files='*', src_str='', dst_str=''):
@@ -187,10 +190,7 @@ def rename(direc, files='*', src_str='', dst_str=''):
     # Check for files to rename
     # If a string is provided for the files, make a list with glob, else assume a list if provided 
     if isinstance(files, str):
-        files_ext = files
         files = glob.glob(files)
-    else:
-        files_ext = None
 
     # List all specified files and rename 
     for f in files:
