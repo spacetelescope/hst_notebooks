@@ -4,25 +4,15 @@
 
 # ACS Notebooks
 
-This repository contains Jupyter notebooks to demonstrate how to calibrate and analyze data from the *Hubble Space Telescope* (*HST*) Advanced Camera for Surveys (ACS). Users are advised to visit the [ACS website](http://www.stsci.edu/hst/acs), [Instrument Handbook](http://www.stsci.edu/hst/acs/documents/handbooks/current/cover.html), and [Data Handbook](http://www.stsci.edu/hst/acs/documents/handbooks/currentDHB/acs_cover.html) for more information about the current status of ACS, instrument specifications, and data analysis.
+This directory contains Jupyter notebooks to demonstrate how to calibrate and analyze data from the *Hubble Space Telescope* (*HST*) Advanced Camera for Surveys (ACS). Users are advised to visit the [ACS website](http://www.stsci.edu/hst/acs), [Instrument Handbook](http://www.stsci.edu/hst/acs/documents/handbooks/current/cover.html), and [Data Handbook](http://www.stsci.edu/hst/acs/documents/handbooks/currentDHB/acs_cover.html) for more information about the current status of ACS, instrument specifications, and data analysis.
 
-Users who need help transitioning from IRAF/PyRAF to Python should see the [stak-notebooks](https://github.com/spacetelescope/stak-notebooks) repository.
 
 If you have questions about HST data analysis, calibration software, instrument capabilities, and/or the methods discussed in this repository, please visit the [HST Help Desk](http://hsthelp.stsci.edu). Through the help desk portal, you can explore the HST Knowledge Base and request additional help from experts.
 
-# Getting Started
-
-[//]: # (To download the notebooks in this repository, simply open a terminal, go to the directory where you would like the notebooks to be, and type)
-
-[//]: # (```)
-
-[//]: # (git clone https://github.com/spacetelescope/acs-notebook.git)
-
-[//]: # (```)
-
-[//]: # (which will create a new acs-notebook/ directory containing the contents of this repository.)
-
 Jupyter Notebooks allow code to be packaged with formatted text to create illustrative examples. Users who are unfamiliar with Jupyter Notebooks should also see the [short guide](https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/) for how to use these tools.
+
+## For general instructions on creating an environment
+that can run the notebooks, see the repository [README](https://github.com/spacetelescope/hst_notebooks/blob/main/README.md)
 
 # Contents
 
