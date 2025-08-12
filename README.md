@@ -117,7 +117,7 @@ a new, isolated environment instead of using `stcal`
 Help
 ====
 If you uncover any issues or bugs, you can [open an issue on GitHub](https://github.com/spacetelescope/hst_notebooks/issues/new).  
-For faster responses, however, we encourage you to submit an [HST Help Desk Ticket](https://hsthelp.stsci.edu): 
+For faster responses, however, we encourage you to submit an [HST Help Desk Ticket](https://hsthelp.stsci.edu).
 
 
 
