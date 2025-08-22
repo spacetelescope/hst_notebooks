@@ -281,10 +281,13 @@ const thebe_selector_output = ".output, .cell_output"
 
 <li class="toctree-l1"><a class="reference internal" href="../../HASP/WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
 
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/COSLifetimePositions/COSLifetimePositions.html">Combining COS Data from Multiple Lifetime Positions and Central Wavelengths</a></li>
+
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
 <ul class="nav bd-sidenav">
@@ -625,7 +628,6 @@ document.write(`
 <h1>ACS Linearity with Saturated Stars<a class="headerlink" href="#acs-linearity-with-saturated-stars" title="Permalink to this heading">#</a></h1>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>The ACS/WFC CCD becomes saturated around 80000 counts. When this occurs, excess charge from the source spills out lengthwise along the columns of the CCD. This can lead to issues with photometry when using very bright stars, since a significant portion of the star’s flux may fall outside of a reasonable extraction radius.</p>
 <p>However, accurate relative photometry can be obtained as long as a large enough aperture is selected to contain the spilled flux (<a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr0401.pdf">ACS ISR 2004-01</a>). While one could simply use a larger circular aperture, that may introduce error when working with a crowded field (where bright stars are often located).</p>
 <p>Here we present a method to identify and perform photometry on saturated sources by defining a custom aperture that is a combination of a standard 0.5” arcsecond circular aperture and the pixels affected by saturation trails. This method has been tested on ACS/WFC observations of 47 Tuc in the F606W band. The plot below shows the results of using this alternative method to recover flux.</p>
@@ -679,7 +681,6 @@ document.write(`
 </section>
 <section id="imports">
 <h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>Here we list the Python packages used in this notebook. Links to the documentation for each module is provided for convenience.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -783,8 +784,6 @@ document.write(`
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.12/site-packages/stwcs/wcsutil/hstwcs.py:481: SyntaxWarning: invalid escape sequence &#39;\*&#39;
   all_world2pix(\*arg, tolerance=1.0e-4, maxiter=20, adaptive=False,
-/home/runner/micromamba/envs/hstcal/lib/python3.12/site-packages/stsci/skypac/skyline.py:900: SyntaxWarning: &#39;str&#39; object is not callable; perhaps you missed a comma?
-  raise AttributeError(&quot;&#39;%s&#39; object has no attribute &#39;%s&#39;&quot;
 </pre></div>
 </div>
 </div>
@@ -803,7 +802,6 @@ document.write(`
 </section>
 <section id="download-the-data">
 <h2>Download the Data<a class="headerlink" href="#download-the-data" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>Here we download all of the data required for this notebook. This is an important step! Some of the image processing steps require all relevant files to be in the working directory. We recommend working with a brand new directory for every new set of data.</p>
 <section id="go-proposal-14949-acs-external-cte-monitor">
 <h3><a class="reference external" href="https://stdatu.stsci.edu/proposal_search.php?mission=hst&amp;id=14949">GO Proposal 14949</a>: “ACS External CTE Monitor”<a class="headerlink" href="#go-proposal-14949-acs-external-cte-monitor" title="Permalink to this heading">#</a></h3>
@@ -1018,7 +1016,7 @@ document.write(`
 <section id="file-information-a-id-fileinfo-a">
 <h3>File Information <a id="_fileinfo"></a><a class="headerlink" href="#file-information-a-id-fileinfo-a" title="Permalink to this heading">#</a></h3>
 <p>The structure of the fits files from ACS may be different depending on what kind of observation was made.
-For more information, refer to Section 2.2of the <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/other-documents/_documents/acs_dhb.pdf">ACS Data Handbook</a>.</p>
+For more information, refer to Section 2.2 of the <a class="reference external" href="https://hst-docs.stsci.edu/acsdhb/chapter-2-acs-data-structure/2-2-acs-file-structure">ACS Data Handbook</a>.</p>
 <section id="raw-files">
 <h4>Raw Files<a class="headerlink" href="#raw-files" title="Permalink to this heading">#</a></h4>
 <p>A standard raw image file from a subarray has the same structure as you’d expect from full frame observation from ACS/WCS.</p>
@@ -1120,7 +1118,6 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </section>
 <section id="prepare-images-a-id-prep-a">
 <h2>1. Prepare Images <a id="_prep"></a><a class="headerlink" href="#prepare-images-a-id-prep-a" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>For this notebook, we will need two well-aligned images of the same field on the sky. One image should have a short exposure time (eg. 40 seconds) and the other should have a long exposure time (eg. 400 seconds). Here we assume you already know which images those are, and set those observation files to appropriate variable names.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1214,7 +1211,6 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </section>
 <section id="identify-saturated-stars-a-id-identify-a">
 <h2>2. Identify Saturated Stars <a id="_identify"></a><a class="headerlink" href="#identify-saturated-stars-a-id-identify-a" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>Before we begin our modified aperture photometry routine, we should determine whether or not our sources are saturated. We can identify saturated stars by whether or not their saturation trails extend past a typical extraction radius.</p>
 <p>Here we have the local coordinates of a bright star in our field.</p>
 <div class="cell docutils container">
@@ -1265,7 +1261,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/db1908efab7a01f89c6b1ea14a67895a655e094441fbe20c2257acb4056985db.png" src="../../../_images/db1908efab7a01f89c6b1ea14a67895a655e094441fbe20c2257acb4056985db.png" />
+<img alt="../../../_images/f3c21d5b4023eac99c93474d1a8d5d27a7608990edcd70bd26a40d8058d1dbe5.png" src="../../../_images/f3c21d5b4023eac99c93474d1a8d5d27a7608990edcd70bd26a40d8058d1dbe5.png" />
 </div>
 </div>
 <p>Now by indexing our image with our cutter, we can grab just the cutout we need!</p>
@@ -1276,7 +1272,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/ffca9a1459f44c52e27f6f1a02c60a719aff17948faa33f653836ffdcd1ddfa4.png" src="../../../_images/ffca9a1459f44c52e27f6f1a02c60a719aff17948faa33f653836ffdcd1ddfa4.png" />
+<img alt="../../../_images/682b45ca5deac3b762cfb5d5dcf4389d2862e6c5c34302dd157c357d624869ce.png" src="../../../_images/682b45ca5deac3b762cfb5d5dcf4389d2862e6c5c34302dd157c357d624869ce.png" />
 </div>
 </div>
 <p>We can visually confirm that this source is affected by saturation trails in the short exposure. What about the long exposure image? Since our images are aligned, we can use the same coordinates (and the same cutter!) as before.</p>
@@ -1287,7 +1283,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/62430b7c234850b0a585d8fdc52cebb705cfb9a0236bb4e1beda59d4ef41034a.png" src="../../../_images/62430b7c234850b0a585d8fdc52cebb705cfb9a0236bb4e1beda59d4ef41034a.png" />
+<img alt="../../../_images/e3917f770b765fa4e91d547bdb9391adf8828cf2905b7a1097e20c93aa4c2c0e.png" src="../../../_images/e3917f770b765fa4e91d547bdb9391adf8828cf2905b7a1097e20c93aa4c2c0e.png" />
 </div>
 </div>
 <p>We can also apply the same cutter to our DQ saturated pixel array!</p>
@@ -1298,10 +1294,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f8cc1dd3890&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fa38c904410&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/45cf34267b2ba918593b0adaa155000a5f4734f74793e53194ab307b81af2cf7.png" src="../../../_images/45cf34267b2ba918593b0adaa155000a5f4734f74793e53194ab307b81af2cf7.png" />
+<img alt="../../../_images/1f7dad8b4665244611454abea6340ef1ea5f57ee3f59a999967e8f4d72f995b4.png" src="../../../_images/1f7dad8b4665244611454abea6340ef1ea5f57ee3f59a999967e8f4d72f995b4.png" />
 </div>
 </div>
 <p>As we expect, we do not see very much saturation in our short exposure image. What about our long exposure image?</p>
@@ -1312,10 +1308,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f8cc1d82b70&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fa38c970170&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/8bbb39283a79d226e728d3eda7f0577558055a06894a078748b8b3309230782e.png" src="../../../_images/8bbb39283a79d226e728d3eda7f0577558055a06894a078748b8b3309230782e.png" />
+<img alt="../../../_images/05d5983ea0a722969f63cd7ecf231ff23c4da74ad7f7539ddab0e677a93ec37e.png" src="../../../_images/05d5983ea0a722969f63cd7ecf231ff23c4da74ad7f7539ddab0e677a93ec37e.png" />
 </div>
 </div>
 <p>Now we see a large clump of saturated pixels spilling along the y-axis!</p>
@@ -1337,10 +1333,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.patches.Circle at 0x7f8cc1e44680&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.patches.Circle at 0x7fa38c9da960&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/15812f2017adeba152909b5f628391d86fac7d9b7a8f70cbc522a40a9a66af66.png" src="../../../_images/15812f2017adeba152909b5f628391d86fac7d9b7a8f70cbc522a40a9a66af66.png" />
+<img alt="../../../_images/fb78f5a62a6736ba24a3a695c9005af8c3a8dd2fa3120df863d9176150c06f71.png" src="../../../_images/fb78f5a62a6736ba24a3a695c9005af8c3a8dd2fa3120df863d9176150c06f71.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1359,10 +1355,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.patches.Circle at 0x7f8cb7b18c50&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.patches.Circle at 0x7fa38273ecf0&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/3f5398b57b3a5149ba8e5ff87ad840f4898a22236adbb5dd99af1676be122c90.png" src="../../../_images/3f5398b57b3a5149ba8e5ff87ad840f4898a22236adbb5dd99af1676be122c90.png" />
+<img alt="../../../_images/df457703ed1ae36283808b580f795b03a81fdb3860eb41767bf3ecc20e3989df.png" src="../../../_images/df457703ed1ae36283808b580f795b03a81fdb3860eb41767bf3ecc20e3989df.png" />
 </div>
 </div>
 <p>Since the saturated pixels extend past our extraction radius, we need to use a different method to improve photometry</p>
@@ -1383,10 +1379,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f8caf11a1e0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fa38c9f3b60&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/404a5a45923c266dc49bac62dedd77b03d2bab08e3ae6197d55e1fc2e5c5af7f.png" src="../../../_images/404a5a45923c266dc49bac62dedd77b03d2bab08e3ae6197d55e1fc2e5c5af7f.png" />
+<img alt="../../../_images/af870f44dac73a4a8ac7c931e79d1c684bec693061e6af4f569a9785b956deaf.png" src="../../../_images/af870f44dac73a4a8ac7c931e79d1c684bec693061e6af4f569a9785b956deaf.png" />
 </div>
 </div>
 <p>We will use the <code class="docutils literal notranslate"><span class="pre">scipy</span></code> function <code class="docutils literal notranslate"><span class="pre">convolve2d()</span></code> to convolve our cutout with our kernel. Here, <code class="docutils literal notranslate"><span class="pre">mode='same'</span></code> ensures that the returned array is the same shape as the input array.</p>
@@ -1416,10 +1412,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f8caf131e50&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fa38c9da240&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/0351436e7c20cb75d9cb45750db9b32ef8f7d1ad9932cbd6013c361a868b66b1.png" src="../../../_images/0351436e7c20cb75d9cb45750db9b32ef8f7d1ad9932cbd6013c361a868b66b1.png" />
+<img alt="../../../_images/02d78d3db6157f4003b949543d30f004feae5b20b400694611a2d4467a54d9f6.png" src="../../../_images/02d78d3db6157f4003b949543d30f004feae5b20b400694611a2d4467a54d9f6.png" />
 </div>
 </div>
 </section>
@@ -1490,10 +1486,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f8ca5f1f5c0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fa379d6ad80&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/7b494117ec7ebf86d68e5687b392dfe39fca23c28dd1f324f8c44d3f1aefe873.png" src="../../../_images/7b494117ec7ebf86d68e5687b392dfe39fca23c28dd1f324f8c44d3f1aefe873.png" />
+<img alt="../../../_images/f24559b9eef2189818668c2b2703081b2fe7b880c710225c0cbef5d06ab246bd.png" src="../../../_images/f24559b9eef2189818668c2b2703081b2fe7b880c710225c0cbef5d06ab246bd.png" />
 </div>
 </div>
 <p>We can use the package <code class="docutils literal notranslate"><span class="pre">photutils</span></code> to define a circular aperture. To combine it with our mask, we need the circular aperture in mask form. Luckily, this is a built-in feature of aperture objects!</p>
@@ -1507,10 +1503,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f8ca5f6dd60&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fa370b07170&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/2268d886c1f5ad97c32a0697eaa59c0d395db3c96df4debd88bccb15707e1fc2.png" src="../../../_images/2268d886c1f5ad97c32a0697eaa59c0d395db3c96df4debd88bccb15707e1fc2.png" />
+<img alt="../../../_images/7b9e8cb3ac2302324c779899d7d2842261d6a409072b76252f557afbeab6290f.png" src="../../../_images/7b9e8cb3ac2302324c779899d7d2842261d6a409072b76252f557afbeab6290f.png" />
 </div>
 </div>
 <p>To match the size of our cutout, we can create a new array with our circular aperture at the center</p>
@@ -1533,10 +1529,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f8ca5f1d2e0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fa370b6ef90&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/3bbbebd7d20497fbb75f909fb83ebc802bb43850ffadd68aa2f64dd137757edb.png" src="../../../_images/3bbbebd7d20497fbb75f909fb83ebc802bb43850ffadd68aa2f64dd137757edb.png" />
+<img alt="../../../_images/4e310e9f6df4acc6ab0027e76dd285e407f290f6d94874793ca5789083967024.png" src="../../../_images/4e310e9f6df4acc6ab0027e76dd285e407f290f6d94874793ca5789083967024.png" />
 </div>
 </div>
 <p>We can use the <code class="docutils literal notranslate"><span class="pre">numpy</span></code> function <code class="docutils literal notranslate"><span class="pre">logical_or()</span></code> to combine both of our masks to form one boolean array.</p>
@@ -1549,10 +1545,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f8ca5f1dcd0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fa370b49bb0&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/898491c743b049de1ad0c701f0fcd8d64a835161f054575ade692289042c1458.png" src="../../../_images/898491c743b049de1ad0c701f0fcd8d64a835161f054575ade692289042c1458.png" />
+<img alt="../../../_images/5095eb2c8d486f6f7e05b5a3293cd0073670bbc7c4de673408d4278a27a55a0c.png" src="../../../_images/5095eb2c8d486f6f7e05b5a3293cd0073670bbc7c4de673408d4278a27a55a0c.png" />
 </div>
 </div>
 </section>
@@ -1608,7 +1604,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2456203.854403298
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2456203.852928641
 </pre></div>
 </div>
 </div>
@@ -1628,7 +1624,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22957339.125604168
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22957339.14854658
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.12/site-packages/numpy/core/fromnumeric.py:771: UserWarning: Warning: &#39;partition&#39; will ignore the &#39;mask&#39; of the MaskedArray.
@@ -1645,7 +1641,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9.346674985648269
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9.34667500060043
 </pre></div>
 </div>
 </div>
@@ -1808,12 +1804,12 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=3</i>
-<table id="table140242056078272" class="table-striped table-bordered table-condensed">
+<table id="table140340416396656" class="table-striped table-bordered table-condensed">
 <thead><tr><th>x</th><th>y</th><th>flux_short</th><th>flux_long</th><th>flux_ratio</th></tr></thead>
 <thead><tr><th>int64</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
-<tr><td>1711</td><td>225</td><td>2456203.864314123</td><td>22957339.125604168</td><td>9.346674947934273</td></tr>
-<tr><td>1205</td><td>238</td><td>526489.1897602566</td><td>5265472.785139643</td><td>10.001103322819109</td></tr>
-<tr><td>3159</td><td>312</td><td>3790974.884192111</td><td>34535354.96899155</td><td>9.109887568234662</td></tr>
+<tr><td>1711</td><td>225</td><td>2456203.862839466</td><td>22957339.14854658</td><td>9.346674962886434</td></tr>
+<tr><td>1205</td><td>238</td><td>526489.1894441628</td><td>5265472.7904016925</td><td>10.001103338818178</td></tr>
+<tr><td>3159</td><td>312</td><td>3790974.881916084</td><td>34535355.00350445</td><td>9.109887582808025</td></tr>
 </table></div></div></div>
 </div>
 <p>While this method is an improvement for some saturated stars, it still has limitations. We can make a quick plot to show that the percentage of recovered flux decreases for brighter stars.</p>
@@ -1835,18 +1831,16 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/09f3ea4bf74e732b79f6db2eaef8ca356d273bb2961cd94ea955baa98c0e6541.png" src="../../../_images/09f3ea4bf74e732b79f6db2eaef8ca356d273bb2961cd94ea955baa98c0e6541.png" />
+<img alt="../../../_images/0f266758222749cd2cf205fcdf1003282938a2469b59e0fe8d79ae60a17e572e.png" src="../../../_images/0f266758222749cd2cf205fcdf1003282938a2469b59e0fe8d79ae60a17e572e.png" />
 </div>
 </div>
 <section id="references">
 <h3>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h3>
-<hr class="docutils" />
 <p>http://iopscience.iop.org/article/10.1086/444553</p>
-<p>http://documents.stsci.edu/hst/acs/documents/handbooks/DataHandbookv3/acs_Ch57.html</p>
 </section>
 <section id="for-more-help">
 <h3>For more help:<a class="headerlink" href="#for-more-help" title="Permalink to this heading">#</a></h3>
-<p>More details may be found on the <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/acs">ACS website</a> and in the <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB">ACS Instrument</a> and <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/other-documents/_documents/acs_dhb.pdf">Data Handbooks</a>.</p>
+<p>More details may be found on the <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/acs">ACS website</a> and in the <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB">ACS Instrument</a> and <a class="reference external" href="https://hst-docs.stsci.edu/acsdhb">Data Handbooks</a>.</p>
 <p>Please visit the <a class="reference external" href="http://hsthelp.stsci.edu">HST Help Desk</a>. Through the help desk portal, you can explore the <em>HST</em> Knowledge Base and request additional help from experts.</p>
 <hr class="docutils" />
 <p><span class="xref myst">Top of Page</span>

@@ -281,10 +281,13 @@ const thebe_selector_output = ".output, .cell_output"
 
 <li class="toctree-l1"><a class="reference internal" href="../../HASP/WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
 
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/COSLifetimePositions/COSLifetimePositions.html">Combining COS Data from Multiple Lifetime Positions and Central Wavelengths</a></li>
+
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
 <ul class="nav bd-sidenav">
@@ -615,7 +618,6 @@ document.write(`
 <h1>Obtaining Pixel Area Maps for ACS Data<a class="headerlink" href="#obtaining-pixel-area-maps-for-acs-data" title="Permalink to this heading">#</a></h1>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>The optical design of ACS introduces larger geometric distortion than in other <em>HST</em> instruments. In the event a user wishes to perform photometry on data that have not been processed by AstroDrizzle, a correction must be applied to account for the different sizes of the pixels on the sky across the field of view.</p>
 <p>A pixel area map (PAM), which is an image where each pixel value describes that pixel’s area on the sky relative to the native plate scale, is used for this correction. The distortion corrections applied by both AstroDrizzle and the PAMs include observation-specific corrections (e.g., velocity distortion). For the best results, users are advised to create a PAM for each observation individually.</p>
 <p>To transform a distorted FLT/FLC image so that it is suitable for photometry, users must multiply the image by the PAM and divide the result by the exposure time so that the image has units of electrons/second. After this transformation, the information on the <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/acs/data-analysis/zeropoints">ACS Zeropoints</a> page can be used to convert flux measurements into physical units.</p>
@@ -638,7 +640,6 @@ document.write(`
 </section>
 <section id="imports">
 <h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>Here we list the Python packages used in this notebook. Links to the documentation for each module is provided for convenience.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -698,8 +699,6 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.12/site-packages/stwcs/wcsutil/hstwcs.py:481: SyntaxWarning: invalid escape sequence &#39;\*&#39;
   all_world2pix(\*arg, tolerance=1.0e-4, maxiter=20, adaptive=False,
-/home/runner/micromamba/envs/hstcal/lib/python3.12/site-packages/stsci/skypac/skyline.py:900: SyntaxWarning: &#39;str&#39; object is not callable; perhaps you missed a comma?
-  raise AttributeError(&quot;&#39;%s&#39; object has no attribute &#39;%s&#39;&quot;
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following task in the stsci.skypac package can be run with TEAL:
@@ -711,7 +710,6 @@ document.write(`
 </section>
 <section id="download-the-data">
 <h2>Download the Data<a class="headerlink" href="#download-the-data" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>Here we download all of the data required for this notebook. This is an important step! Some of the image processing steps require all relevant files to be in the working directory. We recommend working with a brand new directory for every new set of data.</p>
 <section id="go-proposal-9438-the-origin-of-the-intergalactic-globular-cluster-population-in-abell-1185">
 <h3><a class="reference external" href="https://stdatu.stsci.edu/proposal_search.php?mission=hst&amp;id=9438">GO Proposal 9438</a>: “The Origin of the Intergalactic Globular Cluster Population in Abell 1185”<a class="headerlink" href="#go-proposal-9438-the-origin-of-the-intergalactic-globular-cluster-population-in-abell-1185" title="Permalink to this heading">#</a></h3>
@@ -754,7 +752,6 @@ document.write(`
 </section>
 <section id="file-information">
 <h2>File Information<a class="headerlink" href="#file-information" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>The structure of the fits files from ACS may be different depending on what kind of observation was made. For more information, refer to Section 2.2 of the <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/other-documents/_documents/acs_dhb.pdf">ACS Data Handbook</a>.</p>
 <section id="flt-files-wfc-specific">
 <h3>FLT Files (WFC-Specific)<a class="headerlink" href="#flt-files-wfc-specific" title="Permalink to this heading">#</a></h3>
@@ -840,24 +837,26 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Filename: j6me13qhq_flt.fits
 No.    Name      Ver    Type      Cards   Dimensions   Format
   0  PRIMARY       1 PrimaryHDU     269   ()      
-  1  SCI           1 ImageHDU       237   (4096, 2048)   float32   
+  1  SCI           1 ImageHDU       245   (4096, 2048)   float32   
   2  ERR           1 ImageHDU        53   (4096, 2048)   float32   
   3  DQ            1 ImageHDU        45   (4096, 2048)   int16   
-  4  SCI           2 ImageHDU       235   (4096, 2048)   float32   
+  4  SCI           2 ImageHDU       243   (4096, 2048)   float32   
   5  ERR           2 ImageHDU        53   (4096, 2048)   float32   
   6  DQ            2 ImageHDU        45   (4096, 2048)   int16   
-  7  D2IMARR       1 ImageHDU        16   (64, 32)   float32   
-  8  D2IMARR       2 ImageHDU        16   (64, 32)   float32   
-  9  D2IMARR       3 ImageHDU        16   (64, 32)   float32   
- 10  D2IMARR       4 ImageHDU        16   (64, 32)   float32   
- 11  WCSDVARR      1 ImageHDU        16   (64, 32)   float32   
- 12  WCSDVARR      2 ImageHDU        16   (64, 32)   float32   
- 13  WCSDVARR      3 ImageHDU        16   (64, 32)   float32   
- 14  WCSDVARR      4 ImageHDU        16   (64, 32)   float32   
- 15  HDRLET        1 HeaderletHDU     18   ()      
- 16  HDRLET        2 HeaderletHDU     26   ()      
- 17  WCSCORR       1 BinTableHDU     59   14R x 24C   [40A, I, A, 24A, 24A, 24A, 24A, D, D, D, D, D, D, D, D, 24A, 24A, D, D, D, D, J, 40A, 128A]   
- 18  HDRLET       18 HeaderletHDU     26   ()      
+  7  HDRLET        1 HeaderletHDU     18   ()      
+  8  HDRLET        2 HeaderletHDU     26   ()      
+  9  WCSCORR       1 BinTableHDU     59   14R x 24C   [40A, I, A, 24A, 24A, 24A, 24A, D, D, D, D, D, D, D, D, 24A, 24A, D, D, D, D, J, 40A, 128A]   
+ 10  HDRLET       18 HeaderletHDU     26   ()      
+ 11  WCSDVARR      1 ImageHDU        15   (64, 32)   float32   
+ 12  WCSDVARR      2 ImageHDU        15   (64, 32)   float32   
+ 13  D2IMARR       1 ImageHDU        15   (64, 32)   float32   
+ 14  D2IMARR       2 ImageHDU        15   (64, 32)   float32   
+ 15  WCSDVARR      3 ImageHDU        15   (64, 32)   float32   
+ 16  WCSDVARR      4 ImageHDU        15   (64, 32)   float32   
+ 17  D2IMARR       3 ImageHDU        15   (64, 32)   float32   
+ 18  D2IMARR       4 ImageHDU        15   (64, 32)   float32   
+ 19  HDRLET        4 HeaderletHDU     26   ()      
+ 20  HDRLET        5 HeaderletHDU     26   ()      
 </pre></div>
 </div>
 </div>
@@ -866,7 +865,6 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </section>
 <section id="construct-pixel-area-map-a-id-obtain-a">
 <h2>Construct Pixel Area Map <a id="_obtain"></a><a class="headerlink" href="#construct-pixel-area-map-a-id-obtain-a" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>Function input for <code class="docutils literal notranslate"><span class="pre">pamutils.pam_from_file</span></code> is (input_file, extension, output_file). To create a PAM for the first science extension (WFC2) of this observation, we need to specify HDU Extension 1.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -886,7 +884,6 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </section>
 <section id="apply-the-pixel-area-map-a-id-drkdrizzle-a">
 <h2>Apply the Pixel Area Map <a id="_drkdrizzle"></a><a class="headerlink" href="#apply-the-pixel-area-map-a-id-drkdrizzle-a" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>Because the pixel area map is an array of flux corrections based on 2d image distortion, you can multiply it by your data element-by-element to produce the corrected image. Here, we present the results.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -895,7 +892,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/f637d4a832d3dee81390f98086d0562bf15f846b81ec34b520db74df1be5ee4c.png" src="../../../_images/f637d4a832d3dee81390f98086d0562bf15f846b81ec34b520db74df1be5ee4c.png" />
+<img alt="../../../_images/4eb3ff45d98dcc47659d56a3c0fe6d56a172502e435bb0bec7092c9cdff3f097.png" src="../../../_images/4eb3ff45d98dcc47659d56a3c0fe6d56a172502e435bb0bec7092c9cdff3f097.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -905,13 +902,14 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/801113c4c55a53ba1d940749b7ba16947779c263014489f4a6526ac1c9fc77a7.png" src="../../../_images/801113c4c55a53ba1d940749b7ba16947779c263014489f4a6526ac1c9fc77a7.png" />
+<img alt="../../../_images/47bcd6c020ee8f3e2abe3b0e4fb7aa5a2a0eea772d6cbdba68fcb7521f6797eb.png" src="../../../_images/47bcd6c020ee8f3e2abe3b0e4fb7aa5a2a0eea772d6cbdba68fcb7521f6797eb.png" />
 </div>
 </div>
 <section id="for-more-help">
 <h3>For more help:<a class="headerlink" href="#for-more-help" title="Permalink to this heading">#</a></h3>
-<p>More details may be found on the <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/acs">ACS website</a> and in the <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB">ACS Instrument</a> and <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/other-documents/_documents/acs_dhb.pdf">Data Handbooks</a>. Geometric Distortion information can be found in <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB/5.6+ACS+Point+Spread+Functions">Section 5.6.4</a> and <a class="reference external" href="https://hst-docs.stsci.edu/acsihb/chapter-10-imaging-reference-material/10-4-geometric-distortion-in-acs">Section 10.4</a> of the ACS Instrument Handbook.</p>
-<p>Please visit the <a class="reference external" href="http://hsthelp.stsci.edu">HST Help Desk</a>. Through the help desk portal, you can explore the <em>HST</em> Knowledge Base and request additional help from experts.</p>
+<p>Geometric Distortion information can be found in <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB/5.6+ACS+Point+Spread+Functions">Section 5.6.4</a> and <a class="reference external" href="https://hst-docs.stsci.edu/acsihb/chapter-10-imaging-reference-material/10-4-geometric-distortion-in-acs">Section 10.4</a> of the ACS Instrument Handbook.</p>
+<p>More details may be found on the <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/acs">ACS website</a> and in the <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB">ACS Instrument</a> and <a class="reference external" href="https://hst-docs.stsci.edu/acsdhb">Data Handbooks</a>.</p>
+<p>Please visit the <a class="reference external" href="http://hsthelp.stsci.edu">HST Help Desk</a>. Through the help desk portal, you can explore the HST Knowledge Base and request additional help from experts.</p>
 <hr class="docutils" />
 <p><span class="xref myst">Top of Page</span>
 <a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a>

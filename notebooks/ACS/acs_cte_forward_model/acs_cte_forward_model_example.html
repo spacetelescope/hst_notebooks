@@ -283,10 +283,13 @@ const thebe_selector_output = ".output, .cell_output"
 
 <li class="toctree-l1"><a class="reference internal" href="../../HASP/WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
 
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/COSLifetimePositions/COSLifetimePositions.html">Combining COS Data from Multiple Lifetime Positions and Central Wavelengths</a></li>
+
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
 <ul class="nav bd-sidenav">
@@ -642,7 +645,7 @@ document.write(`
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
 <p>The charge transfer efficiency (CTE) of the Advanced Camera for Surveys (ACS) Wide Field Channel (WFC) has been decreasing over the lifetime of the instrument. Radiation damage from cosmic rays and other sources leads to charge traps within the detector. These traps remove electrons from charge packets as they are transferred between rows of the detector, and release the electrons in subsequent pixels. This causes flux to be removed from bright features and released into pixels behind the features (relative to the row closest to the amplifier), creating bright trails.</p>
 <p>A pixel-based CTE correction model for the ACS/WFC detector is fully described in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2010PASP..122.1035A/abstract">Anderson &amp; Bedin (2010)</a>, and a recent update to the model is presented in <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr1804.pdf">ACS ISR 2018-04</a>. The model is based on an empirical determination of the number and depth of charge traps distributed across the detector. It simulates detector readout of an input image, removes the result from the input, and iterates five times. In this way, a reverse model is successively approximated by the forward model. Electrons released in trails are removed and added back to the bright feature in which they originated.</p>
-<p>The pixel-based correction was implemented in the calibration pipeline code for ACS (<code class="docutils literal notranslate"><span class="pre">CALACS</span></code>) in 2012 and the algorithm was updated and improved in 2018. The CTE correction step within <code class="docutils literal notranslate"><span class="pre">CALACS</span></code> runs on bias-corrected images, <code class="docutils literal notranslate"><span class="pre">blv_tmp</span></code> files, producing <code class="docutils literal notranslate"><span class="pre">blc_tmp</span></code> files, which lack the bright trails due to poor CTE. Further calibration, including dark correction and flat-fielding, produces <code class="docutils literal notranslate"><span class="pre">flt</span></code> and <code class="docutils literal notranslate"><span class="pre">flc</span></code> files from the <code class="docutils literal notranslate"><span class="pre">blv_tmp</span></code> and <code class="docutils literal notranslate"><span class="pre">blc_tmps</span></code> files, respectively. For more information on calibration of ACS/WFC data, see the <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/other-documents/_documents/acs_dhb.pdf">ACS Data Handbook</a>.</p>
+<p>The pixel-based correction was implemented in the calibration pipeline code for ACS (<code class="docutils literal notranslate"><span class="pre">CALACS</span></code>) in 2012 and the algorithm was updated and improved in 2018. The CTE correction step within <code class="docutils literal notranslate"><span class="pre">CALACS</span></code> runs on bias-corrected images, <code class="docutils literal notranslate"><span class="pre">blv_tmp</span></code> files, producing <code class="docutils literal notranslate"><span class="pre">blc_tmp</span></code> files, which lack the bright trails due to poor CTE. Further calibration, including dark correction and flat-fielding, produces <code class="docutils literal notranslate"><span class="pre">flt</span></code> and <code class="docutils literal notranslate"><span class="pre">flc</span></code> files from the <code class="docutils literal notranslate"><span class="pre">blv_tmp</span></code> and <code class="docutils literal notranslate"><span class="pre">blc_tmps</span></code> files, respectively. For more information on calibration of ACS/WFC data, see the <a class="reference external" href="https://hst-docs.stsci.edu/acsdhb">ACS Data Handbook</a>.</p>
 <p>Users desiring to more fully understand the effects of pixel-based CTE correction on their science may wish to run the forward model (i.e., the detector readout simulation) on data containing artificial stars. Here we demonstrate two methods for running the CTE forward model. In <span class="xref myst">Option A</span>, we begin with an observed <code class="docutils literal notranslate"><span class="pre">flc</span></code> image, whereas in <span class="xref myst">Option B</span>, we begin with a <code class="docutils literal notranslate"><span class="pre">raw</span></code> image and generate synthetic data on which to run the forward model.</p>
 <p><strong>Note: The forward model, like the CTE correction step in <code class="docutils literal notranslate"><span class="pre">CALACS</span></code>, adds 10% of the difference between the input and output <code class="docutils literal notranslate"><span class="pre">SCI</span></code> extensions to the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions to account for uncertainty in the CTE model. Below, we provide guidance for properly repopulating the <code class="docutils literal notranslate"><span class="pre">ERR</span></code> extensions of forward-modeled data.</strong></p>
 <p><a id="imports"></a></p>
@@ -795,7 +798,7 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_snkcfile_0003.rmap        681 bytes  (12 / 142 files) (217.8 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_satufile_0002.rmap      1.0 K bytes  (13 / 142 files) (218.5 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_satufile_0003.rmap      1.0 K bytes  (13 / 142 files) (218.5 K / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_pfltfile_0253.rmap     34.2 K bytes  (14 / 142 files) (219.5 K / 1.8 M bytes)
@@ -855,7 +858,7 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_atodtab_0250.rmap         651 bytes  (32 / 142 files) (868.9 K / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_0624.imap               1.3 K bytes  (33 / 142 files) (869.6 K / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_wfc3_0625.imap               1.3 K bytes  (33 / 142 files) (869.6 K / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_synphot_tmttab_0002.rmap       745 bytes  (34 / 142 files) (870.8 K / 1.8 M bytes)
@@ -951,7 +954,7 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_disptab_0250.rmap         813 bytes  (64 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_darkfile_0366.rmap     62.7 K bytes  (65 / 142 files) (1.3 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_darkfile_0367.rmap     62.9 K bytes  (65 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_crrejtab_0250.rmap        711 bytes  (66 / 142 files) (1.3 M / 1.8 M bytes)
@@ -966,7 +969,7 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_bpixtab_0250.rmap         845 bytes  (69 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_biasfile_0367.rmap    123.7 K bytes  (70 / 142 files) (1.3 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_biasfile_0368.rmap    124.2 K bytes  (70 / 142 files) (1.3 M / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_apertab_0250.rmap         588 bytes  (71 / 142 files) (1.5 M / 1.8 M bytes)
@@ -975,7 +978,7 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_apdestab_0252.rmap        636 bytes  (72 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_0387.imap               1.7 K bytes  (73 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_stis_0388.imap               1.7 K bytes  (73 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_zprattab_0250.rmap      646 bytes  (74 / 142 files) (1.5 M / 1.8 M bytes)
@@ -1032,88 +1035,88 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_nicmos_0250.imap             1.1 K bytes  (91 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_ywlkfile_0003.rmap         922 bytes  (92 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_ywlkfile_0004.rmap         922 bytes  (92 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_xwlkfile_0002.rmap         922 bytes  (93 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_xwlkfile_0003.rmap         922 bytes  (93 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_xtractab_0269.rmap       1.6 K bytes  (94 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_xtractab_0271.rmap       1.9 K bytes  (94 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_wcptab_0257.rmap         1.3 K bytes  (95 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_wcptab_0262.rmap         1.2 K bytes  (95 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_twozxtab_0277.rmap         990 bytes  (96 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_twozxtab_0281.rmap       1.5 K bytes  (96 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_tracetab_0276.rmap         998 bytes  (97 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_tracetab_0280.rmap       1.5 K bytes  (97 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_tdstab_0272.rmap           803 bytes  (98 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_tdstab_0274.rmap           749 bytes  (98 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_spwcstab_0255.rmap       1.1 K bytes  (99 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_spottab_0007.rmap          766 bytes  (100 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_spottab_0008.rmap          766 bytes  (100 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_proftab_0276.rmap        1.0 K bytes  (101 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_proftab_0280.rmap        1.5 K bytes  (101 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_phatab_0250.rmap           668 bytes  (102 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_lamptab_0264.rmap        1.4 K bytes  (103 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_lamptab_0268.rmap        1.7 K bytes  (103 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_hvtab_0259.rmap            567 bytes  (104 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_hvdstab_0002.rmap        1.0 K bytes  (105 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_hvdstab_0003.rmap        1.0 K bytes  (105 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_gsagtab_0261.rmap          712 bytes  (106 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_gsagtab_0263.rmap          603 bytes  (106 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_geofile_0250.rmap          670 bytes  (107 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_geofile_0251.rmap          640 bytes  (107 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_fluxtab_0282.rmap        1.7 K bytes  (108 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_fluxtab_0287.rmap        1.8 K bytes  (108 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_flatfile_0264.rmap       1.8 K bytes  (109 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_flatfile_0268.rmap       2.3 K bytes  (109 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_disptab_0276.rmap        1.7 K bytes  (110 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_disptab_0279.rmap        1.8 K bytes  (110 / 142 files) (1.5 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_dgeofile_0002.rmap         909 bytes  (111 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_dgeofile_0003.rmap         909 bytes  (111 / 142 files) (1.6 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_deadtab_0250.rmap          711 bytes  (112 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_deadtab_0250.rmap          711 bytes  (112 / 142 files) (1.6 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_brsttab_0250.rmap          696 bytes  (113 / 142 files) (1.5 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_brsttab_0250.rmap          696 bytes  (113 / 142 files) (1.6 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_brftab_0250.rmap           614 bytes  (114 / 142 files) (1.6 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_brftab_0251.rmap           583 bytes  (114 / 142 files) (1.6 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_bpixtab_0260.rmap          773 bytes  (115 / 142 files) (1.6 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_bpixtab_0261.rmap          773 bytes  (115 / 142 files) (1.6 M / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_badttab_0252.rmap          643 bytes  (116 / 142 files) (1.6 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_0360.imap                1.4 K bytes  (117 / 142 files) (1.6 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_cos_0372.imap                1.4 K bytes  (117 / 142 files) (1.6 M / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_spottab_0251.rmap          641 bytes  (118 / 142 files) (1.6 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_snkcfile_0110.rmap       8.0 K bytes  (119 / 142 files) (1.6 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_snkcfile_0111.rmap       8.1 K bytes  (119 / 142 files) (1.6 M / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_shadfile_0251.rmap         531 bytes  (120 / 142 files) (1.6 M / 1.8 M bytes)
@@ -1149,13 +1152,13 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_flshfile_0270.rmap       3.5 K bytes  (130 / 142 files) (1.6 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_drkcfile_0463.rmap      15.5 K bytes  (131 / 142 files) (1.6 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_drkcfile_0464.rmap      15.6 K bytes  (131 / 142 files) (1.6 M / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_dgeofile_0250.rmap       3.2 K bytes  (132 / 142 files) (1.7 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_darkfile_0453.rmap      87.5 K bytes  (133 / 142 files) (1.7 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_darkfile_0454.rmap      87.5 K bytes  (133 / 142 files) (1.7 M / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_d2imfile_0253.rmap         601 bytes  (134 / 142 files) (1.8 M / 1.8 M bytes)
@@ -1173,16 +1176,16 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_bpixtab_0253.rmap        1.1 K bytes  (138 / 142 files) (1.8 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_biasfile_0450.rmap      57.6 K bytes  (139 / 142 files) (1.8 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_biasfile_0451.rmap      57.6 K bytes  (139 / 142 files) (1.8 M / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_atodtab_0251.rmap          528 bytes  (140 / 142 files) (1.8 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_0559.imap                1.3 K bytes  (141 / 142 files) (1.8 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_acs_0560.imap                1.3 K bytes  (141 / 142 files) (1.8 M / 1.8 M bytes)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_1254.pmap                      495 bytes  (142 / 142 files) (1.8 M / 1.8 M bytes)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/mappings/hst/hst_1269.pmap                      495 bytes  (142 / 142 files) (1.8 M / 1.8 M bytes)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  No comparison context or source comparison requested.
@@ -1341,7 +1344,7 @@ CRDS - INFO -  160 infos
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>QTable length=300</i>
-<table id="table140624022065216" class="table-striped table-bordered table-condensed">
+<table id="table139744213349920" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>x_mean</th><th>y_mean</th><th>amplitude</th><th>x_stddev</th><th>y_stddev</th><th>theta</th></tr></thead>
 <thead><tr><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>1</td><td>931.1683480255269</td><td>2034.731927781212</td><td>24273.448018412746</td><td>1.052614567617044</td><td>1.0578600277164938</td><td>2.8992449842520105</td></tr>
@@ -1390,10 +1393,10 @@ CRDS - INFO -  160 infos
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fe53a438050&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f18bad5cfb0&gt;]
 </pre></div>
 </div>
-<img alt="../../../_images/2ec26586dbab29edd1df3f4fd8cdf6d28322c5b2d8c0ea4648850c595a5a8305.png" src="../../../_images/2ec26586dbab29edd1df3f4fd8cdf6d28322c5b2d8c0ea4648850c595a5a8305.png" />
+<img alt="../../../_images/c5febb2cb7afb39792a884ccec8b1d8951dacec9b02293eca4d0344d47072fa5.png" src="../../../_images/c5febb2cb7afb39792a884ccec8b1d8951dacec9b02293eca4d0344d47072fa5.png" />
 </div>
 </div>
 <p><a id="option-a"></a></p>
@@ -1418,7 +1421,7 @@ CRDS - INFO -  160 infos
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/8f5fb190751d22cee22caf4f4dd39ff74fb71ca1240c6df44f5097aa03062560.png" src="../../../_images/8f5fb190751d22cee22caf4f4dd39ff74fb71ca1240c6df44f5097aa03062560.png" />
+<img alt="../../../_images/7d3206d4507b5df4640e82ce2f27fae515b4162842d334d06474d5fc2bc1f014.png" src="../../../_images/7d3206d4507b5df4640e82ce2f27fae515b4162842d334d06474d5fc2bc1f014.png" />
 </div>
 </div>
 <p><span class="xref myst">Top of Page</span></p>
@@ -1463,7 +1466,7 @@ CRDS - INFO -  160 infos
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/43cf3560e16d7d6ef3c781c12d69b19e10c83c2ff81153681c80aaf901c9ad87.png" src="../../../_images/43cf3560e16d7d6ef3c781c12d69b19e10c83c2ff81153681c80aaf901c9ad87.png" />
+<img alt="../../../_images/770b84d660bf669743b1090831b7aedf4042e3f873372d77cef096b154cd36bf.png" src="../../../_images/770b84d660bf669743b1090831b7aedf4042e3f873372d77cef096b154cd36bf.png" />
 </div>
 </div>
 <p><span class="xref myst">Top of Page</span></p>
@@ -1526,16 +1529,16 @@ CRDS - INFO -  160 infos
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 48adcbb1-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 2142938c-dirty
 git branch: HEAD
-HEAD @: 48adcbb17475310414e925e7b30031fa0aad52d3
+HEAD @: 2142938cd73537b431e96ead5f63f2910ce0edc2
 Setting max threads to 4 out of 4 available
 Trying to open jd0q14ctq_stars_pfl_dkc.fits...
 Read in Primary header from jd0q14ctq_stars_pfl_dkc.fits...
 
 
 CALBEG*** ACSCTE -- Version 10.4.0 (07-May-2024) ***
-Begin    15-Jul-2025 14:06:12 UTC
+Begin    14-Aug-2025 17:39:08 UTC
 Input    jd0q14ctq_stars_pfl_dkc.fits
 Output   jd0q14ctq_stars_pfl_dkc_ctefmod.fits
 Trying to open jd0q14ctq_stars_pfl_dkc.fits...
@@ -1647,7 +1650,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -23166.330078 (-0.003277%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -23150.240234 (-0.003275%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: C
@@ -1663,8 +1666,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -361141.937500 (-0.051102%)
-(pctecorr) CTE run time for current chip: 46.87(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -361181.406250 (-0.051107%)
+(pctecorr) CTE run time for current chip: 46.94(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -1706,7 +1709,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -17038.117188 (-0.002019%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -17051.089844 (-0.002021%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: D
@@ -1722,8 +1725,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -415005.031250 (-0.049182%)
-(pctecorr) CTE run time for current chip: 54.21(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -415128.500000 (-0.049196%)
+(pctecorr) CTE run time for current chip: 54.34(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -1765,7 +1768,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -21604.617188 (-0.003729%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -21598.345703 (-0.003728%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: A
@@ -1781,8 +1784,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -291110.843750 (-0.050249%)
-(pctecorr) CTE run time for current chip: 49.33(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -291088.843750 (-0.050245%)
+(pctecorr) CTE run time for current chip: 49.42(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -1824,7 +1827,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -29932.289062 (-0.002642%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -29904.574219 (-0.002640%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: B
@@ -1840,13 +1843,13 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -474360.093750 (-0.041879%)
-(pctecorr) CTE run time for current chip: 63.78(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -474364.437500 (-0.041880%)
+(pctecorr) CTE run time for current chip: 63.91(s) with 4 procs/threads
 
 PCTECORR COMPLETE
 
 
-End      15-Jul-2025 14:09:49 UTC
+End      14-Aug-2025 17:42:44 UTC
 
 
 *** ACSCTE complete ***
@@ -1934,16 +1937,16 @@ End      15-Jul-2025 14:09:49 UTC
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 48adcbb1-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 2142938c-dirty
 git branch: HEAD
-HEAD @: 48adcbb17475310414e925e7b30031fa0aad52d3
+HEAD @: 2142938cd73537b431e96ead5f63f2910ce0edc2
 Setting max threads to 4 out of 4 available
 Trying to open jd0q14ctq_stars_ctefmod_blv_tmp.fits...
 Read in Primary header from jd0q14ctq_stars_ctefmod_blv_tmp.fits...
 
 
 CALBEG*** ACSCTE -- Version 10.4.0 (07-May-2024) ***
-Begin    15-Jul-2025 14:09:49 UTC
+Begin    14-Aug-2025 17:42:44 UTC
 Input    jd0q14ctq_stars_ctefmod_blv_tmp.fits
 Output   jd0q14ctq_stars_ctefmod_blc_tmp.fits
 Trying to open jd0q14ctq_stars_ctefmod_blv_tmp.fits...
@@ -2045,12 +2048,11 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 
 (pctecorr) Invoking rotation for CTE Correction Type: serial
 (pctecorr) Rotation for Amp: C
+
+(pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Calculating smooth readnoise image...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 2.12(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 2.19(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -2059,7 +2061,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 22224.949219 (0.003146%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 22217.929688 (0.003145%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: C
@@ -2070,7 +2072,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 (pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 2.10(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 2.14(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -2079,8 +2081,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 355434.218750 (0.050323%)
-(pctecorr) CTE run time for current chip: 235.03(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 355267.187500 (0.050300%)
+(pctecorr) CTE run time for current chip: 233.20(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -2117,7 +2119,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 (pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.89(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.93(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -2126,7 +2128,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 16210.365234 (0.001922%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 16212.111328 (0.001922%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: D
@@ -2137,7 +2139,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 (pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 2.11(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 2.15(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -2146,8 +2148,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 408346.031250 (0.048416%)
-(pctecorr) CTE run time for current chip: 269.63(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 408698.562500 (0.048457%)
+(pctecorr) CTE run time for current chip: 272.03(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -2184,7 +2186,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 (pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.89(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.93(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -2193,7 +2195,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 16064.954102 (0.002775%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 16047.301758 (0.002772%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: A
@@ -2204,7 +2206,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 (pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 2.13(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 2.21(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -2213,8 +2215,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 255371.234375 (0.044105%)
-(pctecorr) CTE run time for current chip: 243.19(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 255410.546875 (0.044111%)
+(pctecorr) CTE run time for current chip: 243.74(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -2251,7 +2253,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 (pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 2.18(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 2.25(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -2260,7 +2262,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 30900.333984 (0.002729%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 30910.041016 (0.002730%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: B
@@ -2271,7 +2273,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 (pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 2.36(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 2.42(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -2280,13 +2282,13 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 470887.625000 (0.041586%)
-(pctecorr) CTE run time for current chip: 316.88(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 470445.187500 (0.041547%)
+(pctecorr) CTE run time for current chip: 319.80(s) with 4 procs/threads
 
 PCTECORR COMPLETE
 
 
-End      15-Jul-2025 14:27:43 UTC
+End      14-Aug-2025 18:00:37 UTC
 
 
 *** ACSCTE complete ***
@@ -2310,15 +2312,15 @@ End      15-Jul-2025 14:27:43 UTC
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 48adcbb1-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 2142938c-dirty
 git branch: HEAD
-HEAD @: 48adcbb17475310414e925e7b30031fa0aad52d3
+HEAD @: 2142938cd73537b431e96ead5f63f2910ce0edc2
 Trying to open jd0q14ctq_stars_ctefmod_blv_tmp.fits...
 Read in Primary header from jd0q14ctq_stars_ctefmod_blv_tmp.fits...
 
 
 CALBEG*** ACS2D -- Version 10.4.0 (07-May-2024) ***
-Begin    15-Jul-2025 14:27:43 UTC
+Begin    14-Aug-2025 18:00:37 UTC
 Input    jd0q14ctq_stars_ctefmod_blv_tmp.fits
 Output   jd0q14ctq_stars_ctefmod_flt.fits
 Trying to open jd0q14ctq_stars_ctefmod_blv_tmp.fits...
@@ -2329,7 +2331,7 @@ FILTER2 CLEAR2L
 DETECTOR WFC
 
 
-Imset 1  Begin 14:27:43 UTC
+Imset 1  Begin 18:00:37 UTC
 
 
 CCDTAB   jref$72m1821dj_ccd.fits
@@ -2366,10 +2368,10 @@ SHADCORR OMIT
 
 
 PHOTCORR OMIT
-Imset 1  End 14:27:43 UTC
+Imset 1  End 18:00:38 UTC
 
 
-Imset 2  Begin 14:27:43 UTC
+Imset 2  Begin 18:00:38 UTC
 
 
 CCDTAB   jref$72m1821dj_ccd.fits
@@ -2400,10 +2402,10 @@ SHADCORR OMIT
 
 
 PHOTCORR OMIT
-Imset 2  End 14:27:43 UTC
+Imset 2  End 18:00:38 UTC
 
 
-End      15-Jul-2025 14:27:43 UTC
+End      14-Aug-2025 18:00:38 UTC
 
 
 *** ACS2D complete ***
@@ -2423,15 +2425,15 @@ End      15-Jul-2025 14:27:43 UTC
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 48adcbb1-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 2142938c-dirty
 git branch: HEAD
-HEAD @: 48adcbb17475310414e925e7b30031fa0aad52d3
+HEAD @: 2142938cd73537b431e96ead5f63f2910ce0edc2
 Trying to open jd0q14ctq_stars_ctefmod_blc_tmp.fits...
 Read in Primary header from jd0q14ctq_stars_ctefmod_blc_tmp.fits...
 
 
 CALBEG*** ACS2D -- Version 10.4.0 (07-May-2024) ***
-Begin    15-Jul-2025 14:27:43 UTC
+Begin    14-Aug-2025 18:00:38 UTC
 Input    jd0q14ctq_stars_ctefmod_blc_tmp.fits
 Output   jd0q14ctq_stars_ctefmod_flc.fits
 Trying to open jd0q14ctq_stars_ctefmod_blc_tmp.fits...
@@ -2442,7 +2444,7 @@ FILTER2 CLEAR2L
 DETECTOR WFC
 
 
-Imset 1  Begin 14:27:43 UTC
+Imset 1  Begin 18:00:38 UTC
 
 
 CCDTAB   jref$72m1821dj_ccd.fits
@@ -2479,10 +2481,10 @@ SHADCORR OMIT
 
 
 PHOTCORR OMIT
-Imset 1  End 14:27:44 UTC
+Imset 1  End 18:00:38 UTC
 
 
-Imset 2  Begin 14:27:44 UTC
+Imset 2  Begin 18:00:38 UTC
 
 
 CCDTAB   jref$72m1821dj_ccd.fits
@@ -2513,10 +2515,10 @@ SHADCORR OMIT
 
 
 PHOTCORR OMIT
-Imset 2  End 14:27:44 UTC
+Imset 2  End 18:00:39 UTC
 
 
-End      15-Jul-2025 14:27:44 UTC
+End      14-Aug-2025 18:00:39 UTC
 
 
 *** ACS2D complete ***
@@ -2545,7 +2547,7 @@ End      15-Jul-2025 14:27:44 UTC
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/88e48cff5312a194c7e361ba2c18b2f56ad4270d1e64a6c49b9acde233ca7bf5.png" src="../../../_images/88e48cff5312a194c7e361ba2c18b2f56ad4270d1e64a6c49b9acde233ca7bf5.png" />
+<img alt="../../../_images/75cdb2f9d364c7314d28dcde07b37fbfc7e10f2f289fe2ea6f0acd68710b85f2.png" src="../../../_images/75cdb2f9d364c7314d28dcde07b37fbfc7e10f2f289fe2ea6f0acd68710b85f2.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2568,7 +2570,7 @@ End      15-Jul-2025 14:27:44 UTC
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/f4c999275cb7acd02a8aebec4873e34bb75bd3fc43ecf24d9ee1f13c2f6a6f54.png" src="../../../_images/f4c999275cb7acd02a8aebec4873e34bb75bd3fc43ecf24d9ee1f13c2f6a6f54.png" />
+<img alt="../../../_images/387a6dd70e116f2940d1c561e0ebb1a80453337407f52baec5d1d3c60fccba55.png" src="../../../_images/387a6dd70e116f2940d1c561e0ebb1a80453337407f52baec5d1d3c60fccba55.png" />
 </div>
 </div>
 <p><span class="xref myst">Top of Page</span></p>
@@ -2590,15 +2592,15 @@ End      15-Jul-2025 14:27:44 UTC
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 48adcbb1-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 2142938c-dirty
 git branch: HEAD
-HEAD @: 48adcbb17475310414e925e7b30031fa0aad52d3
+HEAD @: 2142938cd73537b431e96ead5f63f2910ce0edc2
 Trying to open jd0q14ctq_raw.fits...
 Read in Primary header from jd0q14ctq_raw.fits...
 
 
 CALBEG*** ACSCCD -- Version 10.4.0 (07-May-2024) ***
-Begin    15-Jul-2025 14:27:45 UTC
+Begin    14-Aug-2025 18:00:40 UTC
 Input    jd0q14ctq_raw.fits
 Output   jd0q14ctq_blv_tmp.fits
 Trying to open jd0q14ctq_raw.fits...
@@ -2639,10 +2641,10 @@ BLEVCORR PERFORM
 Bias shift correcting for bias level in Amp A of 4217.9877 electrons.
 Bias shift correcting for bias level in Amp A of 4217.9877 electrons.
 Bias shift correcting for bias level in Amp B of 4025.7480 electrons.
+Bias shift correcting for bias level in Amp B of 4025.7480 electrons.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Bias shift correcting for bias level in Amp B of 4025.7480 electrons.
-Bias shift correcting for bias level in Amp C of 4437.9683 electrons.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Bias shift correcting for bias level in Amp C of 4437.9683 electrons.
 Bias shift correcting for bias level in Amp C of 4437.9683 electrons.
 Bias shift correcting for bias level in Amp D of 4624.3633 electrons.
 Performing stripe removal and bias level subtraction for full frame data.
@@ -2654,16 +2656,15 @@ Bias shift correcting for bias level in Amp D of 4624.3633 electrons.
      bias level of -0.0598474 electrons was subtracted for AMP B.
      bias level of -0.32127 electrons was subtracted for AMP C.
      bias level of 0.5666 electrons was subtracted for AMP D.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BLEVCORR COMPLETE
+BLEVCORR COMPLETE
 Full Frame adjusted Darktime: 342.239197
 
 DARKTIME from SCI header: 342.239197  Offset from CCDTAB: 0.000000  Final DARKTIME: 342.239197
 
 Full-well saturation flagging being performed for imset 1.
-
-Full-frame full-well saturation image flagging step being performed.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Full-frame full-well saturation image flagging step being performed.
 
 Full-frame full-well saturation image flagging step done.
 
@@ -2688,7 +2689,7 @@ SNKCFILE DESCRIP =Sink pixel reference file ----------------------------
 SINKCORR COMPLETE
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      15-Jul-2025 14:27:46 UTC
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      14-Aug-2025 18:00:41 UTC
 
 
 *** ACSCCD complete ***
@@ -2744,7 +2745,7 @@ SINKCORR COMPLETE
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/f4bf3721412aa0501d99e07353a91068b646cbe1d091029603addcb4d1ffc252.png" src="../../../_images/f4bf3721412aa0501d99e07353a91068b646cbe1d091029603addcb4d1ffc252.png" />
+<img alt="../../../_images/c675cf543c70c9eb563a80d5ee3441a42136e22698c0bc21e0f071abb1fb6181.png" src="../../../_images/c675cf543c70c9eb563a80d5ee3441a42136e22698c0bc21e0f071abb1fb6181.png" />
 </div>
 </div>
 <p>In order to properly remove the dark current after the forward model is run, we update the exposure time and flash duration header keywords, <code class="docutils literal notranslate"><span class="pre">EXPTIME</span></code> and <code class="docutils literal notranslate"><span class="pre">FLASHDUR</span></code>, with the desired simulated exposure time. The total exposure time used for the dark correction is the combination of exposure time, flash duration, and overhead (which depends on whether the data are post-flashed or not). Here we set <code class="docutils literal notranslate"><span class="pre">EXPTIME</span></code> to 300 seconds and <code class="docutils literal notranslate"><span class="pre">FLASHDUR</span></code> to 0 seconds. In principle one should retrieve the overheads from CCDTAB, but we provide a simpler approach here. Please note that the overhead times may change.</p>
@@ -2814,16 +2815,16 @@ SINKCORR COMPLETE
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 48adcbb1-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 2142938c-dirty
 git branch: HEAD
-HEAD @: 48adcbb17475310414e925e7b30031fa0aad52d3
+HEAD @: 2142938cd73537b431e96ead5f63f2910ce0edc2
 Setting max threads to 4 out of 4 available
 Trying to open synth_blc_tmp.fits...
 Read in Primary header from synth_blc_tmp.fits...
 
 
 CALBEG*** ACSCTE -- Version 10.4.0 (07-May-2024) ***
-Begin    15-Jul-2025 14:27:49 UTC
+Begin    14-Aug-2025 18:00:43 UTC
 Input    synth_blc_tmp.fits
 Output   synth_blc_tmp_ctefmod.fits
 Trying to open synth_blc_tmp.fits...
@@ -2935,7 +2936,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -7926.253906 (-0.003583%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -7946.129395 (-0.003592%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: C
@@ -2951,8 +2952,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -300348.718750 (-0.135755%)
-(pctecorr) CTE run time for current chip: 22.14(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -300334.281250 (-0.135755%)
+(pctecorr) CTE run time for current chip: 22.13(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -2994,7 +2995,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -6646.807617 (-0.002858%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -6643.007812 (-0.002856%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: D
@@ -3010,8 +3011,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -311952.375000 (-0.134149%)
-(pctecorr) CTE run time for current chip: 22.19(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -312159.812500 (-0.134237%)
+(pctecorr) CTE run time for current chip: 22.20(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -3053,7 +3054,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -6757.876953 (-0.003200%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -6749.043945 (-0.003196%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: A
@@ -3069,8 +3070,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -301365.250000 (-0.142698%)
-(pctecorr) CTE run time for current chip: 21.58(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -301509.281250 (-0.142771%)
+(pctecorr) CTE run time for current chip: 21.57(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -3112,7 +3113,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -11504.871094 (-0.005090%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -11506.472656 (-0.005090%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: B
@@ -3128,13 +3129,13 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -311472.750000 (-0.137819%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -311547.156250 (-0.137844%)
 (pctecorr) CTE run time for current chip: 22.71(s) with 4 procs/threads
 
 PCTECORR COMPLETE
 
 
-End      15-Jul-2025 14:29:19 UTC
+End      14-Aug-2025 18:02:13 UTC
 
 
 *** ACSCTE complete ***
@@ -3270,15 +3271,15 @@ End      15-Jul-2025 14:29:19 UTC
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 48adcbb1-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 2142938c-dirty
 git branch: HEAD
-HEAD @: 48adcbb17475310414e925e7b30031fa0aad52d3
+HEAD @: 2142938cd73537b431e96ead5f63f2910ce0edc2
 Trying to open synth_ctefmod_rn_raw.fits...
 Read in Primary header from synth_ctefmod_rn_raw.fits...
 
 
 CALBEG*** ACSCCD -- Version 10.4.0 (07-May-2024) ***
-Begin    15-Jul-2025 14:29:20 UTC
+Begin    14-Aug-2025 18:02:14 UTC
 Input    synth_ctefmod_rn_raw.fits
 Output   synth_ctefmod_rn_blv_tmp.fits
 Trying to open synth_ctefmod_rn_raw.fits...
@@ -3332,9 +3333,9 @@ SNKCFILE DESCRIP =Sink pixel reference file ----------------------------
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SINKCORR COMPLETE
-
-
-End      15-Jul-2025 14:29:20 UTC
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      14-Aug-2025 18:02:14 UTC
 
 
 *** ACSCCD complete ***
@@ -3395,16 +3396,16 @@ End      15-Jul-2025 14:29:20 UTC
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 48adcbb1-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 2142938c-dirty
 git branch: HEAD
-HEAD @: 48adcbb17475310414e925e7b30031fa0aad52d3
+HEAD @: 2142938cd73537b431e96ead5f63f2910ce0edc2
 Setting max threads to 4 out of 4 available
 Trying to open synth_ctefmod_rn_blv_tmp.fits...
 Read in Primary header from synth_ctefmod_rn_blv_tmp.fits...
 
 
 CALBEG*** ACSCTE -- Version 10.4.0 (07-May-2024) ***
-Begin    15-Jul-2025 14:29:21 UTC
+Begin    14-Aug-2025 18:02:15 UTC
 Input    synth_ctefmod_rn_blv_tmp.fits
 Output   synth_ctefmod_rn_blc_tmp.fits
 Trying to open synth_ctefmod_rn_blv_tmp.fits...
@@ -3506,12 +3507,11 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 
 (pctecorr) Invoking rotation for CTE Correction Type: serial
 (pctecorr) Rotation for Amp: C
+
+(pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Calculating smooth readnoise image...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.71(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.86(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -3520,7 +3520,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 7090.177246 (0.003209%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 7103.017578 (0.003215%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: C
@@ -3531,7 +3531,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 (pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.68(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.72(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -3540,8 +3540,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 294912.000000 (0.133471%)
-(pctecorr) CTE run time for current chip: 111.15(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 294787.843750 (0.133421%)
+(pctecorr) CTE run time for current chip: 111.41(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -3578,7 +3578,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 (pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.59(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.61(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -3587,7 +3587,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 5939.631836 (0.002557%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 5943.723633 (0.002559%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: D
@@ -3607,8 +3607,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 304999.437500 (0.131317%)
-(pctecorr) CTE run time for current chip: 110.66(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 305370.562500 (0.131477%)
+(pctecorr) CTE run time for current chip: 110.56(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -3645,7 +3645,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 (pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.65(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.66(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -3654,7 +3654,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 6054.767578 (0.002871%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 6048.416992 (0.002868%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: A
@@ -3665,7 +3665,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 (pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.68(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.70(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -3674,8 +3674,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 295296.250000 (0.140019%)
-(pctecorr) CTE run time for current chip: 108.27(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 295458.125000 (0.140096%)
+(pctecorr) CTE run time for current chip: 108.29(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -3712,7 +3712,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 (pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.70(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.71(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -3721,7 +3721,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 10586.493164 (0.004690%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 10588.810547 (0.004691%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: B
@@ -3732,7 +3732,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 (pctecorr) Calculating smooth readnoise image...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.74(s) with 4 threads
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) Time taken to smooth image: 1.76(s) with 4 threads
 (pctecorr) ...complete.
 (pctecorr) Creating charge trap image...
 (pctecorr) Time taken to populate pixel trap map image: 0.01(s) with 4 threads
@@ -3741,13 +3741,13 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: 306411.281250 (0.135751%)
-(pctecorr) CTE run time for current chip: 113.20(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: 306117.375000 (0.135611%)
+(pctecorr) CTE run time for current chip: 113.15(s) with 4 procs/threads
 
 PCTECORR COMPLETE
 
 
-End      15-Jul-2025 14:36:48 UTC
+End      14-Aug-2025 18:09:40 UTC
 
 
 *** ACSCTE complete ***
@@ -3771,15 +3771,15 @@ End      15-Jul-2025 14:36:48 UTC
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 48adcbb1-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 2142938c-dirty
 git branch: HEAD
-HEAD @: 48adcbb17475310414e925e7b30031fa0aad52d3
+HEAD @: 2142938cd73537b431e96ead5f63f2910ce0edc2
 Trying to open synth_ctefmod_rn_blv_tmp.fits...
 Read in Primary header from synth_ctefmod_rn_blv_tmp.fits...
 
 
 CALBEG*** ACS2D -- Version 10.4.0 (07-May-2024) ***
-Begin    15-Jul-2025 14:36:48 UTC
+Begin    14-Aug-2025 18:09:40 UTC
 Input    synth_ctefmod_rn_blv_tmp.fits
 Output   synth_ctefmod_rn_flt.fits
 Trying to open synth_ctefmod_rn_blv_tmp.fits...
@@ -3790,7 +3790,7 @@ FILTER2 CLEAR2L
 DETECTOR WFC
 
 
-Imset 1  Begin 14:36:48 UTC
+Imset 1  Begin 18:09:40 UTC
 
 
 CCDTAB   jref$72m1821dj_ccd.fits
@@ -3838,10 +3838,10 @@ IMPHTTAB jref$4af1559ij_imp.fits
 IMPHTTAB PEDIGREE=INFLIGHT 18/04/2000 29/09/2020
 IMPHTTAB DESCRIP =photometry keywords reference file---------------------------------
 PHOTCORR COMPLETE
-Imset 1  End 14:36:49 UTC
+Imset 1  End 18:09:41 UTC
 
 
-Imset 2  Begin 14:36:49 UTC
+Imset 2  Begin 18:09:41 UTC
 
 
 CCDTAB   jref$72m1821dj_ccd.fits
@@ -3883,10 +3883,10 @@ IMPHTTAB jref$4af1559ij_imp.fits
 IMPHTTAB PEDIGREE=INFLIGHT 18/04/2000 29/09/2020
 IMPHTTAB DESCRIP =photometry keywords reference file---------------------------------
 PHOTCORR COMPLETE
-Imset 2  End 14:36:49 UTC
+Imset 2  End 18:09:41 UTC
 
 
-End      15-Jul-2025 14:36:49 UTC
+End      14-Aug-2025 18:09:41 UTC
 
 
 *** ACS2D complete ***
@@ -3906,15 +3906,15 @@ End      15-Jul-2025 14:36:49 UTC
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 48adcbb1-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 2142938c-dirty
 git branch: HEAD
-HEAD @: 48adcbb17475310414e925e7b30031fa0aad52d3
+HEAD @: 2142938cd73537b431e96ead5f63f2910ce0edc2
 Trying to open synth_ctefmod_rn_blc_tmp.fits...
 Read in Primary header from synth_ctefmod_rn_blc_tmp.fits...
 
 
 CALBEG*** ACS2D -- Version 10.4.0 (07-May-2024) ***
-Begin    15-Jul-2025 14:36:49 UTC
+Begin    14-Aug-2025 18:09:41 UTC
 Input    synth_ctefmod_rn_blc_tmp.fits
 Output   synth_ctefmod_rn_flc.fits
 Trying to open synth_ctefmod_rn_blc_tmp.fits...
@@ -3925,7 +3925,7 @@ FILTER2 CLEAR2L
 DETECTOR WFC
 
 
-Imset 1  Begin 14:36:49 UTC
+Imset 1  Begin 18:09:41 UTC
 
 
 CCDTAB   jref$72m1821dj_ccd.fits
@@ -3973,10 +3973,10 @@ IMPHTTAB jref$4af1559ij_imp.fits
 IMPHTTAB PEDIGREE=INFLIGHT 18/04/2000 29/09/2020
 IMPHTTAB DESCRIP =photometry keywords reference file---------------------------------
 PHOTCORR COMPLETE
-Imset 1  End 14:36:49 UTC
+Imset 1  End 18:09:41 UTC
 
 
-Imset 2  Begin 14:36:49 UTC
+Imset 2  Begin 18:09:41 UTC
 
 
 CCDTAB   jref$72m1821dj_ccd.fits
@@ -4018,10 +4018,10 @@ IMPHTTAB jref$4af1559ij_imp.fits
 IMPHTTAB PEDIGREE=INFLIGHT 18/04/2000 29/09/2020
 IMPHTTAB DESCRIP =photometry keywords reference file---------------------------------
 PHOTCORR COMPLETE
-Imset 2  End 14:36:50 UTC
+Imset 2  End 18:09:42 UTC
 
 
-End      15-Jul-2025 14:36:50 UTC
+End      14-Aug-2025 18:09:42 UTC
 
 
 *** ACS2D complete ***
@@ -4050,7 +4050,7 @@ End      15-Jul-2025 14:36:50 UTC
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/8a9ab569d74a773fd1a4576420f5e273b834abcf965287d511e9da13fbfbf7b0.png" src="../../../_images/8a9ab569d74a773fd1a4576420f5e273b834abcf965287d511e9da13fbfbf7b0.png" />
+<img alt="../../../_images/f3e495120083ef98ef7c633c07516a607efee82cba77c3f22d0930bd8a74fea3.png" src="../../../_images/f3e495120083ef98ef7c633c07516a607efee82cba77c3f22d0930bd8a74fea3.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -4073,13 +4073,13 @@ End      15-Jul-2025 14:36:50 UTC
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/87bc8b1e31e21e1721a05e82b6884d36f84817be01271b8ca10096cc807a407f.png" src="../../../_images/87bc8b1e31e21e1721a05e82b6884d36f84817be01271b8ca10096cc807a407f.png" />
+<img alt="../../../_images/7cdc1023fbc503cdfe7d7b39ceea24ce7590ec7da56c3f3ac6e4fed2553c62d5.png" src="../../../_images/7cdc1023fbc503cdfe7d7b39ceea24ce7590ec7da56c3f3ac6e4fed2553c62d5.png" />
 </div>
 </div>
 </section>
 <section id="for-more-help">
 <h3>For more help:<a class="headerlink" href="#for-more-help" title="Permalink to this heading">#</a></h3>
-<p>More details may be found on the <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/acs">ACS website</a> and in the <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB">ACS Instrument</a> and <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/other-documents/_documents/acs_dhb.pdf">Data Handbooks</a>.</p>
+<p>More details may be found on the <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/acs">ACS website</a> and in the <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB">ACS Instrument</a> and <a class="reference external" href="https://hst-docs.stsci.edu/acsdhb">Data Handbooks</a>.</p>
 <p>Please visit the <a class="reference external" href="http://hsthelp.stsci.edu">HST Help Desk</a>. Through the help desk portal, you can explore the HST Knowledge Base and request additional help from experts.</p>
 <p><a id="about_ID"></a></p>
 </section>
