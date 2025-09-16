@@ -1,19 +1,21 @@
 # COS Notebooks 
 
-[//]: # (*[Click here]&#40;https://spacetelescope.github.io/COS-Notebooks/&#41; for the COS Notebooks website*)
+[//]: # (*[Click here]&#40;https://spacetelescope.github.io/hst_notebooks/&#41; for the COS Notebooks website*)
+
+# Before Running a Notebook
+Before running these examples you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [Installation Instructions](https://spacetelescope.github.io/hst_notebooks/index.html).
 
 ## Jupyter Notebook Walkthroughs of Cosmic Origins Spectrograph (COS) Data Processing
 The [Cosmic Origins Spectrograph](https://www.stsci.edu/hst/instrumentation/cos) (COS) is an instrument on the [Hubble Space Telescope](https://www.stsci.edu/hst/about) (HST).
 This is a repository of interactive walkthrough guides to common COS data procedures. It is intended for any and all COS data users: from undergraduates, to professional astronomers, to the general public.
 
-#### 1. [Currently Operational Notebooks](#ch1)
-#### 2. [Basic Requirements](#ch2)
-#### 3. [Notes for those new to `Python`/`Jupyter`/Coding](#ch3)
-#### 4. [Getting Help](#ch4)
+### 1. [Currently Operational Notebooks](#ch1)
+### 2. [Basic Requirements](#ch2)
+### 3. [Notes for those new to `Python`/`Jupyter`/Coding](#ch3)
+### 4. [Getting Help](#ch4)
 
----
 <a id=ch1></a>
-## Currently Operational Notebooks
+# Current Notebooks
 
 If you don't want to run the Notebooks for yourself but just want to see rendered html versions of the Notebooks, *(with outputs,)* you may use the rendered `html` file.
 
@@ -29,13 +31,13 @@ If you don't want to run the Notebooks for yourself but just want to see rendere
 |LSF|Working with the COS Line Spread Function (LSF)|[LSF.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/LSF/LSF.ipynb)|[LSF.html](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/LSF/LSF.html)|
 |Extract|Editing the extraction boxes in a BOXCAR-method spectral extraction file (XTRACTAB)|[Extract.ipynb](https://github.com/spacetelescope/hst_notebooks/blob/master/notebooks/COS/Extract/Extract.ipynb)|[Extract.html](https://spacetelescope.github.io/hst_notebooks/notebooks/COS/Extract/Extract.html)|
 
-##### For Notebooks with exercises, you can find worked solutions at the end of the Notebook.
+## For Notebooks with exercises, you can find worked solutions at the end of the Notebook.
 
 
 <a id = ch2></a>
-## Basic Requirements
+# Basic Requirements
 
-### Computer requirements
+## Computer requirements
 We have built these Notebooks to be cross-platform compatible; however they have been tested primarily on `Unix` and `Unix`-`like` systems, (i.e. **MacOS** and **Linux**). As such **Users may encounter issues when run on Windows computers**. If you are unable to run a particular Notebook from a Windows device, please reach out to us (see [Getting Help](#ch4)) and we will work to fix the problem. The first solution to try if the Notebooks are failing because of a Windows incompatibility is using the [Windows Sub-System for Linux](https://docs.microsoft.com/en-us/windows/wsl/) (WSL), which will allow you to run a Linux computer environment from your Windows device.
 
 
@@ -106,4 +108,3 @@ If you don't have experience installing packages, you should begin with our **in
 
 If you have an issue using these Notebooks that you cannot fix, or if believe you have discovered an error in a Notebook, please reach out to the [HST Help Desk](https://stsci.service-now.com/hst) or to the Notebook's primary author: [Marc Rafelski](mailto:mrafelski@stsci.edu).
 
----
