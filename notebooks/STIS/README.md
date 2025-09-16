@@ -12,7 +12,6 @@ Before running these examples you **must** follow the general instructions on cr
 #### [Notes for those new to `Python`/`Jupyter` Coding](#ch3)
 #### [Getting Help](#ch4)
 
----
 <a id=ch1></a>
 ## Currently Operational Notebooks
 
