@@ -1,18 +1,15 @@
-# STIS-Notebooks
+# STIS Notebooks
 
 ## Jupyter Notebook Tutorials for Working with Space Telescope Imaging Spectrograph (STIS) Data and Observation Planning.
 The [Space Telescope Imaging Spectrograph](https://www.stsci.edu/hst/instrumentation/stis) (STIS) is an instrument on board the [Hubble Space Telescope](https://www.stsci.edu/hst/about) (HST). This is a repository of interactive tutorials for working with STIS data and planning observations.  A complete list of available tools can be found on the [STIS data and software tools website](https://www.stsci.edu/hst/instrumentation/stis/data-analysis-and-software-tools).
 
-# Before Running a Notebook
+--- 
+
+## Before Running a Notebook
 Before running these examples you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [Installation Instructions](https://spacetelescope.github.io/hst_notebooks/index.html).
 
+--- 
 
-#### [Currently Operational Notebooks](#ch1)
-#### [Basic Requirements](#ch2)
-#### [Notes for those new to `Python`/`Jupyter` Coding](#ch3)
-#### [Getting Help](#ch4)
-
-<a id=ch1></a>
 ## Currently Operational Notebooks
 
 The current operational notebooks with a short description:
@@ -35,7 +32,7 @@ The current operational notebooks with a short description:
 Each folder has an `HTML` file that can be opened in a browser after cloning this repository. The `HTML` file is identical to the notebook, except they contain output plots and tables.
 
 ---  
-<a id = ch4></a>
+
 ## Contributing
 
 New contributions and feedback are very welcomed! Please open a new [issue](https://github.com/spacetelescope/hst_notebooks/issues) or new pull request for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. Questions can also be sent to the STIS team through the [HST Help Desk](https://stsci.service-now.com/hst).

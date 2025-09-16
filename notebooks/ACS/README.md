@@ -11,12 +11,16 @@ If you have questions about HST data analysis, calibration software, instrument 
 
 Jupyter Notebooks allow code to be packaged with formatted text to create illustrative examples. Users who are unfamiliar with Jupyter Notebooks should also see the [short guide](https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/) for how to use these tools.
 
+--- 
+
 ## Before Running a Notebook
 Before running these examples you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [Installation Instructions](https://spacetelescope.github.io/hst_notebooks/index.html).
 
-# Contents
+--- 
 
-## Simple Example Notebooks
+## Contents
+
+### Simple Example Notebooks
 
 * **acs_subarrays**: Instructions for how to use the `acstools.acs_destripe_plus` module to calibrate, de-stripe, and correct ACS subarray observations for charge transfer efficiency (CTE). Also included are instructions for updating the `OSCNTAB` reference file to subtract the bias level from the prescan columns in user-defined subarray observations.
 
@@ -24,7 +28,7 @@ Before running these examples you **must** follow the general instructions on cr
 
 * **acs_polarization_tools**: ACS/WFC offers two sets of polarizers, UV and visible, for imaging polarimetry and imaging spectropolarimetry. This notebook provides guidance on using the `acstools.polarization_tools` module to retrieve polarization calibration coefficients and calculate polarization properties of a source.
 
-## Complex Workflow Notebooks
+### Complex Workflow Notebooks
 
 * **acs_reduction**: This worked example demonstrates how to use the CALACS pipeline to re-process raw ACS data retrieved from MAST. Users are shown how to update reference files in the image headers, retrieve reference files from the Calibration Reference Data System (CRDS), and how to toggle steps in the calibration pipeline (e.g., CTE correction).
 
@@ -35,6 +39,8 @@ Before running these examples you **must** follow the general instructions on cr
 * **acs_sbc_dark_analysis**: The ACS Solar Blind Channel (SBC) has nominally negligible dark current. However, the temperature of the SBC detector increases steadily over time while it is in use, and the dark current is proportional to temperature. At temperatures above 25 ºC, the dark current is no longer negligible and must be subracted. This workflow demonstrates how to account for dark current in ACS/SBC observations.
 
 * **acs_findsat_mrt_example.ipynb**: ACS/WFC imaging data is often affected by contamination by artificial satellites, compromising science data. The `acstools.findsat_mrt` module can be used to identify satellite trails and create masks to reject affected pixels from further analysis.
+
+--- 
 
 Contributing
 ------------
