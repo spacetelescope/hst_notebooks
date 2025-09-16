@@ -8,7 +8,7 @@ Before Running a Notebook
 
 Before running these examples you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [Installation Instructions](https://spacetelescope.github.io/hst_notebooks/index.html).
 
-In each notebook, a sample WFC3 or ACS dataset is used to demonstrate how to download the calibrated data, inspect the quality of the alignment, and test whether the observations need to be realigned before combining the data with `AstroDrizzle`. Different workflows are illustrated to enhance the scientific value of the drizzled data products using advanced reprocessing techniques. These notebooks highlight different use cases, e.g. images acquired using small sub-pixel dithers to optimally sample the PSF versus those acquired in multiple pointings to generate large mosaics on the sky.
+In each notebook, a sample WFC3 or ACS dataset is used to demonstrate how to download the calibrated data, inspect the quality of the alignment and test whether the observations need to be realigned before combining the data with `AstroDrizzle`. Different workflows are illustrated to enhance the scientific value of the drizzled data products using advanced reprocessing techniques. These notebooks highlight different use cases, e.g. images acquired using small sub-pixel dithers to optimally sample the PSF versus those acquired in multiple pointings to generate large mosaics on the sky.
 
 The notebooks available in this repository include:
 
