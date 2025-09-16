@@ -40,10 +40,14 @@ See the [WFC3 Instrument Handbook](https://hst-docs.stsci.edu/wfc3ihb),
 [WFC3 Software Tools](https://www.stsci.edu/hst/instrumentation/wfc3/software-tools)
 for more information on instrumentation, data, calibration, and software.
 
+--- 
+
 Before Running a Notebook
 ------------
 
 Before running these examples you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [Installation Instructions](https://spacetelescope.github.io/hst_notebooks/index.html).
+
+--- 
 
 Contributing
 ------------
@@ -61,6 +65,7 @@ the the `astropy`
 and [developer](https://docs.astropy.org/en/stable/index.html#developer-documentation) 
 documentation.
 
+--- 
 
 License
 -------
