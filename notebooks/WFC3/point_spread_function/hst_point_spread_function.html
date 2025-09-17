@@ -577,7 +577,6 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">1. Introduction</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">1.1 Environment Setup</a></li>
@@ -627,11 +626,10 @@ document.write(`
   <p><a id="top"></a></p>
 <section class="tex2jax_ignore mathjax_ignore" id="hst-wfc3-point-spread-function-modeling-space-telescope-logo">
 <h1>HST WFC3 Point Spread Function Modeling   <a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a><a class="headerlink" href="#hst-wfc3-point-spread-function-modeling-space-telescope-logo" title="Permalink to this heading">#</a></h1>
-<hr class="docutils" />
-<p><a id="learning"></a></p>
-<section id="learning-goals">
-<h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Permalink to this heading">#</a></h2>
-<p>This notebook demonstrates how to create Point Spread Function (PSF) models for HST <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3">Wide Field Camera 3 (WFC3)</a> observations.</p>
+<hr>
+<a id="learning"></a>
+## Learning Goals
+This notebook demonstrates how to create Point Spread Function (PSF) models for HST [Wide Field Camera 3 (WFC3)](https://www.stsci.edu/hst/instrumentation/wfc3) observations.
 <p>The tutorial will allow users to complete the following tasks:</p>
 <ul class="simple">
 <li><p>Perform simple aperture photometry on science images for comparison with PSF photometry.</p></li>
@@ -639,7 +637,6 @@ document.write(`
 <li><p>Complete basic science workflows including PSF photometry, subtraction, and decomposition.</p></li>
 </ul>
 <p><a id="toc"></a></p>
-</section>
 <section id="table-of-contents">
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">#</a></h2>
 <p><strong> <span class="xref myst">Learning Goals</span></strong> <br>
@@ -684,7 +681,7 @@ document.write(`
 <section id="introduction">
 <h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p><strong>What is the Point Spread Function and why do we want to model it?</strong></p>
 <p>The purpose of a telescope is to collect, magnify, and record the intensity of light from astronomical sources. A telescope’s ability to resolve the size of objects is limited by its spatial resolution, which is determined by its aperture and the wavelength of light being observed, such that every telescope is fundamentally limited by the diffraction nature of light. The minimum size of an image that the light can be focused onto is known as the Airy disk. In addition, the shape of the image will be altered by any optical aberrations in the telescope’s system of mirrors, lenses, filters, and camera detectors. When observing unresolved point sources such as stars, these factors determine the size and shape of the focused image. This distribution of light as a function of position on the telescopes detectors is known as the Point Spread Function (PSF). More simply, the PSF describes how the light from an unresolved source is distributed across multiple pixels when it is recorded by the telescope’s camera.</p>
 <p>While a well-focused telescope produces a very small image of point sources, the shape will be distorted and the light is effectively scattered to an infinite radius. Therefore, a model of the PSF is required to accurately measure astrometry (positions) and photometry (brightnesses) of objects in astronomical images. In the case of the HST WFC3 this is especially important because the images are undersampled, which means the telescope is capable of delivering higher resolution than the detector pixels can record. The PSF will vary depending on the telescopes focus, and also significantly with location on the WFC3 detector due to optical distortions in the light path that are designed to minimize light loss by reducing the number of optical reflections. For these reasons, the WFC3 team has produced a library of PSF models and tools for users on the <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3/data-analysis/psf">WFC3 PSF webpage</a>.</p>
@@ -695,9 +692,8 @@ document.write(`
 <section id="environment-setup">
 <h3>1.1 Environment Setup<a class="headerlink" href="#environment-setup" title="Permalink to this heading">#</a></h3>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
-<p>This Jupyter Notebook requires users to install the packages listed in the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file located in the main notebook directory. Installing the <code class="docutils literal notranslate"><span class="pre">stenv</span></code> Python environment maintained by STScI will often fulfill most of these requirements. Please see the <code class="docutils literal notranslate"><span class="pre">stenv</span></code> <a class="reference external" href="https://stenv.readthedocs.io/en/latest/getting_started.html">readthedocs</a> for more information. In this workflow, we will install the required packages using the <code class="docutils literal notranslate"><span class="pre">conda</span></code> package manager. To check whether you have <code class="docutils literal notranslate"><span class="pre">conda</span></code> installed, open a terminal window and type <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">-V</span></code>, <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">--version</span></code>, or run the next cell. If your <code class="docutils literal notranslate"><span class="pre">conda</span></code> is installed and working, the terminal or cell will return the current version of <code class="docutils literal notranslate"><span class="pre">conda</span></code>.</p>
-<div class="cell docutils container">
+<hr>
+This Jupyter Notebook requires users to install the packages listed in the `requirements.txt` file located in the main notebook directory. Installing the `stenv` Python environment maintained by STScI will often fulfill most of these requirements. Please see the `stenv` [readthedocs](https://stenv.readthedocs.io/en/latest/getting_started.html) for more information. In this workflow, we will install the required packages using the `conda` package manager. To check whether you have `conda` installed, open a terminal window and type `conda -V`, `conda --version`, or run the next cell. If your `conda` is installed and working, the terminal or cell will return the current version of `conda`.<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>conda<span class="w"> </span>-V
 </pre></div>
@@ -729,7 +725,7 @@ document.write(`
 <section id="import-packages">
 <h3>1.2 Import Packages<a class="headerlink" href="#import-packages" title="Permalink to this heading">#</a></h3>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>The following Python packages are required to run the Jupyter Notebook:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/os.html"><strong>os</strong></a> - change and make directories</p></li>
@@ -904,7 +900,7 @@ save_figure(figure, filename, show_figure)
 <section id="download-data">
 <h3>1.3 Download Data<a class="headerlink" href="#download-data" title="Permalink to this heading">#</a></h3>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>In this example, we will be using HST WFC3 imaging of the globular cluster Omega Centauri (NGC 5139). Specifically, utilizing exposures that are not centered on the cluster core so there is a moderate density of bright stars. This source was chosen because it serves as a frequent target for both science and calibration exposures, and has been observed with every UVIS and IR filter onboard WFC3. A complete list of WFC3 filters is available in the Data Handbook for the <a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb/chapter-6-uvis-imaging-with-wfc3/6-5-uvis-spectral-elements">UVIS</a> and <a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb/chapter-7-ir-imaging-with-wfc3/7-5-ir-spectral-elements">IR</a> channels. First, we use astroquery to retrieve the calibrated exposure from MAST.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -956,7 +952,7 @@ save_figure(figure, filename, show_figure)
 <section id="aperture-photometry">
 <h3>1.4 Aperture Photometry<a class="headerlink" href="#aperture-photometry" title="Permalink to this heading">#</a></h3>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>First, we can perform simple aperture photometry on the image. This consists of detecting stars in the image, assigning them an aperture within which to measure the enclosed flux, and creating a background annulus that is used to subtract the background level. In ground-based astronomy this is commonly referred to as the “sky” level. In this example, we create a mask so that we only find and measure the properties of stars that are within our selected box region.</p>
 <p>The cell below first calculates the mean, median, and standard deviation for the background, initializes the star finder function with a threshold of 500 electrons and a FWHM of three pixels, and then creates a mask so that the star finding algorithm will only search within our zoomed-in box region. Next, the <code class="docutils literal notranslate"><span class="pre">DAOStarFinder</span></code> function searches for peaks and returns a list of sources. We then assign to the position of each source a circular annulus designed to measure the flux of the star, and a background annulus that measures the local background flux.</p>
 <div class="cell docutils container">
@@ -1027,7 +1023,7 @@ save_figure(figure, filename, show_figure)
 <section id="exposure-psf-models">
 <h2>2. Exposure PSF Models<a class="headerlink" href="#exposure-psf-models" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>As described in the <span class="xref myst">Introduction</span>, we may perform PSF modeling, photometry, and astrometry on either individual exposures or mosaics that combine exposures through drizzling. The sections below contain several different workflows with various options depending on your science goals and the available data. The flowchart below is meant as a general guide for deciding which sections are most relevant for your project. We highlight that several different paths may be applicable to a single dataset and users are encouraged to experiment with the options below.</p>
 <div class="alert alert-block alert-info"><b>NOTE:</b> Users that are creating PSF models for drizzled images and not single exposures can proceed to the section on Drizzle PSF Models. </div>
 <p><img alt="This flowchart provides users with a general guide for deciding which PSF modeling technique is the most relevant based on their dataset and science goals. The top of the chart asks users if they are modeling at the exposure or drizzle level. The drizzle workflow forks to the right, and asks users how many bright, isolated stars are in their image. If there are fewer than 10 stars, they can fit an analytical profile or download custom tools as described below. If they have 10 or more stars, they can extract and stack stars as described in Section 3. If users are working at the exposure level, then the diagram forks to the left. If the user's goal is focused on high-accuracy photometry and astrometry of stars, then they follow the left fork. If their goals are to model the extended wings and diffraction spikes of the PSF, they follow the fork right. In following the left fork for precision photometry and astrometry, users are asked if an empirical model from the WFC3 team exists. If it does, then they can run hst1pass and examine the residuals. If there is not an empirical model, they can use the model for the closest filter and perturb it with hst1pass if there are at least 10 stars. In following the right fork for modeling extended wing emission and diffraction spikes, users are asked if they have more or less than 10 stars in their image. If they have fewer than 10, they can use the MAST cutout service to retrieve and stack stars from other observations. If they have at least 10 stars, then they can stack stars directly from their observations. This flowchart is a general guide, and we note that several different paths may be applicable to a single dataset. Users are encouraged to experiment with the options below." src="../../../_images/workflow.png" /></p>
@@ -1036,7 +1032,7 @@ save_figure(figure, filename, show_figure)
 <section id="analytical-psf-models">
 <h3>2.1 Analytical PSF Models<a class="headerlink" href="#analytical-psf-models" title="Permalink to this heading">#</a></h3>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>The example above demonstrates how to perform basic aperture photometry of sources. However, we can see that two of the stars overlap in the image and their fluxes are blended. Therefore, aperture photometry cannot be used reliably for crowded fields, and requires corrections when using multiple filters as the apertures do not account for changing resolution with wavelength. Without any knowledge of the intrinsic shape of the PSF, we can first fit purely analytical functions such as a Gaussian, Moffat, Lorentzian, or Voigt profile to each star. While the majority of our functions are specified in the <code class="docutils literal notranslate"><span class="pre">psf_utilities.py</span></code> module, we explicitly define two common photometry functions here so users can easily experiment and change common options depending on their data and goals.</p>
 <p>Critically, we note that the size of the <code class="docutils literal notranslate"><span class="pre">fit_shape</span></code> variable (in pixels) determines the number of pixels used to constrain the fit. If the value is small, the core pixels of the source will dominate the fit, while larger values will weight more wing emission when determining the best fit model.</p>
 <div class="cell docutils container">
@@ -1176,7 +1172,7 @@ save_figure(figure, filename, show_figure)
 <section id="empirical-psf-models">
 <h3>2.2 Empirical PSF Models<a class="headerlink" href="#empirical-psf-models" title="Permalink to this heading">#</a></h3>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>The example above demonstrates how a Gaussian profile can determine reasonable centroids for stellar sources, but they fail to accurately model the radial light distribution. While it is possible to use more advanced analytical forms such as <a class="reference external" href="https://docs.astropy.org/en/stable/api/astropy.modeling.functional_models.Moffat2D.html">Moffat profiles</a>, the overall shape can be more accurately represented by models constructed from bright stars in the field of view. The examples below demonstrate how to use pre-generated PSF models provided by the WFC3 team, as well as how to extract and stack stars from your observations. As described below, the pre-generated models are excellent for precision astrometry and photometry of unresolved sources, while stacking stars can be more beneficial for accurately modeling the PSF wings and diffraction spikes.</p>
 <p>First, we display the pre-generated PSF models provided by the WFC3 team, which are stored in a standard format known as “STDPSF_WFC3”. The FITS file for each filter contains a grid of models that represents the PSF at regularly spaced intervals of a few hundred pixels across the detector, as shown below. The models are oversampled by a factor of 4x to account for the fact that the morphology of the PSF changes depending on where a star falls within a given pixel. These models are tapered to zero flux at large radii to prevent discontinuities in image subtraction, at the expense of PSF wing accuracy. The specific details of these models are provided on the <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3/data-analysis/psf">WFC3 PSF webpage</a>, as well as in <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2016/WFC3-2016-12.pdf">WFC3 ISR 2016-12</a>. The models are retrieved from <a class="reference external" href="https://www.stsci.edu/~jayander/HST1PASS/LIB/PSFs/STDPSFs/">https://www.stsci.edu/~jayander/HST1PASS/LIB/PSFs/STDPSFs/</a>, and we save them to the main directory for access by hst1pass.</p>
 <p>There are also “focus-diverse” models for commonly used filters with an additional dimension containing the same grids at different focus intervals. The best fit model can be determined experimentally, or by running the hst1pass code to measure the focus. However, if there are a sufficient number of stars to measure the focus then hst1pass can “perturb” the pre-generated PSF models to best match the data. As this approach is generalized for any filter we do not use the focus-diverse models in this notebook. Users can find information in <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2018/WFC3-2018-14.pdf">WFC3 ISR 2018-14</a>. In addition, similar focus-diverse models exist for <a class="reference external" href="http://acspsf.stsci.edu">ACS</a> as described in <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr2306.pdf">ACS ISR 2023-06</a>.</p>
@@ -1208,7 +1204,7 @@ save_figure(figure, filename, show_figure)
 <section id="default-models">
 <h4>2.2.1 Default Models<a class="headerlink" href="#default-models" title="Permalink to this heading">#</a></h4>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>First, we can simply use the pre-generated PSF models provided by the WFC3 team. In many cases, these models will be sufficient for measuring very accurate astrometry and photometry of stellar sources in individual exposures (FLTs/FLCs) without further modifications. We utilize functions within the Astropy-affiliated <a class="reference external" href="https://photutils.readthedocs.io/en/stable/">photutils</a> package to read the models into a recognized format for the PSF fitter. As noted in the packages <a class="reference external" href="https://photutils.readthedocs.io/en/stable/api/photutils.psf.stdpsf_reader.html">documentation</a>, for ACS/WFC and WFC3/UVIS the detector value should be “1” for WFC2, UVIS2 (sci, 1), and “2” for WFC1, UVIS1 (sci, 2).</p>
 <p>In the examples below we only utilize the <code class="docutils literal notranslate"><span class="pre">['SCI',</span> <span class="pre">1]</span></code> extension of the science image, so the hst1pass and array image coordinates will match. When analyzing <code class="docutils literal notranslate"><span class="pre">['SCI',</span> <span class="pre">2]</span></code> (<code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">=</span> <span class="pre">1</span></code> in hst1pass catalogs) users must subtract 2048 from the hst1pass <code class="docutils literal notranslate"><span class="pre">y</span></code> coordinates so they match the array coordinates. This is because hst1pass detects over the full 4096x2048 dimensions of the detector, but each chip is read in as a 2048x2048 array.</p>
 <p>We now read in the model and use it with the PSF fitter to calculate the best fit model and residuals.</p>
@@ -1256,7 +1252,7 @@ save_figure(figure, filename, show_figure)
 <section id="focus-perturbation">
 <h4>2.2.2 Focus Perturbation<a class="headerlink" href="#focus-perturbation" title="Permalink to this heading">#</a></h4>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>In the case above, the pre-generated PSF model subtraction has substantial flux remaining in the residual image. We can use the perturbation feature within hst1pass to modify the shape of the PSF to account for the focus of these specific observations, as well as other effects such as minor modulations due to guiding accuracy. As described in Section 3.3 of <a class="reference external" href="https://www.stsci.edu/~jayander/JWST1PASS/DOCs/ISR_HST1PASS.pdf">WFC3 ISR 2022-05</a>, the routine has a <code class="docutils literal notranslate"><span class="pre">PERT</span></code> option that can modify the library PSF if there are at least 10 relatively bright, isolated stars in the field. If <code class="docutils literal notranslate"><span class="pre">PERT=1</span></code>, then hst1pass constructs a single PSF that applies across the entire image. This often provides the best results, but <code class="docutils literal notranslate"><span class="pre">PERT=2</span></code> can be specified to generate an NxN array of PSFs spaced evenly across the detector. This requires ample bright, isolated stars across the detector. In general, it is recommended that users begin with the unaltered PSFs before utilizing the focus or spatially-dependent perturbed PSFs. The perturbed models have a small effect on astrometry and moderate on photometry.</p>
 <p>The commands below assume that you have followed the instructions for installing hst1pass given in the <span class="xref myst">Environment Setup</span> section. The executable can be in the same directory as assumed below, or you can provide the full path to the location of the executable. We now attempt to compile and call hst1pass with <code class="docutils literal notranslate"><span class="pre">PERT=1</span></code> to construct a single perturbed PSF model that applies at all locations on the detector. We make a copy of the model because it will be overwritten by hst1pass, but call the original file for compatibility with <code class="docutils literal notranslate"><span class="pre">GriddedPSFModel</span></code>.</p>
 <div class="cell docutils container">
@@ -1335,7 +1331,7 @@ save_figure(figure, filename, show_figure)
 <section id="spatial-perturbation">
 <h4>2.2.3 Spatial Perturbation<a class="headerlink" href="#spatial-perturbation" title="Permalink to this heading">#</a></h4>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>In general, using hst1pass with <code class="docutils literal notranslate"><span class="pre">PERT=1</span></code> to construct a single, focus-dependent PSF model that applies across the detector will provide the best results. However, for specialized use cases with many bright, isolated stars that are located near one location on the detector, or dispersed across the entire detector, hst1pass can create a spatially-dependent PSF model in the same NxN array format as the STDPSF_WFC3 standard models. We now use hst1pass with <code class="docutils literal notranslate"><span class="pre">PERT=2</span></code> to generate a grid of spatially-dependent PSF models optimized for the focus of this exposure at each location on the detector.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1409,7 +1405,7 @@ save_figure(figure, filename, show_figure)
 <section id="stacked-psf-models">
 <h3>2.3 Stacked PSF Models<a class="headerlink" href="#stacked-psf-models" title="Permalink to this heading">#</a></h3>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>The empirical models used above that are provided by the WFC3 team can provide excellent fits at the exposure level for very accurate astrometry and photometry. However, these models have three limitations for specific science cases. First, the models are intentionally tapered to zero flux at large radii to prevent oversubtraction and fitting of noise at large radii, which means they cannot accurately capture very extended emission of bright sources. Second, while these models are available for the majority of commonly used filters on WFC3, models are not available for more specialized narrowband and quadrant filters. Third, these models are generated in the exposure frame, and so do not accurately represent the PSF in drizzled image mosaics, which will differ depending on how the drizzle was created.</p>
 <p>With these considerations, we now explore extracting and stacking stars from both individual exposures and drizzled mosaics. Stacking a large number of sources allows for efficient outlier rejection and can produce a high quality PSF that extends to large radii, but can inherently smear or broaden the PSF at a miniscule level depending on how the sources are aligned. In this example, we will first extract stars from our image of Omega Cen and stack them to produce a PSF model. Next, we will examine the case where there are insufficient stars in an image, and retrieve stellar cutouts from the MAST database to construct a model. <strong>In this case the images have a very low background flux, but images with a high background would require users to background subtract their data and/or PSF model for proper fitting and photometric accuracy.</strong></p>
 <p>In summary, users may wish to stack stars if 1) there is no empirical model available for their filter, 2) they are interested in extended wing emission and diffraction spikes, or 3) they need to generate a PSF model for a drizzled mosaic, including those with diffraction spikes at multiple angles. Users can stack stars extracted from their images, or use the MAST database cutout service to retrieve observations of a similar focus and quality for their science. We will use the hst1pass catalogs produced above for examples on the exposure level, which are the same as the centroids provided by the <a class="reference external" href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST</a> cutout service, but users can provide coordinates from an external catalog (e.g. SourceExtractor, photutils) if desired.</p>
@@ -1417,7 +1413,7 @@ save_figure(figure, filename, show_figure)
 <section id="stellar-stacks">
 <h4>2.3.1 Stellar Stacks<a class="headerlink" href="#stellar-stacks" title="Permalink to this heading">#</a></h4>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>In this example, we use the hst1pass catalog to extract and stack stars from the FLC exposure of Omega Centauri. The hst1pass catalog columns are described in Section 2.3 of <a class="reference external" href="https://www.stsci.edu/~jayander/JWST1PASS/DOCs/ISR_HST1PASS.pdf">WFC3 ISR 2022-05</a> and include <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> detector coordinates, <code class="docutils literal notranslate"><span class="pre">m</span></code>:magnitude, <code class="docutils literal notranslate"><span class="pre">p</span></code>:peak flux, <code class="docutils literal notranslate"><span class="pre">q</span></code>:quality of fit, <code class="docutils literal notranslate"><span class="pre">k</span></code>:chip number, and <code class="docutils literal notranslate"><span class="pre">s</span></code>:sky value. We note that running hst1pass is not required, and users can use an external catalog generated with photutils or other packages provided the catalog contains accurate <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> coordinates. An example of this is shown in the section on <span class="xref myst">Drizzle PSF Models</span>.</p>
 <p>We first read the hst1pass catalog and select bright stars with excellent qfit values on chip two. We also require a low sky value to remove some cutouts with many neighboring stars, and create a buffer around the edges of the detector so all cutouts contain a full array of data. The <code class="docutils literal notranslate"><span class="pre">rpix</span></code> parameter sets the radius of the cutout in pixels. For example, <code class="docutils literal notranslate"><span class="pre">rpix</span> <span class="pre">=</span> <span class="pre">19</span></code> produces a 39x39 pixel PSF model, corresponding to a size of 1.54<span class="math notranslate nohighlight">\(\times\)</span>1.54 arcseconds.</p>
 <div class="alert alert-block alert-warning"><b>NOTE:</b> Users who are unable to run hst1pass can continue the tutorial using the included catalog file id8048dyq_flc.xympqks that is automatically copied to the data_dir. </div><div class="cell docutils container">
@@ -1460,7 +1456,7 @@ save_figure(figure, filename, show_figure)
 </pre></div>
 </div>
 <div class="output text_html"><div><i>Table length=34</i>
-<table id="table140642011025808" class="table-striped table-bordered table-condensed">
+<table id="table139664123743184" class="table-striped table-bordered table-condensed">
 <thead><tr><th>x</th><th>y</th><th>m</th><th>p</th><th>q</th><th>k</th><th>s</th></tr></thead>
 <thead><tr><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>int64</th><th>float64</th></tr></thead>
 <tr><td>1286.7318</td><td>32.5184</td><td>-13.268</td><td>21134.07</td><td>0.025</td><td>2</td><td>16.4</td></tr>
@@ -1569,7 +1565,7 @@ The total image flux is = 1.0
 <section id="mast-stacks">
 <h4>2.3.2 MAST Stacks<a class="headerlink" href="#mast-stacks" title="Permalink to this heading">#</a></h4>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>The example above demonstrates how to extract and stack stars from a provided exposure. However, in many cases there may be an insufficient number of stars to create a high-quality median stack. In those cases, users can utilize the MAST cutout database described in <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2021/ISR_2021_12.pdf">WFC3 ISR 2021-12</a>, with access instructions provided on the <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3/data-analysis/psf/psf-search">PSF Search webpage</a>. The MAST API commands are listed on <a class="reference external" href="https://mast.stsci.edu/api/v0/pyex.html#MastCatalogsFilteredWfc3PsfUvisPy">this webpage</a>, with parameter options on <a class="reference external" href="https://mast.stsci.edu/api/v0/_w_f_c3__p_s_ffields.html">this webpage</a>. The examples below utilize sections of code from the <code class="docutils literal notranslate"><span class="pre">download_psf_cutouts.ipynb</span></code> developed by Dauphin et al. (2024) that is available on <a class="reference external" href="https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/mast_api_psf/download_psf_cutouts.html">Github</a>. In this case, we set limits on the x and y detector locations, quality of fit, exposure time, isolation index, integrated flux (in electrons for WFC3/UVIS and WFPC2, and in electrons per second for WFC3/IR), the central pixel flux, sky flux, and exclude subarrays. The stellar centroids provided in the MAST database were calculated using hst1pass and the empirical PSF models described in <span class="xref myst">Section 2.2</span>. See <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2021/ISR_2021_12.pdf">WFC3 ISR 2021-12</a> for additional information.</p>
 <div class="alert alert-block alert-info"><b>NOTE:</b> We explicitly assume that users have familiarized themselves with the contents of the "download_psf_cutouts.ipynb" notebook for this section. </div><div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1615,29 +1611,29 @@ The total image flux is = 1.0
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table masked=True length=50</i>
-<table id="table140642650534544" class="table-striped table-bordered table-condensed">
+<table id="table139664120365456" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>rootname</th><th>filter</th><th>chip</th><th>exptime</th><th>psf_x_center</th><th>psf_y_center</th><th>pixc</th><th>sky</th><th>qfit</th><th>iso_index</th><th>subarray</th><th>x_raw</th><th>y_raw</th><th>x_cal</th><th>y_cal</th></tr></thead>
 <thead><tr><th>int64</th><th>str9</th><th>str5</th><th>str1</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>int64</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
-<tr><td>21965947</td><td>icc303kcq</td><td>F606W</td><td>2</td><td>560.0</td><td>1958.563</td><td>930.7289</td><td>63243.29</td><td>45.94</td><td>0.042</td><td>24</td><td>0</td><td>1982.563</td><td>929.7289</td><td>1957.563</td><td>929.7289</td></tr>
-<tr><td>24704924</td><td>icqx12bmq</td><td>F606W</td><td>2</td><td>40.0</td><td>1940.4401</td><td>1052.1364</td><td>59501.67</td><td>46.45</td><td>0.043</td><td>24</td><td>0</td><td>1964.4401</td><td>1051.1364</td><td>1939.4401</td><td>1051.1364</td></tr>
+<tr><td>19613415</td><td>idzv04cqq</td><td>F606W</td><td>2</td><td>400.0</td><td>1784.6772</td><td>1124.1099</td><td>60563.47</td><td>45.94</td><td>0.037</td><td>24</td><td>0</td><td>1808.6772</td><td>1123.1099</td><td>1783.6772</td><td>1123.1099</td></tr>
+<tr><td>22806078</td><td>ibm516fjq</td><td>F606W</td><td>2</td><td>40.0</td><td>1791.9078</td><td>762.9925</td><td>60518.07</td><td>44.16</td><td>0.044</td><td>24</td><td>0</td><td>1815.9078</td><td>761.9925</td><td>1790.9078</td><td>761.9925</td></tr>
+<tr><td>20345367</td><td>ibm503jzq</td><td>F606W</td><td>2</td><td>40.0</td><td>1791.2526</td><td>1331.6954</td><td>59403.81</td><td>41.25</td><td>0.023</td><td>24</td><td>0</td><td>1815.2526</td><td>1330.6954</td><td>1790.2526</td><td>1330.6954</td></tr>
+<tr><td>28058025</td><td>id1x15wcq</td><td>F606W</td><td>2</td><td>40.0</td><td>1881.6022</td><td>1333.9424</td><td>61112.78</td><td>49.87</td><td>0.05</td><td>24</td><td>0</td><td>1905.6022</td><td>1332.9424</td><td>1880.6022</td><td>1332.9424</td></tr>
+<tr><td>24389168</td><td>ibnh13hcq</td><td>F606W</td><td>2</td><td>348.0</td><td>1804.3284</td><td>793.4576</td><td>63195.28</td><td>41.64</td><td>0.037</td><td>24</td><td>0</td><td>1828.3284</td><td>792.4576</td><td>1803.3284</td><td>792.4576</td></tr>
+<tr><td>25172815</td><td>ib2o02tbq</td><td>F606W</td><td>2</td><td>616.0</td><td>1621.2174</td><td>1220.9774</td><td>59238.68</td><td>49.37</td><td>0.043</td><td>24</td><td>0</td><td>1645.2174</td><td>1219.9774</td><td>1620.2174</td><td>1219.9774</td></tr>
+<tr><td>25899670</td><td>ibcd40kvq</td><td>F606W</td><td>2</td><td>450.0</td><td>1827.2809</td><td>776.5402</td><td>61432.53</td><td>32.99</td><td>0.043</td><td>24</td><td>0</td><td>1851.2809</td><td>775.5402</td><td>1826.2809</td><td>775.5402</td></tr>
 <tr><td>24883910</td><td>icqx02bvq</td><td>F606W</td><td>2</td><td>40.0</td><td>2026.3932</td><td>772.9385</td><td>62638.16</td><td>47.94</td><td>0.043</td><td>24</td><td>0</td><td>2050.3932</td><td>771.9385</td><td>2025.3932</td><td>771.9385</td></tr>
-<tr><td>26385576</td><td>ibc602v7q</td><td>F606W</td><td>2</td><td>360.0</td><td>2116.5151</td><td>1143.5637</td><td>63022.99</td><td>32.91</td><td>0.05</td><td>24</td><td>0</td><td>2200.5151</td><td>1142.5637</td><td>2115.5151</td><td>1142.5637</td></tr>
+<tr><td>22422770</td><td>ibnh11bkq</td><td>F606W</td><td>2</td><td>348.0</td><td>2166.8757</td><td>1058.9733</td><td>61659.41</td><td>28.62</td><td>0.03</td><td>24</td><td>0</td><td>2250.8757</td><td>1057.9733</td><td>2165.8757</td><td>1057.9733</td></tr>
+<tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
 <tr><td>22392319</td><td>iexu12wsq</td><td>F606W</td><td>2</td><td>348.0</td><td>1604.7406</td><td>1343.4912</td><td>60461.44</td><td>36.34</td><td>0.047</td><td>24</td><td>0</td><td>1628.7406</td><td>1342.4912</td><td>1603.7406</td><td>1342.4912</td></tr>
 <tr><td>20334003</td><td>ibm503jzq</td><td>F606W</td><td>2</td><td>40.0</td><td>2114.4614</td><td>689.2773</td><td>62039.21</td><td>49.11</td><td>0.034</td><td>24</td><td>0</td><td>2198.4614</td><td>688.2773</td><td>2113.4614</td><td>688.2773</td></tr>
-<tr><td>26113796</td><td>ibnh13h2q</td><td>F606W</td><td>2</td><td>348.0</td><td>1727.7864</td><td>708.8348</td><td>61216.02</td><td>34.74</td><td>0.042</td><td>24</td><td>0</td><td>1751.7864</td><td>707.8348</td><td>1726.7864</td><td>707.8348</td></tr>
-<tr><td>20504234</td><td>iedx05r0q</td><td>F606W</td><td>2</td><td>415.0</td><td>2122.1753</td><td>1326.8822</td><td>62098.94</td><td>33.2</td><td>0.035</td><td>24</td><td>0</td><td>2206.1753</td><td>1325.8822</td><td>2121.1753</td><td>1325.8822</td></tr>
-<tr><td>22694839</td><td>icc303kjq</td><td>F606W</td><td>2</td><td>570.0</td><td>1958.4135</td><td>930.4946</td><td>62666.45</td><td>48.78</td><td>0.029</td><td>24</td><td>0</td><td>1982.4135</td><td>929.4946</td><td>1957.4135</td><td>929.4946</td></tr>
-<tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
-<tr><td>21918234</td><td>iedx01anq</td><td>F606W</td><td>2</td><td>407.0</td><td>1800.5421</td><td>739.1125</td><td>61941.66</td><td>38.65</td><td>0.037</td><td>24</td><td>0</td><td>1824.5421</td><td>738.1125</td><td>1799.5421</td><td>738.1125</td></tr>
 <tr><td>26755911</td><td>ibc302jcq</td><td>F606W</td><td>2</td><td>40.0</td><td>1889.7075</td><td>943.8731</td><td>61900.36</td><td>39.15</td><td>0.015</td><td>24</td><td>0</td><td>1913.7075</td><td>942.8731</td><td>1888.7075</td><td>942.8731</td></tr>
-<tr><td>22056475</td><td>ic8x01mfq</td><td>F606W</td><td>2</td><td>50.0</td><td>2191.8518</td><td>1087.7273</td><td>59502.78</td><td>31.68</td><td>0.035</td><td>24</td><td>0</td><td>2275.8518</td><td>1086.7273</td><td>2190.8518</td><td>1086.7273</td></tr>
-<tr><td>25899670</td><td>ibcd40kvq</td><td>F606W</td><td>2</td><td>450.0</td><td>1827.2809</td><td>776.5402</td><td>61432.53</td><td>32.99</td><td>0.043</td><td>24</td><td>0</td><td>1851.2809</td><td>775.5402</td><td>1826.2809</td><td>775.5402</td></tr>
+<tr><td>21965947</td><td>icc303kcq</td><td>F606W</td><td>2</td><td>560.0</td><td>1958.563</td><td>930.7289</td><td>63243.29</td><td>45.94</td><td>0.042</td><td>24</td><td>0</td><td>1982.563</td><td>929.7289</td><td>1957.563</td><td>929.7289</td></tr>
+<tr><td>24704924</td><td>icqx12bmq</td><td>F606W</td><td>2</td><td>40.0</td><td>1940.4401</td><td>1052.1364</td><td>59501.67</td><td>46.45</td><td>0.043</td><td>24</td><td>0</td><td>1964.4401</td><td>1051.1364</td><td>1939.4401</td><td>1051.1364</td></tr>
 <tr><td>20277208</td><td>ib2o01ssq</td><td>F606W</td><td>2</td><td>600.0</td><td>1942.1887</td><td>944.2888</td><td>59100.43</td><td>45.41</td><td>0.048</td><td>24</td><td>0</td><td>1966.1887</td><td>943.2888</td><td>1941.1887</td><td>943.2888</td></tr>
-<tr><td>23179989</td><td>ibc302j7q</td><td>F606W</td><td>2</td><td>40.0</td><td>1533.0767</td><td>983.4271</td><td>60506.57</td><td>45.06</td><td>0.028</td><td>24</td><td>0</td><td>1557.0767</td><td>982.4271</td><td>1532.0767</td><td>982.4271</td></tr>
-<tr><td>23821761</td><td>iddk01mbq</td><td>F606W</td><td>2</td><td>40.0</td><td>1730.7775</td><td>732.3746</td><td>61253.79</td><td>36.33</td><td>0.043</td><td>24</td><td>0</td><td>1754.7775</td><td>731.3746</td><td>1729.7775</td><td>731.3746</td></tr>
-<tr><td>25454731</td><td>icqx12bbq</td><td>F606W</td><td>2</td><td>40.0</td><td>1940.3081</td><td>1052.2091</td><td>62857.78</td><td>42.5</td><td>0.043</td><td>24</td><td>0</td><td>1964.3081</td><td>1051.2091</td><td>1939.3081</td><td>1051.2091</td></tr>
-<tr><td>26765366</td><td>ic3f22meq</td><td>F606W</td><td>2</td><td>50.0</td><td>1832.6663</td><td>1161.4025</td><td>61014.33</td><td>32.28</td><td>0.045</td><td>24</td><td>0</td><td>1856.6663</td><td>1160.4025</td><td>1831.6663</td><td>1160.4025</td></tr>
-<tr><td>28058025</td><td>id1x15wcq</td><td>F606W</td><td>2</td><td>40.0</td><td>1881.6022</td><td>1333.9424</td><td>61112.78</td><td>49.87</td><td>0.05</td><td>24</td><td>0</td><td>1905.6022</td><td>1332.9424</td><td>1880.6022</td><td>1332.9424</td></tr>
+<tr><td>26385576</td><td>ibc602v7q</td><td>F606W</td><td>2</td><td>360.0</td><td>2116.5151</td><td>1143.5637</td><td>63022.99</td><td>32.91</td><td>0.05</td><td>24</td><td>0</td><td>2200.5151</td><td>1142.5637</td><td>2115.5151</td><td>1142.5637</td></tr>
+<tr><td>27708117</td><td>ie5h10f3q</td><td>F606W</td><td>2</td><td>659.0</td><td>2160.7126</td><td>718.0035</td><td>59981.95</td><td>41.77</td><td>0.045</td><td>24</td><td>0</td><td>2244.7126</td><td>717.0035</td><td>2159.7126</td><td>717.0035</td></tr>
+<tr><td>19704186</td><td>ic4j04zhq</td><td>F606W</td><td>2</td><td>40.0</td><td>1524.1021</td><td>633.1755</td><td>59304.77</td><td>36.82</td><td>0.044</td><td>24</td><td>0</td><td>1548.1021</td><td>632.1755</td><td>1523.1021</td><td>632.1755</td></tr>
+<tr><td>21918234</td><td>iedx01anq</td><td>F606W</td><td>2</td><td>407.0</td><td>1800.5421</td><td>739.1125</td><td>61941.66</td><td>38.65</td><td>0.037</td><td>24</td><td>0</td><td>1824.5421</td><td>738.1125</td><td>1799.5421</td><td>738.1125</td></tr>
 </table></div></div></div>
 </div>
 <p>As described and detailed in the <a class="reference external" href="https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/mast_api_psf/download_psf_cutouts.html"><code class="docutils literal notranslate"><span class="pre">download_psf_cutouts.ipynb</span></code></a>, the below cell constructs the filepaths for the cutouts, requests to download them from the MAST cutout service, and then extracts the files from a compressed tar folder. Finally, the filepaths for each cutout are saved to a list in <code class="docutils literal notranslate"><span class="pre">path_data</span></code> and passed to an array.</p>
@@ -1659,7 +1655,7 @@ The total image flux is = 1.0
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/50 [00:00&lt;?, ?it/s]
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 50/50 [00:00&lt;00:00, 11792.35it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 50/50 [00:00&lt;00:00, 11773.82it/s]
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -1750,13 +1746,13 @@ The total image flux is = 1.0
 <section id="drizzle-psf-models">
 <h2>3. Drizzle PSF Models<a class="headerlink" href="#drizzle-psf-models" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>The examples in Section 2 apply to PSF modeling at the exposure level. However, in many cases with faint astronomical sources, multiple exposures are combined through drizzling to yield an image mosaic with increased signal-to-noise that is free from artifacts such as cosmic rays and hot pixels. This process changes the shape of the PSF due to resampling, so dedicated models are required. The process of drizzling is beyond the scope of this notebook, and users can find more information on the <a class="reference external" href="https://www.stsci.edu/scientific-community/software/drizzlepac">DrizzlePac Website</a>, including a series of <a class="reference external" href="https://spacetelescope.github.io/hst_notebooks/notebooks/DrizzlePac/README.html">tutorial notebooks</a> available on <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/tree/main/notebooks/DrizzlePac">Github</a> with useful examples, and a brief explanation <a class="reference external" href="https://www.stsci.edu/~fruchter/dither/drizzle.html?fbclid=IwAR3mrcUR7kxAZuDk7l6GUQtuJKrs-ecvv5YHSmWYfM64EgXP3unqp02Rdpk">here</a>. In this case, it is sufficient to note that drizzling allows us to account for undersampling of the WFC3 detectors to recover the full spatial resolution of HST, and account for distortion across the field of view to provide a flux-conserved, geometrically rectified mosaic generated from the individual exposures. In this case, we combine three F606W exposures covering the same area of Omega Cen, and focused on the same four stars shown in <span class="xref myst">Section 1.4</span>.</p>
 <p><a id="create"></a></p>
 <section id="create-drizzle">
 <h3>3.1 Create Drizzle<a class="headerlink" href="#create-drizzle" title="Permalink to this heading">#</a></h3>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>In the cell below, we first download the three F606W exposures and copy them to a new directory because their headers will be modified in the alignment and drizzling process. Next, we use <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> to find sources in common between the images and align them to the first exposure. See the <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> <a class="reference external" href="https://drizzlepac.readthedocs.io/en/deployment/tweakreg.html">readthedocs</a> for more information on each parameter. Note also that users can utilize hst1pass catalogs of their FLC files to perform high-accuracy alignments if there are a sufficient number of stars.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1894,7 +1890,7 @@ id8048e3q_flc.fits 0.09  0.01   0.000 1.00001 0.05 0.05
 <section id="stack-stars">
 <h3>3.2 Stack Stars<a class="headerlink" href="#stack-stars" title="Permalink to this heading">#</a></h3>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>Next, we want to detect stars that surround the location of interest, and stack them to construct a PSF model. In this case we have a sufficient number of stars (&gt; 10) that are near the location on the detector for which we want to construct a PSF model. In this case we select a 525<span class="math notranslate nohighlight">\(\times\)</span>525 pixel region near the four stars shown above. The functionality of the code below is described in more detail in <span class="xref myst">Section 1.4</span>, and the resulting stellar flux measurements can be shown by adding <code class="docutils literal notranslate"><span class="pre">print(phot_table)</span></code>. <strong>In this case the drizzles have been background-subtracted, but images with a high background would require users to background subtract their data and/or PSF model for proper fitting and photometric accuracy.</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2082,14 +2078,14 @@ The total image flux is = 1.0
 <section id="conclusions">
 <h2>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>We hope this tutorial provides you with valuable tools and techniques for PSF modeling of HST observations. In summary, we have shown several different workflows for generating PSF models depending on the available observations. First, we demonstrated in <span class="xref myst">Section 2.1</span> that analytical models such as Gaussian profiles fail to characterize the complex shape of the HST PSF. In <span class="xref myst">Section 2.2</span>, we used empirical models provided by the WFC3 team to accurately characterize the shape of the PSF. We explored using the <span class="xref myst">default models</span>, as well as those modified to match the <span class="xref myst">focus</span> of specific observations, and characterize <span class="xref myst">spatial variations</span> of the PSF across the detector. These models provide high-accuracy astrometry and photometry of stellar sources, but do not account for extended wing emission or diffraction spikes. We tackled this issue in <span class="xref myst">Section 2.3</span> by stacking stars <span class="xref myst">extracted from</span> the observations, or by <span class="xref myst">retrieving cutouts</span> from MAST. Stacking a large number of sources allows for efficient outlier rejection and can produce a high quality PSF that extends to large radii, but can also broaden the PSF core depending on how the sources are aligned. Finally, we extended this process to drizzled images in <span class="xref myst">Section 3</span>. In some cases, more than one workflow is possible for a given set of observations, and users are encouraged to experiment with these tools to develop the best PSF models for their science goals.</p>
 <p><a id="about"></a></p>
 </section>
 <section id="about-this-notebook">
 <h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p><strong>Author:</strong> Mitchell Revalski<br>
 <strong>Created:</strong> 15 Apr 2024<br>
 <strong>Updated:</strong> 22 May 2025<br>
@@ -2130,7 +2126,7 @@ The total image flux is = 1.0
 <li><p>17 Apr 2025: Added <code class="docutils literal notranslate"><span class="pre">tqdm&gt;=4.66.2</span></code> to the requirements.txt file, which is needed by <code class="docutils literal notranslate"><span class="pre">mast_api_psf.py</span></code>, and is required to pass the repositories continuous integration (CI).</p></li>
 <li><p>22 May 2025: Packages are no longer pinned so the CI can use the most recent versions. Calls to <code class="docutils literal notranslate"><span class="pre">make_residual_image</span></code> were fixed for compatibility with <code class="docutils literal notranslate"><span class="pre">photutils</span> <span class="pre">v2.2.0</span></code>.</p></li>
 </ul>
-<hr class="docutils" />
+<hr>
 <p><span class="xref myst">Top of Page</span>
 <a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
 </section>
@@ -2201,7 +2197,6 @@ The total image flux is = 1.0
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">1. Introduction</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-setup">1.1 Environment Setup</a></li>

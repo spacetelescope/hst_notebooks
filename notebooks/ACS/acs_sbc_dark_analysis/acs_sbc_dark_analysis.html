@@ -618,19 +618,11 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="alert alert-block alert-warning">
-<b>REQUIREMENT:</b>
-    Before proceeding, install or update your
-    <b><a class="divlink" href="https://stenv.readthedocs.io/en/latest/">
-    stenv
-    </a></b>
-    distribution. <b>stenv</b> is the replacement for AstroConda, which is unsupported as of February 2023.
-</div><p><a id="titleSbc"></a></p>
+  <p><a id="titleSbc"></a></p>
 <section class="tex2jax_ignore mathjax_ignore" id="sbc-dark-analysis">
 <h1>SBC Dark Analysis<a class="headerlink" href="#sbc-dark-analysis" title="Permalink to this heading">#</a></h1>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>This notebook has been prepared as a demo on how to perform aperture photometry in SBC images that contain an elevated dark rate. This problem arises when the detector temperature goes above ~25 ºC.</p>
 <p>More information on the dark rate can be found in <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr1704.pdf">ISR ACS 2017-04</a> (Avila 2017).</p>
 <section id="this-tutorial-will-show-you-how-to">
@@ -666,7 +658,6 @@ document.write(`
 </section>
 <section id="imports">
 <h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>Here we list the Python packages used in this notebook. Links to the documentation for each module is provided for convenience.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -778,27 +769,10 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following task in the stsci.skypac package can be run with TEAL:
-                                    skymatch                                    
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following tasks in the drizzlepac package can be run with TEAL:
-    astrodrizzle       config_testbed      imagefindpars           mapreg       
-       photeq            pixreplace           pixtopix            pixtosky      
-  refimagefindpars       resetbits          runastrodriz          skytopix      
-     tweakback            tweakreg           updatenpol
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="download-the-data">
 <h2>Download the Data<a class="headerlink" href="#download-the-data" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>Here we download all of the data required for this notebook. This is an important step! Some of the image processing steps require all relevant files to be in the working directory. We recommend working with a brand new directory for every new set of data.</p>
 <p>Using the python package <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, we can retreive files from the <a class="reference external" href="http://archive.stsci.edu">MAST</a> archive.</p>
 <section id="go-proposal-13655-how-lyman-alpha-bites-beats-the-dust">
@@ -1108,7 +1082,6 @@ document.write(`
 </section>
 <section id="file-information">
 <h2>File Information<a class="headerlink" href="#file-information" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>The structure of the fits files from ACS may be different depending on what kind of observation was made. For more information, refer to Section 2.2 of the <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/other-documents/_documents/acs_dhb.pdf">ACS Data Handbook</a>.</p>
 <section id="association-files">
 <h3>Association Files<a class="headerlink" href="#association-files" title="Permalink to this heading">#</a></h3>
@@ -1226,7 +1199,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Filename: jcrx01iuq_raw.fits
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Filename: jcrx01iyq_raw.fits
 No.    Name      Ver    Type      Cards   Dimensions   Format
   0  PRIMARY       1 PrimaryHDU     173   ()      
   1  SCI           1 ImageHDU        85   (1024, 1024)   int16   
@@ -1240,7 +1213,6 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </section>
 <section id="identify-affected-observations-a-id-identify-a">
 <h2>Identify Affected Observations <a id="_identify"></a><a class="headerlink" href="#identify-affected-observations-a-id-identify-a" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>Let’s take a look at some information from our science images. We want to find observations with an average temperature greater than 25<span class="math notranslate nohighlight">\(^o\)</span>C. We can organize the information in a <code class="docutils literal notranslate"><span class="pre">Table</span></code> object from <code class="docutils literal notranslate"><span class="pre">astropy.table</span></code> for convenience. Here, we define a table with column names and respective data types.</p>
 <p><b>Note:</b> The FITS header keywords <code class="docutils literal notranslate"><span class="pre">mdecodt1</span></code> and <code class="docutils literal notranslate"><span class="pre">mdecodt2</span></code> refer to the temperature at the beginning and end of the exposure respectively.</p>
 <div class="cell docutils container">
@@ -1277,22 +1249,22 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                     file                     ...      avgtemp      
 --------------------------------------------- ... ------------------
-                           jcmc11deq_flt.fits ... 22.820700000000002
-hst_13655_11_acs_sbc_f150lp_jcmc11dh_flt.fits ...            23.3091
-                           jcmc11ctq_flt.fits ...            17.3262
-hst_13655_11_acs_sbc_f125lp_jcmc11cw_flt.fits ...            18.6693
-hst_13655_11_acs_sbc_f165lp_jcmc11ct_flt.fits ...            17.3262
-                           jcmc11cxq_flt.fits ...             19.524
-                           jcmc11dhq_flt.fits ...            23.3091
-                           jcmc11dtq_flt.fits ... 24.163800000000002
-hst_13655_11_acs_sbc_f165lp_jcmc11e6_flt.fits ...            25.9953
 hst_13655_11_acs_sbc_f125lp_jcmc11dt_flt.fits ... 24.163800000000002
-hst_13655_11_acs_sbc_f140lp_jcmc11cx_flt.fits ...             19.524
                            jcmc11dsq_flt.fits ...            23.7975
+hst_13655_11_acs_sbc_f140lp_jcmc11cx_flt.fits ...             19.524
+                           jcmc11ctq_flt.fits ...            17.3262
+                           jcmc11dhq_flt.fits ...            23.3091
 hst_13655_11_acs_sbc_f150lp_jcmc11de_flt.fits ... 22.820700000000002
-                           jcmc11cwq_flt.fits ...            18.6693
+hst_13655_11_acs_sbc_f165lp_jcmc11e6_flt.fits ...            25.9953
+hst_13655_11_acs_sbc_f125lp_jcmc11cw_flt.fits ...            18.6693
+                           jcmc11dtq_flt.fits ... 24.163800000000002
+hst_13655_11_acs_sbc_f150lp_jcmc11dh_flt.fits ...            23.3091
+hst_13655_11_acs_sbc_f165lp_jcmc11ct_flt.fits ...            17.3262
+                           jcmc11deq_flt.fits ... 22.820700000000002
 hst_13655_11_acs_sbc_f140lp_jcmc11ds_flt.fits ...            23.7975
+                           jcmc11cwq_flt.fits ...            18.6693
                            jcmc11e6q_flt.fits ...            25.9953
+                           jcmc11cxq_flt.fits ...             19.524
 </pre></div>
 </div>
 </div>
@@ -1310,16 +1282,16 @@ hst_13655_11_acs_sbc_f140lp_jcmc11ds_flt.fits ...            23.7975
 --------------------------------------------- ... ------------------
                            jcmc11ctq_flt.fits ...            17.3262
 hst_13655_11_acs_sbc_f165lp_jcmc11ct_flt.fits ...            17.3262
-hst_13655_11_acs_sbc_f125lp_jcmc11cw_flt.fits ...            18.6693
                            jcmc11cwq_flt.fits ...            18.6693
+hst_13655_11_acs_sbc_f125lp_jcmc11cw_flt.fits ...            18.6693
 hst_13655_11_acs_sbc_f140lp_jcmc11cx_flt.fits ...             19.524
                            jcmc11cxq_flt.fits ...             19.524
                            jcmc11deq_flt.fits ... 22.820700000000002
 hst_13655_11_acs_sbc_f150lp_jcmc11de_flt.fits ... 22.820700000000002
 hst_13655_11_acs_sbc_f150lp_jcmc11dh_flt.fits ...            23.3091
                            jcmc11dhq_flt.fits ...            23.3091
-hst_13655_11_acs_sbc_f140lp_jcmc11ds_flt.fits ...            23.7975
                            jcmc11dsq_flt.fits ...            23.7975
+hst_13655_11_acs_sbc_f140lp_jcmc11ds_flt.fits ...            23.7975
                            jcmc11dtq_flt.fits ... 24.163800000000002
 hst_13655_11_acs_sbc_f125lp_jcmc11dt_flt.fits ... 24.163800000000002
 hst_13655_11_acs_sbc_f165lp_jcmc11e6_flt.fits ...            25.9953
@@ -1333,7 +1305,6 @@ hst_13655_11_acs_sbc_f165lp_jcmc11e6_flt.fits ...            25.9953
 </section>
 <section id="combine-science-images-a-id-scidrizzle-a">
 <h2>Combine science images<a id="_scidrizzle"></a><a class="headerlink" href="#combine-science-images-a-id-scidrizzle-a" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>Let’s make drizzled products for each filter. We do this by using the ASN files for each filter. The ASN files will tell AstroDrizzle which flat images to combine for a given filter.  Steps 1-6 of the drizzling procedure have been turned off since their purpose is to identify and mask cosmic rays, which do not affect SBC images.</p>
 <p>The drizzle keyword parameters below are the appropriate ones for SBC data. For “final_scale” we use the pixel scale of SBC, 0.025 arcseconds.</p>
 <div class="cell docutils container">
@@ -1367,223 +1338,17 @@ hst_13655_11_acs_sbc_f165lp_jcmc11e6_flt.fits ...            25.9953
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No trailer file created...
-AstroDrizzle log file: jcmc11030.tra
-AstroDrizzle Version 3.9.0 started at: 16:42:28.145 (13/02/2025)
+AstroDrizzle log file: jcmc11020.tra
+AstroDrizzle Version 3.10.0 started at: 22:01:33.677 (17/09/2025)
 
-==== Processing Step  Initialization  started at  16:42:28.145 (13/02/2025)
+==== Processing Step  Initialization  started at  22:01:33.677 (17/09/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: No cte correction will be made for this SBC data.
 WARNING: No cte correction will be made for this SBC data.
-WCS Keywords
-
-Number of WCS axes: 2
-CTYPE : &#39;RA---TAN&#39; &#39;DEC--TAN&#39; 
-CRVAL : 165.55871142745008 38.043205302369955 
-CRPIX : 707.5000105276703 686.0000102072953 
-CD1_1 CD1_2  : -5.080790365666934e-06 -4.73401287515374e-06 
-CD2_1 CD2_2  : -4.73401287515374e-06 5.080790365666934e-06 
-NAXIS : 1416  1373
-********************************************************************************
-*
-*  Estimated memory usage:  up to 30 Mb.
-*  Output image size:       1416 X 1373 pixels. 
-*  Output image file:       ~ 22 Mb. 
-*  Cores available:         1
-*
-********************************************************************************
-==== Processing Step Initialization finished at 16:42:28.47 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  16:42:28.477 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 16:42:28.477 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  16:42:28.47 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 16:42:28.527 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  16:42:28.527 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 16:42:28.528 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  16:42:28.528 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  16:42:28.528 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 16:42:28.529 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  16:42:28.529 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  16:42:28.530 (13/02/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WCS Keywords
-
-Number of WCS axes: 2
-CTYPE : &#39;RA---TAN&#39; &#39;DEC--TAN&#39; 
-CRVAL : 165.55871142745008 38.043205302369955 
-CRPIX : 707.5000105276703 686.0000102072953 
-CD1_1 CD1_2  : -5.080790365666934e-06 -4.73401287515374e-06 
-CD2_1 CD2_2  : -4.73401287515374e-06 5.080790365666934e-06 
-NAXIS : 1416  1373
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-Generating simple FITS output: jcmc11030_drz_sci.fits
-Deleted all instances of WCS with key A in extensions [0]
-Writing out image to disk: jcmc11030_drz_sci.fits
-Writing out image to disk: jcmc11030_drz_wht.fits
-==== Processing Step Final Drizzle finished at 16:42:29.560 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.9.0 is finished processing at 16:42:29.561 (13/02/2025).
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   --------------------          --------------------
-                   Step          Elapsed time
-   --------------------          --------------------
-
-         Initialization          0.3311 sec.
-            Static Mask          0.0004 sec.
-           Subtract Sky          0.0493 sec.
-       Separate Drizzle          0.0004 sec.
-          Create Median          0.0000 sec.
-                   Blot          0.0004 sec.
-                Driz_CR          0.0000 sec.
-          Final Drizzle          1.0304 sec.
-   ====================          ====================
-                  Total          1.4120 sec.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No trailer file saved...
-No trailer file created...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle log file: jcmc11010.tra
-AstroDrizzle Version 3.9.0 started at: 16:42:29.58 (13/02/2025)
-
-==== Processing Step  Initialization  started at  16:42:29.589 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: No cte correction will be made for this SBC data.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: No cte correction will be made for this SBC data.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WCS Keywords
-
-Number of WCS axes: 2
-CTYPE : &#39;RA---TAN&#39; &#39;DEC--TAN&#39; 
-CRVAL : 165.5587124859804 38.04320516616883 
-CRPIX : 707.5000105276704 686.0000102072954 
-CD1_1 CD1_2  : -5.080803516492815e-06 -4.733998760959866e-06 
-CD2_1 CD2_2  : -4.733998760959866e-06 5.080803516492815e-06 
-NAXIS : 1416  1373
-********************************************************************************
-*
-*  Estimated memory usage:  up to 30 Mb.
-*  Output image size:       1416 X 1373 pixels. 
-*  Output image file:       ~ 22 Mb. 
-*  Cores available:         1
-*
-********************************************************************************
-==== Processing Step Initialization finished at 16:42:29.817 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  16:42:29.818 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 16:42:29.818 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  16:42:29.819 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 16:42:29.867 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  16:42:29.868 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 16:42:29.868 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  16:42:29.868 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  16:42:29.869 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 16:42:29.869 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  16:42:29.869 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  16:42:29.870 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WCS Keywords
-
-Number of WCS axes: 2
-CTYPE : &#39;RA---TAN&#39; &#39;DEC--TAN&#39; 
-CRVAL : 165.5587124859804 38.04320516616883 
-CRPIX : 707.5000105276704 686.0000102072954 
-CD1_1 CD1_2  : -5.080803516492815e-06 -4.733998760959866e-06 
-CD2_1 CD2_2  : -4.733998760959866e-06 5.080803516492815e-06 
-NAXIS : 1416  1373
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-Generating simple FITS output: jcmc11010_drz_sci.fits
-Deleted all instances of WCS with key A in extensions [0]
-Writing out image to disk: jcmc11010_drz_sci.fits
-Writing out image to disk: jcmc11010_drz_wht.fits
-==== Processing Step Final Drizzle finished at 16:42:30.897 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.9.0 is finished processing at 16:42:30.898 (13/02/2025).
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   --------------------          --------------------
-                   Step          Elapsed time
-   --------------------          --------------------
-
-         Initialization          0.2287 sec.
-            Static Mask          0.0004 sec.
-           Subtract Sky          0.0485 sec.
-       Separate Drizzle          0.0004 sec.
-          Create Median          0.0000 sec.
-                   Blot          0.0004 sec.
-                Driz_CR          0.0000 sec.
-          Final Drizzle          1.0274 sec.
-   ====================          ====================
-                  Total          1.3058 sec.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No trailer file saved...
-No trailer file created...
-AstroDrizzle log file: jcmc11020.tra
-AstroDrizzle Version 3.9.0 started at: 16:42:30.925 (13/02/2025)
-
-==== Processing Step  Initialization  started at  16:42:30.925 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: No cte correction will be made for this SBC data.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: No cte correction will be made for this SBC data.
-WCS Keywords
 
 Number of WCS axes: 2
 CTYPE : &#39;RA---TAN&#39; &#39;DEC--TAN&#39; 
@@ -1600,40 +1365,40 @@ NAXIS : 1416  1373
 *  Cores available:         1
 *
 ********************************************************************************
-==== Processing Step Initialization finished at 16:42:31.149 (13/02/2025)
+==== Processing Step Initialization finished at 22:01:33.89 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  16:42:31.149 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  22:01:33.891 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 16:42:31.150 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 22:01:33.89 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  16:42:31.150 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  22:01:33.892 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 16:42:31.199 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 22:01:33.936 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  16:42:31.199 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  22:01:33.936 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 16:42:31.199 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 22:01:33.937 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  16:42:31.200 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  22:01:33.937 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  16:42:31.200 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  22:01:33.938 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 16:42:31.201 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 22:01:33.938 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  16:42:31.201 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  22:01:33.939 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  16:42:31.201 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  22:01:33.940 (17/09/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WCS Keywords
@@ -1650,44 +1415,42 @@ NAXIS : 1416  1373
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-Generating simple FITS output: jcmc11020_drz_sci.fits
 Deleted all instances of WCS with key A in extensions [0]
 Writing out image to disk: jcmc11020_drz_sci.fits
+Writing out image to disk: jcmc11020_drz_wht.fits
+==== Processing Step Final Drizzle finished at 22:01:34.878 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: jcmc11020_drz_wht.fits
-==== Processing Step Final Drizzle finished at 16:42:32.312 (13/02/2025)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.9.0 is finished processing at 16:42:32.312 (13/02/2025).
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.10.0 is finished processing at 22:01:34.878 (17/09/2025).
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   --------------------          --------------------
                    Step          Elapsed time
    --------------------          --------------------
 
-         Initialization          0.2235 sec.
+         Initialization          0.2133 sec.
             Static Mask          0.0005 sec.
-           Subtract Sky          0.0485 sec.
-       Separate Drizzle          0.0004 sec.
+           Subtract Sky          0.0445 sec.
+       Separate Drizzle          0.0005 sec.
           Create Median          0.0000 sec.
                    Blot          0.0005 sec.
                 Driz_CR          0.0000 sec.
-          Final Drizzle          1.1104 sec.
+          Final Drizzle          0.9379 sec.
    ====================          ====================
-                  Total          1.3837 sec.
+                  Total          1.1971 sec.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No trailer file saved...
 No trailer file created...
 AstroDrizzle log file: jcmc11040.tra
-AstroDrizzle Version 3.9.0 started at: 16:42:32.340 (13/02/2025)
+AstroDrizzle Version 3.10.0 started at: 22:01:34.903 (17/09/2025)
 
-==== Processing Step  Initialization  started at  16:42:32.340 (13/02/2025)
+==== Processing Step  Initialization  started at  22:01:34.903 (17/09/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: No cte correction will be made for this SBC data.
+WARNING: No cte correction will be made for this SBC data.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: No cte correction will be made for this SBC data.
-WCS Keywords
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WCS Keywords
 
 Number of WCS axes: 2
 CTYPE : &#39;RA---TAN&#39; &#39;DEC--TAN&#39; 
@@ -1704,40 +1467,40 @@ NAXIS : 1417  1373
 *  Cores available:         1
 *
 ********************************************************************************
-==== Processing Step Initialization finished at 16:42:32.5 (13/02/2025)
+==== Processing Step Initialization finished at 22:01:35.104 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  16:42:32.566 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  22:01:35.104 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 16:42:32.56 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 22:01:35.105 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  16:42:32.567 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  22:01:35.105 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 16:42:32.616 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 22:01:35.150 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  16:42:32.616 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  22:01:35.150 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 16:42:32.616 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 22:01:35.15 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  16:42:32.617 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  22:01:35.151 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  16:42:32.617 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  22:01:35.151 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 16:42:32.618 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 22:01:35.151 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  16:42:32.618 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  22:01:35.152 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  16:42:32.61 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  22:01:35.152 (17/09/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WCS Keywords
@@ -1755,26 +1518,230 @@ NAXIS : 1417  1373
 Deleted all instances of WCS with key A in extensions [0]
 Writing out image to disk: jcmc11040_drz_sci.fits
 Writing out image to disk: jcmc11040_drz_wht.fits
-==== Processing Step Final Drizzle finished at 16:42:33.636 (13/02/2025)
+==== Processing Step Final Drizzle finished at 22:01:36.061 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.9.0 is finished processing at 16:42:33.637 (13/02/2025).
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.10.0 is finished processing at 22:01:36.062 (17/09/2025).
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   --------------------          --------------------
                    Step          Elapsed time
    --------------------          --------------------
 
-         Initialization          0.2251 sec.
-            Static Mask          0.0005 sec.
-           Subtract Sky          0.0491 sec.
+         Initialization          0.2003 sec.
+            Static Mask          0.0004 sec.
+           Subtract Sky          0.0445 sec.
        Separate Drizzle          0.0004 sec.
           Create Median          0.0000 sec.
                    Blot          0.0004 sec.
                 Driz_CR          0.0000 sec.
-          Final Drizzle          1.0177 sec.
+          Final Drizzle          0.9090 sec.
    ====================          ====================
-                  Total          1.2932 sec.
+                  Total          1.1551 sec.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No trailer file saved...
+No trailer file created...
+AstroDrizzle log file: jcmc11010.tra
+AstroDrizzle Version 3.10.0 started at: 22:01:36.088 (17/09/2025)
+
+==== Processing Step  Initialization  started at  22:01:36.088 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: No cte correction will be made for this SBC data.
+WARNING: No cte correction will be made for this SBC data.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WCS Keywords
+
+Number of WCS axes: 2
+CTYPE : &#39;RA---TAN&#39; &#39;DEC--TAN&#39; 
+CRVAL : 165.5587124859804 38.04320516616883 
+CRPIX : 707.5000105276704 686.0000102072954 
+CD1_1 CD1_2  : -5.080803516492815e-06 -4.733998760959866e-06 
+CD2_1 CD2_2  : -4.733998760959866e-06 5.080803516492815e-06 
+NAXIS : 1416  1373
+********************************************************************************
+*
+*  Estimated memory usage:  up to 30 Mb.
+*  Output image size:       1416 X 1373 pixels. 
+*  Output image file:       ~ 22 Mb. 
+*  Cores available:         1
+*
+********************************************************************************
+==== Processing Step Initialization finished at 22:01:36.291 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  22:01:36.292 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 22:01:36.292 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  22:01:36.293 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 22:01:36.337 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  22:01:36.337 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 22:01:36.338 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  22:01:36.338 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  22:01:36.339 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 22:01:36.33 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  22:01:36.339 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  22:01:36.340 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WCS Keywords
+
+Number of WCS axes: 2
+CTYPE : &#39;RA---TAN&#39; &#39;DEC--TAN&#39; 
+CRVAL : 165.5587124859804 38.04320516616883 
+CRPIX : 707.5000105276704 686.0000102072954 
+CD1_1 CD1_2  : -5.080803516492815e-06 -4.733998760959866e-06 
+CD2_1 CD2_2  : -4.733998760959866e-06 5.080803516492815e-06 
+NAXIS : 1416  1373
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-Generating simple FITS output: jcmc11010_drz_sci.fits
+Deleted all instances of WCS with key A in extensions [0]
+Writing out image to disk: jcmc11010_drz_sci.fits
+Writing out image to disk: jcmc11010_drz_wht.fits
+==== Processing Step Final Drizzle finished at 22:01:37.357 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.10.0 is finished processing at 22:01:37.358 (17/09/2025).
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   --------------------          --------------------
+                   Step          Elapsed time
+   --------------------          --------------------
+
+         Initialization          0.2037 sec.
+            Static Mask          0.0004 sec.
+           Subtract Sky          0.0445 sec.
+       Separate Drizzle          0.0004 sec.
+          Create Median          0.0000 sec.
+                   Blot          0.0004 sec.
+                Driz_CR          0.0000 sec.
+          Final Drizzle          1.0173 sec.
+   ====================          ====================
+                  Total          1.2667 sec.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No trailer file saved...
+No trailer file created...
+AstroDrizzle log file: jcmc11030.tra
+AstroDrizzle Version 3.10.0 started at: 22:01:37.383 (17/09/2025)
+
+==== Processing Step  Initialization  started at  22:01:37.384 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: No cte correction will be made for this SBC data.
+WARNING: No cte correction will be made for this SBC data.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WCS Keywords
+
+Number of WCS axes: 2
+CTYPE : &#39;RA---TAN&#39; &#39;DEC--TAN&#39; 
+CRVAL : 165.55871142745008 38.043205302369955 
+CRPIX : 707.5000105276703 686.0000102072953 
+CD1_1 CD1_2  : -5.080790365666934e-06 -4.73401287515374e-06 
+CD2_1 CD2_2  : -4.73401287515374e-06 5.080790365666934e-06 
+NAXIS : 1416  1373
+********************************************************************************
+*
+*  Estimated memory usage:  up to 30 Mb.
+*  Output image size:       1416 X 1373 pixels. 
+*  Output image file:       ~ 22 Mb. 
+*  Cores available:         1
+*
+********************************************************************************
+==== Processing Step Initialization finished at 22:01:37.58 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  22:01:37.589 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 22:01:37.589 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  22:01:37.590 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 22:01:37.634 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  22:01:37.635 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 22:01:37.635 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  22:01:37.636 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  22:01:37.636 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 22:01:37.63 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  22:01:37.637 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  22:01:37.638 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WCS Keywords
+
+Number of WCS axes: 2
+CTYPE : &#39;RA---TAN&#39; &#39;DEC--TAN&#39; 
+CRVAL : 165.55871142745008 38.043205302369955 
+CRPIX : 707.5000105276703 686.0000102072953 
+CD1_1 CD1_2  : -5.080790365666934e-06 -4.73401287515374e-06 
+CD2_1 CD2_2  : -4.73401287515374e-06 5.080790365666934e-06 
+NAXIS : 1416  1373
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-Generating simple FITS output: jcmc11030_drz_sci.fits
+Deleted all instances of WCS with key A in extensions [0]
+Writing out image to disk: jcmc11030_drz_sci.fits
+Writing out image to disk: jcmc11030_drz_wht.fits
+==== Processing Step Final Drizzle finished at 22:01:38.554 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.10.0 is finished processing at 22:01:38.554 (17/09/2025).
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   --------------------          --------------------
+                   Step          Elapsed time
+   --------------------          --------------------
+
+         Initialization          0.2048 sec.
+            Static Mask          0.0005 sec.
+           Subtract Sky          0.0444 sec.
+       Separate Drizzle          0.0004 sec.
+          Create Median          0.0000 sec.
+                   Blot          0.0004 sec.
+                Driz_CR          0.0000 sec.
+          Final Drizzle          0.9160 sec.
+   ====================          ====================
+                  Total          1.1664 sec.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No trailer file saved...
@@ -1785,7 +1752,6 @@ Writing out image to disk: jcmc11040_drz_wht.fits
 </section>
 <section id="create-dark-images-a-id-drkdrizzle-a">
 <h2>Create dark images <a id="_drkdrizzle"></a><a class="headerlink" href="#create-dark-images-a-id-drkdrizzle-a" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>We want to use dark frames to make a drizzled product that will be used to approximate the dark rate to be subtracted from the science product. The dark rate above 25C varies. We need to find the dark frame that contains a <em>dark rate</em> similar to your affected image.</p>
 <p>Below we open the two F165LP science frames, one being a high temperature image and the other being a lower temperature image with negligible dark current.</p>
 <p>To measure the dark rate, we will take the sum of the pixels within a 200x200 box. The box will be placed off-center of our SBC image where dark rate is low and consistent, at (y, x) = (750, 680). We will measure this sum for our science images as well as all of the dark frames.</p>
@@ -1826,34 +1792,34 @@ Writing out image to disk: jcmc11040_drz_wht.fits
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Box Sums for Science Data:
 
 jcmc11ctq_flt.fits --&gt; 428.6138000488281
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>jcmc11e6q_flt.fits --&gt; 2379.35107421875
+jcmc11e6q_flt.fits --&gt; 2379.351318359375
 
 ----------------
 
 Box Sums for Dark Frames:
 
-jcrx01iuq_raw.fits --&gt; 1232
-jcrx01ijq_raw.fits --&gt; 294
-jcrx01imq_raw.fits --&gt; 299
-jcrx01ivq_raw.fits --&gt; 1532
-jcrx01iwq_raw.fits --&gt; 1904
-jcrx01ilq_raw.fits --&gt; 348
-jcrx01ipq_raw.fits --&gt; 347
-jcrx01ikq_raw.fits --&gt; 302
 jcrx01iyq_raw.fits --&gt; 2445
-jcrx01inq_raw.fits --&gt; 324
-jcrx01iqq_raw.fits --&gt; 492
-jcrx01ioq_raw.fits --&gt; 351
-jcrx01itq_raw.fits --&gt; 982
-jcrx01j2q_raw.fits --&gt; 3566
-jcrx01iiq_raw.fits --&gt; 300
-jcrx01irq_raw.fits --&gt; 644
-jcrx01ixq_raw.fits --&gt; 2196
+jcrx01j1q_raw.fits --&gt; 3141
 jcrx01isq_raw.fits --&gt; 777
 jcrx01j0q_raw.fits --&gt; 2922
-jcrx01j1q_raw.fits --&gt; 3141
+jcrx01imq_raw.fits --&gt; 299
+jcrx01iuq_raw.fits --&gt; 1232
+jcrx01ioq_raw.fits --&gt; 351
+jcrx01ixq_raw.fits --&gt; 2196
+jcrx01inq_raw.fits --&gt; 324
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>jcrx01itq_raw.fits --&gt; 982
+jcrx01ipq_raw.fits --&gt; 347
+jcrx01j2q_raw.fits --&gt; 3566
+jcrx01ijq_raw.fits --&gt; 294
+jcrx01iwq_raw.fits --&gt; 1904
+jcrx01ilq_raw.fits --&gt; 348
+jcrx01irq_raw.fits --&gt; 644
+jcrx01ivq_raw.fits --&gt; 1532
+jcrx01iqq_raw.fits --&gt; 492
+jcrx01iiq_raw.fits --&gt; 300
+jcrx01ikq_raw.fits --&gt; 302
 </pre></div>
 </div>
 </div>
@@ -1888,10 +1854,10 @@ jcrx01j1q_raw.fits --&gt; 3141
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.patches.Rectangle at 0x7fe1a83cfad0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.patches.Rectangle at 0x7f527304c050&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/c611d125ef50eb3b479a256c4051b8d765367526c44942d80c1f7f04cefd9eff.png" src="../../../_images/c611d125ef50eb3b479a256c4051b8d765367526c44942d80c1f7f04cefd9eff.png" />
+<img alt="../../../_images/5ee22a1f03b79138f0cf480f255e1d1201d48fcf933a7ead8c6234211b06a0a6.png" src="../../../_images/5ee22a1f03b79138f0cf480f255e1d1201d48fcf933a7ead8c6234211b06a0a6.png" />
 </div>
 </div>
 <p>To preserve important information in the header specific to the science image, such as the WCS solution, we will insert the data of the dark images into copies of the science images. We also must remember to adjust the exposure time of the copies of the science frames to that of the dark frames so that the drizzled products have the correct count rates.</p>
@@ -1942,9 +1908,9 @@ jcrx01j1q_raw.fits --&gt; 3141
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No trailer file created...
 AstroDrizzle log file: final.tra
-AstroDrizzle Version 3.9.0 started at: 16:42:34.580 (13/02/2025)
+AstroDrizzle Version 3.10.0 started at: 22:01:39.584 (17/09/2025)
 
-==== Processing Step  Initialization  started at  16:42:34.580 (13/02/2025)
+==== Processing Step  Initialization  started at  22:01:39.585 (17/09/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: No cte correction will be made for this SBC data.
@@ -1968,40 +1934,40 @@ NAXIS : 1416  1373
 *  Cores available:         1
 *
 ********************************************************************************
-==== Processing Step Initialization finished at 16:42:34.79 (13/02/2025)
+==== Processing Step Initialization finished at 22:01:39.795 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  16:42:34.79 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Static Mask  started at  22:01:39.795 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 16:42:34.798 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Static Mask finished at 22:01:39.796 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  16:42:34.79 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Subtract Sky  started at  22:01:39.79 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 16:42:34.847 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Subtract Sky finished at 22:01:39.842 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  16:42:34.847 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Separate Drizzle  started at  22:01:39.842 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 16:42:34.847 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Separate Drizzle finished at 22:01:39.84 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  16:42:34.848 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Create Median  started at  22:01:39.843 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  16:42:34.84 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Blot  started at  22:01:39.844 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 16:42:34.849 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step Blot finished at 22:01:39.844 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  16:42:34.849 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Driz_CR  started at  22:01:39.844 (17/09/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  16:42:34.850 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==== Processing Step  Final Drizzle  started at  22:01:39.845 (17/09/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WCS Keywords
@@ -2018,27 +1984,29 @@ NAXIS : 1416  1373
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-Generating simple FITS output: masterdark_drz_sci.fits
 Deleted all instances of WCS with key A in extensions [0]
 Writing out image to disk: masterdark_drz_sci.fits
-Writing out image to disk: masterdark_drz_wht.fits
-==== Processing Step Final Drizzle finished at 16:42:35.860 (13/02/2025)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.9.0 is finished processing at 16:42:35.860 (13/02/2025).
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing out image to disk: masterdark_drz_wht.fits
+==== Processing Step Final Drizzle finished at 22:01:40.877 (17/09/2025)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AstroDrizzle Version 3.10.0 is finished processing at 22:01:40.87 (17/09/2025).
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   --------------------          --------------------
                    Step          Elapsed time
    --------------------          --------------------
 
-         Initialization          0.2169 sec.
-            Static Mask          0.0005 sec.
-           Subtract Sky          0.0485 sec.
-       Separate Drizzle          0.0005 sec.
+         Initialization          0.2102 sec.
+            Static Mask          0.0004 sec.
+           Subtract Sky          0.0459 sec.
+       Separate Drizzle          0.0004 sec.
           Create Median          0.0000 sec.
-                   Blot          0.0005 sec.
+                   Blot          0.0004 sec.
                 Driz_CR          0.0000 sec.
-          Final Drizzle          1.0102 sec.
+          Final Drizzle          1.0324 sec.
    ====================          ====================
-                  Total          1.2770 sec.
+                  Total          1.2897 sec.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No trailer file saved...
@@ -2069,17 +2037,16 @@ Writing out image to disk: masterdark_drz_wht.fits
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fe1a6349d10&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f5272de3d90&gt;
 </pre></div>
 </div>
-<img alt="../../../_images/49b10b1496d10843c12f0443be6688366e833ecd392ca72287cd72b8b9500f72.png" src="../../../_images/49b10b1496d10843c12f0443be6688366e833ecd392ca72287cd72b8b9500f72.png" />
+<img alt="../../../_images/98259930e94999bcc915af73865428931ad15711139992399710a794e1372119.png" src="../../../_images/98259930e94999bcc915af73865428931ad15711139992399710a794e1372119.png" />
 </div>
 </div>
 <p>The images look comparable. We will now proceed to performing some photometric analysis to estimate the dark current in the source.</p>
 </section>
 <section id="photometry-a-id-photometry-a">
 <h2>Photometry<a id="_photometry"></a><a class="headerlink" href="#photometry-a-id-photometry-a" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <p>Now we will use the <code class="docutils literal notranslate"><span class="pre">photutils</span></code> package to set up the two apertures. We will use these apertures to measure the flux of different regions in the images.</p>
 <p>The first aperture is centered on our target at (735, 710), and is shaped as an elliptical to encompass all of the flux from the source. The other aperture will be the same exact shape, but located near the edge of the detector at (200, 200).</p>
 <div class="cell docutils container">
@@ -2107,11 +2074,11 @@ Writing out image to disk: masterdark_drz_wht.fits
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.patches.Ellipse at 0x7fe1a7cb5cd0&gt;,
- &lt;matplotlib.patches.Ellipse at 0x7fe1a7ac0a50&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.patches.Ellipse at 0x7f52714439d0&gt;,
+ &lt;matplotlib.patches.Ellipse at 0x7f5271441a90&gt;]
 </pre></div>
 </div>
-<img alt="../../../_images/21babb958224e65f350c6c50434d89cd03bb2fba2e69b428afeec07df6361c70.png" src="../../../_images/21babb958224e65f350c6c50434d89cd03bb2fba2e69b428afeec07df6361c70.png" />
+<img alt="../../../_images/56979a13af7f3d36b6e1418ad1ca4d6ce5e23291819ef16f1f6dbf86daadbc86.png" src="../../../_images/56979a13af7f3d36b6e1418ad1ca4d6ce5e23291819ef16f1f6dbf86daadbc86.png" />
 </div>
 </div>
 <p>Finally, we do the photometry using the two apertures on both images. We print out the tables to see the results.</p>
@@ -2167,7 +2134,6 @@ Difference of aperture sums (science - dark):
 </section>
 <section id="final-thoughts">
 <h2>Final Thoughts<a class="headerlink" href="#final-thoughts" title="Permalink to this heading">#</a></h2>
-<hr class="docutils" />
 <ol class="arabic simple">
 <li><p>The difference in flux in the second aperture (the one in the lower left portion of the image) shows that there is a small residual background of ~0.02 cts/sec in the science frame. This could be real background from the sky (and not dark current from the detector that you might want to account for properly in your flux and error budget.</p></li>
 <li><p>The dark frame we created does not have the exact same dark count rate as we measured in the science frame. You could try searching for other darks that more closely resemble your science frame.</p></li>
@@ -2175,14 +2141,13 @@ Difference of aperture sums (science - dark):
 </ol>
 <section id="for-more-help">
 <h3>For more help:<a class="headerlink" href="#for-more-help" title="Permalink to this heading">#</a></h3>
-<p>More details may be found on the <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/acs">ACS website</a> and in the <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB">ACS Instrument</a> and <a class="reference external" href="http://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/other-documents/_documents/acs_dhb.pdf">Data Handbooks</a>.</p>
-<p>Please visit the <a class="reference external" href="http://hsthelp.stsci.edu">HST Help Desk</a>. Through the help desk portal, you can explore the <em>HST</em> Knowledge Base and request additional help from experts.</p>
-<hr class="docutils" />
-<p><span class="xref myst">Top of Page</span>
-<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a>
+<p>More details may be found on the <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/acs">ACS website</a> and in the <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB">ACS Instrument</a> and <a class="reference external" href="https://hst-docs.stsci.edu/acsdhb">Data Handbooks</a>.</p>
+<p>Please visit the <a class="reference external" href="http://hsthelp.stsci.edu">HST Help Desk</a>. Through the help desk portal, you can explore the HST Knowledge Base and request additional help from experts.</p>
+<hr>
+[Top of Page](#titleSbc)
+<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/> 
 <br></br>
-<br></br></p>
-</section>
+<br></br></section>
 </section>
 </section>
 
