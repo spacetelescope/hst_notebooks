@@ -40,17 +40,17 @@ See the [WFC3 Instrument Handbook](https://hst-docs.stsci.edu/wfc3ihb),
 [WFC3 Software Tools](https://www.stsci.edu/hst/instrumentation/wfc3/software-tools)
 for more information on instrumentation, data, calibration, and software.
 
---- 
+<hr>
 
 Before Running a Notebook
-------------
+<hr>
 
 Before running these examples you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [Installation Instructions](https://spacetelescope.github.io/hst_notebooks/index.html).
 
---- 
+<hr>
 
 Contributing
-------------
+<hr>
 
 New contributions and feedback are very welcomed! Please open a new [issue](https://github.com/spacetelescope/hst_notebooks/issues) or new pull request for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. Questions can also be sent to the WFC3 team through the [HST Help Desk](https://stsci.service-now.com/hst).
 
@@ -65,9 +65,9 @@ the the `astropy`
 and [developer](https://docs.astropy.org/en/stable/index.html#developer-documentation) 
 documentation.
 
---- 
+<hr>
 
 License
--------
+<hr>
 
 WFC3 Notebooks is licensed under a BSD 3-Clause License (see the `LICENSE.txt` file).
