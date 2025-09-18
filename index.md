@@ -1,9 +1,9 @@
 
-## STScI HST Notebook Repository HQ
+# STScI HST Notebook Repository HQ
 Welcome to the STScI HST Notebook Repository
-This resource provides comprehensive documentation and interactive notebooks created by the Hubble Space Telescope instruments teams.
+This resource provides comprehensive documentation and interactive notebooks created by the Hubble Space Telescope instruments' teams.
 
-### Interactive Notebooks
+## Interactive Notebooks
 Explore our interactive notebooks for hands-on experience with HST data.
 - [ACS notebooks](./notebooks/ACS/README.md)
 - [COS notebooks](./notebooks/COS/README.md)
@@ -12,7 +12,7 @@ Explore our interactive notebooks for hands-on experience with HST data.
 - [STIS notebooks](./notebooks/STIS/README.md)
 - [WFC3 notebooks](./notebooks/WFC3/README.md)
 
-### Instrument Documentation
+## Instrument Documentation
 Here, you can find detailed documentation for each instrument the Hubble Space Telescope uses.
 
 - [Advanced Camera for Surveys (ACS)](https://www.stsci.edu/hst/instrumentation/acs)
@@ -27,7 +27,7 @@ Here, you can find detailed documentation for each instrument the Hubble Space T
 
 - [Wide Field Camera 3 (WFC3)](https://www.stsci.edu/hst/instrumentation/wfc3)
 
-### Installation Instructions
+## Installation Instructions
 
 You can view rendered versions of the notebooks in this repository,
 it requires no special tools beyond your web browser.
@@ -47,13 +47,12 @@ Any version dependencies are contained in the requirements file in
 each notebook folder. Please use at least the minimum supported
 version of the Python language in your active environment.
 
-Some notebooks use the HSTCAL package. The folders for these notebooks will also contain a shell
-script that contains the command to pull the hstcal package from conda-forge instead of pypi.
+Some notebooks use the HSTCAL package. The folders for these notebooks will also contain a shell script (pre-requirements.sh) that contains the command to pull the hstcal package from conda-forge instead of pypi.
 
 
-#### Clone the Repository
+### Clone the Repository
 
-Once you've changed to the directory where you cloned this repository, and go to
+Once you've changed to the directory where you cloned this repository, go to
 the notebook directory you are interested in using, and go to your selected 
 notebook, as below:
 
@@ -63,14 +62,14 @@ notebook, as below:
 You can then proceed to install the requirements for the specific notebook you are interested in using.
 
 
-#### Run the notebook in an appropriate environment
+### Run the notebook in an appropriate environment
 
-Once you are in the directory of the notebook you want to use, make sure you have a populated environment that contains the required pacages::
+Once you are in the directory of the notebook you want to use, make sure you have a populated environment that contains the required packages:
 
-    cd hst_notebooks/notebooks/<whatever-notebook>
+    cd hst_notebooks/notebooks/<notebook-name>
 
 You may want to consider installing your notebooks in a new conda/mamba environment
-to avoid version conflicts with other packages you may have installed, for example::
+to avoid version conflicts with other packages you may have installed, for example:
 
     conda create -n hstnb python pip jupyter
     conda activate hstnb
@@ -83,10 +82,10 @@ In the case that there is no pre-requirements.sh file:
     pip install -r requirements.txt
     
 
-In the case that there is a pre-requirements.sh file, this file is likely
-only used to install hstcal. You can either install hstcal in the `hstnb`
-environment you created above... 
-    
+In the case that there is a pre-requirements.sh file, you can either install hstcal in the `hstnb`
+environment you created above by:
+    sh pre-requirements.sh
+or 
     conda install --yes -c conda-forge hstcal
 
 
@@ -98,7 +97,7 @@ with hstcal using the following:
     pip install -r requirements.txt
     pip install jupyter
 
-#### Using stenv
+### Using stenv
 
 To use `stenv` on these notebooks you must install or update to the latest version of [stenv](https://stenv.readthedocs.io/en/latest/).
 It's possible that you already have the latest version of the `stenv` environment available locally.
@@ -112,13 +111,13 @@ If pip reports conflicts, then you might need to follow the above instructions t
 a new, isolated environment instead of using `stcal`
 
 
-#### Help
+## Help
 
 If you uncover any issues or bugs, you can [open an issue on GitHub](https://github.com/spacetelescope/hst_notebooks/issues/new).  
 For faster responses, however, we encourage you to submit an [HST Help Desk Ticket](https://hsthelp.stsci.edu).
 
 
-#### Contributing
+## Contributing
 
 New contributions and feedback are very welcomed! Please open a new issue or new 
 pull request for bugs, feedback, or new features you would like to see. If there 
