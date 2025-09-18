@@ -85,7 +85,7 @@ In the case that there is no pre-requirements.sh file:
 In the case that there is a pre-requirements.sh file, you can either install hstcal in the `hstnb`
 environment you created above by:
 
-    sh pre-requirements.sh
+    <shell> pre-requirements.sh
 
 or 
 
