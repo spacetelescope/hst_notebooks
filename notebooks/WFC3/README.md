@@ -1,5 +1,4 @@
-WFC3 Notebooks
-==============
+# WFC3 Notebooks
 
 WFC3 Notebooks is the primary repository for analyzing data from the 
 [Wide Field Camera 3](https://www.stsci.edu/hst/instrumentation/wfc3) on the 
