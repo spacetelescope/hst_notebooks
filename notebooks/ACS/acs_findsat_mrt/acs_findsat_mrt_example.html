@@ -624,7 +624,7 @@ document.write(`
 </section>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
-<p>Despite being in orbit, HST imaging data still suffers from contamination by artificial satellites that can compromise science data unless they are identified and masked. This notebook presents examples of how to identify satellite trails in ACS/WFC data. The routine is also effective at identifying other linear features duch as <a href="https://hst-docs.stsci.edu/acsdhb/files/60243156/60243162/1/1567011208101/acs_Ch46.2.jpg">diffraction spikes</a> and <a href="https://hst-docs.stsci.edu/acsdhb/files/60243156/60243160/1/1567011424969/acs_Ch46.4.jpg">glint</a> (see <a href="https://hst-docs.stsci.edu/acsdhb/chapter-4-acs-data-processing-considerations/4-5-image-anomalies">Section 4.5 of the ACS DHB</a> for further discussion on these artifacts).</p>
+<p>Despite being in orbit, HST imaging data still suffers from contamination by artificial satellites that can compromise science data unless they are identified and masked. This notebook presents examples of how to identify satellite trails in ACS/WFC data. The routine is also effective at identifying other linear features such as <a href="https://hst-docs.stsci.edu/acsdhb/files/147982080/147982085/1/1700513637904/acs_Ch46.2.jpg">diffraction spikes</a> and <a href="https://hst-docs.stsci.edu/acsdhb/files/147982080/147982083/1/1700513637829/acs_Ch46.4.jpg">glint</a> (see <a href="https://hst-docs.stsci.edu/acsdhb/chapter-4-acs-data-processing-considerations/4-5-image-anomalies">Section 4.5 of the ACS DHB</a> for further discussion on these artifacts).</p>
 <p>A full description of the algorithm is provided in <a href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr2208.pdf">ACS ISR 2022-08</a>. To briefly summarize, the Median Radon Transform (MRT) is calculated for an input image and used to identify linear signals in the data. The MRT is similar to the standard <a href="https://en.wikipedia.org/wiki/Radon_transform">Radon Transform</a> except that it calculates the median, rather than the sum, of data along all possible paths through an image. This modification makes the algorithm more robust against false signals from localized sources (e.g., stars, galaxies) but still very sensitive to persistent linear features, even well-below the background noise level.</p>
 <p>Additional post-processing is done to filter out spurious detections, primarily eliminating them based on trail S/N, width, and persistence across the image. These parameters, especially the maximum allowed trail width, are tuned for ACS/WFC data binned 2x2 and may be different for images from other instruments. Once the final set of trails is identified and characterized, a mask can be created. The routine provides numerous ways of visualizing the results, as will be demonstrated below.</p>
 <p>The following examples illustrate how to use <code class="docutils literal notranslate"><span class="pre">acstools.findsat_mrt</span></code> to identify satellite trails and then create masks for them. Examples 1 and 4 go through the analysis step by step, including how to preprocess data and run individual routines inside <code class="docutils literal notranslate"><span class="pre">findsat_mrt</span></code>. Examples 2, 3, and 5 demonstrate how to automate many of these steps. Our demonstrations stop at the creation of the masks. We leave it to the user to decide the best way to apply the masks to their own analysis.</p>
@@ -698,13 +698,13 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_13498_32_acs_wfc_f606w_jc8m32j5_drc.fits to ./mastDownload/HST/hst_13498_32_acs_wfc_f606w_jc8m32j5/hst_13498_32_acs_wfc_f606w_jc8m32j5_drc.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8m32j5q_flc.fits to ./mastDownload/HST/jc8m32j5q/jc8m32j5q_flc.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/jc8m32j5q_flc.fits to ./mastDownload/HST/jc8m32j5q/jc8m32j5q_flc.fits ...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_13498_32_acs_wfc_f606w_jc8m32j5_drc.fits to ./mastDownload/HST/hst_13498_32_acs_wfc_f606w_jc8m32j5/hst_13498_32_acs_wfc_f606w_jc8m32j5_drc.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -2310,7 +2310,7 @@ snr of feature = 3.4224676357600043
 </pre></div>
 </div>
 <div class="output text_html"><div><i>QTable length=8</i>
-<table id="table139711392834320" class="table-striped table-bordered table-condensed">
+<table id="table140320380833168" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>xcentroid</th><th>ycentroid</th><th>fwhm</th><th>roundness</th><th>pa</th><th>max_value</th><th>flux</th><th>mag</th><th>theta</th><th>rho</th><th>endpoints</th><th>status</th><th>mean flux</th><th>width</th><th>snr</th><th>persistence</th></tr></thead>
 <thead><tr><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64[2,2]</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>1</td><td>149.82861105630025</td><td>1477.0451590340901</td><td>10.006171249354978</td><td>0.8268922957188881</td><td>90.34106279991074</td><td>25.149939411833273</td><td>1165.2352429959637</td><td>-7.66603402890213</td><td>74.91430552815012</td><td>29.045159034090148</td><td>0.0 .. 757.305511828876</td><td>2</td><td>21.61210315571154</td><td>28.121276073737363</td><td>20.845589943623423</td><td>0.9047619047619048</td></tr>
@@ -3796,7 +3796,7 @@ snr of feature = 3.4224676357600043
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f1117b56990&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f9ee2327950&gt;
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
@@ -6196,7 +6196,7 @@ snr of feature = 3.4224676357600043
 </pre></div>
 </div>
 <div class="output text_html"><div><i>QTable length=8</i>
-<table id="table139711387067728" class="table-striped table-bordered table-condensed">
+<table id="table140320372260688" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>xcentroid</th><th>ycentroid</th><th>fwhm</th><th>roundness</th><th>pa</th><th>max_value</th><th>flux</th><th>mag</th><th>theta</th><th>rho</th><th>endpoints</th><th>status</th><th>mean flux</th><th>width</th><th>snr</th><th>persistence</th></tr></thead>
 <thead><tr><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64[2,2]</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>1</td><td>149.82861105630025</td><td>1477.0451590340901</td><td>10.006171249354978</td><td>0.8268922957188881</td><td>90.34106279991074</td><td>25.149939411833273</td><td>1165.2352429959637</td><td>-7.66603402890213</td><td>74.91430552815012</td><td>29.045159034090148</td><td>0.0 .. 757.305511828876</td><td>2</td><td>21.61210315571154</td><td>28.121276073737363</td><td>20.845589943623423</td><td>0.9047619047619048</td></tr>
@@ -8505,7 +8505,7 @@ snr of feature = 3.4224676357600043
 </pre></div>
 </div>
 <div class="output text_html"><div><i>QTable length=137</i>
-<table id="table139711388118288" class="table-striped table-bordered table-condensed">
+<table id="table140320377513360" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>xcentroid</th><th>ycentroid</th><th>fwhm</th><th>roundness</th><th>pa</th><th>max_value</th><th>flux</th><th>mag</th><th>theta</th><th>rho</th><th>endpoints</th><th>status</th></tr></thead>
 <thead><tr><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64[2,2]</th><th>int64</th></tr></thead>
 <tr><td>1</td><td>166.32632848500526</td><td>784.1620364707945</td><td>8.97661040342012</td><td>0.7918843725916062</td><td>90.0847777688511</td><td>47.2651673120286</td><td>3758.814804907941</td><td>-8.937627321874395</td><td>83.16316424250263</td><td>-983.8379635292055</td><td>0.0 .. 2368.752557372936</td><td>0</td></tr>
@@ -19273,7 +19273,7 @@ snr of feature = 10.344792381412692
 </pre></div>
 </div>
 <div class="output text_html"><div><i>QTable length=137</i>
-<table id="table139711388118288" class="table-striped table-bordered table-condensed">
+<table id="table140320377513360" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>xcentroid</th><th>ycentroid</th><th>fwhm</th><th>roundness</th><th>pa</th><th>max_value</th><th>flux</th><th>mag</th><th>theta</th><th>rho</th><th>endpoints</th><th>status</th><th>mean flux</th><th>width</th><th>snr</th><th>persistence</th></tr></thead>
 <thead><tr><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64[2,2]</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>1</td><td>166.32632848500526</td><td>784.1620364707945</td><td>8.97661040342012</td><td>0.7918843725916062</td><td>90.0847777688511</td><td>47.2651673120286</td><td>3758.814804907941</td><td>-8.937627321874395</td><td>83.16316424250263</td><td>-983.8379635292055</td><td>0.0 .. 2368.752557372936</td><td>0</td><td>10.766564246247055</td><td>144.11032104424442</td><td>8.949418734191653</td><td>0.0</td></tr>
