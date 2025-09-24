@@ -1,5 +1,8 @@
+![STScI Logo](_static/stsci_header.png)
 
 # STScI HST Notebook Repository HQ
+[![DOI](https://zenodo.org/badge/605151805.svg)](https://zenodo.org/badge/latestdoi/605151805)
+
 Welcome to the STScI HST Notebook Repository
 This resource provides comprehensive documentation and interactive notebooks created by the Hubble Space Telescope instruments' teams.
 
@@ -111,7 +114,7 @@ can activate the environment, and then update it to use the notebooks requiremen
     pip install -r requirments.txt
  
 If pip reports conflicts, then you might need to follow the above instructions to create
-a new, isolated environment instead of using `stcal`
+a new, isolated environment instead of using `hstcal`
 
 
 ## Help
