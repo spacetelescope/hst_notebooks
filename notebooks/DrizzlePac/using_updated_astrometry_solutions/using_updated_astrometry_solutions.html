@@ -648,7 +648,7 @@ document.write(`
 <section id="import-packages">
 <h2>Import Packages<a class="headerlink" href="#import-packages" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
+<hr>
 <p>The following Python packages are required to run the Jupyter Notebook:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/os.html"><strong>os</strong></a> - change and make directories</p></li>
@@ -687,17 +687,6 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following task in the stsci.skypac package can be run with TEAL:
-                                    skymatch                                    
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following tasks in the drizzlepac package can be run with TEAL:
-    astrodrizzle       config_testbed      imagefindpars           mapreg       
-       photeq            pixreplace           pixtopix            pixtosky      
-  refimagefindpars       resetbits          runastrodriz          skytopix      
-     tweakback            tweakreg           updatenpol
-</pre></div>
-</div>
 </div>
 </div>
 <p>Some steps in this notebook require access to HST reference files, so we will create a temporary ‘iref’ directory for these reference files after download. This step is typically done by defining the ‘iref’ path in your bash profile so that all reference files for all datasets can be in one static location, but for the portability of this notebook we will create a directory.</p>
@@ -715,14 +704,14 @@ document.write(`
 <section id="example-data-download">
 <h2>0. Example Data Download<a class="headerlink" href="#example-data-download" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
-<p>MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/latest/mast/mast_obsquery.html#observation-criteria-queries"> <code class="docutils literal notranslate"><span class="pre">query_criteria</span></code></a>, where we specify: <br></p>
+<hr>
+MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/latest/mast/mast_obsquery.html#observation-criteria-queries"> `query_criteria`</a>, where we specify: <br>
 <p>    <span class="math notranslate nohighlight">\(\rightarrow\)</span> obs_id, proposal_id, and filters</p>
 <p>MAST data products may be downloaded by using <a href="https://astroquery.readthedocs.io/en/latest/mast/mast_obsquery.html#downloading-data"> <code class="docutils literal notranslate"><span class="pre">download_products</span></code></a>, where we specify:<br></p>
 <p>    <span class="math notranslate nohighlight">\(\rightarrow\)</span> products = calibrated (FLT, FLC) or drizzled (DRZ, DRC) files</p>
 <p>    <span class="math notranslate nohighlight">\(\rightarrow\)</span> type = standard products (CALxxx) or advanced products (HAP-SVM)</p>
-<hr class="docutils" />
-<p>Let’s find some example HST data from MAST and download it. The example used here is from visit 14 of program <a class="reference external" href="http://www.stsci.edu/cgi-bin/get-proposal-info?id=16801&amp;observatory=HST">16801</a>. The associations IEPW14030 and IEPW14040 each contain two FLC images in the F336W and F225W filters and a single DRC combined image for each filter.  Here we download the FLC, DRC, and ASN files using <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>.</p>
+<hr>
+<p>Let’s find some example HST data from MAST and download it. The example used here is from visit 14 of program <a class="reference external" href="https://www.stsci.edu/hst-program-info/program/?program=16801">16801</a>. The associations IEPW14030 and IEPW14040 each contain two FLC images in the F336W and F225W filters and a single DRC combined image for each filter.  Here we download the FLC, DRC, and ASN files using <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>.</p>
 <div class="alert alert-block alert-info" style="color:black" >  Depending on your connection speed this cell may take a few minutes to execute. </div><div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;IEPW14030&#39;</span><span class="p">,</span> <span class="s1">&#39;IEPW14040&#39;</span><span class="p">]</span>
@@ -738,30 +727,6 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/iepw14030_asn.fits to ./mastDownload/HST/iepw14030/iepw14030_asn.fits ...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/iepw14030_drc.fits to ./mastDownload/HST/iepw14030/iepw14030_drc.fits ...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/iepw14040_asn.fits to ./mastDownload/HST/iepw14040/iepw14040_asn.fits ...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/iepw14040_drc.fits to ./mastDownload/HST/iepw14040/iepw14040_drc.fits ...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/iepw14g4q_flc.fits to ./mastDownload/HST/iepw14g4q/iepw14g4q_flc.fits ...
 </pre></div>
 </div>
@@ -786,18 +751,42 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/iepw14030_asn.fits to ./mastDownload/HST/iepw14030/iepw14030_asn.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/iepw14030_drc.fits to ./mastDownload/HST/iepw14030/iepw14030_drc.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/iepw14040_asn.fits to ./mastDownload/HST/iepw14040/iepw14040_asn.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/iepw14040_drc.fits to ./mastDownload/HST/iepw14040/iepw14040_drc.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
 <div class="output text_html"><div><i>Table length=8</i>
-<table id="table140112390389584" class="table-striped table-bordered table-condensed">
+<table id="table140235668390096" class="table-striped table-bordered table-condensed">
 <thead><tr><th>Local Path</th><th>Status</th><th>Message</th><th>URL</th></tr></thead>
 <thead><tr><th>str47</th><th>str8</th><th>object</th><th>object</th></tr></thead>
-<tr><td>./mastDownload/HST/iepw14030/iepw14030_asn.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
-<tr><td>./mastDownload/HST/iepw14030/iepw14030_drc.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
-<tr><td>./mastDownload/HST/iepw14040/iepw14040_asn.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
-<tr><td>./mastDownload/HST/iepw14040/iepw14040_drc.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
 <tr><td>./mastDownload/HST/iepw14g4q/iepw14g4q_flc.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
 <tr><td>./mastDownload/HST/iepw14g6q/iepw14g6q_flc.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
 <tr><td>./mastDownload/HST/iepw14gaq/iepw14gaq_flc.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
 <tr><td>./mastDownload/HST/iepw14geq/iepw14geq_flc.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/iepw14030/iepw14030_asn.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/iepw14030/iepw14030_drc.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/iepw14040/iepw14040_asn.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/iepw14040/iepw14040_drc.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
 </table></div></div></div>
 </div>
 <p>Next, we retrieve the Hubble Advanced Product (HAP) headerlets, which we will use to change between different WCS solutions.</p>
@@ -809,12 +798,6 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_16801_14_wfc3_uvis_f275w_iepw14ga_hlet.fits to ./mastDownload/HST/hst_16801_14_wfc3_uvis_f275w_iepw14ga/hst_16801_14_wfc3_uvis_f275w_iepw14ga_hlet.fits ...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_16801_14_wfc3_uvis_f275w_iepw14ge_hlet.fits to ./mastDownload/HST/hst_16801_14_wfc3_uvis_f275w_iepw14ge/hst_16801_14_wfc3_uvis_f275w_iepw14ge_hlet.fits ...
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
@@ -832,14 +815,20 @@ document.write(`
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
 </pre></div>
 </div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/hst_16801_14_wfc3_uvis_f275w_iepw14ge_hlet.fits to ./mastDownload/HST/hst_16801_14_wfc3_uvis_f275w_iepw14ge/hst_16801_14_wfc3_uvis_f275w_iepw14ge_hlet.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
 <div class="output text_html"><div><i>Table length=4</i>
-<table id="table140112405550736" class="table-striped table-bordered table-condensed">
+<table id="table140237066158032" class="table-striped table-bordered table-condensed">
 <thead><tr><th>Local Path</th><th>Status</th><th>Message</th><th>URL</th></tr></thead>
 <thead><tr><th>str104</th><th>str8</th><th>object</th><th>object</th></tr></thead>
 <tr><td>./mastDownload/HST/hst_16801_14_wfc3_uvis_f275w_iepw14ga/hst_16801_14_wfc3_uvis_f275w_iepw14ga_hlet.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
-<tr><td>./mastDownload/HST/hst_16801_14_wfc3_uvis_f275w_iepw14ge/hst_16801_14_wfc3_uvis_f275w_iepw14ge_hlet.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
 <tr><td>./mastDownload/HST/hst_16801_14_wfc3_uvis_f336w_iepw14g4/hst_16801_14_wfc3_uvis_f336w_iepw14g4_hlet.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
 <tr><td>./mastDownload/HST/hst_16801_14_wfc3_uvis_f336w_iepw14g6/hst_16801_14_wfc3_uvis_f336w_iepw14g6_hlet.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/hst_16801_14_wfc3_uvis_f275w_iepw14ge/hst_16801_14_wfc3_uvis_f275w_iepw14ge_hlet.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
 </table></div></div></div>
 </div>
 <p>Now to make the paths easier to work with, we move those files from their default download location into the notebook directory. In addition, we add one to the headerlet extension numbers because lists are zero indexed while the EXTVER’s extensions are unity based. We do this by defining a small <code class="docutils literal notranslate"><span class="pre">correct_hdrlet_extvers()</span></code> function.</p>
@@ -926,13 +915,13 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=4</i>
-<table id="table140112389976208" class="table-striped table-bordered table-condensed">
+<table id="table140235673417744" class="table-striped table-bordered table-condensed">
 <thead><tr><th>filename</th><th>DETECTOR</th><th>EXPTIME</th><th>FILTER</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RA_pix</th><th>RMS_DEC_pix</th></tr></thead>
-<thead><tr><th>str18</th><th>str4</th><th>float64</th><th>str5</th><th>str30</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
-<tr><td>iepw14g4q_flc.fits</td><td>UVIS</td><td>178.0</td><td>F336W</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>46.0</td><td>13.0</td><td>11.1</td><td>0.33</td><td>0.28</td></tr>
-<tr><td>iepw14g6q_flc.fits</td><td>UVIS</td><td>700.0</td><td>F336W</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>46.0</td><td>13.0</td><td>11.1</td><td>0.33</td><td>0.28</td></tr>
-<tr><td>iepw14gaq_flc.fits</td><td>UVIS</td><td>720.0</td><td>F275W</td><td>IDC_2731450pi-GSC240</td><td>nan</td><td>nan</td><td>nan</td><td>nan</td><td>nan</td></tr>
-<tr><td>iepw14geq_flc.fits</td><td>UVIS</td><td>462.0</td><td>F275W</td><td>IDC_2731450pi-GSC240</td><td>nan</td><td>nan</td><td>nan</td><td>nan</td><td>nan</td></tr>
+<thead><tr><th>str18</th><th>str4</th><th>float64</th><th>str5</th><th>str30</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>iepw14g4q_flc.fits</td><td>UVIS</td><td>178.0</td><td>F336W</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>48</td><td>20.5</td><td>17.9</td><td>0.52</td><td>0.45</td></tr>
+<tr><td>iepw14g6q_flc.fits</td><td>UVIS</td><td>700.0</td><td>F336W</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>48</td><td>20.5</td><td>17.9</td><td>0.52</td><td>0.45</td></tr>
+<tr><td>iepw14gaq_flc.fits</td><td>UVIS</td><td>720.0</td><td>F275W</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>28</td><td>7.9</td><td>10.8</td><td>0.2</td><td>0.27</td></tr>
+<tr><td>iepw14geq_flc.fits</td><td>UVIS</td><td>462.0</td><td>F275W</td><td>IDC_2731450pi-FIT_REL_GAIAeDR3</td><td>28</td><td>7.9</td><td>10.8</td><td>0.2</td><td>0.27</td></tr>
 </table></div></div></div>
 </div>
 <p>Here we see that the first two exposures (F336W) have a fit to ‘Gaia eDR3’ with 46 matches and a fit RMS of ~0.3 pixels.  The next two exposures (F225W) do not have a catalog fit and use the ‘a priori’ correction to the Guide Star Catalog v2.4.  In section 5, we show how to apply the SVM headerlet to align the F225W filter to Gaia eDR3.</p>
@@ -952,11 +941,11 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Filename: iepw14g4q_flc.fits
 No.    Name      Ver    Type      Cards   Dimensions   Format
-  0  PRIMARY       1 PrimaryHDU     308   ()      
-  1  SCI           1 ImageHDU       217   (4096, 2051)   float32   
+  0  PRIMARY       1 PrimaryHDU     309   ()      
+  1  SCI           1 ImageHDU       223   (4096, 2051)   float32   
   2  ERR           1 ImageHDU        48   (4096, 2051)   float32   
   3  DQ            1 ImageHDU        40   (4096, 2051)   int16   
-  4  SCI           2 ImageHDU       215   (4096, 2051)   float32   
+  4  SCI           2 ImageHDU       221   (4096, 2051)   float32   
   5  ERR           2 ImageHDU        48   (4096, 2051)   float32   
   6  DQ            2 ImageHDU        40   (4096, 2051)   int16   
   7  D2IMARR       1 ImageHDU        16   (64, 32)   float32   
@@ -1326,7 +1315,7 @@ hst_16801_14_wfc3_uvis_f336w_iepw14g6_hlet.fits iepw14g6q IDC_2731450pi-FIT_SVM_
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Searching for the MDRIZTAB file: 2ck18260i_mdz.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-latest&#39; resolves to &#39;hst_1211.pmap&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-latest&#39; resolves to &#39;hst_1279.pmap&#39;
 CRDS - INFO -  Reorganizing 0 references from &#39;instrument&#39; to &#39;flat&#39;
 CRDS - INFO -  Reorganizing from &#39;instrument&#39; to &#39;flat&#39; cache,  removing instrument directories.
 CRDS - INFO -  Syncing explicitly listed files.
@@ -1456,7 +1445,7 @@ final_bits 336
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/0755da01973636136265d547a0e4dcb79a7e8639bb7c0d619bbe83295d229cdd.png" src="../../../_images/0755da01973636136265d547a0e4dcb79a7e8639bb7c0d619bbe83295d229cdd.png" />
+<img alt="../../../_images/66e4fa72ea6eb30744e8b2aade065899142a70c2a8d0ce684d3be5f5d34344d0.png" src="../../../_images/66e4fa72ea6eb30744e8b2aade065899142a70c2a8d0ce684d3be5f5d34344d0.png" />
 </div>
 </div>
 <p>Here we see a small misalignment between the two filters in the pipeline drizzled files which have different WCS solutions. <br>
@@ -1495,7 +1484,7 @@ Finally, we  display the redrizzled image which uses the improved FIT-SVM-GAIAeD
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/9eb2cf1553fc1618496b221be75f83de678b338bdb8f8e6089d0da3cfe1cc1c4.png" src="../../../_images/9eb2cf1553fc1618496b221be75f83de678b338bdb8f8e6089d0da3cfe1cc1c4.png" />
+<img alt="../../../_images/8a20dd7ab3c45cbd7841f370366adc773b2f1645fd458163362ff59091a5ce9c.png" src="../../../_images/8a20dd7ab3c45cbd7841f370366adc773b2f1645fd458163362ff59091a5ce9c.png" />
 </div>
 </div>
 <p><a id="conclude"></a></p>
@@ -1536,7 +1525,7 @@ Updated: 31 May 2024;     M. Revalski, V. Bajaj, &amp; J. Mack
 <li><p><a class="reference external" href="https://matplotlib.org/stable/users/project/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
 <li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
 </ul>
-<hr class="docutils" />
+<hr>
 <p><span class="xref myst">Top of Page</span>
 <a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
 </section>

@@ -644,7 +644,7 @@ document.write(`
 <section id="introduction-a-id-intro-a">
 <h2>Introduction <a id="intro"></a><a class="headerlink" href="#introduction-a-id-intro-a" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Table of Contents</span></p>
-<p>This notebook demonstrates how to use <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> and <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> tasks to align and combine images. While this example focuses on ACS/WFC data, the procedure can be almost identically applied to WFC3/UVIS images. This notebook is based on <a class="reference external" href="http://documents.stsci.edu/hst/HST_overview/documents/DrizzlePac/ch75.html">a prior example</a> from the 2012 <a class="reference external" href="http://documents.stsci.edu/hst/HST_overview/documents/DrizzlePac/toc.html">DrizzlePac Handbook</a>, but has been updated for compatibility with the latest STScI software distribution.</p>
+<p>This notebook demonstrates how to use <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> and <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> tasks to align and combine images. While this example focuses on ACS/WFC data, the procedure can be almost identically applied to WFC3/UVIS images. This notebook is based on a prior example in Section 7.5 of the <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/scientific-community/software/drizzlepac/_documents/drizzlepac-handbook-v1.pdf">2012 DrizzlePac Handbook</a>, but has been updated for compatibility with the latest STScI software distribution.</p>
 <p>There is a good deal of explanatory text in this notebook, and users new to DrizzlePac are encouraged to start with this tutorial. Additional <code class="docutils literal notranslate"><span class="pre">DrizzlePac</span></code> software documentation is available at the <a class="reference external" href="https://drizzlepac.readthedocs.io">readthedocs webpage</a>.</p>
 <p>Before running the notebook, you will need to install the <code class="docutils literal notranslate"><span class="pre">astroquery</span></code> package, which is used to retrieve the data from the MAST archive.</p>
 <p>Please also make sure to appropriately set your environment variables to allow Python to locate the appropriate reference files.</p>
@@ -675,22 +675,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following task in the stsci.skypac package can be run with TEAL:
-                                    skymatch                                    
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following tasks in the drizzlepac package can be run with TEAL:
-    astrodrizzle       config_testbed      imagefindpars           mapreg       
-       photeq            pixreplace           pixtopix            pixtosky      
-  refimagefindpars       resetbits          runastrodriz          skytopix      
-     tweakback            tweakreg           updatenpol
-</pre></div>
-</div>
-</div>
 </div>
 <p>Along with the above imports, we also set up the required local reference files.</p>
 <div class="cell docutils container">
@@ -709,14 +693,14 @@ document.write(`
 <section id="download-the-observations-with-astroquery-a-id-download-a">
 <h2>1. Download the Observations with <code class="docutils literal notranslate"><span class="pre">astroquery</span></code> <a id="download"></a><a class="headerlink" href="#download-the-observations-with-astroquery-a-id-download-a" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Table of Contents</span></p>
-<hr class="docutils" />
-<p>MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/latest/mast/mast_obsquery.html#observation-criteria-queries"> <code class="docutils literal notranslate"><span class="pre">query_criteria</span></code></a>, where we specify: <br></p>
+<hr>
+MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/latest/mast/mast_obsquery.html#observation-criteria-queries"> `query_criteria`</a>, where we specify: <br>
 <p>    –&gt; obs_id, proposal_id, and filters</p>
 <p>MAST data products may be downloaded by using <a href="https://astroquery.readthedocs.io/en/latest/mast/mast_obsquery.html#downloading-data"> <code class="docutils literal notranslate"><span class="pre">download_products</span></code></a>, where we specify:<br></p>
 <p>    –&gt; products = calibrated (FLT, FLC) or drizzled (DRZ, DRC) files</p>
 <p>    –&gt; type = standard products (CALxxx) or advanced products (HAP-SVM)</p>
-<hr class="docutils" />
-<p>In this example, we align three F606W full-frame 339 second ACS/WFC images of the globular cluster NGC 104 from ACS/CAL Program <a class="reference external" href="http://www.stsci.edu/cgi-bin/get-proposal-info?id=10737&amp;observatory=HST">10737</a>.  These observations were acquired over a 3-month period in separate visits and at different orientations. We will use calibrated, CTE-corrected <code class="docutils literal notranslate"><span class="pre">*_flc.fits</span></code> files.</p>
+<hr>
+<p>In this example, we align three F606W full-frame 339 second ACS/WFC images of the globular cluster NGC 104 from ACS/CAL Program <a class="reference external" href="https://www.stsci.edu/hst-program-info/program/?program=10737">10737</a>.  These observations were acquired over a 3-month period in separate visits and at different orientations. We will use calibrated, CTE-corrected <code class="docutils literal notranslate"><span class="pre">*_flc.fits</span></code> files.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>        j9irw3fwq_flc.fits
         j9irw4b1q_flc.fits
         j9irw5kaq_flc.fits
@@ -769,7 +753,7 @@ document.write(`
 </pre></div>
 </div>
 <div class="output text_html"><div><i>Table length=4</i>
-<table id="table139744586802512" class="table-striped table-bordered table-condensed">
+<table id="table140197974632144" class="table-striped table-bordered table-condensed">
 <thead><tr><th>Local Path</th><th>Status</th><th>Message</th><th>URL</th></tr></thead>
 <thead><tr><th>str47</th><th>str8</th><th>object</th><th>object</th></tr></thead>
 <tr><td>./mastDownload/HST/j9irw3fwq/j9irw3fwq_flc.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
@@ -873,7 +857,7 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=3</i>
-<table id="table139744587564816" class="table-striped table-bordered table-condensed">
+<table id="table140197930794448" class="table-striped table-bordered table-condensed">
 <thead><tr><th>rootname</th><th>ASN_ID</th><th>TARGNAME</th><th>detector</th><th>filter1</th><th>exptime</th><th>ra_targ</th><th>dec_targ</th><th>date-obs</th><th>postarg1</th><th>postarg2</th><th>orientat</th></tr></thead>
 <thead><tr><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>float64</th><th>float64</th><th>float64</th><th>str32</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>j9irw3fwq</td><td>NONE</td><td>NGC104-WFC</td><td>WFC</td><td>F606W</td><td>339.0</td><td>5.6604</td><td>-72.0678</td><td>2006-05-30</td><td>0.000</td><td>0.000</td><td>-125.24</td></tr>
@@ -925,20 +909,20 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=3</i>
-<table id="table139745082417040" class="table-striped table-bordered table-condensed">
+<table id="table140197939337616" class="table-striped table-bordered table-condensed">
 <thead><tr><th>filename</th><th>DETECTOR</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RA_pix</th><th>RMS_DEC_pix</th></tr></thead>
 <thead><tr><th>str18</th><th>str3</th><th>str30</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
-<tr><td>j9irw3fwq_flc.fits</td><td>WFC</td><td>IDC_4bb1536oj-FIT_IMG_GAIAeDR3</td><td>339</td><td>16.4</td><td>15.8</td><td>0.33</td><td>0.32</td></tr>
-<tr><td>j9irw4b1q_flc.fits</td><td>WFC</td><td>IDC_4bb1536oj-FIT_REL_GAIAeDR3</td><td>414</td><td>14.3</td><td>11.8</td><td>0.29</td><td>0.24</td></tr>
-<tr><td>j9irw5kaq_flc.fits</td><td>WFC</td><td>IDC_4bb1536oj-FIT_IMG_GAIAeDR3</td><td>359</td><td>13.5</td><td>12.6</td><td>0.27</td><td>0.25</td></tr>
+<tr><td>j9irw3fwq_flc.fits</td><td>WFC</td><td>IDC_4bb1536oj-FIT_IMG_GAIAeDR3</td><td>356</td><td>12.4</td><td>12.2</td><td>0.25</td><td>0.24</td></tr>
+<tr><td>j9irw4b1q_flc.fits</td><td>WFC</td><td>IDC_4bb1536oj-FIT_REL_GAIAeDR3</td><td>391</td><td>14.5</td><td>11.8</td><td>0.29</td><td>0.24</td></tr>
+<tr><td>j9irw5kaq_flc.fits</td><td>WFC</td><td>IDC_4bb1536oj-FIT_IMG_GAIAeDR3</td><td>361</td><td>13.5</td><td>12.6</td><td>0.27</td><td>0.25</td></tr>
 </table></div></div></div>
 </div>
 <p>Here we see that the FLC images from each separate visit have each been fit to the reference catalog GAIA eDR3.</p>
 <p>For visits w3 and w5, the WCSNAME ‘FIT_IMG_catalog’ implies that each FLC was aligned separately, whereas for visit w4, the drizzle combined image ‘j9irw4040_drc.fits’ was aligned to GAIA and the solution was propogated back to the FLC exposures. (Note that the number of matches and fit rms values are different for each FLC frame.)</p>
 <p>For more details on absolute astrometry in HST images, see <a class="reference external" href="https://hst-docs.stsci.edu/drizzpac/chapter-4-astrometric-information-in-the-header/4-5-absolute-astrometry">Section 4.5 in the DrizzlePac Handbook</a>.</p>
+<hr>
 </section>
 </section>
-<hr class="docutils" />
 <section id="align-with-tweakreg-a-id-tweakreg-a">
 <h2>2. Align with <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code>  <a id="tweakreg"></a><a class="headerlink" href="#align-with-tweakreg-a-id-tweakreg-a" title="Permalink to this heading">#</a></h2>
 <p><span class="xref myst">Table of Contents</span></p>
@@ -1029,7 +1013,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Setting up logfile :  tweakreg.log
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TweakReg Version 3.9.0 started at: 16:42:28.291 (13/02/2025) 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TweakReg Version 3.10.0 started at: 17:51:19.736 (25/09/2025) 
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -1041,19 +1025,19 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--------------------
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Python Version 3.11.11 (main, Dec  4 2024, 12:57:43) [GCC 9.4.0]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Python Version 3.11.13 | packaged by conda-forge | (main, Jun  4 2025, 14:48:23) [GCC 13.3.0]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>numpy Version -&gt; 2.2.2 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>numpy Version -&gt; 2.3.3 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>astropy Version -&gt; 7.0.1 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>astropy Version -&gt; 7.1.0 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>stwcs Version -&gt; 1.7.4 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>stwcs Version -&gt; 1.7.5 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>photutils Version -&gt; 2.1.0 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>photutils Version -&gt; 2.3.0 
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -1077,13 +1061,13 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;j9irw3fwq_flc.fits&#39;:
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;j9irw3fwq_flc.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 16:42:28.382 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;j9irw3fwq_flc.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 17:51:19.820 (25/09/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 626 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;j9irw3fwq_flc.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 16:42:28.739 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;j9irw3fwq_flc.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 17:51:20.177 (25/09/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 408 objects.
@@ -1098,13 +1082,13 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;j9irw4b1q_flc.fits&#39;:
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;j9irw4b1q_flc.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 16:42:29.340 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;j9irw4b1q_flc.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 17:51:20.772 (25/09/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 708 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;j9irw4b1q_flc.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 16:42:29.70 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;j9irw4b1q_flc.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 17:51:21.128 (25/09/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 398 objects.
@@ -1119,13 +1103,13 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;j9irw5kaq_flc.fits&#39;:
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;j9irw5kaq_flc.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 16:42:30.364 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;j9irw5kaq_flc.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 17:51:21.78 (25/09/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 524 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;j9irw5kaq_flc.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 16:42:30.716 (13/02/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;j9irw5kaq_flc.fits&#39;, EXT=(&#39;SCI&#39;, 2) started at: 17:51:22.127 (25/09/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 343 objects.
@@ -1173,7 +1157,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing initial guess for X and Y shifts...
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Found initial X and Y shifts of -0.001445, -0.00289 with significance of 665.3 and 692 matches
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Found initial X and Y shifts of -0.001445, -0.00289 with significance of 668.5 and 692 matches
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Found 691 matches for j9irw4b1q_flc.fits...
@@ -1182,13 +1166,13 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computed  rscale  fit for  j9irw4b1q_flc.fits : 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>XSH: -0.0341  YSH: 0.0128    ROT: 359.9998145    SCALE: 0.999991
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>XSH: -0.0524  YSH: -0.0136    ROT: 2.186891803e-05    SCALE: 1.000000
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FIT XRMS: 0.042      FIT YRMS: 0.04   
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FIT RMSE: 0.058      FIT MAE: 0.051  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FIT RMSE: 0.058      FIT MAE: 0.052  
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -1245,19 +1229,19 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computed  rscale  fit for  j9irw5kaq_flc.fits : 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>XSH: 0.0528  YSH: -0.0287    ROT: 359.9993718    SCALE: 1.000004
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>XSH: 0.0604  YSH: -0.0459    ROT: 359.9997958    SCALE: 1.000020
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FIT XRMS: 0.049      FIT YRMS: 0.046  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FIT XRMS: 0.05       FIT YRMS: 0.046  
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FIT RMSE: 0.067      FIT MAE: 0.06   
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FIT RMSE: 0.068      FIT MAE: 0.06   
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RMS_RA: 5.2e-07 (deg)   RMS_DEC: 9.2e-07 (deg)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RMS_RA: 5.3e-07 (deg)   RMS_DEC: 9.3e-07 (deg)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -1287,9 +1271,9 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Trailer file written to:  tweakreg.log
 </pre></div>
 </div>
-<img alt="../../../_images/9089d96860f20577bf188e93f47300030c805e2bca3f16afd700e791ce9ff149.png" src="../../../_images/9089d96860f20577bf188e93f47300030c805e2bca3f16afd700e791ce9ff149.png" />
-<img alt="../../../_images/87f66977a19ace9d5d3d1d2873d5e7b0bfcb3c4abe8330c9837f6b19ae951736.png" src="../../../_images/87f66977a19ace9d5d3d1d2873d5e7b0bfcb3c4abe8330c9837f6b19ae951736.png" />
-<img alt="../../../_images/1417c813cae347b01e93d93b09ed3dec1d08c2abab91f45dd8a66a8696485742.png" src="../../../_images/1417c813cae347b01e93d93b09ed3dec1d08c2abab91f45dd8a66a8696485742.png" />
+<img alt="../../../_images/c41c9f7ce3a93dd09df207222be2e8fef26941e4fb2f553541f512c306e432f7.png" src="../../../_images/c41c9f7ce3a93dd09df207222be2e8fef26941e4fb2f553541f512c306e432f7.png" />
+<img alt="../../../_images/86f7bbdfdaee22609fe076a402e1fd72576a8402eeaea2b571714a0c76e2ff98.png" src="../../../_images/86f7bbdfdaee22609fe076a402e1fd72576a8402eeaea2b571714a0c76e2ff98.png" />
+<img alt="../../../_images/2ae9b756aebb8dd3269d00b5ce2a695a1bdf4b403f14a915b4f67ee27a23a6b1.png" src="../../../_images/2ae9b756aebb8dd3269d00b5ce2a695a1bdf4b403f14a915b4f67ee27a23a6b1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1326,12 +1310,12 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=3</i>
-<table id="table139744580515088" class="table-striped table-bordered table-condensed">
+<table id="table140197921940112" class="table-striped table-bordered table-condensed">
 <thead><tr><th>file</th><th>dx</th><th>dy</th><th>rot</th><th>scale</th><th>xrms</th><th>yrms</th></tr></thead>
 <thead><tr><th>str18</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>j9irw3fwq_flc.fits</td><td>0.00</td><td>0.00</td><td>0.000</td><td>1.00000</td><td>0.00</td><td>0.00</td></tr>
-<tr><td>j9irw4b1q_flc.fits</td><td>-0.03</td><td>0.01</td><td>360.000</td><td>0.99999</td><td>0.04</td><td>0.04</td></tr>
-<tr><td>j9irw5kaq_flc.fits</td><td>0.05</td><td>-0.03</td><td>359.999</td><td>1.00000</td><td>0.05</td><td>0.05</td></tr>
+<tr><td>j9irw4b1q_flc.fits</td><td>-0.05</td><td>-0.01</td><td>0.000</td><td>1.00000</td><td>0.04</td><td>0.04</td></tr>
+<tr><td>j9irw5kaq_flc.fits</td><td>0.06</td><td>-0.05</td><td>360.000</td><td>1.00002</td><td>0.05</td><td>0.05</td></tr>
 </table></div></div></div>
 </div>
 <p>When <code class="docutils literal notranslate"><span class="pre">interactive</span></code> = False, <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> outputs several diagnostic plots in the working directory for you to inspect the fit quality. For each input file, except the reference file, TweakReg creates an x/y plot of fit residuals and a vector plot. Let’s take a look at these.</p>
@@ -1376,7 +1360,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/044bc29ec2cef0bffc67bf42ceea0806a56b0b86718916ec7ddba51f8c7e8129.png" src="../../../_images/044bc29ec2cef0bffc67bf42ceea0806a56b0b86718916ec7ddba51f8c7e8129.png" />
+<img alt="../../../_images/ae41a965acc6c7695f09a50f9cbf8b5388a52be162cbb484ab335b46b74dd516.png" src="../../../_images/ae41a965acc6c7695f09a50f9cbf8b5388a52be162cbb484ab335b46b74dd516.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1397,7 +1381,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/ecdaddb2e66d8f2e7775776da8bb2f8f0a54cc10ee5cd6df91d94fa35d62c7cd.png" src="../../../_images/ecdaddb2e66d8f2e7775776da8bb2f8f0a54cc10ee5cd6df91d94fa35d62c7cd.png" />
+<img alt="../../../_images/008a01e8c0611153d1e7e2d8e1a987b46dc7546ae74a8aa74547d5b1163c5542.png" src="../../../_images/008a01e8c0611153d1e7e2d8e1a987b46dc7546ae74a8aa74547d5b1163c5542.png" />
 </div>
 </div>
 <p>The residual plots show a fit RMS of ~0.04 pixels, but there is still a systematic skew in the fit residuals, which is believed to be caused by an uncorrected ‘skew’ in the ACS distortion solution.</p>
@@ -1452,12 +1436,12 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=3</i>
-<table id="table139744323810576" class="table-striped table-bordered table-condensed">
+<table id="table140197594267088" class="table-striped table-bordered table-condensed">
 <thead><tr><th>file</th><th>dx</th><th>dy</th><th>rot</th><th>scale</th><th>xrms</th><th>yrms</th></tr></thead>
 <thead><tr><th>str18</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>j9irw3fwq_flc.fits</td><td>0.00</td><td>0.00</td><td>0.000</td><td>1.00000</td><td>0.00</td><td>0.00</td></tr>
-<tr><td>j9irw4b1q_flc.fits</td><td>-0.03</td><td>0.01</td><td>360.000</td><td>0.99999</td><td>0.03</td><td>0.03</td></tr>
-<tr><td>j9irw5kaq_flc.fits</td><td>0.05</td><td>-0.02</td><td>359.999</td><td>1.00000</td><td>0.04</td><td>0.03</td></tr>
+<tr><td>j9irw4b1q_flc.fits</td><td>-0.04</td><td>-0.01</td><td>360.000</td><td>1.00000</td><td>0.03</td><td>0.03</td></tr>
+<tr><td>j9irw5kaq_flc.fits</td><td>0.06</td><td>-0.03</td><td>360.000</td><td>1.00002</td><td>0.04</td><td>0.03</td></tr>
 </table></div></div></div>
 </div>
 <div class="cell docutils container">
@@ -1492,12 +1476,12 @@ j9irw5kaq      Number of Gaia Matches= {705}
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=3</i>
-<table id="table139745082417040" class="table-striped table-bordered table-condensed">
+<table id="table140197939337616" class="table-striped table-bordered table-condensed">
 <thead><tr><th>filename</th><th>DETECTOR</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RA_pix</th><th>RMS_DEC_pix</th></tr></thead>
 <thead><tr><th>str18</th><th>str3</th><th>str30</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
-<tr><td>j9irw3fwq_flc.fits</td><td>WFC</td><td>IDC_4bb1536oj-FIT_IMG_GAIAeDR3</td><td>339</td><td>16.4</td><td>15.8</td><td>0.33</td><td>0.32</td></tr>
-<tr><td>j9irw4b1q_flc.fits</td><td>WFC</td><td>IDC_4bb1536oj-FIT_REL_GAIAeDR3</td><td>414</td><td>14.3</td><td>11.8</td><td>0.29</td><td>0.24</td></tr>
-<tr><td>j9irw5kaq_flc.fits</td><td>WFC</td><td>IDC_4bb1536oj-FIT_IMG_GAIAeDR3</td><td>359</td><td>13.5</td><td>12.6</td><td>0.27</td><td>0.25</td></tr>
+<tr><td>j9irw3fwq_flc.fits</td><td>WFC</td><td>IDC_4bb1536oj-FIT_IMG_GAIAeDR3</td><td>356</td><td>12.4</td><td>12.2</td><td>0.25</td><td>0.24</td></tr>
+<tr><td>j9irw4b1q_flc.fits</td><td>WFC</td><td>IDC_4bb1536oj-FIT_REL_GAIAeDR3</td><td>391</td><td>14.5</td><td>11.8</td><td>0.29</td><td>0.24</td></tr>
+<tr><td>j9irw5kaq_flc.fits</td><td>WFC</td><td>IDC_4bb1536oj-FIT_IMG_GAIAeDR3</td><td>361</td><td>13.5</td><td>12.6</td><td>0.27</td><td>0.25</td></tr>
 </table></div></div></div>
 </div>
 <p>While the shift file looks nearly identical to the prior run, this is because the axis-dependent rotation and scale values are averaged together in the shiftfile.  To determine the actual values, it is necessary to inspect the ‘tweakreg.log’ logfile.</p>
@@ -1542,10 +1526,10 @@ j9irw5kaq  SCALE_X: 0.9999851345  SCALE_Y: 1.000030317  ROT_X:   0.0015  ROT_Y: 
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/9089d96860f20577bf188e93f47300030c805e2bca3f16afd700e791ce9ff149.png" src="../../../_images/9089d96860f20577bf188e93f47300030c805e2bca3f16afd700e791ce9ff149.png" />
-<img alt="../../../_images/bc2aec623c619a1814c3da235a93012845d957d6e5f3ba3dcf3c5299f09cd856.png" src="../../../_images/bc2aec623c619a1814c3da235a93012845d957d6e5f3ba3dcf3c5299f09cd856.png" />
-<img alt="../../../_images/597ada1e6d3948a60d643da1ccfd3c95478efb4aff0180222c2fa65c270f6257.png" src="../../../_images/597ada1e6d3948a60d643da1ccfd3c95478efb4aff0180222c2fa65c270f6257.png" />
-<img alt="../../../_images/fb128426fee7df3afb3bd6391704c12e6f989006e34914fb333cbcc72bb74309.png" src="../../../_images/fb128426fee7df3afb3bd6391704c12e6f989006e34914fb333cbcc72bb74309.png" />
+<img alt="../../../_images/c41c9f7ce3a93dd09df207222be2e8fef26941e4fb2f553541f512c306e432f7.png" src="../../../_images/c41c9f7ce3a93dd09df207222be2e8fef26941e4fb2f553541f512c306e432f7.png" />
+<img alt="../../../_images/b9766165db40d0b959f862d8f587983a6bc06b9466a6412230c4a97bc7c447ed.png" src="../../../_images/b9766165db40d0b959f862d8f587983a6bc06b9466a6412230c4a97bc7c447ed.png" />
+<img alt="../../../_images/0445ef95048ba7eda2ed5df9459c10685b75c5ef0df25dd1424e40d7a0833038.png" src="../../../_images/0445ef95048ba7eda2ed5df9459c10685b75c5ef0df25dd1424e40d7a0833038.png" />
+<img alt="../../../_images/64510104251342f61ce936fbb490be59dcd8d3b32ad2a70ebf471b378274d02b.png" src="../../../_images/64510104251342f61ce936fbb490be59dcd8d3b32ad2a70ebf471b378274d02b.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1566,7 +1550,7 @@ j9irw5kaq  SCALE_X: 0.9999851345  SCALE_Y: 1.000030317  ROT_X:   0.0015  ROT_Y: 
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/910dd3f86268e3ad3ff61fb1ff780ba1a1e6692782e371f437ea9a415b7a3062.png" src="../../../_images/910dd3f86268e3ad3ff61fb1ff780ba1a1e6692782e371f437ea9a415b7a3062.png" />
+<img alt="../../../_images/70b10db29be36e57f34fdeb4db9c85e6ee6505471e9e1a51738638b8d1c1dd18.png" src="../../../_images/70b10db29be36e57f34fdeb4db9c85e6ee6505471e9e1a51738638b8d1c1dd18.png" />
 </div>
 </div>
 <p>The direction and the magnitude of the arrows in the vector plot above represent the offsets in the source position between the image in question and the reference image. These should visually appear random if the alignment was sucessful.</p>
@@ -1619,7 +1603,7 @@ j9irw5kaq  SCALE_X: 0.9999851345  SCALE_Y: 1.000030317  ROT_X:   0.0015  ROT_Y: 
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/bae3c8d6260f30abb5416be4822bf5088975a247fbe03b3b803b1d196f8333e6.png" src="../../../_images/bae3c8d6260f30abb5416be4822bf5088975a247fbe03b3b803b1d196f8333e6.png" />
+<img alt="../../../_images/2a6d7ee377937b90f6fc164e9e962d6730576358b64ce502a86e8f14c090a63f.png" src="../../../_images/2a6d7ee377937b90f6fc164e9e962d6730576358b64ce502a86e8f14c090a63f.png" />
 </div>
 </div>
 </section>
@@ -1679,11 +1663,9 @@ j9irw5kaq  SCALE_X: 0.9999851345  SCALE_Y: 1.000030317  ROT_X:   0.0015  ROT_Y: 
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Searching for the MDRIZTAB file: 37g1550cj_mdz.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-latest&#39; resolves to &#39;hst_1211.pmap&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-latest&#39; resolves to &#39;hst_1279.pmap&#39;
 CRDS - INFO -  Reorganizing 0 references from &#39;instrument&#39; to &#39;flat&#39;
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Reorganizing from &#39;instrument&#39; to &#39;flat&#39; cache,  removing instrument directories.
+CRDS - INFO -  Reorganizing from &#39;instrument&#39; to &#39;flat&#39; cache,  removing instrument directories.
 CRDS - INFO -  Syncing explicitly listed files.
 </pre></div>
 </div>
@@ -1732,9 +1714,7 @@ CRDS - INFO -  5 infos
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- MDRIZTAB: AstroDrizzle parameters read from row 2.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Outputting the following parameters:
+Outputting the following parameters:
 driz_sep_bits 336
 combine_type minmed
 driz_cr_snr 3.5 3.0
@@ -1807,10 +1787,10 @@ final_bits 336
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/9089d96860f20577bf188e93f47300030c805e2bca3f16afd700e791ce9ff149.png" src="../../../_images/9089d96860f20577bf188e93f47300030c805e2bca3f16afd700e791ce9ff149.png" />
-<img alt="../../../_images/bc2aec623c619a1814c3da235a93012845d957d6e5f3ba3dcf3c5299f09cd856.png" src="../../../_images/bc2aec623c619a1814c3da235a93012845d957d6e5f3ba3dcf3c5299f09cd856.png" />
-<img alt="../../../_images/597ada1e6d3948a60d643da1ccfd3c95478efb4aff0180222c2fa65c270f6257.png" src="../../../_images/597ada1e6d3948a60d643da1ccfd3c95478efb4aff0180222c2fa65c270f6257.png" />
-<img alt="../../../_images/6cbe8232a504283b497c8a6ded62ea4a98d7b530e1d4e85115a6d011bd0f024d.png" src="../../../_images/6cbe8232a504283b497c8a6ded62ea4a98d7b530e1d4e85115a6d011bd0f024d.png" />
+<img alt="../../../_images/c41c9f7ce3a93dd09df207222be2e8fef26941e4fb2f553541f512c306e432f7.png" src="../../../_images/c41c9f7ce3a93dd09df207222be2e8fef26941e4fb2f553541f512c306e432f7.png" />
+<img alt="../../../_images/b9766165db40d0b959f862d8f587983a6bc06b9466a6412230c4a97bc7c447ed.png" src="../../../_images/b9766165db40d0b959f862d8f587983a6bc06b9466a6412230c4a97bc7c447ed.png" />
+<img alt="../../../_images/0445ef95048ba7eda2ed5df9459c10685b75c5ef0df25dd1424e40d7a0833038.png" src="../../../_images/0445ef95048ba7eda2ed5df9459c10685b75c5ef0df25dd1424e40d7a0833038.png" />
+<img alt="../../../_images/7bbcf9c41c568dd32b0e83aef6d804ea1a23f401cd05c39af378585fa15c712f.png" src="../../../_images/7bbcf9c41c568dd32b0e83aef6d804ea1a23f401cd05c39af378585fa15c712f.png" />
 </div>
 </div>
 </section>
@@ -1831,7 +1811,7 @@ final_bits 336
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/040412ff9e301349bff26e6921284325a126b40bb1ceb1680135a8d1f280c84d.png" src="../../../_images/040412ff9e301349bff26e6921284325a126b40bb1ceb1680135a8d1f280c84d.png" />
+<img alt="../../../_images/31568c51c2d24d9df7603c1b91b4e84026e2cad508d4c6c16208764a210b3dce.png" src="../../../_images/31568c51c2d24d9df7603c1b91b4e84026e2cad508d4c6c16208764a210b3dce.png" />
 </div>
 </div>
 </section>
@@ -1878,7 +1858,7 @@ Updated: 17 Sep 2024;     G. Anand &amp; J. Mack
 <li><p><a class="reference external" href="https://matplotlib.org/stable/users/project/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
 <li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
 </ul>
-<hr class="docutils" />
+<hr>
 <p><span class="xref myst">Top of Page</span>
 <a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
 </section>
