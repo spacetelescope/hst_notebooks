@@ -34,7 +34,7 @@ Installation Instructions
 
 You can view rendered versions of the notebooks in this repository,
 it requires no special tools beyond your web browser.
-See [this website](https://spacetelescope.github.io/hst_notebooks/
+See [this website](https://spacetelescope.github.io/hst_notebooks/)
 
 To download and execute the notebooks, we recommend you clone
 the `hst_notebooks <https://github.com/spacetelescope/hst_notebooks>`_
@@ -72,7 +72,7 @@ Run the notebook in an appropriate environment
 
 Once you are in the directory of the notebook you want to use, make sure you have a populated environment that contains the required pacages::
 
-    cd hst_notebooks/notebooks/<whatever-notebook>
+    cd hst_notebooks/notebooks/<notebook-name>
 
 You may want to consider installing your notebooks in a new conda/mamba environment
 to avoid version conflicts with other packages you may have installed, for example::
@@ -112,7 +112,7 @@ can activate the environment, and then update it to use the notebooks requiremen
     pip install -r requirments.txt
  
 If pip reports conflicts, then you might need to follow the above instructions to create
-a new, isolated environment instead of using `stcal`
+a new, isolated environment instead of using `hstcal`
 
 
 Help
