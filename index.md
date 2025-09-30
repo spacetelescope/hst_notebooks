@@ -1,6 +1,7 @@
-![STScI Logo](_static/stsci_header.png)
+![STScI Logo](/_static/stsci_header.png)
 
 # STScI HST Notebook Repository HQ
+
 [![DOI](https://zenodo.org/badge/605151805.svg)](https://zenodo.org/badge/latestdoi/605151805)
 
 Welcome to the STScI HST Notebook Repository
