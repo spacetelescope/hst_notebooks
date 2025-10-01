@@ -1,10 +1,11 @@
-![STScI Logo](/_static/stsci_header.png)
+![STScI Logo](./_static/stsci_header.png)
 
 # STScI HST Notebook Repository HQ
 
 [![DOI](https://zenodo.org/badge/605151805.svg)](https://zenodo.org/badge/latestdoi/605151805)
 
 Welcome to the STScI HST Notebook Repository
+
 This resource provides comprehensive documentation and interactive notebooks created by the Hubble Space Telescope instruments' teams.
 
 ## Interactive Notebooks
@@ -38,14 +39,14 @@ it requires no special tools beyond your web browser.
 See [this website](https://spacetelescope.github.io/hst_notebooks/)
 
 To download and execute the notebooks, we recommend you clone
-the `hst_notebooks <https://github.com/spacetelescope/hst_notebooks>`_
+the `hst_notebooks <https://github.com/spacetelescope/hst_notebooks>`
 repository to your local computer. 
 
 You can also click the "Download ZIP" option for the entire repository listed under the green "Code" button at the top of the repository landing page. You are also able to download individual notebooks, but it is not as straight forward or recommended, so we do not provide details here.
 
 Most notebooks have additional associated files in their folder,
 including a requirements file that lists packages necessary to run the notebooks.
-The packages in the requirements file can be installed using `pip <https://pip.pypa.io/en/stable/>`_ . 
+The packages in the requirements file can be installed using `pip <https://pip.pypa.io/en/stable/>` . 
 
 Any version dependencies are contained in the requirements file in 
 each notebook folder. Please use at least the minimum supported
