@@ -5,25 +5,21 @@ Here are brief descriptions of WFC3 Notebooks for photometry:
 ## WFC3/UVIS Filter Transformations with `stsynphot`
 We present how to calculate photometric transformation coefficients between 
 WFC3/UVIS wide-band filters and any other non-HST filter system for a given 
-object spectrum. This tool uses the latest WFC3 synthetic throughput tables 
-and replaces functionality provided in the 
-[WFC3 Photometric Conversion Tool](https://colortool.stsci.edu/uvis-filter-transformations), 
-which is no longer supported. For more detail on photometric transformations to 
-other systems, see 
+object spectrum, using the latest WFC3 synthetic throughput tables. For more 
+detail on photometric transformations to other systems, see 
 [WFC3 ISR 2014-16](https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2014/WFC3-2014-16.pdf).
 
 ## Flux Unit Conversions with `synphot` and `stsynphot`
 We present a framework for users to convert between multiple magnitude and flux 
-unit systems, and plot the results on the selected spectrum. This tool is based 
-on the NICMOS unit conversion form and replaces the 
-[HST Unit conversion tool](https://colortool.stsci.edu/unit-conversion/), 
-which was developed in 2014. The updated tool incorporates the latest 
-WFC3/UVIS ([WFC3 ISR 2021-04](https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2021/WFC3_ISR_2021-04.pdf)) and 
-WFC3/IR ([WFC3 ISR 2020-10](https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2020/WFC3-ISR-2020-10.pdf)) 
-photometric calibration as well as recent changes in the Vega spectrum of up to ~1.5% 
-([Bohlin et al. 2020](https://iopscience.iop.org/article/10.3847/1538-3881/ab94b4)). 
-See Section 9.5.2 of the [WFC3 Data Handbook](https://hst-docs.stsci.edu/wfc3dhb) 
-for more information.
+unit systems, and plot the results on the selected spectrum. This notebook is 
+based on the NICMOS unit conversion form and replaces a previous web-hosted HST 
+unit conversion tool developed in 2014. The updated tool incorporates the 
+latest WFC3/UVIS ([WFC3 ISR 2021-04](https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2021/WFC3_ISR_2021-04.pdf)) and 
+WFC3/IR ([WFC3 ISR 2024-13](https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2024/WFC3-ISR-2024-13.pdf)) 
+photometric 
+calibration as well as recent changes in the Vega spectrum of up to ~1.5% 
+([Bohlin et al. 2020](https://iopscience.iop.org/article/10.3847/1538-3881/ab94b4)). See Section 9.5.2 of the [WFC3 Data Handbook](https://hst-docs.stsci.edu/wfc3dhb) for more 
+information.
 
 ## Synthetic Photometry Examples for WFC3
 This notebook replaces `pysynphot` examples from the 2018 version of the Data 
