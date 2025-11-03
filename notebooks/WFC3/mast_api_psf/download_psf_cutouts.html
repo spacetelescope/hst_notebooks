@@ -1,0 +1,1220 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Downloading WFC3 and WFPC2 PSF Cutouts from MAST &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css?v=cd6c26fb" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/WFC3/mast_api_psf/download_psf_cutouts';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="prev" title="HST WFC3 Point Spread Function Modeling" href="../point_spread_function/hst_point_spread_function.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="HST Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="HST Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI HST Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">ACS Pixel Area Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html">Focus Diverse ePSFs for ACS/WFC</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_exception_report/exception_report_checks.html">HST Exception Report - Investigate your ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/hst_orbits_ephem/hst_orbits_ephem.html">Getting HST Ephemeris and Related Data for an Observation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ExceptionReport/ExceptionReport.html">What to do when you get an Exception Report for COS</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Improving Astrometry Using Alternate WCS Solutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an Absolute Reference Catalog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/use_ds9_regions_in_tweakreg/use_ds9_regions_in_tweakreg.html">TWEAKREG Tips - Using DS9 Regions for Source Inclusion/Exclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_mosaics/align_mosaics.html">Aligning HST Mosaics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/sky_matching/sky_matching.html">Sky Matching for HST Mosaics <a id="top"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling new WFPC2 FLT data products with chip-normalization   </a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HASP</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/Setup/Setup.html">Installing the Hubble Advanced Spectral Products Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/CoaddTutorial/CoaddTutorial.html">Inputting User Data using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/FluxScaleTutorial/FluxScaleTutorial.html">Scaling Flux while using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/DataDiagnostic/DataDiagnostics.html">HASP Data Diagnostic Notebook</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/COSLifetimePositions/COSLifetimePositions.html">Combining COS Data from Multiple Lifetime Positions and Central Wavelengths</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/README.html">STIS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/low_count_uncertainties/Low_Count_Uncertainties.html">Low Count Uncertainties in STIS <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/contrast_sensitivity/STIS_Coronagraphic_Observation_Feasibility.html">STIS Coronagraphic Observation Feasibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">WFC3 Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../general_tools.html">General Tools</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uvis_g280_transit/G280_Exoplanet_Transits.html">Analyzing WFC3/UVIS G280 Exoplanet Transit Observations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ir_tvb.html">WFC3/IR Time Variable Background (TVB)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../photometry.html">Photometry</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../point_spread_function.html">Point Spread Function (PSF)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../point_spread_function/hst_point_spread_function.html">HST WFC3 Point Spread Function Modeling   </a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Downloading WFC3 and WFPC2 PSF Cutouts from MAST</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/WFC3/mast_api_psf/download_psf_cutouts.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/WFC3/mast_api_psf/download_psf_cutouts.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/WFC3/mast_api_psf/download_psf_cutouts.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Downloading WFC3 and WFPC2 PSF Cutouts from MAST</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">1. Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query-the-wfc3-and-wfpc2-psf-databases">2. Query the WFC3 and WFPC2 PSF Databases</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reconstruct-datauris">3. Reconstruct dataURIs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-and-extract-cutouts-using-datauris">4. Download and extract cutouts using dataURIs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#single-file">4.1 Single file</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-files-bundle">4.2 Multiple files: bundle</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-files-pooling">4.3 Multiple files: pooling</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extracting-cutouts-using-dataurls">5. Extracting cutouts using dataURLs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-and-plot-cutouts">6. Load and plot cutouts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">7. Conclusions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p><a id="top"></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="downloading-wfc3-and-wfpc2-psf-cutouts-from-mast">
+<h1>Downloading WFC3 and WFPC2 PSF Cutouts from MAST<a class="headerlink" href="#downloading-wfc3-and-wfpc2-psf-cutouts-from-mast" title="Link to this heading">#</a></h1>
+<hr>
+## Learning Goals
+This notebook demonstrates how to download PSF cutouts (i.e. "realizations" of the PSF) from the WFC3 and WFPC2 PSF Databases on the MAST Portal using the MAST API. By the end of this tutorial, you will:
+<ul class="simple">
+<li><p>Query the database for source metadata.</p></li>
+<li><p>Download source cutouts from reconstructed dataURIs.</p></li>
+<li><p>Extract source cutouts from dataURLs.</p></li>
+</ul>
+<p>Acronyms:</p>
+<ul class="simple">
+<li><p>Hubble Space Telescope (HST)</p></li>
+<li><p>Wide Field Camera 3 (WFC3)</p></li>
+<li><p>Wide Field and Planetary Camera 2 (WFPC2)</p></li>
+<li><p>WFC3 Ultraviolet and VISable detector (WFC3/UVIS or UVIS)</p></li>
+<li><p>WFC3 InfraRed detector (WFC3/IR or IR)</p></li>
+<li><p>Point Spread Function (PSF)</p></li>
+<li><p>Mikulski Archive for Space Telescopes (MAST)</p></li>
+<li><p>Application Programming Interface (API)</p></li>
+</ul>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="#intro"><span class="xref myst">Introduction</span></a> <br>
+<a class="reference internal" href="#import"><span class="xref myst">1. Imports</span></a> <br>
+<a class="reference internal" href="#query"><span class="xref myst">2. Query the WFC3 and WFPC2 PSF Databases</span></a> <br>
+<a class="reference internal" href="#reconstruct"><span class="xref myst">3. Reconstruct dataURIs</span></a> <br>
+<a class="reference internal" href="#download"><span class="xref myst">4. Download and extract cutouts using dataURIs</span></a> <br></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#single"><span class="xref myst">4.1 Single file</span></a> <br></p></li>
+<li><p><a class="reference internal" href="#bundle"><span class="xref myst">4.2 Multiple files: bundle</span></a> <br></p></li>
+<li><p><a class="reference internal" href="#pool"><span class="xref myst">4.3 Multiple files: pooling</span></a> <br></p></li>
+</ul>
+<p><a class="reference internal" href="#url"><span class="xref myst">5. Extracting cutouts using dataURLs</span></a> <br>
+<a class="reference internal" href="#plot"><span class="xref myst">6. Load and plot cutouts</span></a> <br>
+<a class="reference internal" href="#conclusions"><span class="xref myst">7. Conclusions</span></a> <br>
+<a class="reference internal" href="#add"><span class="xref myst">Additional Resources</span></a> <br>
+<a class="reference internal" href="#about"><span class="xref myst">About this Notebook</span></a> <br>
+<a class="reference internal" href="#cite"><span class="xref myst">Citations</span></a> <br></p>
+<p><a id="intro"></a></p>
+</section>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>The WFC3 and WFPC2 PSF Databases are three databases (WFC3/UVIS, WFC3/IR, and WFPC2) of sources measured in every external observation from the instruments, excluding proprietary data. All sources were measured using <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2022/WFC3-ISR-2022-05.pdf">HST1PASS</a>, a Fortran program that measures point sources using HST PSF models and one-pass photometry. These point sources are “realizations” of the PSF, meaning they can be used to construct detailed PSF models. <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2021/ISR_2021_12.pdf">WFC3 ISR 2021-12</a> (Dauphin et al. 2021) provides a detailed overview of the database pipeline and a statistical analysis of the databases up to 2021. As of August 2024, the databases have over 83.5 million sources, including both unsaturated and saturated sources. The databases are summarized below:</p>
+<ul class="simple">
+<li><p>WFC3/UVIS: 33M sources (30M unsaturated and 3M saturated)</p></li>
+<li><p>WFC3/IR: 25.5M sources (25.3M unsaturated and 0.2M saturated)</p></li>
+<li><p>WFPC2: 25M sources (15M unsaturated and 10M saturated)</p></li>
+</ul>
+<p>The databases are available on the <a class="reference external" href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST Portal</a> under the collections “WFC3 PSF” (with wavebands “UVIS” and “IR”) and “WFPC2 PSF”. By clicking “Advanced Search”, the databases can be filtered and queried by various parameters, such as source position and flux. All of the searchable field options are described <a class="reference external" href="https://mast.stsci.edu/api/v0/_w_f_c3__p_s_ffields.html">here</a>. After completing the query, the sources’ measurables (i.e. metadata) and cutouts centered on the source can be retrieved and downloaded, using either raw or calibrated data.</p>
+<p>Although the MAST Portal is extremely effective for a variety of purposes, we introduce a programmatic way of downloading metadata and cutouts, which can be useful for downstream tasks and increasing data accessibility.</p>
+<p><a id="import"></a></p>
+</section>
+<section id="imports">
+<h2>1. Imports<a class="headerlink" href="#imports" title="Link to this heading">#</a></h2>
+<p>This notebook assumes you have installed the required libraries as described <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/blob/main/notebooks/WFC3/mast_api_psf/requirements.txt">here</a>.</p>
+<p>We import:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">glob</span></code> for querying directories</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">os</span></code> for handling files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tarfile</span></code> for extracting the contents of a .tar.gz file</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> for handling arrays</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> for plotting data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy.io</span> <span class="pre">fits</span></code> for accessing FITS files</p></li>
+</ul>
+<p>We also import a custom module <code class="docutils literal notranslate"><span class="pre">mast_api_psf.py</span></code> for querying sources and downloading cutouts.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tarfile</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">mast_api_psf</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="query"></a></p>
+</section>
+<section id="query-the-wfc3-and-wfpc2-psf-databases">
+<h2>2. Query the WFC3 and WFPC2 PSF Databases<a class="headerlink" href="#query-the-wfc3-and-wfpc2-psf-databases" title="Link to this heading">#</a></h2>
+<p>First, we query a database for source metadata. For this notebook, we use WFC3/UVIS (i.e. <code class="docutils literal notranslate"><span class="pre">UVIS</span></code>) as an example. The same syntax and functionality also works for WFC3/IR and WFPC2 (i.e. <code class="docutils literal notranslate"><span class="pre">IR</span></code> and <code class="docutils literal notranslate"><span class="pre">WFPC2</span></code>, respectively).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">detector</span> <span class="o">=</span> <span class="s1">&#39;UVIS&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s retrieve a small subset of sources by filtering our query. We retrieve all unsaturated sources centered on pixels between 100 to 102 on both the x and y coordinates of the detector. We format our min and max values using <code class="docutils literal notranslate"><span class="pre">mast_api_psf.set_min_max</span></code> from <a class="reference external" href="https://mast.stsci.edu/api/v0/pyex.html#set_min_max">Using the MAST API with Python</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">center_min_max</span> <span class="o">=</span> <span class="n">mast_api_psf</span><span class="o">.</span><span class="n">set_min_max</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">102</span><span class="p">)</span>
+<span class="n">center_min_max</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[{&#39;min&#39;: 100, &#39;max&#39;: 102}]
+</pre></div>
+</div>
+</div>
+</div>
+<p>We define our parameters to be filtered. As a reminder, all of the columns that can be filtered are described <a class="reference external" href="https://mast.stsci.edu/api/v0/_w_f_c3__p_s_ffields.html">here</a>.</p>
+<p><strong>Note: there are a few column differences between the databases.</strong></p>
+<ul class="simple">
+<li><p>the column corresponding to filters (<code class="docutils literal notranslate"><span class="pre">filter</span></code>) in the WFC3 databases is <code class="docutils literal notranslate"><span class="pre">filter_1</span></code> in the WFPC2 database. For WFPC2, our module corrects <code class="docutils literal notranslate"><span class="pre">filter</span></code> to <code class="docutils literal notranslate"><span class="pre">filter_1</span></code> in case the former was used by accident.</p></li>
+<li><p>the secondary filter column <code class="docutils literal notranslate"><span class="pre">filter_2</span></code> is only available for WFPC2. For special WFPC2 observations, the user can utilize two filters at once as long as both filters are on different wheels. The most common case is using a standard optical filter with a polarizer.</p></li>
+<li><p>the proposal type column <code class="docutils literal notranslate"><span class="pre">proptype</span></code> is only available for WFC3.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;psf_x_center&#39;</span><span class="p">:</span> <span class="n">center_min_max</span><span class="p">,</span>
+    <span class="s1">&#39;psf_y_center&#39;</span><span class="p">:</span> <span class="n">center_min_max</span><span class="p">,</span>
+    <span class="s1">&#39;n_sat_pixels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>For reference, <code class="docutils literal notranslate"><span class="pre">n_sat_pixels</span></code> is the number of saturated pixels the source contains. 0 indicates no saturated pixels (i.e. unsaturated). Any number greater than 0 indicates a saturated source with that many saturated pixels.</p>
+<p>We format our filters using <code class="docutils literal notranslate"><span class="pre">mast_api_psf.set_filters</span></code> from <a class="reference external" href="https://mast.stsci.edu/api/v0/pyex.html#set_filters">Using the MAST API with Python</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filts</span> <span class="o">=</span> <span class="n">mast_api_psf</span><span class="o">.</span><span class="n">set_filters</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+<span class="n">filts</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[{&#39;paramName&#39;: &#39;psf_x_center&#39;, &#39;values&#39;: [{&#39;min&#39;: 100, &#39;max&#39;: 102}]},
+ {&#39;paramName&#39;: &#39;psf_y_center&#39;, &#39;values&#39;: [{&#39;min&#39;: 100, &#39;max&#39;: 102}]},
+ {&#39;paramName&#39;: &#39;n_sat_pixels&#39;, &#39;values&#39;: [&#39;0&#39;]}]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we query MAST by wrapping their API to retrieve our filtered sources using <code class="docutils literal notranslate"><span class="pre">mast_api_psf.mast_query_psf_database</span></code>. By default, this function returns all columns for the query. The columns can be changed using the parameter <code class="docutils literal notranslate"><span class="pre">columns</span></code>, which is a list of the columns to be returned. Here, we use the minimum number of columns necessary to reconstruct dataURIs.</p>
+<p><strong>Warning: the time it takes to query MAST depends on connectivity, the number of sources to retrieve, and the number of columns returned.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;rootname&#39;</span><span class="p">,</span> <span class="s1">&#39;filter&#39;</span><span class="p">,</span> <span class="s1">&#39;x_cal&#39;</span><span class="p">,</span> <span class="s1">&#39;y_cal&#39;</span><span class="p">,</span> <span class="s1">&#39;x_raw&#39;</span><span class="p">,</span> <span class="s1">&#39;y_raw&#39;</span><span class="p">,</span> <span class="s1">&#39;chip&#39;</span><span class="p">,</span> <span class="s1">&#39;qfit&#39;</span><span class="p">,</span> <span class="s1">&#39;subarray&#39;</span><span class="p">]</span>
+<span class="n">obs</span> <span class="o">=</span> <span class="n">mast_api_psf</span><span class="o">.</span><span class="n">mast_query_psf_database</span><span class="p">(</span><span class="n">detector</span><span class="o">=</span><span class="n">detector</span><span class="p">,</span> <span class="n">filts</span><span class="o">=</span><span class="n">filts</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of sources queried: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of sources queried: 6
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="reconstruct"></a></p>
+</section>
+<section id="reconstruct-datauris">
+<h2>3. Reconstruct dataURIs<a class="headerlink" href="#reconstruct-datauris" title="Link to this heading">#</a></h2>
+<p>Now that we retrieved our queried sources, we create dataURIs, or paths to their source on the MAST server, to download their respective cutouts using <code class="docutils literal notranslate"><span class="pre">mast_api_psf.make_dataURIs</span></code> and the metadata.</p>
+<p>We support two data types for WFPC2 (raw, calibrated), and three data types for WFC3 (raw, calibrated, charge transfer efficiency (CTE) corrected). These data types are indicated by unique file suffixes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">raw</span></code> for raw WFC3 data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">d0m</span></code> for raw WFPC2 data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flt</span></code> for calibrated WFC3 data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">c0m</span></code> for calibrated WFPC2 data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flc</span></code> for calibrated, CTE corrected WFC3/UVIS data (a similar option is not available for WFC3/IR or WFPC2)</p></li>
+</ul>
+<p>Here, we reconstruct dataURIs for just calibrated (<code class="docutils literal notranslate"><span class="pre">flt</span></code>) data. By default, this function calls for 51x51 and 101x101 cutouts for unsaturated and saturated sources, respectively. The sizes can be changed within the function using the parameters <code class="docutils literal notranslate"><span class="pre">unsat_size</span></code> and <code class="docutils literal notranslate"><span class="pre">sat_size</span></code> as integers (i.e. <code class="docutils literal notranslate"><span class="pre">unsat_size=51,</span> <span class="pre">sat_size=101</span></code>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file_suffix</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;flt&#39;</span><span class="p">]</span>
+<span class="n">dataURIs</span> <span class="o">=</span> <span class="n">mast_api_psf</span><span class="o">.</span><span class="n">make_dataURIs</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">detector</span><span class="o">=</span><span class="n">detector</span><span class="p">,</span> <span class="n">file_suffix</span><span class="o">=</span><span class="n">file_suffix</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/6 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 6/6 [00:00&lt;00:00, 5849.80it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="download"></a></p>
+</section>
+<section id="download-and-extract-cutouts-using-datauris">
+<h2>4. Download and extract cutouts using dataURIs<a class="headerlink" href="#download-and-extract-cutouts-using-datauris" title="Link to this heading">#</a></h2>
+<p>With the dataURIs, we download the respective cutouts using three different functions as derivatives from <a class="reference external" href="https://mast.stsci.edu/api/v0/pyex.html#download_req">Using the MAST API with Python</a>.</p>
+<p><strong>Warning: the time it takes to download cutouts from MAST depends on connectivity and the number of sources to retrieve.</strong></p>
+<p><a id="single"></a></p>
+<section id="single-file">
+<h3>4.1 Single file<a class="headerlink" href="#single-file" title="Link to this heading">#</a></h3>
+<p>First, we download a single cutout using <code class="docutils literal notranslate"><span class="pre">mast_api_psf.download_request_file</span></code>, which downloads to the current working directory.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataURI</span> <span class="o">=</span> <span class="n">dataURIs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">dataURI</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">filename_cutout</span> <span class="o">=</span> <span class="n">mast_api_psf</span><span class="o">.</span><span class="n">download_request_file</span><span class="p">([</span><span class="n">dataURI</span><span class="p">,</span> <span class="n">filename</span><span class="p">])</span>
+<span class="n">filename_cutout</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;ibc302j3q_16057258_F336W_flt_cutout.fits&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="bundle"></a></p>
+</section>
+<section id="multiple-files-bundle">
+<h3>4.2 Multiple files: bundle<a class="headerlink" href="#multiple-files-bundle" title="Link to this heading">#</a></h3>
+<p>Next, we download multiple cutouts using <code class="docutils literal notranslate"><span class="pre">mast_api_psf.download_request_bundle</span></code>, which downloads as a <code class="docutils literal notranslate"><span class="pre">.tar.gz</span></code> file that can later be extracted. We recommend using this to download hundreds of cutouts. A standard laptop and network bandwith can download a bundle of 1000 cutouts in ~30 seconds.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename_bundle</span> <span class="o">=</span> <span class="n">mast_api_psf</span><span class="o">.</span><span class="n">download_request_bundle</span><span class="p">(</span><span class="n">dataURIs</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mastDownload.tar.gz&#39;</span><span class="p">)</span>
+<span class="n">filename_bundle</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;mastDownload.tar.gz&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">.tar.gz</span></code> file downloaded, we safely extract the cutouts.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename_bundle</span><span class="p">,</span> <span class="s1">&#39;r:gz&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar</span><span class="p">:</span>
+    <span class="n">path_mast</span> <span class="o">=</span> <span class="n">tar</span><span class="o">.</span><span class="n">getnames</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Path to MAST PSF Cutouts: </span><span class="si">{</span><span class="n">path_mast</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">tar</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Path to MAST PSF Cutouts: MAST_2025-09-17T2201
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="pool"></a></p>
+</section>
+<section id="multiple-files-pooling">
+<h3>4.3 Multiple files: pooling<a class="headerlink" href="#multiple-files-pooling" title="Link to this heading">#</a></h3>
+<p>Lastly, we download multiple cutouts using <code class="docutils literal notranslate"><span class="pre">mast_api_psf.download_request_pool</span></code>, which downloads cutouts to a new directory indicated by the date, similar to the directory name of the extracted <code class="docutils literal notranslate"><span class="pre">.tar.gz</span></code> file. Although this method is ~1.5 times slower than bundle, we recommend using this to download thousands of cutouts as the progress bar can be helpful keeping track of how much longer the downloads will take. This function utilizes all available CPUs by default. Changing the parameter <code class="docutils literal notranslate"><span class="pre">cpu_count</span></code> sets the number of CPUs.</p>
+<p><strong>Warning: Interrupting the kernel will not kill the multiprocessing and will keep downloading cutouts. To kill the multiprocessing, restart the kernel.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mast_api_psf</span><span class="o">.</span><span class="n">download_request_pool</span><span class="p">(</span><span class="n">dataURIs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/6 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|█▋        | 1/6 [00:00&lt;00:01,  3.05it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 83%|████████▎ | 5/6 [00:00&lt;00:00,  8.82it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 6/6 [00:00&lt;00:00,  9.49it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;MAST_2025-09-17T2201/WFC3PSF&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="url"></a></p>
+</section>
+</section>
+<section id="extracting-cutouts-using-dataurls">
+<h2>5. Extracting cutouts using dataURLs<a class="headerlink" href="#extracting-cutouts-using-dataurls" title="Link to this heading">#</a></h2>
+<p>If downloading the cutouts are unnecessary, we can also extract the cutouts directly using dataURLs, or links to their sources on the <a class="reference external" href="https://archive.stsci.edu/">MAST website</a>.</p>
+<p>First, we convert the dataURIs to dataURLs using <code class="docutils literal notranslate"><span class="pre">mast_api_psf.convert_dataURIs_to_dataURLs</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataURLs</span> <span class="o">=</span> <span class="n">mast_api_psf</span><span class="o">.</span><span class="n">convert_dataURIs_to_dataURLs</span><span class="p">(</span><span class="n">dataURIs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/6 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 6/6 [00:00&lt;00:00, 83055.52it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then, we extract a single cutout using <code class="docutils literal notranslate"><span class="pre">fits.getdata</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataURL</span> <span class="o">=</span> <span class="n">dataURLs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">cutout_URL</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">dataURL</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we extract all of the cutouts from the dataURLs using <code class="docutils literal notranslate"><span class="pre">mast_api_psf.extract_cutouts_pool</span></code>. Similarly to <code class="docutils literal notranslate"><span class="pre">mast_api_psf.download_request_pool</span></code>, this function performs multiprocessing to retrieve all the cutouts, and has the same parameter <code class="docutils literal notranslate"><span class="pre">cpu_count</span></code> to set the number of CPUs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cutouts</span> <span class="o">=</span> <span class="n">mast_api_psf</span><span class="o">.</span><span class="n">extract_cutouts_pool</span><span class="p">(</span><span class="n">dataURLs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of cutouts: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cutouts</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/6 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|███▎      | 2/6 [00:00&lt;00:00,  5.27it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 6/6 [00:00&lt;00:00, 10.16it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 6/6 [00:00&lt;00:00,  9.29it/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of cutouts: 6
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="plot"></a></p>
+</section>
+<section id="load-and-plot-cutouts">
+<h2>6. Load and plot cutouts<a class="headerlink" href="#load-and-plot-cutouts" title="Link to this heading">#</a></h2>
+<p>Since the cutouts have been downloaded, we load them into the notebook. For this example, we only load the single cutout downloaded in the first example.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cutout_URI</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">filename_cutout</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we plot the cutout in log scaling.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename_cutout</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cutout_URI</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2750/3467526765.py:3: RuntimeWarning: invalid value encountered in log10
+  plt.imshow(np.log10(cutout_URI), origin=&#39;lower&#39;, cmap=&#39;gray&#39;)
+</pre></div>
+</div>
+<img alt="../../../_images/6f72692779e2ae60a055be4da59a3d5219d5b0bd78774b6b8551e503ed07f579.png" src="../../../_images/6f72692779e2ae60a055be4da59a3d5219d5b0bd78774b6b8551e503ed07f579.png" />
+</div>
+</div>
+<p>For a final check, we show that the dataURI cutout is the same as the dataURL cutout.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">cutout_URI</span> <span class="o">!=</span> <span class="n">cutout_URL</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;There are </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s1"> different pixels.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>There are 0 different pixels.
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="conclusions"></a></p>
+</section>
+<section id="conclusions">
+<h2>7. Conclusions<a class="headerlink" href="#conclusions" title="Link to this heading">#</a></h2>
+<p>Thank you for walking through this notebook. Now, you should be familiar with:</p>
+<ul class="simple">
+<li><p>Querying the WFC3 and WFPC2 PSF Databases for source metadata.</p></li>
+<li><p>Reconstructing dataURIs and dataURLs to open source cutouts.</p></li>
+<li><p>Downloading, extracting, loading, and plotting the cutouts.</p></li>
+</ul>
+<p><strong>Congratulations, you have completed the notebook.</strong></p>
+<p><a id="add"></a></p>
+</section>
+<section id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Link to this heading">#</a></h2>
+<p>Be sure to check out our <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/tree/main/notebooks/WFC3/point_spread_function">complimentary notebook</a> on HST WFC3 PSF Modeling for a variety of science use cases (Revalski 2024).</p>
+<p>Below are some additional resources that may be helpful. Please send any questions through the <a class="reference external" href="https://stsci.service-now.com/hst">HST Help Desk</a> or <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/issues">open a ticket on HST Notebooks</a>.</p>
+<p><strong>WFC3</strong></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3">WFC3 Website</a></p>
+<ul>
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3/data-analysis/psf">WFC3 PSF Website</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb">WFC3 Instrument Handbook</a></p>
+<ul>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb/chapter-6-uvis-imaging-with-wfc3/6-6-uvis-optical-performance">Chapter 6.6 UVIS Optical Performance</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb/chapter-7-ir-imaging-with-wfc3/7-6-ir-optical-performance">Chapter 7.6 IR Optical Performance</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb">WFC3 Data Handbook</a></p></li>
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs">WFC3 Instrument Science Reports</a></p>
+<ul>
+<li><p><a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2022/WFC3-ISR-2022-05.pdf">WFC3 ISR 2022-05</a>: One-Pass HST Photometry with hst1pass (Anderson 2022)</p></li>
+<li><p><a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2021/ISR_2021_12.pdf">WFC3 ISR 2021-12</a>: The WFPC2 and WFC3 PSF Database (Dauphin et. al 2021)</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>WFPC2</strong></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/legacy/wfpc2/_documents/wfpc2_ihb.pdf">WFPC2 Instrument Handbook</a></p>
+<ul>
+<li><p>see Chapter 5: Point Spread Function for documentation on WFPC2’s PSFs</p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/legacy/wfpc2/_documents/wfpc2_dhb.pdf">WFPC2 Data Handbook</a></p></li>
+</ul>
+<p><strong>MAST</strong></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://archive.stsci.edu/">MAST Website</a></p></li>
+<li><p><a class="reference external" href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST Portal</a></p>
+<ul>
+<li><p><a class="reference external" href="https://mast.stsci.edu/api/v0/_w_f_c3__p_s_ffields.html">MAST WFC3/WFPC2 PSF Field Descriptions</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://mast.stsci.edu/api/v0/">MAST API</a></p>
+<ul>
+<li><p><a class="reference external" href="https://mast.stsci.edu/api/v0/_services.html">Services</a> (Examples exist for WFC3/UVIS and WFC3/IR databases)</p></li>
+<li><p><a class="reference external" href="https://mast.stsci.edu/api/v0/pyex.html">Python Examples</a> (Examples exist for WFC3/UVIS and WFC3/IR databases)</p></li>
+<li><p>As of August 2024, the MAST API for WFPC2 PSFs has not been documented, but the <code class="docutils literal notranslate"><span class="pre">service</span></code> is called <code class="docutils literal notranslate"><span class="pre">Mast.Catalogs.Filtered.Wfpc2Psf.Uvis</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<p><a id="about"></a></p>
+</section>
+<section id="about-this-notebook">
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
+<p><strong>Author:</strong> Fred Dauphin, WFC3 Instrument</p>
+<p><strong>Created On:</strong> 2024-09-11</p>
+<p><strong>Updated On:</strong> 2024-09-11</p>
+<p><strong>Source:</strong> <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks">HST Notebooks</a></p>
+<p><a id="cite"></a></p>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, or <code class="docutils literal notranslate"><span class="pre">astroquery</span></code> for published research, please cite the
+authors. Follow these links for more information about citing the libraries below:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/users/project/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://github.com/astropy/astroquery/blob/main/astroquery/CITATION">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
+</ul>
+<hr>
+<p><a class="reference internal" href="#top"><span class="xref myst">Top of Page</span></a>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/WFC3/mast_api_psf"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../point_spread_function/hst_point_spread_function.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">HST WFC3 Point Spread Function Modeling   </p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">1. Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query-the-wfc3-and-wfpc2-psf-databases">2. Query the WFC3 and WFPC2 PSF Databases</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reconstruct-datauris">3. Reconstruct dataURIs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-and-extract-cutouts-using-datauris">4. Download and extract cutouts using dataURIs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#single-file">4.1 Single file</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-files-bundle">4.2 Multiple files: bundle</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-files-pooling">4.3 Multiple files: pooling</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extracting-cutouts-using-dataurls">5. Extracting cutouts using dataURLs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-and-plot-cutouts">6. Load and plot cutouts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">7. Conclusions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

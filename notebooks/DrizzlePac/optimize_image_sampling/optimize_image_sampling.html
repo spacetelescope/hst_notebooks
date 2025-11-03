@@ -1,0 +1,1475 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Optimizing the Image Sampling &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css?v=cd6c26fb" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/DrizzlePac/optimize_image_sampling/optimize_image_sampling';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Aligning HST Mosaics" href="../align_mosaics/align_mosaics.html" />
+    <link rel="prev" title="TWEAKREG Tips - Using DS9 Regions for Source Inclusion/Exclusion" href="../use_ds9_regions_in_tweakreg/use_ds9_regions_in_tweakreg.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="HST Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="HST Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI HST Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">ACS Pixel Area Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html">Focus Diverse ePSFs for ACS/WFC</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_exception_report/exception_report_checks.html">HST Exception Report - Investigate your ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/hst_orbits_ephem/hst_orbits_ephem.html">Getting HST Ephemeris and Related Data for an Observation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ExceptionReport/ExceptionReport.html">What to do when you get an Exception Report for COS</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">DrizzlePac Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Improving Astrometry Using Alternate WCS Solutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../align_to_catalogs/align_to_catalogs.html">Aligning HST images to an Absolute Reference Catalog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use_ds9_regions_in_tweakreg/use_ds9_regions_in_tweakreg.html">TWEAKREG Tips - Using DS9 Regions for Source Inclusion/Exclusion</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../align_mosaics/align_mosaics.html">Aligning HST Mosaics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sky_matching/sky_matching.html">Sky Matching for HST Mosaics <a id="top"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drizzle_wfpc2/drizzle_wfpc2.html">Drizzling new WFPC2 FLT data products with chip-normalization   </a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HASP</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/Setup/Setup.html">Installing the Hubble Advanced Spectral Products Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/CoaddTutorial/CoaddTutorial.html">Inputting User Data using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/FluxScaleTutorial/FluxScaleTutorial.html">Scaling Flux while using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/DataDiagnostic/DataDiagnostics.html">HASP Data Diagnostic Notebook</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/COSLifetimePositions/COSLifetimePositions.html">Combining COS Data from Multiple Lifetime Positions and Central Wavelengths</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/README.html">STIS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/low_count_uncertainties/Low_Count_Uncertainties.html">Low Count Uncertainties in STIS <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/contrast_sensitivity/STIS_Coronagraphic_Observation_Feasibility.html">STIS Coronagraphic Observation Feasibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../WFC3/README.html">WFC3 Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/general_tools.html">General Tools</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_g280_transit/G280_Exoplanet_Transits.html">Analyzing WFC3/UVIS G280 Exoplanet Transit Observations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/ir_tvb.html">WFC3/IR Time Variable Background (TVB)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/photometry.html">Photometry</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/point_spread_function.html">Point Spread Function (PSF)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/point_spread_function/hst_point_spread_function.html">HST WFC3 Point Spread Function Modeling   </a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/mast_api_psf/download_psf_cutouts.html">Downloading WFC3 and WFPC2 PSF Cutouts from MAST</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/DrizzlePac/optimize_image_sampling/optimize_image_sampling.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/DrizzlePac/optimize_image_sampling/optimize_image_sampling.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/DrizzlePac/optimize_image_sampling/optimize_image_sampling.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Optimizing the Image Sampling</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-packages">Import packages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-observations-with-astroquery">1. Download the Observations with <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-image-header-data">2. Check image header data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-useful-keywords">2.1 Inspect useful keywords</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-dither-pattern">2.2 Inspect the dither pattern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-mast-alignment">2.3 Inspect the MAST alignment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-the-wcs-solution">2.4 Reset the WCS solution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#drizzling">3. Drizzling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-the-results">4. Inspecting the Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-final-pixfrac-parameter">5. Optimizing the <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> parameter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#final-thoughts">6. Final thoughts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="optimizing-the-image-sampling">
+<h1>Optimizing the Image Sampling<a class="headerlink" href="#optimizing-the-image-sampling" title="Link to this heading">#</a></h1>
+<p><a id="top"></a></p>
+<div class="alert alert-block alert-warning" style="color:black" > <b> This notebook requires creating and activating a virtual environment using the requirements file in this notebook's repository. Please also review the README file before using the notebook.</b> <br> </div>
+<a id="toc"></a>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="#intro"><span class="xref myst">Introduction</span></a> <br>
+<a class="reference internal" href="#imports"><span class="xref myst">Import Packages</span></a><br></p>
+<p><a class="reference internal" href="#retrieve"><span class="xref myst">1. Retrieve Observations</span></a> <br>
+<a class="reference internal" href="#inspection"><span class="xref myst">2. Check image header data</span></a> <br>
+    <a class="reference internal" href="#inspect_keywords"><span class="xref myst">2.1 Inspect useful keywords</span></a><br>
+    <a class="reference internal" href="#inspect_dither"><span class="xref myst">2.2 Inspect the dither pattern</span></a><br>
+    <a class="reference internal" href="#inspect_wcs"><span class="xref myst">2.3 Inspect the MAST alignment</span></a><br>
+    <a class="reference internal" href="#reset_wcs"><span class="xref myst">2.4 Reset the WCS solution</span></a><br>
+<a class="reference internal" href="#drizzle"><span class="xref myst">3. Drizzling</span></a> <br>
+<a class="reference internal" href="#results"><span class="xref myst">4. Inspecting the Results</span></a> <br>
+<a class="reference internal" href="#pixfrac"><span class="xref myst">5. Optimizing the final_pixfrac parameter</span></a> <br>
+<a class="reference internal" href="#final"><span class="xref myst">6. Final Thoughts</span></a> <br></p>
+<p><a class="reference internal" href="#about"><span class="xref myst">About this notebook</span></a><br>
+<a class="reference internal" href="#add"><span class="xref myst">Additional resources</span></a><br></p>
+<p><a id="intro"></a></p>
+</section>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="#toc"><span class="xref myst">Table of Contents</span></a></p>
+<p>This example was written to help users better understand the subtleties in improving image sampling for dithered data. One of the powers of the <em>drizzling</em> algorithm is that, given properly dithered images, it can restore much of the information lost due to undersampled images (<a class="reference external" href="http://iopscience.iop.org/article/10.1086/338393/pdf">Fruchter and Hook, 2002</a>).</p>
+<p>This work is based on <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr1501.pdf">ISR ACS 2015-01</a>, which contains a more detailed discussion than presented here.</p>
+<p>In practice, this requires the use of <code class="docutils literal notranslate"><span class="pre">Astrodrizzle</span></code> task within the <code class="docutils literal notranslate"><span class="pre">Drizzlepac</span></code> package. This example will:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>- Run astrodrizzle several times using different parameter settings for &#39;final_pixfrac&#39; and &#39;final_scale&#39;
+- Compare and evaluate results of using different &#39;final_pixfrac&#39; and &#39;final_scale&#39; values
+</pre></div>
+</div>
+<p><a id="imports"></a></p>
+</section>
+<section id="import-packages">
+<h2>Import packages<a class="headerlink" href="#import-packages" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="#toc"><span class="xref myst">Table of Contents</span></a></p>
+<p>The following Python packages are required to run the Jupyter Notebook:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/os.html"><strong>os</strong></a> - change and make directories</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/glob.html"><strong>glob</strong></a> - gather lists of filenames</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/shutil.html#module-shutil"><strong>shutil</strong></a> - remove directories and files</p></li>
+<li><p><a class="reference external" href="https://numpy.org"><strong>numpy</strong></a> - math and array functions</p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/tutorials/pyplot.html"><strong>matplotlib</strong></a> - make figures and graphics</p></li>
+<li><p><a class="reference external" href="https://www.astropy.org"><strong>astropy</strong></a> - file handling, tables, units, WCS, statistics</p></li>
+<li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/"><strong>astroquery</strong></a> - download data and query databases</p></li>
+<li><p><a class="reference external" href="https://www.stsci.edu/scientific-community/software/drizzlepac"><strong>drizzlepac</strong></a> - align and combine HST images</p></li>
+<li><p>[<strong>stwcs</strong>] - tools for manipulating headerlets</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_output</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.mast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogStretch</span><span class="p">,</span> <span class="n">ImageNormalize</span><span class="p">,</span> <span class="n">LinearStretch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy</span><span class="w"> </span><span class="kn">import</span> <span class="n">wcs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">stwcs.wcsutil</span><span class="w"> </span><span class="kn">import</span> <span class="n">headerlet</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">drizzlepac</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39; # Greatly improves the resolution of figures rendered in notebooks.
+
+<span class="c1"># Set the locations of reference files.  and retrieve the MDRIZTAB recommended drizzle parameters.</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;iref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache/references/hst/wfc3/&#39;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;jref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache/references/hst/acs/&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following task in the stsci.skypac package can be run with TEAL:
+                                    skymatch                                    
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following tasks in the drizzlepac package can be run with TEAL:
+    astrodrizzle       config_testbed      imagefindpars           mapreg       
+       photeq            pixreplace           pixtopix            pixtosky      
+  refimagefindpars       resetbits          runastrodriz          skytopix      
+     tweakback            tweakreg           updatenpol
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="download"></a></p>
+</section>
+<section id="download-the-observations-with-astroquery">
+<h2>1. Download the Observations with <code class="docutils literal notranslate"><span class="pre">astroquery</span></code><a class="headerlink" href="#download-the-observations-with-astroquery" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="#toc"><span class="xref myst">Table of Contents</span></a></p>
+<hr class="docutils" />
+<p>MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/latest/mast/mast_obsquery.html#observation-criteria-queries"> <code class="docutils literal notranslate"><span class="pre">query_criteria</span></code></a>, where we specify: <br></p>
+<p>    –&gt; obs_id, proposal_id, and filters</p>
+<p>MAST data products may be downloaded by using <a href="https://astroquery.readthedocs.io/en/latest/mast/mast_obsquery.html#downloading-data"> <code class="docutils literal notranslate"><span class="pre">download_products</span></code></a>, where we specify:<br></p>
+<p>    –&gt; products = calibrated (FLT, FLC) or drizzled (DRZ, DRC) files</p>
+<p>    –&gt; type = standard products (CALxxx) or advanced products (HAP-SVM)</p>
+<hr class="docutils" />
+<p>Observations of the spiral galaxy NGC 3370 (Program 11570) were acquired using the WFC3/IR F160W imaging filter. The <code class="docutils literal notranslate"><span class="pre">WFC3-IR-DITHERBOX-MIN</span></code> dither pattern designed to provide optimal sampling of the PSF was used.</p>
+<p>For this example, the four calibrated FLT exposures from visit 19 will be downloaded and moved to the local directory.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>        ib1f19l6q_flt.fits
+        ib1f19l7q_flt.fits
+        ib1f19l8q_flt.fits
+        ib1f19l9q_flt.fits
+</pre></div>
+</div>
+<div class="alert alert-block alert-warning" style="color:black" >  Depending on your connection speed, this cell may take a few minutes to execute. </div><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ib1f19010&#39;</span><span class="p">]</span>
+
+<span class="n">obsTable</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">obs_ids</span><span class="p">)</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">obsTable</span><span class="p">)</span>
+
+<span class="n">data_prod</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;FLT&#39;</span><span class="p">]</span>                                 <span class="c1"># [&#39;FLC&#39;,&#39;FLT&#39;,&#39;DRC&#39;,&#39;DRZ&#39;]                  </span>
+<span class="n">data_type</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;CALWF3&#39;</span><span class="p">]</span>                              <span class="c1"># [&#39;CALACS&#39;,&#39;CALWF3&#39;,&#39;CALWP2&#39;,&#39;HAP-SVM&#39;]    </span>
+
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="n">data_prod</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">data_type</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/ib1f19l6q_flt.fits to ./mastDownload/HST/ib1f19l6q/ib1f19l6q_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/ib1f19l7q_flt.fits to ./mastDownload/HST/ib1f19l7q/ib1f19l7q_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/ib1f19l9q_flt.fits to ./mastDownload/HST/ib1f19l9q/ib1f19l9q_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/ib1f19laq_flt.fits to ./mastDownload/HST/ib1f19laq/ib1f19laq_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output text_html"><div><i>Table length=4</i>
+<table id="table140416249186256" class="table-striped table-bordered table-condensed">
+<thead><tr><th>Local Path</th><th>Status</th><th>Message</th><th>URL</th></tr></thead>
+<thead><tr><th>str47</th><th>str8</th><th>object</th><th>object</th></tr></thead>
+<tr><td>./mastDownload/HST/ib1f19l6q/ib1f19l6q_flt.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/ib1f19l7q/ib1f19l7q_flt.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/ib1f19l9q/ib1f19l9q_flt.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/ib1f19laq/ib1f19laq_flt.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+</table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Move to the files to the local working directory</span>
+
+<span class="k">for</span> <span class="n">flt</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;./mastDownload/HST/*/*fl?.fits&#39;</span><span class="p">):</span>     
+    <span class="n">flt_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">flt</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">flt</span><span class="p">,</span> <span class="n">flt_name</span><span class="p">)</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;mastDownload/&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="inspection"></a></p>
+</section>
+<section id="check-image-header-data">
+<h2>2. Check image header data<a class="headerlink" href="#check-image-header-data" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="#toc"><span class="xref myst">Table of Contents</span></a></p>
+<p>Here we will look at important keywords in the image headers to summarize the observation strategy.</p>
+<p><a id="inspect_keywords"></a></p>
+<section id="inspect-useful-keywords">
+<h3>2.1 Inspect useful keywords<a class="headerlink" href="#inspect-useful-keywords" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flt_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*fl?.fits&#39;</span><span class="p">))</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">keywords_ext0</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ROOTNAME&quot;</span><span class="p">,</span> <span class="s2">&quot;ASN_ID&quot;</span><span class="p">,</span> <span class="s2">&quot;TARGNAME&quot;</span><span class="p">,</span> <span class="s2">&quot;DETECTOR&quot;</span><span class="p">,</span> <span class="s2">&quot;FILTER&quot;</span><span class="p">,</span> <span class="s2">&quot;EXPTIME&quot;</span><span class="p">,</span> 
+                 <span class="s2">&quot;RA_TARG&quot;</span><span class="p">,</span> <span class="s2">&quot;DEC_TARG&quot;</span><span class="p">,</span> <span class="s2">&quot;POSTARG1&quot;</span><span class="p">,</span> <span class="s2">&quot;POSTARG2&quot;</span><span class="p">,</span> <span class="s2">&quot;DATE-OBS&quot;</span><span class="p">]</span>
+<span class="n">keywords_ext1</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ORIENTAT&quot;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">flt_file</span> <span class="ow">in</span> <span class="n">flt_files</span><span class="p">:</span>
+    <span class="n">path_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keywords_ext0</span><span class="p">:</span>
+        <span class="n">path_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">flt_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keywords_ext1</span><span class="p">:</span>
+        <span class="n">path_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">flt_file</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
+    
+<span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords_ext0</span> <span class="o">+</span> <span class="n">keywords_ext1</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">names</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">])</span>
+<span class="n">table</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;7.1f&#39;</span> 
+<span class="n">table</span><span class="p">[</span><span class="s1">&#39;RA_TARG&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;DEC_TARG&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;7.4f&#39;</span>
+<span class="n">table</span><span class="p">[</span><span class="s1">&#39;POSTARG1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;POSTARG2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;7.3f&#39;</span> 
+<span class="n">table</span><span class="p">[</span><span class="s1">&#39;ORIENTAT&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;7.2f&#39;</span>
+<span class="n">table</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=4</i>
+<table id="table140416176272784" class="table-striped table-bordered table-condensed">
+<thead><tr><th>ROOTNAME</th><th>ASN_ID</th><th>TARGNAME</th><th>DETECTOR</th><th>FILTER</th><th>EXPTIME</th><th>RA_TARG</th><th>DEC_TARG</th><th>POSTARG1</th><th>POSTARG2</th><th>DATE-OBS</th><th>ORIENTAT</th></tr></thead>
+<thead><tr><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>str32</th><th>float64</th></tr></thead>
+<tr><td>ib1f19l6q</td><td>IB1F19010</td><td>NGC-3370</td><td>IR</td><td>F160W</td><td>502.9</td><td>161.7694</td><td>17.2732</td><td>0.000</td><td>0.000</td><td>2010-04-04</td><td>5.62</td></tr>
+<tr><td>ib1f19l7q</td><td>IB1F19010</td><td>NGC-3370</td><td>IR</td><td>F160W</td><td>502.9</td><td>161.7694</td><td>17.2732</td><td>0.542</td><td>0.182</td><td>2010-04-04</td><td>5.62</td></tr>
+<tr><td>ib1f19l9q</td><td>IB1F19010</td><td>NGC-3370</td><td>IR</td><td>F160W</td><td>502.9</td><td>161.7694</td><td>17.2732</td><td>0.339</td><td>0.485</td><td>2010-04-04</td><td>5.62</td></tr>
+<tr><td>ib1f19laq</td><td>IB1F19010</td><td>NGC-3370</td><td>IR</td><td>F160W</td><td>502.9</td><td>161.7694</td><td>17.2732</td><td>-0.203</td><td>0.303</td><td>2010-04-04</td><td>5.62</td></tr>
+</table></div></div></div>
+</div>
+<p><a id="inspect_dither"></a></p>
+</section>
+<section id="inspect-the-dither-pattern">
+<h3>2.2 Inspect the dither pattern<a class="headerlink" href="#inspect-the-dither-pattern" title="Link to this heading">#</a></h3>
+<p>For the <em>drizzle</em> algorithm to work optimally, observations need to be dithered so that the PSF is appropriately sampled. The code below creates plots to show the dithering of each of the images in the association. The plot on the left shows how the images were dithered on the sky (the POSTARG). The plot on the right shows how the offsets translate to pixel phase (e.g. subpixel position).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plate_scale</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">flt_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;idcscale&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Detector Plate scale: </span><span class="si">{:&gt;6.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plate_scale</span><span class="p">))</span>
+<span class="n">postarg1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">flt_files</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+<span class="n">postarg2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">flt_files</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+<span class="n">x_phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">flt_files</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+<span class="n">y_phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">flt_files</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">im</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">flt_files</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">im</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+        <span class="n">postarg1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;postarg1&#39;</span><span class="p">]</span>
+        <span class="n">postarg2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;postarg2&#39;</span><span class="p">]</span>
+        <span class="n">x_phase</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">modf</span><span class="p">(</span><span class="n">postarg1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">plate_scale</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">y_phase</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">modf</span><span class="p">(</span><span class="n">postarg2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">plate_scale</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">postarg1</span><span class="p">,</span> <span class="n">postarg2</span><span class="p">,</span> <span class="s1">&#39;k+-&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;POSTARG1 RA [arcsec]&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;large&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;POSTARG2 DEC [arcsec]&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;large&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_phase</span><span class="p">,</span> <span class="n">y_phase</span><span class="p">,</span> <span class="s1">&#39;k+-&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X pixel phase&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;large&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Y pixel phase&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;large&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Detector Plate scale: 0.1283
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;Y pixel phase&#39;)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../../_images/fc416e6cfe5051c374a6fd870e7dd5c427db78e85fde3478356035c45984a01a.png"><img alt="../../../_images/fc416e6cfe5051c374a6fd870e7dd5c427db78e85fde3478356035c45984a01a.png" src="../../../_images/fc416e6cfe5051c374a6fd870e7dd5c427db78e85fde3478356035c45984a01a.png" style="width: 1015px; height: 533px;" />
+</a>
+</div>
+</div>
+<p><a id="inspect_wcs"></a></p>
+</section>
+<section id="inspect-the-mast-alignment">
+<h3>2.3 Inspect the MAST alignment<a class="headerlink" href="#inspect-the-mast-alignment" title="Link to this heading">#</a></h3>
+<p>Check the active WCS solution in the FITS image header. If the image is aligned to a catalog, list the number of matches and the fit RMS in milli-arcseconds and in pixels.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ext_0_kws</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DETECTOR&#39;</span><span class="p">,</span> <span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span>
+<span class="n">ext_1_kws</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;WCSNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;NMATCHES&#39;</span><span class="p">,</span> <span class="s1">&#39;RMS_RA&#39;</span><span class="p">,</span> <span class="s1">&#39;RMS_DEC&#39;</span><span class="p">]</span>
+
+<span class="n">det_scale</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;IR&#39;</span><span class="p">:</span> <span class="mf">0.1283</span><span class="p">,</span> <span class="s1">&#39;UVIS&#39;</span><span class="p">:</span> <span class="mf">0.0396</span><span class="p">,</span> <span class="s1">&#39;WFC&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}</span>                    <span class="c1"># plate scale (arcsec/pixel)</span>
+
+<span class="n">format_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">col_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">flt_files</span><span class="p">:</span>
+    <span class="n">col_dict</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">hdr0</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">hdr1</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">ext_0_kws</span><span class="p">:</span>                                                <span class="c1"># extension 0 keywords</span>
+        <span class="n">col_dict</span><span class="p">[</span><span class="n">kw</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hdr0</span><span class="p">[</span><span class="n">kw</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">ext_1_kws</span><span class="p">:</span>                                                <span class="c1"># extension 1 keywords</span>
+        <span class="k">if</span> <span class="s1">&#39;RMS&#39;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">hdr1</span><span class="p">[</span><span class="n">kw</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="n">val</span> <span class="o">=</span> <span class="n">hdr1</span><span class="p">[</span><span class="n">kw</span><span class="p">]</span>
+        <span class="n">col_dict</span><span class="p">[</span><span class="n">kw</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        
+    <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;RMS_RA&#39;</span><span class="p">,</span> <span class="s1">&#39;RMS_DEC&#39;</span><span class="p">]:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">hdr1</span><span class="p">[</span><span class="n">kw</span><span class="p">]</span><span class="o">/</span><span class="mf">1000.</span><span class="o">/</span><span class="n">det_scale</span><span class="p">[</span><span class="n">hdr0</span><span class="p">[</span><span class="s1">&#39;DETECTOR&#39;</span><span class="p">]],</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># convert RMS from mas to pixels</span>
+        <span class="n">col_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">kw</span><span class="si">}</span><span class="s1">_pix&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+<span class="n">wcstable</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">col_dict</span><span class="p">)</span>
+<span class="n">wcstable</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=4</i>
+<table id="table140416171918224" class="table-striped table-bordered table-condensed">
+<thead><tr><th>filename</th><th>DETECTOR</th><th>EXPTIME</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RA_pix</th><th>RMS_DEC_pix</th></tr></thead>
+<thead><tr><th>str18</th><th>str2</th><th>float64</th><th>str28</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>ib1f19l6q_flt.fits</td><td>IR</td><td>502.936462</td><td>IDC_w3m18525i-FIT_REL_GSC242</td><td>26</td><td>109.0</td><td>102.9</td><td>0.85</td><td>0.8</td></tr>
+<tr><td>ib1f19l7q_flt.fits</td><td>IR</td><td>502.936462</td><td>IDC_w3m18525i-FIT_REL_GSC242</td><td>26</td><td>109.0</td><td>102.9</td><td>0.85</td><td>0.8</td></tr>
+<tr><td>ib1f19l9q_flt.fits</td><td>IR</td><td>502.936462</td><td>IDC_w3m18525i-FIT_REL_GSC242</td><td>26</td><td>109.0</td><td>102.9</td><td>0.85</td><td>0.8</td></tr>
+<tr><td>ib1f19laq_flt.fits</td><td>IR</td><td>502.936462</td><td>IDC_w3m18525i-FIT_REL_GSC242</td><td>26</td><td>109.0</td><td>102.9</td><td>0.85</td><td>0.8</td></tr>
+</table></div></div></div>
+</div>
+<p>Here we see that the four FLC images have a “FIT_REL_GSC242” WCS solution, which means they were aligned as a set to the reference catalog ‘GSC v2.4.2’ using the drizzled-combined (DRC) image, and that WCS was propogated back to the original FLCs.  This is reflected in the fact that the number of matches and fit rms values are the same for each FLC frame.</p>
+<p>Note that the alignment was based on 26 matches to the GSC v2.4.2 catalog.  This means that the target did not successfully align to the Gaia eDR3 solution since there are very few stars in the frame.</p>
+<p>We can various functions within the <code class="docutils literal notranslate"><span class="pre">headerlet</span></code> of the <code class="docutils literal notranslate"><span class="pre">stwcs</span></code> package to find, list, and ultimately update the WCS solutions in an image. Let’s make a list of the images and then print out all the WCS solutions in the first image in the list.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wcsnames</span> <span class="o">=</span> <span class="n">headerlet</span><span class="o">.</span><span class="n">get_headerlet_kw_names</span><span class="p">(</span><span class="n">flt_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kw</span><span class="o">=</span><span class="s1">&#39;WCSNAME&#39;</span><span class="p">)</span>
+<span class="n">wcsnames</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;OPUS&#39;,
+ &#39;IDC_w3m18525i&#39;,
+ &#39;IDC_w3m18525i-GSC240&#39;,
+ &#39;IDC_w3m18525i-HSC30&#39;,
+ &#39;IDC_w3m18525i&#39;,
+ &#39;IDC_w3m18525i-FIT_REL_GSC242&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>For more details on the WCS naming convention, see <a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/mast_data_products/astrometry.html#interpreting-wcs-names">DrizzlePac readthedocs</a></p>
+<p>For more discussion on absolute astrometry, see <a class="reference external" href="https://hst-docs.stsci.edu/drizzpac/chapter-4-astrometric-information-in-the-header/4-5-absolute-astrometry">Section 4.5 in the DrizzlePac Handbook</a></p>
+<p><a id="reset_wcs"></a></p>
+</section>
+<section id="reset-the-wcs-solution">
+<h3>2.4 Reset the WCS solution<a class="headerlink" href="#reset-the-wcs-solution" title="Link to this heading">#</a></h3>
+<p>Next, we find the index of the WCS solution we want to use, and then apply that solution to each of the science images. Because the program was designed to have precise dithers, we reset the WCS to the “a priori” (distortion-only) solution to preserve relative alignment and get the sharpest PSFs when drizzling the images together.</p>
+<p>In this example, the “a priori” solution is named <strong>IDC_w3m18525i-GSC240</strong>, in which the coordinates of the guide stars were corrected to the coordinates reported in GAIA DR1, with no additional catalog fitting.</p>
+<p>Here we first grab the index of list element with value ‘IDC_w3m18525i-GSC240’. The index in this list + 1 is the same as the EXTVER of the corresponding HDRLET. We need to add 1 because lists are 0-indexed, while EXTVER’s are 1 indexed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">flt_file</span> <span class="ow">in</span> <span class="n">flt_files</span><span class="p">:</span>
+    
+    <span class="n">chosen_ext</span> <span class="o">=</span> <span class="n">wcsnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;IDC_w3m18525i-GSC240&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
+    <span class="n">headerlet</span><span class="o">.</span><span class="n">restore_from_headerlet</span><span class="p">(</span><span class="n">flt_file</span><span class="p">,</span> <span class="n">hdrext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;HDRLET&#39;</span><span class="p">,</span> <span class="n">chosen_ext</span><span class="p">),</span> <span class="n">archive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Image: </span><span class="si">{</span><span class="n">flt_file</span><span class="si">}</span><span class="s1"> WCSNAME: </span><span class="si">{</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">flt_file</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;wcsname&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Image: ib1f19l6q_flt.fits WCSNAME: IDC_w3m18525i-GSC240
+Image: ib1f19l7q_flt.fits WCSNAME: IDC_w3m18525i-GSC240
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Image: ib1f19l9q_flt.fits WCSNAME: IDC_w3m18525i-GSC240
+Image: ib1f19laq_flt.fits WCSNAME: IDC_w3m18525i-GSC240
+</pre></div>
+</div>
+</div>
+</div>
+<p>Since the relative alignment of the individual FLC frames is preserved with the ‘a priori’ solution, we do not need run <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> before drizzling the images.</p>
+<p><a id="drizzle"></a></p>
+</section>
+</section>
+<section id="drizzling">
+<h2>3. Drizzling<a class="headerlink" href="#drizzling" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="#toc"><span class="xref myst">Table of Contents</span></a></p>
+<p>Before drizzling can be performed, a plate scale for the output image should be chosen. This will usually be dictated by the science needs. In theory, critical sampling of a PSF occurs with 2.355 pixels. The FWHM of the WFC3/IR detector at 1600 nm is ~0.151” (Table 7.5 of <a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb/chapter-7-ir-imaging-with-wfc3/7-6-ir-optical-performance">WFC Instrument Handbook</a>).</p>
+<p><b>Using these values, we select a plate scale of 0.065”/pix for the drizzled output frame, approximately half of the native plate scale (0.1283”/pix).</p>
+<p>The mechanism by which the <em>drizzle</em> algorithm improves sampling in the output image is by shrinking the input pixels before adding them to the output pixel grid (see Figure 2 in <a class="reference external" href="http://iopscience.iop.org/article/10.1086/338393/pdf">Fruchter and Hook (2002)</a>). In practice this process is controlled in the <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> package by adjusting the <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> parameter, which is the fractional size of the pixel to be used.
+Below <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> is called twice. The first time, no changes are made to the plate scale or the size of the drop. In the second call, the plate scale and pixfrac are reduced.</p>
+<p>Next, we get some recommended values for drizzling from the MDRIZTAB reference file.  The parameters in this file are different for each detector and are based on the number of input frames. These are a good starting point for drizzling and may be adjusted accordingly.</p>
+<p>To see the full list of <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> parameters, consult the <a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/drizzlepac_api/astrodrizzle.html">DrizzlePac readthedocs</a> page.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdz</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">flt_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;MDRIZTAB&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Searching for the MDRIZTAB file:&#39;</span><span class="p">,</span> <span class="n">mdz</span><span class="p">)</span>
+<span class="o">!</span>crds<span class="w"> </span>sync<span class="w"> </span>--hst<span class="w"> </span>--files<span class="w"> </span><span class="o">{</span>mdz<span class="o">}</span><span class="w"> </span>--output-dir<span class="w"> </span><span class="o">{</span>os.environ<span class="o">[</span><span class="s1">&#39;iref&#39;</span><span class="o">]}</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Searching for the MDRIZTAB file: 3562021pi_mdz.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-latest&#39; resolves to &#39;hst_1211.pmap&#39;
+CRDS - INFO -  Reorganizing 0 references from &#39;instrument&#39; to &#39;flat&#39;
+CRDS - INFO -  Reorganizing from &#39;instrument&#39; to &#39;flat&#39; cache,  removing instrument directories.
+CRDS - INFO -  Syncing explicitly listed files.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  ./crds_cache/references/hst/wfc3/3562021pi_mdz.fits       40.3 K bytes  (1 / 1 files) (0 / 40.3 K bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  0 errors
+CRDS - INFO -  0 warnings
+CRDS - INFO -  5 infos
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_vals_from_mdriztab</span><span class="p">(</span><span class="n">input_images</span><span class="p">,</span> <span class="n">kw_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;driz_sep_bits&#39;</span><span class="p">,</span> 
+                                                  <span class="s1">&#39;combine_type&#39;</span><span class="p">,</span> 
+                                                  <span class="s1">&#39;driz_cr_snr&#39;</span><span class="p">,</span> 
+                                                  <span class="s1">&#39;driz_cr_scale&#39;</span><span class="p">,</span> 
+                                                  <span class="s1">&#39;final_bits&#39;</span><span class="p">]):</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Get only selected parameters from. the MDRIZTAB&#39;&#39;&#39;</span>
+    <span class="n">mdriz_dict</span> <span class="o">=</span> <span class="n">drizzlepac</span><span class="o">.</span><span class="n">processInput</span><span class="o">.</span><span class="n">getMdriztabPars</span><span class="p">(</span><span class="n">input_images</span><span class="p">)</span>
+    
+    <span class="n">requested_params</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Outputting the following parameters:&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kw_list</span><span class="p">:</span>
+        <span class="n">requested_params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdriz_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">mdriz_dict</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">requested_params</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">selected_params</span> <span class="o">=</span> <span class="n">get_vals_from_mdriztab</span><span class="p">(</span><span class="n">flt_files</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>- MDRIZTAB: AstroDrizzle parameters read from row 3.
+Outputting the following parameters:
+driz_sep_bits 528
+combine_type median
+driz_cr_snr 5.0 4.0
+driz_cr_scale 3.0 2.4
+final_bits 528
+</pre></div>
+</div>
+</div>
+</div>
+<p>In this example, we have turned off the four <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> steps used for performing CR-rejection. For WFC3/IR frames this is done in the up-the-ramp fitting in <code class="docutils literal notranslate"><span class="pre">calwf3</span></code>.  If desired, the CR-rejection may be turned on if the user wishes to further the flagging of bad pixels.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">drizzlepac</span><span class="o">.</span><span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="n">flt_files</span><span class="p">,</span>
+                                     <span class="n">output</span><span class="o">=</span><span class="s1">&#39;f160w_noopt&#39;</span><span class="p">,</span>
+                                     <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">build</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="o">**</span><span class="n">selected_params</span><span class="p">,</span>
+                                     <span class="n">skymethod</span><span class="o">=</span><span class="s1">&#39;match&#39;</span><span class="p">,</span>
+                                     <span class="n">driz_separate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">driz_cr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># CR-rej off</span>
+                                     <span class="n">final_wcs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                     <span class="n">final_rot</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                                     <span class="n">final_scale</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="n">drizzlepac</span><span class="o">.</span><span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="n">flt_files</span><span class="p">,</span>
+                                     <span class="n">output</span><span class="o">=</span><span class="s1">&#39;f160w_opt&#39;</span><span class="p">,</span>
+                                     <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">build</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="o">**</span><span class="n">selected_params</span><span class="p">,</span>
+                                     <span class="n">skymethod</span><span class="o">=</span><span class="s1">&#39;match&#39;</span><span class="p">,</span>
+                                     <span class="n">driz_separate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">driz_cr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># CR-rej off</span>
+                                     <span class="n">final_wcs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                     <span class="n">final_rot</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                                     <span class="n">final_scale</span><span class="o">=</span><span class="mf">0.065</span><span class="p">,</span>
+                                     <span class="n">final_pixfrac</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+
+<span class="n">clear_output</span><span class="p">()</span>    
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id="results"></a></p>
+</section>
+<section id="inspecting-the-results">
+<h2>4. Inspecting the Results<a class="headerlink" href="#inspecting-the-results" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="#toc"><span class="xref myst">Table of Contents</span></a></p>
+<p>The drizzled science and weight images produced from the first call to AstroDrizzle with no optimization of the plate scale and pixfrac are plotted below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;f160w_noopt_drz.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+    <span class="n">im1wcs</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+    <span class="n">sci1</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wht1</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+        
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">ImageNormalize</span><span class="p">(</span><span class="n">sci1</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="n">LogStretch</span><span class="p">())</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;projection&#39;</span><span class="p">:</span> <span class="n">im1wcs</span><span class="p">})</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wht1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fb55290ba10&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../../_images/1b332f489d47d611b3fb51286782da675ba125a6aaec7c5fb7e8f312b9d0017d.png"><img alt="../../../_images/1b332f489d47d611b3fb51286782da675ba125a6aaec7c5fb7e8f312b9d0017d.png" src="../../../_images/1b332f489d47d611b3fb51286782da675ba125a6aaec7c5fb7e8f312b9d0017d.png" style="width: 1670px; height: 702px;" />
+</a>
+</div>
+</div>
+<p>The drizzled science image is on the left and the associated weight image is on the right, both without optimization of the plate scale and pixfrac.</p>
+<p>To compare, the figure plotted below shows close ups of the same part of the sky from the two drizzled products.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radeclims</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">pixel_to_skycoord</span><span class="p">([</span><span class="mi">825</span><span class="p">,</span> <span class="mi">875</span><span class="p">],</span> <span class="p">[</span><span class="mi">930</span><span class="p">,</span> <span class="mi">980</span><span class="p">],</span> <span class="n">im1wcs</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;f160w_opt_drz.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+    <span class="n">im2wcs</span> <span class="o">=</span> <span class="n">wcs</span><span class="o">.</span><span class="n">WCS</span><span class="p">(</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+    <span class="n">sci2</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wht2</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+<span class="n">norm1</span> <span class="o">=</span> <span class="n">ImageNormalize</span><span class="p">(</span><span class="n">sci2</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.70</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="n">LogStretch</span><span class="p">())</span>
+<span class="n">norm2</span> <span class="o">=</span> <span class="n">ImageNormalize</span><span class="p">(</span><span class="n">sci2</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="n">LogStretch</span><span class="p">())</span>
+    
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">im1wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im1wcs</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im1wcs</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">im2wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci2</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im2wcs</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im2wcs</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>                  
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1835.4481178802962, 1934.101966235267)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../../_images/976d74c0327f0905529a527fbdff7e05affe8ae46d678afb7b182cac68c27fac.png"><img alt="../../../_images/976d74c0327f0905529a527fbdff7e05affe8ae46d678afb7b182cac68c27fac.png" src="../../../_images/976d74c0327f0905529a527fbdff7e05affe8ae46d678afb7b182cac68c27fac.png" style="width: 1375px; height: 628px;" />
+</a>
+</div>
+</div>
+<p>The image on the left is without improved plate scale and pixfrac, and shows that the detector undersamples the PSF. The image on the right is the image with optimized parameters where the resolution is greatly improved.</p>
+<p><a id="pixfrac"></a></p>
+</section>
+<section id="optimizing-the-final-pixfrac-parameter">
+<h2>5. Optimizing the <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> parameter<a class="headerlink" href="#optimizing-the-final-pixfrac-parameter" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="#toc"><span class="xref myst">Table of Contents</span></a></p>
+<p>While the optimized <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> in the example above was chosen from experience with using a four-point dither, the value that should be used is not known <em>a priori</em>. The value could be different depending on several factors. For example, if the number of images is greater than four, the value used for <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> could be smaller since more images are available to fill in holes in the output grid. On the other hand, it is possible that no dithering was used during the observations. In that case, <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> should be left at 1.0, since shrinking the size of the drop could be detrimental.</p>
+<p>Below, a series of experiments will be run to determine the best <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value for the selected output plate scale, by varying pixfrac in steps of 0.1 over a range of values from 0.1 to 1.0.</p>
+<div class="alert alert-block alert-warning" style="color:black" >  This cell may take a several minutes to execute. </div><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pixfracs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">pixfrac</span> <span class="ow">in</span> <span class="n">pixfracs</span><span class="p">:</span>
+    <span class="n">outname</span> <span class="o">=</span> <span class="s1">&#39;f160w_</span><span class="si">{:.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pixfrac</span><span class="p">)</span>
+    <span class="n">drizzlepac</span><span class="o">.</span><span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="n">flt_files</span><span class="p">,</span>
+                                         <span class="n">output</span><span class="o">=</span><span class="n">outname</span><span class="p">,</span>
+                                         <span class="o">**</span><span class="n">selected_params</span><span class="p">,</span>
+                                         <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+                                         <span class="n">build</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+                                         <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>      
+                                         <span class="n">skymethod</span><span class="o">=</span><span class="s1">&#39;match&#39;</span><span class="p">,</span>
+                                         <span class="n">driz_separate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">driz_cr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># CR-rej off</span>
+                                         <span class="n">final_pixfrac</span><span class="o">=</span><span class="n">pixfrac</span><span class="p">,</span>
+                                         <span class="n">final_wcs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                         <span class="n">final_rot</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                                         <span class="n">final_scale</span><span class="o">=</span><span class="mf">0.065</span><span class="p">)</span>
+<span class="n">clear_output</span><span class="p">()</span>    
+</pre></div>
+</div>
+</div>
+</div>
+<p>When evaluating what value to use for <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code>, <em>THERE IS NO SINGLE METRIC THAT INDICATES WHAT VALUE TO USE</em>, and several factors should be taken into account. The general philosophy is that the chosen value should improve the resolution of the image as much as possible, without causing any adverse effects.</p>
+<p>The first thing to look for is an excessive number of holes in the science and weight images. The figure below shows the central region of the science and weight images produced by three different <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;f160w_0.1_drz.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu1</span><span class="p">:</span>
+    <span class="n">sci1</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wht1</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;f160w_0.6_drz.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu2</span><span class="p">:</span>
+    <span class="n">sci2</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wht2</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;f160w_1.0_drz.fits&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu3</span><span class="p">:</span>
+    <span class="n">sci3</span> <span class="o">=</span> <span class="n">hdu3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">wht3</span> <span class="o">=</span> <span class="n">hdu3</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">norm3</span> <span class="o">=</span> <span class="n">ImageNormalize</span><span class="p">(</span><span class="n">wht2</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="n">LinearStretch</span><span class="p">())</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1640</span><span class="p">,</span> <span class="mi">1920</span><span class="p">,</span> <span class="s1">&#39;final_pixfrac=0.1&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;maroon&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci2</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1640</span><span class="p">,</span> <span class="mi">1920</span><span class="p">,</span> <span class="s1">&#39;final_pixfrac=0.6&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;maroon&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci3</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1640</span><span class="p">,</span> <span class="mi">1920</span><span class="p">,</span> <span class="s1">&#39;final_pixfrac=1.0&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;maroon&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wht1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wht2</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wht3</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im2wcs</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im2wcs</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1835.4481178802962, 1934.101966235267)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../../_images/fc0ba5eb549b91e76d1b80c1e0d0898bb493858ef219c3809f3fd490ca0edd80.png"><img alt="../../../_images/fc0ba5eb549b91e76d1b80c1e0d0898bb493858ef219c3809f3fd490ca0edd80.png" src="../../../_images/fc0ba5eb549b91e76d1b80c1e0d0898bb493858ef219c3809f3fd490ca0edd80.png" style="width: 1276px; height: 813px;" />
+</a>
+</div>
+</div>
+<p>This figure above shows the central region of the science and weight images produced by <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> values (left to right) of 0.1, 0.8 and 1.0. The top row is the science frame, the bottom is the weight image. The science image with the smallest <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value of 0.1 shows a noisy background and holes in the image where no input pixels fall into the output grid because pixfrac is too small.</p>
+<p>Inspection of the weight map corresponding to the smallest <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value shows many places with weights of zero, indicating that a <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value of 0.1 is clearly too small and was only included in this example for illustrative purposes.</p>
+<p>Another piece of information that can be useful is the amount of noise in the weight image. As suggested in the <a class="reference external" href="https://hst-docs.stsci.edu/drizzpac/chapter-7-data-quality-checks-and-trouble-shooting-problems/7-3-inspecting-drizzled-products-after-user-reprocessing">DrizzlePac Handbook</a> Section 7.3, statistics performed on the drizzled weight image should yield a RMS/median value less than ~0.2. This threshold controls the trade-off between improving image resolution versus increasing background noise due to pixel resampling.</p>
+<p>The final_pixfrac value should be small enough to avoid degrading the final drizzle-combined image, but large enough that when all images are “dropped” onto the final frame, coverage of the output frame is fairly uniform. In general, final_pixfrac should be slightly larger than the final output scale to allow some “spillover” to adjacent pixels. This will help avoid “holes” in the final product when a given pixel has been flagged as bad in several frames.</p>
+<p>The figure below shows the RMS/median as a function of <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code>. One should take care to use the same region in the weight image as the region where the object of interest is located in the science image. If one is using the entire image for scientific analysis, then one should measure the statistics of the weight image where there is more variance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">whtlist</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;f160w_0.[0-9]*drz.fits&#39;</span><span class="p">)</span>
+
+<span class="n">std_med</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">whtlist</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">fraclist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">whtlist</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">xlims</span> <span class="o">=</span> <span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im1wcs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">ylims</span> <span class="o">=</span> <span class="n">radeclims</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">im1wcs</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="c1"># Loop that measures statistics, also some information gathering</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">im</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">whtlist</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">im</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
+        <span class="n">hdr</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+        <span class="n">wht</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;TARGNAME&#39;</span><span class="p">]</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;D001SCAL&#39;</span><span class="p">])</span>
+        <span class="n">nimg</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;NDRIZIM&#39;</span><span class="p">]</span>
+    <span class="n">wht_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">wht</span><span class="p">[</span><span class="n">ylims</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">ylims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xlims</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">xlims</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">wht_med</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">wht</span><span class="p">[</span><span class="n">ylims</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">ylims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xlims</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">xlims</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">std_med</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">wht_std</span> <span class="o">/</span> <span class="n">wht_med</span>
+    <span class="n">fraclist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;D001PIXF&#39;</span><span class="p">]</span>
+
+<span class="c1"># Plotting commands              </span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">1.025</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.025</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">fraclist</span><span class="p">,</span> <span class="n">std_med</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;pixfrac&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;rms/median&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.28</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.26</span><span class="p">,</span> <span class="s1">&#39;Scale=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.24</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">nimg</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; images&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.95, 0.24, &#39;4 images&#39;)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../../_images/84a930739f7e72ad355d6191cd3fd2d964c7e2da6cf404f77d23085dfac51e92.png"><img alt="../../../_images/84a930739f7e72ad355d6191cd3fd2d964c7e2da6cf404f77d23085dfac51e92.png" src="../../../_images/84a930739f7e72ad355d6191cd3fd2d964c7e2da6cf404f77d23085dfac51e92.png" style="width: 586px; height: 448px;" />
+</a>
+</div>
+</div>
+<p>Note that none of the test images have RMS/median greater than 0.2, so this does not seem to be a good metric for WFC3/IR in which the PSF is undersampled. (We suspect that this recommendation from the DrizzlePac Handbook was based on WFC3/UVIS or ACS/WFC dithered frames.)</p>
+<p>The RMS/median increases steadily to a <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value of 0.5, where there is a change in the slope of the function. For an output scale of  0.065”/pix (0.5 times the native plate scale) thus select the pixfrac 0.6 for the final drizzled image.</p>
+<p><a id="final"></a></p>
+</section>
+<section id="final-thoughts">
+<h2>6. Final thoughts<a class="headerlink" href="#final-thoughts" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="#toc"><span class="xref myst">Table of Contents</span></a></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> value has to be small enough to avoid degrading the combined output image, but large enough that when all images are “dropped” onto the final frame, coverage of the output frame is fairly uniform. In general, <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> should be slightly larger than the final output scale to allow some “spillover” to adjacent pixels. This will help avoid “holes” in the final product when a given pixel has been flagged as “bad” in several frames.  Optimizing the final drizzle parameters is a balance between the benefits of improving the image resolution and PSFs at the expense of increasing noise in the background.</p>
+<p><a id="about"></a></p>
+</section>
+<section id="about-this-notebook">
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Created: 12 Dec 2018;     R. Avila
+Updated: 30 Dec 2024;     R. Avila &amp; J. Mack
+</pre></div>
+</div>
+<p><strong>Source:</strong> GitHub <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks">spacetelescope/hst_notebooks</a></p>
+<p><a id="add"></a></p>
+</section>
+<section id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Link to this heading">#</a></h2>
+<p>Below are some additional resources that may be helpful. Please send any questions through the <a class="reference external" href="https://stsci.service-now.com/hst">HST Help Desk</a>.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/wfc3">WFC3 Website</a></p></li>
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/acs">ACS Website</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3ihb">WFC3 Instrument Handbook</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb">WFC3 Data Handbook</a></p></li>
+<li><p><a class="reference external" href="https://hst-docs.stsci.edu/drizzpac">Drizzlepac Handbook</a></p></li>
+<li><p><a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/drizzlepac_api/astrodrizzle.html">Astrodrizzle keywords documentation</a></p></li>
+</ul>
+<p><a id="cite"></a></p>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<p>If you use Python packages such as <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, <code class="docutils literal notranslate"><span class="pre">drizzlepac</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, or <code class="docutils literal notranslate"><span class="pre">numpy</span></code> for published research, please cite the authors.</p>
+<p>Follow these links for more information about citing various packages:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://github.com/astropy/astroquery/blob/main/astroquery/CITATION">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
+<li><p><a class="reference external" href="https://zenodo.org/records/3743274">Citing <code class="docutils literal notranslate"><span class="pre">drizzlepac</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/users/project/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+</ul>
+<hr class="docutils" />
+<p><a class="reference internal" href="#top"><span class="xref myst">Top of Page</span></a></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/DrizzlePac/optimize_image_sampling"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../use_ds9_regions_in_tweakreg/use_ds9_regions_in_tweakreg.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">TWEAKREG Tips - Using DS9 Regions for Source Inclusion/Exclusion</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../align_mosaics/align_mosaics.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Aligning HST Mosaics</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-packages">Import packages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-observations-with-astroquery">1. Download the Observations with <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#check-image-header-data">2. Check image header data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-useful-keywords">2.1 Inspect useful keywords</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-dither-pattern">2.2 Inspect the dither pattern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-mast-alignment">2.3 Inspect the MAST alignment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-the-wcs-solution">2.4 Reset the WCS solution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#drizzling">3. Drizzling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspecting-the-results">4. Inspecting the Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-final-pixfrac-parameter">5. Optimizing the <code class="docutils literal notranslate"><span class="pre">final_pixfrac</span></code> parameter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#final-thoughts">6. Final thoughts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

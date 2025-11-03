@@ -1,0 +1,2201 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Correcting for Missing Wavecals with Cross-Correlation &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css?v=cd6c26fb" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/STIS/cross-correlation/cross-correlation';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Custom CCD Darks" href="../custom_ccd_darks/custom_ccd_darks.html" />
+    <link rel="prev" title="STIS Notebooks" href="../README.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="HST Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="HST Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI HST Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">ACS Pixel Area Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html">Focus Diverse ePSFs for ACS/WFC</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_exception_report/exception_report_checks.html">HST Exception Report - Investigate your ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/hst_orbits_ephem/hst_orbits_ephem.html">Getting HST Ephemeris and Related Data for an Observation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ExceptionReport/ExceptionReport.html">What to do when you get an Exception Report for COS</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Improving Astrometry Using Alternate WCS Solutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an Absolute Reference Catalog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/use_ds9_regions_in_tweakreg/use_ds9_regions_in_tweakreg.html">TWEAKREG Tips - Using DS9 Regions for Source Inclusion/Exclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_mosaics/align_mosaics.html">Aligning HST Mosaics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/sky_matching/sky_matching.html">Sky Matching for HST Mosaics <a id="top"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling new WFPC2 FLT data products with chip-normalization   </a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HASP</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/Setup/Setup.html">Installing the Hubble Advanced Spectral Products Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/CoaddTutorial/CoaddTutorial.html">Inputting User Data using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/FluxScaleTutorial/FluxScaleTutorial.html">Scaling Flux while using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/DataDiagnostic/DataDiagnostics.html">HASP Data Diagnostic Notebook</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/COSLifetimePositions/COSLifetimePositions.html">Combining COS Data from Multiple Lifetime Positions and Central Wavelengths</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">STIS Notebooks</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../low_count_uncertainties/Low_Count_Uncertainties.html">Low Count Uncertainties in STIS <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contrast_sensitivity/STIS_Coronagraphic_Observation_Feasibility.html">STIS Coronagraphic Observation Feasibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../WFC3/README.html">WFC3 Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/general_tools.html">General Tools</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_g280_transit/G280_Exoplanet_Transits.html">Analyzing WFC3/UVIS G280 Exoplanet Transit Observations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/ir_tvb.html">WFC3/IR Time Variable Background (TVB)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/photometry.html">Photometry</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/point_spread_function.html">Point Spread Function (PSF)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/point_spread_function/hst_point_spread_function.html">HST WFC3 Point Spread Function Modeling   </a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/mast_api_psf/download_psf_cutouts.html">Downloading WFC3 and WFPC2 PSF Cutouts from MAST</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/STIS/cross-correlation/cross-correlation.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/STIS/cross-correlation/cross-correlation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/STIS/cross-correlation/cross-correlation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Correcting for Missing Wavecals with Cross-Correlation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#import-necessary-packages">Import Necessary Packages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collect-data-set-from-the-mast-archive-using-astroquery">Collect Data Set From the MAST Archive Using Astroquery</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#x1d-spectra-of-the-observations">_x1d Spectra of the Observations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-shifted-spectrum">Creating Shifted Spectrum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spectrum-interpolation">Spectrum Interpolation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-correlation">Cross-Correlation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dispersion-per-pixel">Dispersion per Pixel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#masking-out-the-lyman-alpha-line">Masking out the Lyman-alpha line</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lag-and-cross-correlation-coefficient">Lag and Cross-Correlation Coefficient</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#polynimial-fitting-and-zero-point-shift">Polynimial Fitting and Zero Point Shift</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recalibrate-spectrum">Recalibrate Spectrum</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook <a class="tocSkip"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations <a class="tocSkip"></a></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p><a id=top></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="correcting-for-missing-wavecals-with-cross-correlation">
+<h1>Correcting for Missing Wavecals with Cross-Correlation<a class="headerlink" href="#correcting-for-missing-wavecals-with-cross-correlation" title="Link to this heading">#</a></h1>
+<h1>Learning Goals<span class="tocSkip"></span></h1>
+<div class="toc"><ul class="toc-item"><li><span><a href="#Introduction" data-toc-modified-id="Introduction-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Introduction</a></span><ul class="toc-item"><li><span><a href="#Import-Necessary-Packages" data-toc-modified-id="Import-Necessary-Packages-1.1"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Import Necessary Packages</a></span></li><li><span><a href="#Collect-Data-Set-From-the-MAST-Archive-Using-Astroquery" data-toc-modified-id="Collect-Data-Set-From-the-MAST-Archive-Using-Astroquery-1.2"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Collect Data Set From the MAST Archive Using Astroquery</a></span></li></ul></li><li><span><a href="#_x1d-Spectra-of-the-Observations" data-toc-modified-id="_x1d-Spectra-of-the-Observations-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>_x1d Spectra of the Observations</a></span><ul class="toc-item"><li><span><a href="#Creating-Shifted-Spectrum" data-toc-modified-id="Creating-Shifted-Spectrum-2.1"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>Creating Shifted Spectrum</a></span></li><li><span><a href="#Spectrum-Interpolation" data-toc-modified-id="Spectrum-Interpolation-2.2"><span class="toc-item-num">2.2&nbsp;&nbsp;</span>Spectrum Interpolation</a></span></li></ul></li><li><span><a href="#Cross-Correlation" data-toc-modified-id="Cross-Correlation-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Cross-Correlation</a></span><ul class="toc-item"><li><span><a href="#Dispersion-per-Pixel" data-toc-modified-id="Dispersion-per-Pixel-3.1"><span class="toc-item-num">3.1&nbsp;&nbsp;</span>Dispersion per Pixel</a></span></li><li><span><a href="#Masking-out-the-Lyman-alpha-line" data-toc-modified-id="Masking-out-the-Lyman-alpha-line-3.2"><span class="toc-item-num">3.2&nbsp;&nbsp;</span>Masking out the Lyman-alpha line</a></span></li><li><span><a href="#Lag-and-Cross-Correlation-Coefficient" data-toc-modified-id="Lag-and-Cross-Correlation-Coefficient-3.3"><span class="toc-item-num">3.3&nbsp;&nbsp;</span>Lag and Cross-Correlation Coefficient</a></span></li><li><span><a href="#Polynimial-Fitting-and-Zero-Point-Shift" data-toc-modified-id="Polynimial-Fitting-and-Zero-Point-Shift-3.4"><span class="toc-item-num">3.4&nbsp;&nbsp;</span>Polynimial Fitting and Zero Point Shift</a></span></li></ul></li><li><span><a href="#Recalibrate-Spectrum" data-toc-modified-id="Recalibrate-Spectrum-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Recalibrate Spectrum</a></span></li></ul></div><section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>If the wavelength calibration fails due to, for example, a bad acquisition, the zero point in the spectral direction of the spectrum might be shifted because of the imprecise target positioning. However, if the target was observed multiple times and at least one has the correct zero point, then this shift can be corrected using cross-correlation. In this notebook, we will go through how to fix the shifted spectrum by cross-correlating it with a calibrated one.</p>
+<section id="import-necessary-packages">
+<h3>Import Necessary Packages<a class="headerlink" href="#import-necessary-packages" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy.io</span> <span class="pre">fits</span></code> <code class="docutils literal notranslate"><span class="pre">astropy.table</span> <span class="pre">Table</span></code> for accessing FITS files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astroquery.mast</span> <span class="pre">Observations</span></code> for finding and downloading data from the <a class="reference external" href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST</a> archive</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy.modeling</span> <span class="pre">fitting</span></code> <code class="docutils literal notranslate"><span class="pre">astropy.modeling.models</span> <span class="pre">Polynomial1D</span></code>for fitting polynomials</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scipy.signal</span> <span class="pre">correlate</span></code> for performing cross-correlation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> for plotting data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> for handling array functions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stistools</span></code> for quick operations on STIS Data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">os</span></code>,<code class="docutils literal notranslate"><span class="pre">shutil</span></code>,<code class="docutils literal notranslate"><span class="pre">pathlib</span></code> for managing system paths</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.mast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.modeling</span><span class="w"> </span><span class="kn">import</span> <span class="n">fitting</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.modeling.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polynomial1D</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">correlate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">correlation_lags</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">stistools</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following tasks in the stistools package can be run with TEAL:
+   basic2d      calstis     ocrreject     wavecal        x1d          x2d
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/stsci/tools/nmpfit.py:8: UserWarning: NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.
+  warnings.warn(&quot;NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.&quot;)
+/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/stsci/tools/gfit.py:18: UserWarning: GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.Use astropy.modeling instead.
+  warnings.warn(&quot;GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.&quot;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="collect-data-set-from-the-mast-archive-using-astroquery">
+<h3>Collect Data Set From the MAST Archive Using Astroquery<a class="headerlink" href="#collect-data-set-from-the-mast-archive-using-astroquery" title="Link to this heading">#</a></h3>
+<p>In this notebook, we need to download two datasets and explore their correlation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># remove downlaod directory if it already exists</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;./mastDownload&quot;</span><span class="p">):</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s2">&quot;./mastDownload&quot;</span><span class="p">)</span>
+<span class="c1"># Search target object by obs_id</span>
+<span class="n">target_id</span> <span class="o">=</span> <span class="s2">&quot;odj101050&quot;</span>
+<span class="n">ref_id</span> <span class="o">=</span> <span class="s2">&quot;odj101060&quot;</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="p">[</span><span class="n">target_id</span><span class="p">,</span> <span class="n">ref_id</span><span class="p">])</span>
+<span class="c1"># get a list of files assiciated with that target</span>
+<span class="n">target_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+<span class="c1"># Download only the SCIENCE fits files</span>
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">target_list</span><span class="p">,</span> <span class="n">productType</span><span class="o">=</span><span class="s2">&quot;SCIENCE&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101050_raw.fits to ./mastDownload/HST/odj101050/odj101050_raw.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101050_x2d.fits to ./mastDownload/HST/odj101050/odj101050_x2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101050_flt.fits to ./mastDownload/HST/odj101050/odj101050_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101050_x1d.fits to ./mastDownload/HST/odj101050/odj101050_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101060_raw.fits to ./mastDownload/HST/odj101060/odj101060_raw.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101060_x2d.fits to ./mastDownload/HST/odj101060/odj101060_x2d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101060_flt.fits to ./mastDownload/HST/odj101060/odj101060_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj101060_x1d.fits to ./mastDownload/HST/odj101060/odj101060_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output text_html"><div><i>Table length=8</i>
+<table id="table140101486698320" class="table-striped table-bordered table-condensed">
+<thead><tr><th>Local Path</th><th>Status</th><th>Message</th><th>URL</th></tr></thead>
+<thead><tr><th>str47</th><th>str8</th><th>object</th><th>object</th></tr></thead>
+<tr><td>./mastDownload/HST/odj101050/odj101050_raw.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101050/odj101050_x2d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101050/odj101050_flt.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101050/odj101050_x1d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101060/odj101060_raw.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101060/odj101060_x2d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101060/odj101060_flt.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>./mastDownload/HST/odj101060/odj101060_x1d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+</table></div></div></div>
+</div>
+</section>
+</section>
+<section id="x1d-spectra-of-the-observations">
+<h2>_x1d Spectra of the Observations<a class="headerlink" href="#x1d-spectra-of-the-observations" title="Link to this heading">#</a></h2>
+<section id="creating-shifted-spectrum">
+<h3>Creating Shifted Spectrum<a class="headerlink" href="#creating-shifted-spectrum" title="Link to this heading">#</a></h3>
+<p>In this notebook, we select two datasets of observations (odj101050, odj101060) with the same target (-PHI-LEO), detector (FUV-MAMA), and grating (G140M). We artificially shift one of the spectra (odj101050) to simulate the wavelength zeropoint shifted spectrum due to target acquisition failures, and use the other spectrum (odj101060) as the reference to conduct cross-correlation. To shift the spectrum, we set the “WAVECORR” calibration switch in the raw fits file to “OMIT” and recalibrate the spectrum using Calstis. “WAVECORR” is the calibration step that determines the shift of the image on the detector along each axis, and therefore by turning off the “WAVECORR” calibration switch, wavecal is not performed and the spectrum is systemetically shifted. We will then use the shifted spectrum and the reference spectrum to determine the wavelength zero point shift, recalibrate this shifted spectrum, and compare it with the original pipeline spectrum.</p>
+<p>Next, use the <a class="reference external" href="https://hst-crds.stsci.edu">Calibration Reference Data System</a> (CRDS) <a class="reference external" href="https://hst-crds.stsci.edu/static/users_guide/command_line_tools.html">command line tools</a> to update and download the reference files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">crds_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/crds_cache&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CRDS_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">crds_path</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CRDS_SERVER_URL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;https://hst-crds.stsci.edu&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;oref&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">crds_path</span><span class="p">,</span> <span class="s2">&quot;references/hst/oref/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>crds<span class="w"> </span>bestrefs<span class="w"> </span>--update-bestrefs<span class="w"> </span>--sync-references<span class="o">=</span><span class="m">1</span><span class="w"> </span>--files<span class="w"> </span>./mastDownload/HST/odj101050/odj101050_raw.fits
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_wf4tfile_0250.rmap      678 bytes  (1 / 142 files) (0 / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_shadfile_0250.rmap      977 bytes  (2 / 142 files) (678 / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_offtab_0250.rmap      642 bytes  (3 / 142 files) (1.7 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_maskfile_0250.rmap      685 bytes  (4 / 142 files) (2.3 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_idctab_0250.rmap      696 bytes  (5 / 142 files) (3.0 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_flatfile_0250.rmap   30.0 K bytes  (6 / 142 files) (3.7 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_dgeofile_0250.rmap      801 bytes  (7 / 142 files) (33.7 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_darkfile_0250.rmap  178.4 K bytes  (8 / 142 files) (34.5 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_biasfile_0250.rmap    3.3 K bytes  (9 / 142 files) (212.8 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_atodfile_0250.rmap      874 bytes  (10 / 142 files) (216.1 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_0250.imap      782 bytes  (11 / 142 files) (217.0 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_snkcfile_0003.rmap      681 bytes  (12 / 142 files) (217.8 K / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_satufile_0003.rmap    1.0 K bytes  (13 / 142 files) (218.5 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_pfltfile_0253.rmap   34.2 K bytes  (14 / 142 files) (219.5 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_pctetab_0004.rmap      698 bytes  (15 / 142 files) (253.7 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_oscntab_0250.rmap      747 bytes  (16 / 142 files) (254.4 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_npolfile_0254.rmap    4.0 K bytes  (17 / 142 files) (255.1 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_nlinfile_0250.rmap      726 bytes  (18 / 142 files) (259.2 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_mdriztab_0254.rmap      845 bytes  (19 / 142 files) (259.9 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_imphttab_0257.rmap      683 bytes  (20 / 142 files) (260.7 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_idctab_0254.rmap      661 bytes  (21 / 142 files) (261.4 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_flshfile_0257.rmap    6.0 K bytes  (22 / 142 files) (262.1 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_drkcfile_0208.rmap  252.5 K bytes  (23 / 142 files) (268.1 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_dfltfile_0002.rmap   17.1 K bytes  (24 / 142 files) (520.6 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_darkfile_0508.rmap  299.8 K bytes  (25 / 142 files) (537.7 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_d2imfile_0251.rmap      605 bytes  (26 / 142 files) (837.5 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_crrejtab_0250.rmap      803 bytes  (27 / 142 files) (838.1 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_ccdtab_0250.rmap      799 bytes  (28 / 142 files) (838.9 K / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_bpixtab_0328.rmap   12.6 K bytes  (29 / 142 files) (839.7 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_biasfile_0268.rmap   23.6 K bytes  (30 / 142 files) (852.3 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_biacfile_0003.rmap      692 bytes  (31 / 142 files) (875.9 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_atodtab_0250.rmap      651 bytes  (32 / 142 files) (876.6 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_0631.imap    1.3 K bytes  (33 / 142 files) (877.3 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_tmttab_0002.rmap      745 bytes  (34 / 142 files) (878.6 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_tmgtab_0013.rmap      767 bytes  (35 / 142 files) (879.3 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_tmctab_0062.rmap      743 bytes  (36 / 142 files) (880.1 K / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_thruput_0067.rmap  332.1 K bytes  (37 / 142 files) (880.8 K / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_thermal_0003.rmap   20.4 K bytes  (38 / 142 files) (1.2 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_obsmodes_0004.rmap      743 bytes  (39 / 142 files) (1.2 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_0077.imap      579 bytes  (40 / 142 files) (1.2 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_xtractab_0250.rmap      815 bytes  (41 / 142 files) (1.2 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_wcptab_0251.rmap      578 bytes  (42 / 142 files) (1.2 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_teltab_0250.rmap      745 bytes  (43 / 142 files) (1.2 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_tdstab_0256.rmap      921 bytes  (44 / 142 files) (1.2 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_tdctab_0253.rmap      650 bytes  (45 / 142 files) (1.2 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_srwtab_0250.rmap      745 bytes  (46 / 142 files) (1.2 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_sptrctab_0251.rmap      895 bytes  (47 / 142 files) (1.2 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_sdctab_0251.rmap      889 bytes  (48 / 142 files) (1.2 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_riptab_0254.rmap      877 bytes  (49 / 142 files) (1.2 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_phottab_0259.rmap    1.6 K bytes  (50 / 142 files) (1.2 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_pfltfile_0250.rmap   23.7 K bytes  (51 / 142 files) (1.2 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_pctab_0250.rmap    3.1 K bytes  (52 / 142 files) (1.3 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_mofftab_0250.rmap      747 bytes  (53 / 142 files) (1.3 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_mlintab_0250.rmap      601 bytes  (54 / 142 files) (1.3 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_lfltfile_0250.rmap   11.8 K bytes  (55 / 142 files) (1.3 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_lamptab_0250.rmap      610 bytes  (56 / 142 files) (1.3 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_inangtab_0250.rmap      815 bytes  (57 / 142 files) (1.3 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_imphttab_0253.rmap      616 bytes  (58 / 142 files) (1.3 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_idctab_0251.rmap      775 bytes  (59 / 142 files) (1.3 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_halotab_0250.rmap      747 bytes  (60 / 142 files) (1.3 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_gactab_0250.rmap      651 bytes  (61 / 142 files) (1.3 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_exstab_0250.rmap      745 bytes  (62 / 142 files) (1.3 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_echsctab_0250.rmap      749 bytes  (63 / 142 files) (1.3 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_disptab_0250.rmap      813 bytes  (64 / 142 files) (1.3 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_darkfile_0369.rmap   63.4 K bytes  (65 / 142 files) (1.3 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_crrejtab_0250.rmap      711 bytes  (66 / 142 files) (1.4 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_cdstab_0250.rmap      745 bytes  (67 / 142 files) (1.4 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_ccdtab_0252.rmap      893 bytes  (68 / 142 files) (1.4 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_bpixtab_0250.rmap      845 bytes  (69 / 142 files) (1.4 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_biasfile_0370.rmap  124.8 K bytes  (70 / 142 files) (1.4 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_apertab_0250.rmap      588 bytes  (71 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_apdestab_0252.rmap      636 bytes  (72 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_0390.imap    1.7 K bytes  (73 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_zprattab_0250.rmap      646 bytes  (74 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_tempfile_0250.rmap    1.1 K bytes  (75 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_tdffile_0250.rmap    8.9 K bytes  (76 / 142 files) (1.5 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_saadfile_0250.rmap      771 bytes  (77 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_saacntab_0250.rmap      594 bytes  (78 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_rnlcortb_0250.rmap      771 bytes  (79 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_pmskfile_0250.rmap      603 bytes  (80 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_pmodfile_0250.rmap      603 bytes  (81 / 142 files) (1.5 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_phottab_0250.rmap      862 bytes  (82 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_pedsbtab_0250.rmap      594 bytes  (83 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_noisfile_0250.rmap    2.6 K bytes  (84 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_nlinfile_0250.rmap    1.7 K bytes  (85 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_maskfile_0250.rmap    1.2 K bytes  (86 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_illmfile_0250.rmap    5.8 K bytes  (87 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_idctab_0250.rmap      767 bytes  (88 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_flatfile_0250.rmap   11.0 K bytes  (89 / 142 files) (1.5 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_darkfile_0250.rmap   14.9 K bytes  (90 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_0250.imap    1.1 K bytes  (91 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_ywlkfile_0004.rmap      922 bytes  (92 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_xwlkfile_0003.rmap      922 bytes  (93 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_xtractab_0272.rmap    1.9 K bytes  (94 / 142 files) (1.5 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_wcptab_0262.rmap    1.2 K bytes  (95 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_twozxtab_0282.rmap    1.5 K bytes  (96 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_tracetab_0280.rmap    1.5 K bytes  (97 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_tdstab_0274.rmap      749 bytes  (98 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_spwcstab_0255.rmap    1.1 K bytes  (99 / 142 files) (1.5 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_spottab_0008.rmap      766 bytes  (100 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_proftab_0280.rmap    1.5 K bytes  (101 / 142 files) (1.5 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_phatab_0250.rmap      668 bytes  (102 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_lamptab_0268.rmap    1.7 K bytes  (103 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_hvtab_0259.rmap      567 bytes  (104 / 142 files) (1.6 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_hvdstab_0003.rmap    1.0 K bytes  (105 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_gsagtab_0263.rmap      603 bytes  (106 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_geofile_0251.rmap      640 bytes  (107 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_fluxtab_0289.rmap    1.8 K bytes  (108 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_flatfile_0268.rmap    2.3 K bytes  (109 / 142 files) (1.6 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_disptab_0279.rmap    1.8 K bytes  (110 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_dgeofile_0003.rmap      909 bytes  (111 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_deadtab_0250.rmap      711 bytes  (112 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_brsttab_0250.rmap      696 bytes  (113 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_brftab_0251.rmap      583 bytes  (114 / 142 files) (1.6 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_bpixtab_0261.rmap      773 bytes  (115 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_badttab_0252.rmap      643 bytes  (116 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_0374.imap     1.4 K bytes  (117 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_spottab_0251.rmap      641 bytes  (118 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_snkcfile_0113.rmap    8.2 K bytes  (119 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_shadfile_0251.rmap      531 bytes  (120 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_satufile_0002.rmap    1.2 K bytes  (121 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_pfltfile_0253.rmap   69.2 K bytes  (122 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_pctetab_0254.rmap      615 bytes  (123 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_oscntab_0251.rmap      781 bytes  (124 / 142 files) (1.6 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_npolfile_0253.rmap    3.2 K bytes  (125 / 142 files) (1.6 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_mlintab_0250.rmap      646 bytes  (126 / 142 files) (1.7 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_mdriztab_0253.rmap      769 bytes  (127 / 142 files) (1.7 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_imphttab_0261.rmap      769 bytes  (128 / 142 files) (1.7 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_idctab_0256.rmap    1.5 K bytes  (129 / 142 files) (1.7 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_flshfile_0270.rmap    3.5 K bytes  (130 / 142 files) (1.7 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_drkcfile_0466.rmap   15.7 K bytes  (131 / 142 files) (1.7 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_dgeofile_0250.rmap    3.2 K bytes  (132 / 142 files) (1.7 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_darkfile_0456.rmap   87.7 K bytes  (133 / 142 files) (1.7 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_d2imfile_0253.rmap      601 bytes  (134 / 142 files) (1.8 M / 1.8 M bytes)
+CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_crrejtab_0251.rmap      945 bytes  (135 / 142 files) (1.8 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_cfltfile_0250.rmap    1.2 K bytes  (136 / 142 files) (1.8 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_ccdtab_0256.rmap    1.4 K bytes  (137 / 142 files) (1.8 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_bpixtab_0253.rmap    1.1 K bytes  (138 / 142 files) (1.8 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_biasfile_0453.rmap   57.7 K bytes  (139 / 142 files) (1.8 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_atodtab_0251.rmap      528 bytes  (140 / 142 files) (1.8 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_0562.imap     1.3 K bytes  (141 / 142 files) (1.8 M / 1.8 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_1285.pmap           495 bytes  (142 / 142 files) (1.8 M / 1.8 M bytes)
+CRDS - INFO -  No comparison context or source comparison requested.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  ===&gt; Processing ./mastDownload/HST/odj101050/odj101050_raw.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/16j16005o_apd.fits   49.0 K bytes  (1 / 26 files) (0 / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/16j1600ao_sdc.fits  167.0 K bytes  (2 / 26 files) (49.0 K / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/16j1600co_wcp.fits   20.2 K bytes  (3 / 26 files) (216.0 K / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/6471930to_rip.fits    4.1 M bytes  (4 / 26 files) (236.2 K / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/77o1827do_1dt.fits    4.4 M bytes  (5 / 26 files) (4.4 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/93q1947bo_tds.fits   57.6 K bytes  (6 / 26 files) (8.8 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/9511857bo_pht.fits    4.3 M bytes  (7 / 26 files) (8.8 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/97a1641fo_imp.fits  817.9 K bytes  (8 / 26 files) (13.1 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/h1v1541eo_iac.fits   11.5 K bytes  (9 / 26 files) (13.9 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/h4s1350io_moc.fits   11.5 K bytes  (10 / 26 files) (13.9 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/j9r16559o_lin.fits   11.5 K bytes  (11 / 26 files) (14.0 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/k8m09584o_cds.fits    8.6 K bytes  (12 / 26 files) (14.0 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/k8m09585o_ech.fits    1.0 M bytes  (13 / 26 files) (14.0 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/k8m09586o_exs.fits   11.5 K bytes  (14 / 26 files) (15.0 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/k8m09587o_hal.fits   67.1 M bytes  (15 / 26 files) (15.0 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/k8m09589o_srw.fits   11.5 K bytes  (16 / 26 files) (82.1 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/k8m0958ao_tel.fits  933.1 K bytes  (17 / 26 files) (82.1 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/l421050oo_lmp.fits    7.2 M bytes  (18 / 26 files) (83.1 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/m1b2139no_lfl.fits  673.9 K bytes  (19 / 26 files) (90.3 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/m7p16110o_dsp.fits  342.7 K bytes  (20 / 26 files) (91.0 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/mbj1658bo_pfl.fits   42.0 M bytes  (21 / 26 files) (91.3 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/n7p10323o_1dx.fits  129.6 K bytes  (22 / 26 files) (133.3 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/q591955ro_drk.fits   42.0 M bytes  (23 / 26 files) (133.4 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/uce15153o_bpx.fits  521.3 K bytes  (24 / 26 files) (175.4 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/y2r1559to_apt.fits   11.6 M bytes  (25 / 26 files) (175.9 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/y2r16005o_pct.fits   89.3 K bytes  (26 / 26 files) (187.5 M / 187.6 M bytes)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  0 errors
+CRDS - INFO -  0 warnings
+CRDS - INFO -  170 infos
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pip_raw</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./mastDownload/HST&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">),</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_raw.fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">))</span>
+<span class="c1"># Set the &quot;WAVECORR&quot; switch in the raw fits file header to &quot;OMIT&quot;</span>
+<span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">pip_raw</span><span class="p">,</span> <span class="s2">&quot;WAVECORR&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;OMIT&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create and clean &quot;./Shifted&quot; directory for saving new files</span>
+<span class="n">shifted_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./Shifted&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">shifted_dir</span><span class="p">):</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">shifted_dir</span><span class="p">)</span>
+<span class="n">Path</span><span class="p">(</span><span class="n">shifted_dir</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Recalibration</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">stistools</span><span class="o">.</span><span class="n">calstis</span><span class="o">.</span><span class="n">calstis</span><span class="p">(</span><span class="n">pip_raw</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">outroot</span><span class="o">=</span><span class="s2">&quot;./Shifted/&quot;</span><span class="p">)</span>
+<span class="c1"># calstis returns 0 if calibration completes; if not, raise assertion error</span>
+<span class="k">assert</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;CalSTIS exited with an error:  </span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    09-Oct-2025 18:37:53 UTC
+
+Input    ./mastDownload/HST/odj101050/odj101050_raw.fits
+Outroot  ./Shifted/odj101050_raw.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    09-Oct-2025 18:37:53 UTC
+Input    ./mastDownload/HST/odj101050/odj101050_raw.fits
+Output   ./Shifted/odj101050_flt.fits
+OBSMODE  ACCUM
+APERTURE 52X0.2
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 18:37:53 UTC
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 18:37:54 UTC
+
+End      09-Oct-2025 18:37:54 UTC
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    09-Oct-2025 18:37:54 UTC
+Input    ./Shifted/odj101050_flt.fits
+Output   ./Shifted/odj101050_x2d.fits
+OBSMODE  ACCUM
+APERTURE 52X0.2
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 18:37:54 UTC
+Warning  Wavecal processing has not been performed.
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 18:37:54 UTC
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$77o1827do_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 30/06/1998
+SPTRCTAB DESCRIP =New traces for select echelle secondary modes
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$9511857bo_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Fullerton 2025 calibration
+PHOTTAB  DESCRIP =Updated Sensitivities 2025 (CALSPEC v11 models)
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$93q1947bo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 06/02/2025
+TDSTAB   DESCRIP =Updated time and slope arrays for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 18:37:54 UTC
+Imset 1  End 18:37:54 UTC
+
+End      09-Oct-2025 18:37:54 UTC
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    09-Oct-2025 18:37:54 UTC
+
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    ./Shifted/odj101050_flt.fits
+Output   ./Shifted/odj101050_x1d.fits
+Rootname odj101050
+OBSMODE  ACCUM
+APERTURE 52X0.2
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$n7p10323o_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$77o1827do_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 01/12/2009
+SPTRCTAB DESCRIP =New traces for select echelle secondary modes
+
+Imset 1  Begin 18:37:54 UTC
+         Input read into memory.
+Order 1  Begin 18:37:54 UTC
+X1DCORR  PERFORM
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BACKCORR PERFORM
+******** Calling Slfit ***********BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 390.008
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$9511857bo_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 24/09/2019
+PHOTTAB  DESCRIP =Fullerton 2025 calibration
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$93q1947bo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 06/02/2025
+TDSTAB   DESCRIP =Updated time and slope arrays for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 18:37:54 UTC
+
+Imset 1  End 18:37:54 UTC
+
+Warning  Keyword `XTRACALG&#39; is being added to header.
+End      09-Oct-2025 18:37:54 UTC
+
+*** CALSTIS-6 complete ***
+
+End      09-Oct-2025 18:37:54 UTC
+
+*** CALSTIS-0 complete ***
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id='shifted'></a>
+As seen in the plot, the spectrum is now shifted compared to the pipeline spectrum:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pip_x1d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./mastDownload/HST&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">),</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_x1d.fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">))</span>
+<span class="n">shifted_x1d</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./Shifted/</span><span class="si">{}</span><span class="s2">_x1d.fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">))</span>
+
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pip_x1d</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu1</span><span class="p">,</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">shifted_x1d</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu2</span><span class="p">:</span>
+    <span class="n">pip_wl</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">pip_flux</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">shifted_wl</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">shifted_flux</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pip_wl</span><span class="p">,</span> <span class="n">pip_flux</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Pipeline Spectrum (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shifted_wl</span><span class="p">,</span> <span class="n">shifted_flux</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Shifted spectrum (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength [Å]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Flux [ergs/s/cm$^2$/Å]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Pipeline and Shifted _x1d Spectrum&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Pipeline and Shifted _x1d Spectrum&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="spectrum-interpolation">
+<h3>Spectrum Interpolation<a class="headerlink" href="#spectrum-interpolation" title="Link to this heading">#</a></h3>
+<p>Since the wavelength range of the pipeline and shifted spectra are different, we interpolate one of the spectra based on the wavelength of the other one so that the two spectra share the same wavelength array. As shown in the plot, the spectrum with “WAVECORR” turned off is systemetically shifted to the left.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ref_x1d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;./mastDownload/HST&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ref_id</span><span class="p">),</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_x1d.fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ref_id</span><span class="p">))</span>
+
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref_x1d</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu1</span><span class="p">,</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">shifted_x1d</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu2</span><span class="p">:</span>
+    <span class="n">wl</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ref_flux</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">shifted_wl</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">shifted_flux</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">shifted_flux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">wl</span><span class="p">,</span> <span class="n">shifted_wl</span><span class="p">,</span> <span class="n">shifted_flux</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span><span class="p">,</span> <span class="n">ref_flux</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Reference spectrum (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span><span class="p">,</span> <span class="n">shifted_flux</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Shifted spectrum (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ref_id</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength [Å]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Flux [ergs/s/cm$^2$/Å]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Reference and Shifted _x1d Spectrum&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Reference and Shifted _x1d Spectrum&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="cross-correlation">
+<h2>Cross-Correlation<a class="headerlink" href="#cross-correlation" title="Link to this heading">#</a></h2>
+<section id="dispersion-per-pixel">
+<h3>Dispersion per Pixel<a class="headerlink" href="#dispersion-per-pixel" title="Link to this heading">#</a></h3>
+<p>To perform cross-correlation, detemine the shift amount in pixels, and then convert it into wavelength, we first need to determine the dispersion per pixel, i.e., the mean differences of adjacent data points in the wavelength grid.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean_plate_scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">wl</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">-</span><span class="n">wl</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">mean_plate_scale</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The dispersion per pixel is </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mean_plate_scale</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; Å/pixel&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The dispersion per pixel is 0.053 Å/pixel
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="masking-out-the-lyman-alpha-line">
+<h3>Masking out the Lyman-alpha line<a class="headerlink" href="#masking-out-the-lyman-alpha-line" title="Link to this heading">#</a></h3>
+<p>The absorption line at around 1215 Å is from Hydrogen Lyman-alpha, which mostly comes from the atmosphere and so should not shift like the science spectrum. Therefore, we need to mask out this region by separating the spectrum into two parts and perform two cross-correlations. There are other airglows lines in the ultraviolet that also does not shift with the science spectrum, including OI line at 1302 Å, OI line at 1305 Å, OI line at 1306 Å. For more information on the Airglow, see: <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/cos/calibration/airglow"><code class="docutils literal notranslate"><span class="pre">AIRGLOW</span></code></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># the spectrum on the right of Lyman-alpha</span>
+<span class="n">ref_flux1</span> <span class="o">=</span> <span class="n">ref_flux</span><span class="p">[</span><span class="n">wl</span> <span class="o">&gt;</span> <span class="mi">1220</span><span class="p">]</span>
+<span class="n">shifted_flux1</span> <span class="o">=</span> <span class="n">shifted_flux</span><span class="p">[</span><span class="n">wl</span> <span class="o">&gt;</span> <span class="mi">1220</span><span class="p">]</span>
+
+<span class="c1"># the spectrum on the left of Lyman-alpha</span>
+<span class="n">ref_flux2</span> <span class="o">=</span> <span class="n">ref_flux</span><span class="p">[</span><span class="n">wl</span> <span class="o">&lt;</span> <span class="mi">1213</span><span class="p">]</span>
+<span class="n">shifted_flux2</span> <span class="o">=</span> <span class="n">shifted_flux</span><span class="p">[</span><span class="n">wl</span> <span class="o">&lt;</span> <span class="mi">1213</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="lag-and-cross-correlation-coefficient">
+<h3>Lag and Cross-Correlation Coefficient<a class="headerlink" href="#lag-and-cross-correlation-coefficient" title="Link to this heading">#</a></h3>
+<p>The lag is the displacement (in pixels) in the lagged spectrum. If the lag is 0, the spectra are aligned and not shifted.</p>
+<p>The cross-correlation coefficient decodes how similar two spectra are. The cross-correlation coefficient takes values from -1 to 1: if it’s positive, the 2 spectra are positively correlated, if it’s negative, the 2 spectra are negatively correlated.</p>
+<p>The cross-correlation algorithm shifts one of the input spectra according the the lags, and computes the cross-correlation coefficient for each lag. Then we take the lag with the maximum cross-coefficient and compute the corresponding displacement in wavelength space.</p>
+<p>In general, the cross-correlation can be written as:</p>
+<p style="text-align: center;">$C_{xy}[k]=\sum_n x[n] y[n+k]$</p>
+<p>in which k is the lag, C is the cross-correlation coefficient, and x and y are the input spectra.</p>
+<p><strong>Normalization of the input spectra is required to ensure the cross-correlation coefficient is in the [-1,1] range.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">cross_correlate</span><span class="p">(</span><span class="n">shifted_flux</span><span class="p">,</span> <span class="n">ref_flux</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">shifted_flux</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref_flux</span><span class="p">),</span> <span class="s2">&quot;Arrays must be same size&quot;</span>
+    
+    <span class="c1"># Normalize inputs:</span>
+    <span class="n">shifted_flux</span> <span class="o">=</span> <span class="n">shifted_flux</span> <span class="o">-</span> <span class="n">shifted_flux</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">shifted_flux</span> <span class="o">/=</span> <span class="n">shifted_flux</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="n">ref_flux</span> <span class="o">=</span> <span class="n">ref_flux</span> <span class="o">-</span> <span class="n">ref_flux</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">ref_flux</span> <span class="o">/=</span> <span class="n">ref_flux</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    
+    <span class="c1"># centered at the median of len(a)</span>
+    <span class="n">lag</span> <span class="o">=</span> <span class="n">correlation_lags</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shifted_flux</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref_flux</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span> 
+    <span class="c1"># find the cross-correlation coefficient</span>
+    <span class="n">cc</span> <span class="o">=</span> <span class="n">correlate</span><span class="p">(</span><span class="n">shifted_flux</span><span class="p">,</span> <span class="n">ref_flux</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ref_flux</span><span class="p">))</span>
+        
+    <span class="k">return</span> <span class="n">lag</span><span class="p">,</span> <span class="n">cc</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="polynimial-fitting-and-zero-point-shift">
+<h3>Polynimial Fitting and Zero Point Shift<a class="headerlink" href="#polynimial-fitting-and-zero-point-shift" title="Link to this heading">#</a></h3>
+<p>After we get the lag and cross-correlation coefficient, we can determine the zero point shift by finding the lag with the maximum cross-correlation coefficient. However, since we only have discrete pixels shifts, we will fit a quadratic curve near the peak, get a fractional pixel shift, and find the maxima of the quadratic curve as the zero point shift. The zero point shift is shown as the green vertical line in the plot.</p>
+<p>In this specific case, we choose the lag from -3 to 3, and fitted a 2 degree polynomial curve around the maximum cross-correlation coefficient to determine the shift in pixel space.<strong>The lag range and polynomial fitting is not the single solution that can be applied to all cases of wavelength zero point shifts. Users should experiment with the lag range and number of points to fit the polynomial curve based on the use case.</strong></p>
+<p>We first find the lag and cross-correlation coefficient of the right part of the spectrum:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">lag</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">cross_correlate</span><span class="p">(</span><span class="n">shifted_flux1</span><span class="p">,</span> <span class="n">ref_flux1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">cc</span><span class="p">,</span> <span class="s2">&quot;.-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;cross-correlation coefficient&quot;</span><span class="p">)</span>
+
+<span class="c1"># fit quadratic near the peak to find the pixel shift</span>
+<span class="n">fitter</span> <span class="o">=</span> <span class="n">fitting</span><span class="o">.</span><span class="n">LinearLSQFitter</span><span class="p">()</span>
+<span class="c1"># get the 5 points near the peak</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">low</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">-</span> <span class="n">width</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">+</span> <span class="n">width</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">fit</span> <span class="o">=</span> <span class="n">fitter</span><span class="p">(</span><span class="n">Polynomial1D</span><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">x</span><span class="o">=</span><span class="n">lag</span><span class="p">[</span><span class="n">low</span><span class="p">:</span><span class="n">hi</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">cc</span><span class="p">[</span><span class="n">low</span><span class="p">:</span><span class="n">hi</span><span class="p">])</span>
+<span class="n">x_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_c</span><span class="p">,</span> <span class="n">fit</span><span class="p">(</span><span class="n">x_c</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;fitted quadratic curve&quot;</span><span class="p">)</span>
+<span class="c1"># finding the maxima</span>
+<span class="n">shift1</span> <span class="o">=</span> <span class="o">-</span><span class="n">fit</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">fit</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">shift1</span><span class="p">,</span> <span class="n">shift1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;quadratic curve maxima&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Lag [pix]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Cross-correlation coeff&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;15168-01, G140M/C1222 Observations&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f6beb5c40d0&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Convert the lag back into zero point shift in wavelength space:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shift between the G140M/c1222 observations is </span><span class="si">{:.3f}</span><span class="s2"> pix = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shift1</span><span class="p">,</span> <span class="n">shift1</span> <span class="o">*</span> <span class="n">mean_plate_scale</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;Å&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shift between the G140M/c1222 observations is -4.935 pix = -0.263Å
+</pre></div>
+</div>
+</div>
+</div>
+<p>Apply the same procedure to the left part of the spectrum:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">lag</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">cross_correlate</span><span class="p">(</span><span class="n">shifted_flux2</span><span class="p">,</span> <span class="n">ref_flux2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag</span><span class="p">,</span> <span class="n">cc</span><span class="p">,</span> <span class="s2">&quot;.-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;cross-correlation coefficient&quot;</span><span class="p">)</span>
+
+<span class="c1"># fit quadratic near the peak to find the pixel shift</span>
+<span class="n">fitter</span> <span class="o">=</span> <span class="n">fitting</span><span class="o">.</span><span class="n">LinearLSQFitter</span><span class="p">()</span>
+<span class="c1"># get the 5 points near the peak</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">low</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">-</span> <span class="n">width</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">+</span> <span class="n">width</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">fit</span> <span class="o">=</span> <span class="n">fitter</span><span class="p">(</span><span class="n">Polynomial1D</span><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">x</span><span class="o">=</span><span class="n">lag</span><span class="p">[</span><span class="n">low</span><span class="p">:</span><span class="n">hi</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">cc</span><span class="p">[</span><span class="n">low</span><span class="p">:</span><span class="n">hi</span><span class="p">])</span>
+<span class="n">x_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_c</span><span class="p">,</span> <span class="n">fit</span><span class="p">(</span><span class="n">x_c</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;fitted quadratic curve&quot;</span><span class="p">)</span>
+<span class="c1"># finding the maxima</span>
+<span class="n">shift2</span> <span class="o">=</span> <span class="o">-</span><span class="n">fit</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">fit</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">shift2</span><span class="p">,</span> <span class="n">shift2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;quadratic curve maxima&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Lag [pix]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Cross-correlation coeff&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;15168-01, G140M/C1222 Observations&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;shift2 between the G140M/c1222 observations is </span><span class="si">{:.3f}</span><span class="s2"> pix = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shift2</span><span class="p">,</span> <span class="n">shift2</span> <span class="o">*</span> <span class="n">mean_plate_scale</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;Å&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>shift2 between the G140M/c1222 observations is -3.956 pix = -0.211Å
+</pre></div>
+</div>
+</div>
+</div>
+<p>However, as shown in the plot, the maximum cross-correlation coefficient (~0.5) is relatively small, which suggests that the spectra are less similar on the left side. With such a small cross-correlation coefficient, we cannot determine a reasonable shift in the pixel space. Therefore, we only take the shift determined by the right part of the spectrum as the shift of the spectrum:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shift</span> <span class="o">=</span> <span class="n">shift1</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;shift between the G140M/c1222 observations is </span><span class="si">{:.3f}</span><span class="s2"> pix = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="n">shift</span> <span class="o">*</span> <span class="n">mean_plate_scale</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;Å&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>shift between the G140M/c1222 observations is -4.935 pix = -0.263Å
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="recalibrate-spectrum">
+<h2>Recalibrate Spectrum<a class="headerlink" href="#recalibrate-spectrum" title="Link to this heading">#</a></h2>
+<p>After we determine the wavelength zero point shift, we can use the value to recalibrate the spectrum.</p>
+<p>In the Calstis pipeline, “WAVECORR” calibration step determines the spectral shift values, and writes the keyword values SHIFTA1, SHIFTA2 for the spectral and spatial shifts, respectively, to the science header. To apply the spectral shift from the cross-correlation, we get the SHIFTA1, SHIFTA2 keywords from the _flt fits file, add the shift (in pixel space) to SHIFTA1, and write the updated keywords to the _raw fits file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get SHIFTA1, SHIFTA1 keywords from the first science extension</span>
+<span class="n">shifted_flt</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./Shifted/</span><span class="si">{}</span><span class="s2">_flt.fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">))</span>
+<span class="c1"># since we have turned off WAVECOR at the beginning, SHIFTA1 should be 0</span>
+<span class="n">SHIFTA1</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">shifted_flt</span><span class="p">,</span> <span class="s2">&quot;SHIFTA1&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">SHIFTA2</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">shifted_flt</span><span class="p">,</span> <span class="s2">&quot;SHIFTA2&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">SHIFTA1</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">SHIFTA2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<span class="c1"># update SHIFTA1 (only in the spectral direction)</span>
+<span class="n">SHIFTA1</span> <span class="o">+=</span> <span class="n">shift</span>
+<span class="c1"># update the the SHIFTA1, SHIFTA1 keywords in the _raw fits file first science extension</span>
+<span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">pip_raw</span><span class="p">,</span> <span class="s2">&quot;SHIFTA1&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">SHIFTA1</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">pip_raw</span><span class="p">,</span> <span class="s2">&quot;SHIFTA2&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">SHIFTA2</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then we need to turn the “WAVECORR” calibration switch to “omit” so that the Calstis calibration pipeline takes our new computed value instead of the wavecal returned value as the wavelength zero point shift.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">pip_raw</span><span class="p">,</span> <span class="s2">&quot;WAVECORR&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;OMIT&quot;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">pip_raw</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s2">&quot;WAVECORR&quot;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;OMIT&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Recalibrate the spectrum using the Calstis pipeline. We create a new folder called “Recalibration” to store the recalibrated files. For more information on the Calstis pipeline, see: <a class="reference external" href="https://hst-docs.stsci.edu/stisdhb/chapter-3-stis-calibration">STIS Calibration</a>, <a class="reference external" href="https://stistools.readthedocs.io/en/latest/calstis.html">calstis</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create and clean &quot;./Recalibration&quot; directory for saving new files</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;./Recalibration&quot;</span><span class="p">):</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s2">&quot;./Recalibration&quot;</span><span class="p">)</span>
+<span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./Recalibration&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Recalibration</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">stistools</span><span class="o">.</span><span class="n">calstis</span><span class="o">.</span><span class="n">calstis</span><span class="p">(</span><span class="n">pip_raw</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">outroot</span><span class="o">=</span><span class="s2">&quot;./Recalibration/&quot;</span><span class="p">)</span>
+<span class="c1"># calstis returns 0 if calibration completes; if not, raise assertion error</span>
+<span class="k">assert</span> <span class="n">res</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;CalSTIS exited with an error:  </span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">recal_x1d</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./Recalibration/</span><span class="si">{}</span><span class="s2">_x1d.fits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    09-Oct-2025 18:37:54 UTC
+
+Input    ./mastDownload/HST/odj101050/odj101050_raw.fits
+Outroot  ./Recalibration/odj101050_raw.fits
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    09-Oct-2025 18:37:54 UTC
+Input    ./mastDownload/HST/odj101050/odj101050_raw.fits
+Output   ./Recalibration/odj101050_flt.fits
+OBSMODE  ACCUM
+APERTURE 52X0.2
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 18:37:54 UTC
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR PERFORM
+LORSCORR COMPLETE
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 18:37:54 UTC
+
+End      09-Oct-2025 18:37:54 UTC
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    09-Oct-2025 18:37:54 UTC
+Input    ./Recalibration/odj101050_flt.fits
+Output   ./Recalibration/odj101050_x2d.fits
+OBSMODE  ACCUM
+APERTURE 52X0.2
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+Imset 1  Begin 18:37:54 UTC
+Warning  Wavecal processing has not been performed.
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+Order 1  Begin 18:37:54 UTC
+
+X2DCORR  PERFORM
+DISPCORR PERFORM
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+SDCTAB   oref$16j1600ao_sdc.fits
+SDCTAB   PEDIGREE=INFLIGHT 13/07/1997 13/06/2017
+SDCTAB   DESCRIP =Co-aligned fiducial bars via an update to the CDELT2 plate scales.-
+SDCTAB   DESCRIP =updated CDELT2 with inflight data, others Lindler-prelaunch
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB PEDIGREE=GROUND
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+INANGTAB DESCRIP =Model
+SPTRCTAB oref$77o1827do_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 30/06/1998
+SPTRCTAB DESCRIP =New traces for select echelle secondary modes
+SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
+
+FLUXCORR PERFORM
+PHOTTAB  oref$9511857bo_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 28/02/2000 21/11/2001
+PHOTTAB  DESCRIP =Fullerton 2025 calibration
+PHOTTAB  DESCRIP =Updated Sensitivities 2025 (CALSPEC v11 models)
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/5/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+PCTAB    DESCRIP = 2 STIS observations averaged
+TDSTAB   oref$93q1947bo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 06/02/2025
+TDSTAB   DESCRIP =Updated time and slope arrays for all optical elements.
+FLUXCORR COMPLETE
+X2DCORR  COMPLETE
+DISPCORR COMPLETE
+Order 1  End 18:37:54 UTC
+Imset 1  End 18:37:54 UTC
+
+End      09-Oct-2025 18:37:54 UTC
+
+*** CALSTIS-7 complete ***
+
+*** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    09-Oct-2025 18:37:54 UTC
+
+Warning  Grating-aperture throughput correction table (GACTAB) was not found,
+         and no gac corrections will be applied
+Input    ./Recalibration/odj101050_flt.fits
+Output   ./Recalibration/odj101050_x1d.fits
+Rootname odj101050
+OBSMODE  ACCUM
+APERTURE 52X0.2
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+XTRACTAB oref$n7p10323o_1dx.fits
+XTRACTAB PEDIGREE=INFLIGHT 29/05/97
+XTRACTAB DESCRIP =Analysis from prop. 7064 and ground data
+XTRACTAB DESCRIP =Analysis from prop. 7064
+SPTRCTAB oref$77o1827do_1dt.fits
+SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 01/12/2009
+SPTRCTAB DESCRIP =New traces for select echelle secondary modes
+
+Imset 1  Begin 18:37:54 UTC
+         Input read into memory.
+Order 1  Begin 18:37:54 UTC
+X1DCORR  PERFORM
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BACKCORR PERFORM
+******** Calling Slfit ***********BACKCORR COMPLETE
+X1DCORR  COMPLETE
+         Spectrum extracted at y position = 390.008
+
+DISPCORR PERFORM
+DISPTAB  oref$m7p16110o_dsp.fits
+DISPTAB  PEDIGREE=INFLIGHT 04/03/1999 04/03/1999
+DISPTAB  DESCRIP =Dispersion coefficients reference table
+DISPTAB  DESCRIP =INFLIGHT Cal. Disp. Coeffs
+APDESTAB oref$16j16005o_apd.fits
+APDESTAB PEDIGREE=INFLIGHT 01/03/1997 13/06/2017
+APDESTAB DESCRIP =Aligned long-slit bar positions for single-bar cases.--------------
+APDESTAB DESCRIP =Microscope Meas./Hartig Post-launch Offsets
+INANGTAB oref$h1v1541eo_iac.fits
+INANGTAB DESCRIP =Prelaunch Calibration/Lindler and Models
+DISPCORR COMPLETE
+
+HELCORR  PERFORM
+HELCORR  COMPLETE
+
+PHOTTAB  oref$9511857bo_pht.fits
+PHOTTAB  PEDIGREE=INFLIGHT 27/02/1997 24/09/2019
+PHOTTAB  DESCRIP =Fullerton 2025 calibration
+APERTAB  oref$y2r1559to_apt.fits
+APERTAB  PEDIGREE=MODEL
+APERTAB  DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+APERTAB  DESCRIP =Bohlin/Hartig TIM Models Nov. 1998
+PCTAB    oref$y2r16005o_pct.fits
+PCTAB    PEDIGREE=INFLIGHT 18/05/1997 19/12/1998
+PCTAB    DESCRIP =Added/updated values for 31X0.05NDA,31X0.05NDB,31X0.05NDC apertures
+TDSTAB   oref$93q1947bo_tds.fits
+TDSTAB   PEDIGREE=INFLIGHT 01/04/1997 06/02/2025
+TDSTAB   DESCRIP =Updated time and slope arrays for all optical elements.
+FLUXCORR PERFORM
+FLUXCORR COMPLETE
+SGEOCORR OMIT
+
+         Row 1 written to disk.
+Order 1  End 18:37:54 UTC
+
+Imset 1  End 18:37:54 UTC
+
+Warning  Keyword `XTRACALG&#39; is being added to header.
+End      09-Oct-2025 18:37:54 UTC
+
+*** CALSTIS-6 complete ***
+
+End      09-Oct-2025 18:37:54 UTC
+
+*** CALSTIS-0 complete ***
+</pre></div>
+</div>
+</div>
+</div>
+<p>We compare the recalibrated spectrum with the pipeline spectrum. The top panel is the shifted spectrum (orange) and the pipeline spectrum (blue) of observation odj101050, which is the same as the plot in <a class="reference internal" href="#shifted"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">2.1</span> <span class="pre">Creating</span> <span class="pre">Shifted</span> <span class="pre">Spectrum</span></code></span></a>. The bottom panel is the recalibrated spectrum (orange) and the pipeline spectrum (blue). The spectra almost overlap in the bottom panel, which suggests that the wavelength shift issue is solved in the recalibrated spectrum.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pip_x1d</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu1</span><span class="p">,</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">shifted_x1d</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu2</span><span class="p">:</span>
+    <span class="n">pip_wl</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">pip_flux</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">shifted_wl</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">shifted_flux</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pip_wl</span><span class="p">,</span> <span class="n">pip_flux</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Pipeline Spectrum (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">shifted_wl</span><span class="p">,</span> <span class="n">shifted_flux</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Shifted spectrum (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength [Å]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Flux [ergs/s/cm$^2$/Å]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Pipeline and Shifted _x1d Spectrum&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pip_x1d</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu1</span><span class="p">,</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">recal_x1d</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu2</span><span class="p">:</span>
+    <span class="n">wl1</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">10</span><span class="p">:</span><span class="o">-</span><span class="mi">10</span><span class="p">]</span>
+    <span class="n">wl2</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">10</span><span class="p">:</span><span class="o">-</span><span class="mi">10</span><span class="p">]</span>
+    
+    <span class="n">flux1</span> <span class="o">=</span> <span class="n">hdu1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">10</span><span class="p">:</span><span class="o">-</span><span class="mi">10</span><span class="p">]</span>
+    <span class="n">flux2</span> <span class="o">=</span> <span class="n">hdu2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">10</span><span class="p">:</span><span class="o">-</span><span class="mi">10</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl1</span><span class="p">,</span> <span class="n">flux1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Pipeline Spectrum (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl2</span><span class="p">,</span> <span class="n">flux2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Recalibrated Spectrum (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_id</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength [Å]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Flux [ergs/s/cm$^2$/Å]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Pipeline and Recalibrated _x1d Spectrum&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="about-this-notebook">
+<h2>About this Notebook <a class="tocSkip"><a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
+<p><strong>Author:</strong> <a class="reference internal" href="#kding&#64;stsci.edu"><span class="xref myst">Keyi Ding</span></a></p>
+<p><strong>Updated On:</strong> 2023-04-14</p>
+<blockquote>
+<div><p><em>This tutorial was generated to be in compliance with the <a class="reference external" href="https://github.com/spacetelescope/style-guides">STScI style guides</a> and would like to cite the <a class="reference external" href="https://github.com/spacetelescope/style-guides/blob/master/templates/example_notebook.ipynb">Jupyter guide</a> in particular.</em></p>
+</div></blockquote>
+</section>
+<section id="citations">
+<h2>Citations <a class="tocSkip"><a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, or <code class="docutils literal notranslate"><span class="pre">numpy</span></code> for published research, please cite the
+authors. Follow these links for more information about citations:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://matplotlib.org/stable/users/project/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+</ul>
+<hr>
+<p><a class="reference internal" href="#top"><span class="xref myst">Top of Page</span></a>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/STIS/cross-correlation"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../README.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">STIS Notebooks</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../custom_ccd_darks/custom_ccd_darks.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Custom CCD Darks <a class="tocSkip"></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#import-necessary-packages">Import Necessary Packages</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collect-data-set-from-the-mast-archive-using-astroquery">Collect Data Set From the MAST Archive Using Astroquery</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#x1d-spectra-of-the-observations">_x1d Spectra of the Observations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-shifted-spectrum">Creating Shifted Spectrum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spectrum-interpolation">Spectrum Interpolation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-correlation">Cross-Correlation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dispersion-per-pixel">Dispersion per Pixel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#masking-out-the-lyman-alpha-line">Masking out the Lyman-alpha line</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lag-and-cross-correlation-coefficient">Lag and Cross-Correlation Coefficient</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#polynimial-fitting-and-zero-point-shift">Polynimial Fitting and Zero Point Shift</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recalibrate-spectrum">Recalibrate Spectrum</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook <a class="tocSkip"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations <a class="tocSkip"></a></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1586 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Scaling Flux while using the Hubble Advanced Spectral Products Script &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css?v=cd6c26fb" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/HASP/FluxScaleTutorial/FluxScaleTutorial';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="HASP Data Diagnostic Notebook" href="../DataDiagnostic/DataDiagnostics.html" />
+    <link rel="prev" title="Inputting User Data using the Hubble Advanced Spectral Products Script" href="../CoaddTutorial/CoaddTutorial.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="HST Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="HST Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI HST Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">ACS Pixel Area Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html">Focus Diverse ePSFs for ACS/WFC</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_exception_report/exception_report_checks.html">HST Exception Report - Investigate your ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/hst_orbits_ephem/hst_orbits_ephem.html">Getting HST Ephemeris and Related Data for an Observation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ExceptionReport/ExceptionReport.html">What to do when you get an Exception Report for COS</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Improving Astrometry Using Alternate WCS Solutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an Absolute Reference Catalog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/use_ds9_regions_in_tweakreg/use_ds9_regions_in_tweakreg.html">TWEAKREG Tips - Using DS9 Regions for Source Inclusion/Exclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_mosaics/align_mosaics.html">Aligning HST Mosaics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/sky_matching/sky_matching.html">Sky Matching for HST Mosaics <a id="top"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling new WFPC2 FLT data products with chip-normalization   </a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HASP</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../Setup/Setup.html">Installing the Hubble Advanced Spectral Products Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CoaddTutorial/CoaddTutorial.html">Inputting User Data using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Scaling Flux while using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../DataDiagnostic/DataDiagnostics.html">HASP Data Diagnostic Notebook</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../COSLifetimePositions/COSLifetimePositions.html">Combining COS Data from Multiple Lifetime Positions and Central Wavelengths</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/README.html">STIS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/extraction/1D_Extraction.html">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/low_count_uncertainties/Low_Count_Uncertainties.html">Low Count Uncertainties in STIS <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/contrast_sensitivity/STIS_Coronagraphic_Observation_Feasibility.html">STIS Coronagraphic Observation Feasibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../WFC3/README.html">WFC3 Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/general_tools.html">General Tools</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_g280_transit/G280_Exoplanet_Transits.html">Analyzing WFC3/UVIS G280 Exoplanet Transit Observations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/ir_tvb.html">WFC3/IR Time Variable Background (TVB)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/photometry.html">Photometry</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/point_spread_function.html">Point Spread Function (PSF)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/point_spread_function/hst_point_spread_function.html">HST WFC3 Point Spread Function Modeling   </a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/mast_api_psf/download_psf_cutouts.html">Downloading WFC3 and WFPC2 PSF Cutouts from MAST</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/HASP/FluxScaleTutorial/FluxScaleTutorial.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/HASP/FluxScaleTutorial/FluxScaleTutorial.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/HASP/FluxScaleTutorial/FluxScaleTutorial.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Scaling Flux while using the Hubble Advanced Spectral Products Script</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Scaling Flux while using the Hubble Advanced Spectral Products Script</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#this-notebook-is-designed-to-walk-you-through-handling-input-spectra-with-differing-fluxes-with-the-hubble-advanced-spectral-products-hasp-co-add-script"><span style="font-weight:normal">This Notebook is designed to walk you through handling input spectra with differing fluxes with the <strong>Hubble Advanced Spectral Products (HASP)</strong> co-add script.</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">0. Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloading-hst-spectroscopic-data">1. Downloading HST Spectroscopic Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-astroquery-to-download-stis-data">1.1 Using <code class="docutils literal notranslate"><span class="pre">Astroquery</span></code> to Download STIS Data</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-co-add-script">2. Running the Co-add Script</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checking-input-spectra-for-flux-variance">3. Checking Input Spectra for Flux Variance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-input-spectra-relative-to-each-to-other-to-search-for-variability">3.1 Plot Input Spectra Relative to Each to Other to Search for Variability</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scaling-input-data">4. Scaling Input Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#determine-scaling-factors">4.1 Determine Scaling Factors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rescaling-the-data">4.2 Rescaling the Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#re-running-the-co-add-script">4.3 Re-running the co-add Script</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#congrats-on-completing-the-notebook">Congrats on completing the notebook!</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#there-are-more-tutorial-notebooks-for-custom-co-addition-cases-in-this-notebooks-repo-check-them-out">There are more tutorial notebooks for custom co-addition cases in this notebooks repo, check them out!</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="scaling-flux-while-using-the-hubble-advanced-spectral-products-script">
+<h1>Scaling Flux while using the Hubble Advanced Spectral Products Script<a class="headerlink" href="#scaling-flux-while-using-the-hubble-advanced-spectral-products-script" title="Link to this heading">#</a></h1>
+<section id="this-notebook-is-designed-to-walk-you-through-handling-input-spectra-with-differing-fluxes-with-the-hubble-advanced-spectral-products-hasp-co-add-script">
+<h2><span style="font-weight:normal">This Notebook is designed to walk you through handling input spectra with differing fluxes with the <strong>Hubble Advanced Spectral Products (HASP)</strong> co-add script.</span><a class="headerlink" href="#this-notebook-is-designed-to-walk-you-through-handling-input-spectra-with-differing-fluxes-with-the-hubble-advanced-spectral-products-hasp-co-add-script" title="Link to this heading">#</a></h2>
+</section>
+<section id="learning-goals">
+<h2>Learning Goals:<a class="headerlink" href="#learning-goals" title="Link to this heading">#</a></h2>
+<p>By the end of this tutorial, you will learn how to:</p>
+<ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">astroquery.mast</span></code> to download STIS data</p></li>
+<li><p>Determine whether the input data requires flux scaling</p></li>
+<li><p>Implement flux scaling and prepare the spectra for use with the co-add script</p></li>
+<li><p>Run the co-add script</p></li>
+<li><p>Examine the co-added output</p></li>
+<li><p>Repeat the process with COS data</p></li>
+</ul>
+</section>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
+<p><strong>0. <a class="reference internal" href="#introduction"><span class="xref myst">Introduction</span></a></strong></p>
+<p><strong>1. <a class="reference internal" href="#datadownload"><span class="xref myst">Downloading HST Spectroscopic Data</span></a></strong></p>
+<p>- 1.1 <a class="reference internal" href="#stisdownload"><span class="xref myst">Using <code class="docutils literal notranslate"><span class="pre">Astroquery</span></code> to Download STIS Data</span></a></p>
+<p><strong>2. <a class="reference internal" href="#runscript"><span class="xref myst">Running the Co-add Script without scaling</span></a></strong></p>
+<p><strong>3. <a class="reference internal" href="#checkflux"><span class="xref myst">Checking input data for flux variance</span></a></strong></p>
+<p>- 3.1 <a class="reference internal" href="#variance"><span class="xref myst">Plot input spectra relative to each other to identify flux variations</span></a></p>
+<p><strong>4. <a class="reference internal" href="#scaledata"><span class="xref myst">Scaling Input Data</span></a></strong></p>
+<p>- 4.1 <a class="reference internal" href="#scaling"><span class="xref myst">Determine Scaling Factors</span></a></p>
+<p>- 4.2 <a class="reference internal" href="#package"><span class="xref myst">Rescaling the Data</span></a></p>
+<p>- 4.3 <a class="reference internal" href="#rerunning"><span class="xref myst">Re-running the co-add Script</span></a></p>
+<p><a id = introduction></a></p>
+</section>
+<section id="introduction">
+<h2>0. Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>The <a class="reference external" href="https://github.com/spacetelescope/hasp">Hubble Advanced Spectral Products (HASP)</a> code is a script that co-adds spectra within programs. It currently is able to co-add data from the <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/stis">Space Telescope Imaging Spectrograph (STIS)</a> and the <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/cos">Cosmic Origins Spectrograph (COS)</a> instruments onboard the <a class="reference external" href="https://www.stsci.edu/hst">Hubble Space Telescope (HST)</a>. The <a class="reference external" href="https://archive.stsci.edu/missions-and-data/hst/hasp">Hubble Spectroscopic Legacy Archive (HSLA)</a> uses this script to co-add these instruments’ data from the <a class="reference external" href="https://archive.stsci.edu/">The Mikulski Archive for Space Telescopes (MAST)</a> archive to make high quality, wide wavelength UV spectra that is publicly available for the scientific community. These custom co-addition notebooks will instruct users on how produce their own co-adds in cases where the MAST archive data needs special processing or is rejected.</p>
+<p>The script first co-adds a program’s observation set spectra for each grating, then it combines all gratings for the observation set. Finally, it co-adds the spectra of each observation set in the program to produce a fully co-added spectra for each target in a program. lease check out the <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/cos/documentation/instrument-science-reports-isrs/_documents/ISR2024-01.pdf">COS 2024-01 ISR</a> for more information about HASP.</p>
+<p>In the process of co-adding data, the script will also check the flux of input data in each wavelength bin for a given mode against a first coadd that includes all of the input spectra. If the median flux of an input spectrum is lower than a given threshold against the co-add, it will be removed and the program iterates until no more spectra are rejected. This is to prevent data from failed observations from being co-added, but it will also impact sources  that are variable. Additionally for extended sources, the amount of light collected by the PSA on COS may be different from a STIS aperture, which could create flux offsets between gratings. Finally, some of the small apertures for STIS can be impacted by changes in observatory focus and create flux offsets. Similarly, extended sources that are observed at multiple orientations may have slight variations in flux. If a user’s science case is not dependent on the accuracy of a dataset’s absolute flux, scaling input spectra to be the same average or median flux may be desirable.</p>
+<p>This notebook will go into depth about checking for variability in a set of data, scaling data to a common median flux, running the co-add script, and inspecting the output by plotting flux as a function of wavelength. This notebook assumes that the user has very little experience with Python but is already familiar with the basic usage of the co-add script; users who are more experienced and would just like to learn how to run and download the script can checkout the <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/tree/main/notebooks/HASP/Setup">Setup.ipynb</a> notebook in this repository. Less experienced users should first run the <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/tree/main/notebooks/HASP/CoaddTutorial">CoaddTutorial.ipynb</a> notebook in this repository.</p>
+<section id="imports">
+<h3>Imports<a class="headerlink" href="#imports" title="Link to this heading">#</a></h3>
+<p>We will be using multiple libraries to retrieve and analyze data. We will use:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Path.pathlib</span></code> to create product and data directories</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astroquery.mast</span> <span class="pre">Observations</span></code> to download COS and STIS data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shutil</span></code> to perform directory and file operations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">os</span></code> to interact with the operating system</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy.io</span> <span class="pre">fits</span></code> to work with FITS files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> to plot abutted spectra</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">glob</span></code> to work with multiple files in our directories</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> to calculate median scale factors</p></li>
+</ul>
+<p>We recommend creating a HASP-specific <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment when co-adding spectra. You can checkout our <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/tree/main/notebooks/HASP/Setup">Setup.ipynb</a> notebook to create such an environment. Alternatively, you can also download the required dependencies to run this notebook with the terminal command:</p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code></p>
+<p>This will download the dependencies that are necessary to run this current notebook. Let’s import all of our packages that we will use in this notebook and print our <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment by running the next cell:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.mast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observations</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Currently active conda environment:&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CONDA_PREFIX&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Currently active conda environment: /home/runner/micromamba/envs/hstcal
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id = datadownload></a></p>
+</section>
+</section>
+<section id="downloading-hst-spectroscopic-data">
+<h2>1. Downloading HST Spectroscopic Data<a class="headerlink" href="#downloading-hst-spectroscopic-data" title="Link to this heading">#</a></h2>
+<p>We will download one STIS dataset using <code class="docutils literal notranslate"><span class="pre">Observations</span></code> from the Python module <code class="docutils literal notranslate"><span class="pre">astroquery.mast</span></code>.</p>
+<p><a id = stisdownload></a></p>
+<section id="using-astroquery-to-download-stis-data">
+<h3>1.1 Using <code class="docutils literal notranslate"><span class="pre">Astroquery</span></code> to Download STIS Data<a class="headerlink" href="#using-astroquery-to-download-stis-data" title="Link to this heading">#</a></h3>
+<p>We will be downloading STIS data for the white dwarf <a class="reference external" href="http://simbad.cds.unistra.fr/simbad/sim-basic?Ident=G191-B2b">G191-B2b</a>; this is an object that is commonly used as a standard. We will specifically download data from Program 8345, which has observations of G191-B2b using the gratings <code class="docutils literal notranslate"><span class="pre">E140M</span></code> and <code class="docutils literal notranslate"><span class="pre">E230M</span></code>.</p>
+<p>We can start with setting up our directory structure and querying the MAST database for the STIS program’s data. This will give us a list of <em>all</em> observations for the program.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating the data download directories for STIS</span>
+<span class="n">stis_data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./stis_data/&quot;</span><span class="p">)</span>
+
+<span class="c1"># Creating the products directory to hold the output</span>
+<span class="n">stis_products_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./stis_products/&quot;</span><span class="p">)</span>
+
+<span class="c1"># Creating the scaled data directories STIS</span>
+<span class="n">stis_scaled_data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./stis_scaled_data/&quot;</span><span class="p">)</span>
+
+<span class="c1"># Creating the scaled products directory to hold the output</span>
+<span class="n">stis_scaled_products_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./stis_scaled_products/&quot;</span><span class="p">)</span>
+
+<span class="c1"># If the directory doesn&#39;t exist, then create it</span>
+<span class="n">stis_data_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">stis_products_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">stis_scaled_data_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">stis_scaled_products_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Conduct the query</span>
+<span class="n">g191_query</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span>
+    <span class="n">proposal_id</span><span class="o">=</span><span class="mi">8435</span><span class="p">,</span>
+    <span class="n">target_name</span><span class="o">=</span><span class="s2">&quot;G191B2B&quot;</span><span class="p">,</span>
+    <span class="n">dataproduct_type</span><span class="o">=</span><span class="s2">&quot;SPECTRUM&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now that we’ve queried the observations for Program 8345’s data, we can get a list that contains the associated data products for the observations from the query. More details on downloading data are available in the <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/tree/main/notebooks/HASP/CoaddTutorial">CoaddTutorial.ipynb</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g191_products</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span>
+    <span class="n">g191_query</span>
+<span class="p">)</span>
+
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span>
+    <span class="n">g191_products</span><span class="p">,</span>
+    <span class="n">download_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">stis_data_dir</span><span class="p">),</span>
+    <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;X1D&quot;</span><span class="p">,</span> <span class="s2">&quot;SX1&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: 5 of 11 products were duplicates. Only returning 6 unique product(s). [astroquery.mast.utils]
+Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/o5jy03010_x1d.fits to stis_data/mastDownload/HST/o5jy03010/o5jy03010_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/o5jy03020_x1d.fits to stis_data/mastDownload/HST/o5jy03020/o5jy03020_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/o5jy03030_x1d.fits to stis_data/mastDownload/HST/o5jy03030/o5jy03030_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/o5jy04010_x1d.fits to stis_data/mastDownload/HST/o5jy04010/o5jy04010_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/o5jy04020_x1d.fits to stis_data/mastDownload/HST/o5jy04020/o5jy04020_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/o5jy04030_x1d.fits to stis_data/mastDownload/HST/o5jy04030/o5jy04030_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output text_html"><div><i>Table length=6</i>
+<table id="table139754708144400" class="table-striped table-bordered table-condensed">
+<thead><tr><th>Local Path</th><th>Status</th><th>Message</th><th>URL</th></tr></thead>
+<thead><tr><th>str55</th><th>str8</th><th>object</th><th>object</th></tr></thead>
+<tr><td>stis_data/mastDownload/HST/o5jy03010/o5jy03010_x1d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>stis_data/mastDownload/HST/o5jy03020/o5jy03020_x1d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>stis_data/mastDownload/HST/o5jy03030/o5jy03030_x1d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>stis_data/mastDownload/HST/o5jy04010/o5jy04010_x1d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>stis_data/mastDownload/HST/o5jy04020/o5jy04020_x1d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>stis_data/mastDownload/HST/o5jy04030/o5jy04030_x1d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+</table></div></div></div>
+</div>
+<p>To be able to run the HASP script, we now must move all STIS files to a single directory. When we download data using <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, it creates a directory <code class="docutils literal notranslate"><span class="pre">mastDownload/HST</span></code>. All sub-folders within that are each different dataset ID.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="c1"># The path to all obs_id folders</span>
+    <span class="n">mast_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stis_data_dir</span><span class="si">}</span><span class="s2">/mastDownload/HST/&quot;</span>
+
+    <span class="c1"># Check if mastDownload exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mast_path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Directory </span><span class="si">{</span><span class="n">mast_path</span><span class="si">}</span><span class="s2"> doesn&#39;t exist.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Getting a list of all obs_id folders. Each folder contains the FITS files</span>
+    <span class="n">obs_id_dirs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">mast_path</span><span class="p">)</span>
+
+    <span class="c1"># Iterating through sub-folders to change the path of each FITS file</span>
+    <span class="k">for</span> <span class="n">obs_id</span> <span class="ow">in</span> <span class="n">obs_id_dirs</span><span class="p">:</span>
+        <span class="c1"># This is the path to each obs_id folder</span>
+        <span class="n">obs_id_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mast_path</span><span class="p">,</span> <span class="n">obs_id</span><span class="p">)</span>
+
+        <span class="c1"># Getting list of FITS files in /mastDownload/HST/&lt;obs_id&gt; folder</span>
+        <span class="n">stis_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">obs_id_path</span> <span class="o">+</span> <span class="s2">&quot;/*fits&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Iterating through each of these files to change their path individually</span>
+        <span class="c1"># We will be moving them to /stis_data</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">stis_files</span><span class="p">:</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="n">new_path</span> <span class="o">=</span> <span class="n">stis_data_dir</span> <span class="o">/</span> <span class="n">file_path</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">new_path</span><span class="p">)</span>
+
+    <span class="c1"># Now we can remove the mastDownload directory</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mast_path</span><span class="p">):</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stis_data_dir</span><span class="si">}</span><span class="s2">/mastDownload/&quot;</span><span class="p">)</span>
+
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id = runscript></a></p>
+</section>
+</section>
+<section id="running-the-co-add-script">
+<h2>2. Running the Co-add Script<a class="headerlink" href="#running-the-co-add-script" title="Link to this heading">#</a></h2>
+<p>Now that we’ve downloaded the G191B2B STIS data, we can run the co-add script.</p>
+<p>In the terminal, run the script by using the next cell’s command. Make sure that you are in the <code class="docutils literal notranslate"><span class="pre">hasp-env</span></code> <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment that we created at the beginning of the notebook. It is also possible to run the command directly from the cell below.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-i</span></code> parameter is the input directory (i.e, where the FITS files are located). <code class="docutils literal notranslate"><span class="pre">-o</span></code> is the directory that will contain the newly created co-added products. Note that if you want to exclude certain data files from the co-add, you can just remove them from the input directory.</p>
+<p>In this case, the code determines that there are significant differences between the <code class="docutils literal notranslate"><span class="pre">E140M</span></code> spectra and rejects any spectra fainter than a certain threshold. The details of the threshold calculation are given in <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/cos/documentation/instrument-science-reports-isrs/_documents/ISR2024-01.pdf">ISR COS 2024-01</a>. In the output text below, this is identified by phrases such as:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Removing</span> <span class="pre">file</span> <span class="pre">./stis_data/o5jy03030_x1d.fits</span> <span class="pre">from</span> <span class="pre">product.</span></code></p>
+<p>Dataset <code class="docutils literal notranslate"><span class="pre">o5jy04030_x1d.fits</span></code> is removed from the co-add. However, small STIS echelle apertures often are impacted by changes in observatory focus and do not reflect intrinsic changes to the object. Thus, we can scale the input spectra to a common flux level and improve signal-to-noise.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>swrapper<span class="w"> </span>-i<span class="w"> </span>./stis_data<span class="w"> </span>-o<span class="w"> </span>./stis_products
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HASP version 1.2.3
+Ullyses version 4.1.0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Creating list of unique modes from these files:
+./stis_data/o5jy03010_x1d.fits G191B2B STIS FUV-MAMA E140M 0.1X0.03 0 8435 (8435, &#39;03&#39;)
+./stis_data/o5jy03020_x1d.fits G191B2B STIS FUV-MAMA E140M 0.1X0.03 0 8435 (8435, &#39;03&#39;)
+./stis_data/o5jy03030_x1d.fits G191B2B STIS FUV-MAMA E140M 0.1X0.03 0 8435 (8435, &#39;03&#39;)
+./stis_data/o5jy04010_x1d.fits G191B2B STIS NUV-MAMA E230M 0.1X0.03 0 8435 (8435, &#39;04&#39;)
+./stis_data/o5jy04020_x1d.fits G191B2B STIS NUV-MAMA E230M 0.1X0.03 0 8435 (8435, &#39;04&#39;)
+./stis_data/o5jy04030_x1d.fits G191B2B STIS NUV-MAMA E230M 0.1X0.03 0 8435 (8435, &#39;04&#39;)
+Looping over visits
+Processing product (8435, &#39;03&#39;)
+Targets in visit (8435, &#39;03&#39;): [&#39;G191B2B&#39;]
+Processing target G191B2B in visit (8435, &#39;03&#39;)
+Processing grating STIS/E140M
+Importing files [&#39;./stis_data/o5jy03010_x1d.fits&#39;, &#39;./stis_data/o5jy03020_x1d.fits&#39;, &#39;./stis_data/o5jy03030_x1d.fits&#39;]
+Processing file ./stis_data/o5jy03010_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file ./stis_data/o5jy03020_x1d.fits
+Processing file ./stis_data/o5jy03030_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/ullyses/coadd.py:550: RuntimeWarning: divide by zero encountered in divide
+  weighted_gross = weight_function[self.weighting_method](gross, exptime, net/flux)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using a maximum SNR of 20.0 in flux-based filtering
+No good pixels for order #86 of segment o5jy03jxq from file ./stis_data/o5jy03010_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #86 of segment o5jy03k0q from file ./stis_data/o5jy03020_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #86 of segment o5jy03k1q from file ./stis_data/o5jy03030_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Order 107 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -52.196539306689644
+Removing file ./stis_data/o5jy03030_x1d.fits from product
+Order 109 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -51.51203851087941
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 110 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -53.458026063810884
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 111 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -55.17910690306585
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 112 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -55.488447095672
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 113 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -52.67651025788358
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 114 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -52.63794307250628
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 115 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -54.85191669798465
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 116 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -51.82238490762179
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Removing files from list:
+[&#39;./stis_data/o5jy03030_x1d.fits&#39;]
+Importing files [&#39;./stis_data/o5jy03010_x1d.fits&#39;, &#39;./stis_data/o5jy03020_x1d.fits&#39;]
+Processing file ./stis_data/o5jy03010_x1d.fits
+Processing file ./stis_data/o5jy03020_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using a maximum SNR of 20.0 in flux-based filtering
+No good pixels for order #86 of segment o5jy03jxq from file ./stis_data/o5jy03010_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #86 of segment o5jy03k0q from file ./stis_data/o5jy03020_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Yellow">WARNING</span>: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
+   Wrote ./stis_products/hst_8435_stis_g191b2b_e140m_o5jy03_cspec.fits
+Only 1 grating to abut, skipping abutment
+Processing product (8435, &#39;04&#39;)
+Targets in visit (8435, &#39;04&#39;): [&#39;G191B2B&#39;]
+Processing target G191B2B in visit (8435, &#39;04&#39;)
+Processing grating STIS/E230M
+Importing files [&#39;./stis_data/o5jy04010_x1d.fits&#39;, &#39;./stis_data/o5jy04020_x1d.fits&#39;, &#39;./stis_data/o5jy04030_x1d.fits&#39;]
+Processing file ./stis_data/o5jy04010_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Processing file ./stis_data/o5jy04020_x1d.fits
+Processing file ./stis_data/o5jy04030_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using a maximum SNR of 20.0 in flux-based filtering
+No good pixels for order #66 of segment o5jy04saq from file ./stis_data/o5jy04010_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #66 of segment o5jy04sdq from file ./stis_data/o5jy04020_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #66 of segment o5jy04seq from file ./stis_data/o5jy04030_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   Wrote ./stis_products/hst_8435_stis_g191b2b_e230m_o5jy04_cspec.fits
+Only 1 grating to abut, skipping abutment
+Looping over proposals
+Processing product 8435
+Targets in proposal 8435: [&#39;G191B2B&#39;]
+Processing target G191B2B in proposal 8435
+Processing grating STIS/E140M
+Importing files [&#39;./stis_data/o5jy03010_x1d.fits&#39;, &#39;./stis_data/o5jy03020_x1d.fits&#39;, &#39;./stis_data/o5jy03030_x1d.fits&#39;]
+Processing file ./stis_data/o5jy03010_x1d.fits
+Processing file ./stis_data/o5jy03020_x1d.fits
+Processing file ./stis_data/o5jy03030_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/ullyses/coadd.py:550: RuntimeWarning: divide by zero encountered in divide
+  weighted_gross = weight_function[self.weighting_method](gross, exptime, net/flux)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using a maximum SNR of 20.0 in flux-based filtering
+No good pixels for order #86 of segment o5jy03jxq from file ./stis_data/o5jy03010_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #86 of segment o5jy03k0q from file ./stis_data/o5jy03020_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #86 of segment o5jy03k1q from file ./stis_data/o5jy03030_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Order 107 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -52.196539306689644
+Removing file ./stis_data/o5jy03030_x1d.fits from product
+Order 109 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -51.51203851087941
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 110 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -53.458026063810884
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 111 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -55.17910690306585
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 112 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -55.488447095672
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 113 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -52.67651025788358
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 114 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -52.63794307250628
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 115 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -54.85191669798465
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Order 116 from segment o5jy03k1q in file ./stis_data/o5jy03030_x1d.fits has scaled median = -51.82238490762179
+File ./stis_data/o5jy03030_x1d.fits already selected for removal from product
+Removing files from list:
+[&#39;./stis_data/o5jy03030_x1d.fits&#39;]
+Importing files [&#39;./stis_data/o5jy03010_x1d.fits&#39;, &#39;./stis_data/o5jy03020_x1d.fits&#39;]
+Processing file ./stis_data/o5jy03010_x1d.fits
+Processing file ./stis_data/o5jy03020_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using a maximum SNR of 20.0 in flux-based filtering
+No good pixels for order #86 of segment o5jy03jxq from file ./stis_data/o5jy03010_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #86 of segment o5jy03k0q from file ./stis_data/o5jy03020_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   Wrote ./stis_products/hst_8435_stis_g191b2b_e140m_o5jy_cspec.fits
+Processing grating STIS/E230M
+Importing files [&#39;./stis_data/o5jy04010_x1d.fits&#39;, &#39;./stis_data/o5jy04020_x1d.fits&#39;, &#39;./stis_data/o5jy04030_x1d.fits&#39;]
+Processing file ./stis_data/o5jy04010_x1d.fits
+Processing file ./stis_data/o5jy04020_x1d.fits
+Processing file ./stis_data/o5jy04030_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using a maximum SNR of 20.0 in flux-based filtering
+No good pixels for order #66 of segment o5jy04saq from file ./stis_data/o5jy04010_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #66 of segment o5jy04sdq from file ./stis_data/o5jy04020_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #66 of segment o5jy04seq from file ./stis_data/o5jy04030_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   Wrote ./stis_products/hst_8435_stis_g191b2b_e230m_o5jy_cspec.fits
+Making a product from these gratings
+STIS/E140M 1141.6-1727.2 (Actual: 1140.4-1709.4)
+STIS/E230M 1606.7-3119.2 (Actual: 2277.5-3071.8)
+Maximum wavelength of STIS/E140M tweaked to 1709.3950499028301
+Minimum wavelength of STIS/E230M tweaked to 2277.522932816718
+Maximum wavelength of STIS/E230M tweaked to 3071.793300151605
+Starting at the short wavelength end with grating STIS/E140M
+Truncating current grating at 1709.3950499028301
+Abutting STIS/E230M product to current result
+With a transition wavelength of 2277.522932816718
+Truncating current grating at 3071.793300151605
+   Wrote ./stis_products/hst_8435_stis_g191b2b_e140m-e230m_o5jy_cspec.fits
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now change the flux scaling for the input spectra and re-run the co-add code!</p>
+<p><a id = checkflux></a></p>
+</section>
+<section id="checking-input-spectra-for-flux-variance">
+<h2>3. Checking Input Spectra for Flux Variance<a class="headerlink" href="#checking-input-spectra-for-flux-variance" title="Link to this heading">#</a></h2>
+<p>With the newly co-added files in the <code class="docutils literal notranslate"><span class="pre">./stis_products/output</span></code> directory, we can begin to inspect the data and determine why some of the data was excluded.</p>
+<p>Let’s first enter the <code class="docutils literal notranslate"><span class="pre">./stis_products</span></code> directory to look at the files. Currently, the script outputs abutted products for a single program and its constituent visits, a file for each grating and a joining of all gratings. For the tutorial, <code class="docutils literal notranslate"><span class="pre">hst_8435_stis_g191b2b_e140m_o5jy_cspec.fits</span></code> is the <code class="docutils literal notranslate"><span class="pre">E140M</span></code> co-add product we will use to compare to our spectra.</p>
+<p><strong>Note: Check that this is the correct filename for the co-add; it is possible that the HASP script has been updated.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coadd</span> <span class="o">=</span> <span class="s2">&quot;hst_8435_stis_g191b2b_e140m_o5jy_cspec.fits&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id = variance></a></p>
+<section id="plot-input-spectra-relative-to-each-to-other-to-search-for-variability">
+<h3>3.1 Plot Input Spectra Relative to Each to Other to Search for Variability<a class="headerlink" href="#plot-input-spectra-relative-to-each-to-other-to-search-for-variability" title="Link to this heading">#</a></h3>
+<p>We will create a plot of flux as a function of wavelength using <code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> to compare the input spectra to the co-add. We will see significant scaling offsets.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the paths and filenames for our investigation</span>
+<span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;o5jy03010_x1d.fits&quot;</span><span class="p">,</span> <span class="s2">&quot;o5jy03020_x1d.fits&quot;</span><span class="p">,</span> <span class="s2">&quot;o5jy03030_x1d.fits&quot;</span><span class="p">]</span>
+
+<span class="c1"># Getting the co-add data</span>
+<span class="n">coadd_hdul</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stis_products_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">coadd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">coadd_data</span> <span class="o">=</span> <span class="n">coadd_hdul</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+<span class="c1"># Getting the wavelength and flux data for the abutted file</span>
+<span class="n">wavelength</span> <span class="o">=</span> <span class="n">coadd_data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">]</span>
+<span class="n">flux</span> <span class="o">=</span> <span class="n">coadd_data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">]</span>
+
+<span class="c1"># Colors for plotting</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">]</span>
+
+<span class="c1"># Getting the input spectra</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+    <span class="n">gd191_hdul</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stis_data_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">gd191_x1d</span> <span class="o">=</span> <span class="n">gd191_hdul</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+    <span class="c1"># Getting the flux and wavelength data</span>
+    <span class="n">wave_x1d</span> <span class="o">=</span> <span class="n">gd191_x1d</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">]</span>
+    <span class="n">flux_x1d</span> <span class="o">=</span> <span class="n">gd191_x1d</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Plotting flux vs wavelength for each X1D in our investigation</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">wave_x1d</span><span class="p">,</span> <span class="n">flux_x1d</span><span class="p">,</span>
+                <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    
+    <span class="n">gd191_hdul</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1"># Plot the coadd for comparison</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s1">&#39;coadd&#39;</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">)</span>
+
+<span class="c1"># Formatting the plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Flux as function of Wavelength, STIS G191B2B&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Flux&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">2e-12</span><span class="p">,</span> <span class="mf">1e-11</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">1450</span><span class="p">,</span> <span class="mi">1500</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Saving the figure to the ./stis_products_dir</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stis_products_dir</span><span class="si">}</span><span class="s2">/flux_vs_wavelength.png&quot;</span><span class="p">)</span>
+
+<span class="c1"># Showing the plot below</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/ef4a171c06756e51aa010c7091c16743284d31d9d4dbefd3b099dcd591b56c5d.png" src="../../../_images/ef4a171c06756e51aa010c7091c16743284d31d9d4dbefd3b099dcd591b56c5d.png" />
+</div>
+</div>
+<p>The co-add is grey, while the individual spectra are red, blue, and orange, respectively. The dataset that was removed (orange points) from the co-add is systematically lower than the co-add. We next calculate the scaling between the three input spectra and assume that the spectrum with the highest flux is most correct.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Checking the SNR of co-add for comparison to improved custom co-add later</span>
+<span class="n">SNR</span> <span class="o">=</span> <span class="n">coadd_data</span><span class="p">[</span><span class="s2">&quot;SNR&quot;</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">SNR</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="c1"># Formatting the plot by adding titles</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;SNR as function of Wavelength, STIS G191B2B&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;SNR&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">1450</span><span class="p">,</span> <span class="mi">1500</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stis_products_dir</span><span class="si">}</span><span class="s2">/snr_vs_wavelength_prescaled.png&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Closing coadd HDUL</span>
+<span class="n">coadd_hdul</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/40131dca4de29daece625bd899fa2edc942a7078ea8ac086d67e7aa48f2e6e23.png" src="../../../_images/40131dca4de29daece625bd899fa2edc942a7078ea8ac086d67e7aa48f2e6e23.png" />
+</div>
+</div>
+<p>For this particular dataset, a slight difference between the native wavelength bin size of the input co-adds and the output bins results in some bins receiving multiple measures of the flux which increase the SNR above other bins.</p>
+<p><a id = scaleflux></a></p>
+</section>
+</section>
+<section id="scaling-input-data">
+<h2>4. Scaling Input Data<a class="headerlink" href="#scaling-input-data" title="Link to this heading">#</a></h2>
+<p>We now determine scaling factors to apply to our input data. Using the scaling factors we determine, we re-scale the input spectra, save them as new input files, and re-run the co-add code on the modified datasets, improving the overall SNR.</p>
+<p><a id = scaling></a></p>
+<section id="determine-scaling-factors">
+<h3>4.1 Determine Scaling Factors<a class="headerlink" href="#determine-scaling-factors" title="Link to this heading">#</a></h3>
+<p>First we calculate the scale factors needed by taking the median of each spectrum, then using the brightest spectrum median as the normalizing factor.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Getting the fluxes of the files we&#39;re interested in</span>
+<span class="n">hdul_010</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stis_data_dir</span><span class="si">}</span><span class="s2">/o5jy03010_x1d.fits&quot;</span><span class="p">)</span>
+<span class="n">flux_010</span> <span class="o">=</span> <span class="n">hdul_010</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">]</span>
+
+<span class="n">hdul_020</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stis_data_dir</span><span class="si">}</span><span class="s2">/o5jy03020_x1d.fits&quot;</span><span class="p">)</span>
+<span class="n">flux_020</span> <span class="o">=</span> <span class="n">hdul_020</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">]</span>
+
+<span class="n">hdul_030</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stis_data_dir</span><span class="si">}</span><span class="s2">/o5jy03030_x1d.fits&quot;</span><span class="p">)</span>
+<span class="n">flux_030</span> <span class="o">=</span> <span class="n">hdul_030</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">]</span>
+
+
+<span class="n">med_spec_010</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">flux_010</span><span class="p">)</span>
+<span class="n">med_spec_020</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">flux_020</span><span class="p">)</span>
+<span class="n">med_spec_030</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">flux_030</span><span class="p">)</span>
+
+<span class="c1"># # Printing the median flux for each X1D file:</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The median flux for file o5jy03010_x1d.fits is: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">med_spec_010</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The median flux for file o5jy03020_x1d.fits is: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">med_spec_020</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The median flux for file o5jy03030_x1d.fits is: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">med_spec_030</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The brightest spectrum is file o5jy03010_x1d.fits&quot;</span><span class="p">)</span>
+
+<span class="n">hdul_010</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">hdul_020</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">hdul_030</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The median flux for file o5jy03010_x1d.fits is: 7.332183e-12
+The median flux for file o5jy03020_x1d.fits is: 6.1427196e-12
+The median flux for file o5jy03030_x1d.fits is: 5.5390805e-12
+
+The brightest spectrum is file o5jy03010_x1d.fits
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can see that the first spectrum (<code class="docutils literal notranslate"><span class="pre">o5jy03010_x1d.fits</span></code>) is the brightest of the three, so we will use it as the normalizing factor.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scale_factor</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span>
+                <span class="n">med_spec_010</span> <span class="o">/</span> <span class="n">med_spec_020</span><span class="p">,</span>
+                <span class="n">med_spec_010</span> <span class="o">/</span> <span class="n">med_spec_030</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id = package></a></p>
+</section>
+<section id="rescaling-the-data">
+<h3>4.2 Rescaling the Data<a class="headerlink" href="#rescaling-the-data" title="Link to this heading">#</a></h3>
+<p>Now that the input files for <code class="docutils literal notranslate"><span class="pre">E140M</span></code> have been rescaled, we create new input files and re-run the co-add script</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+    <span class="n">g191_hdul</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stis_data_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">g191_data</span> <span class="o">=</span> <span class="n">g191_hdul</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+    <span class="c1"># Getting the flux and wavelength data for the X1D files in our investigation</span>
+    <span class="n">flux</span> <span class="o">=</span> <span class="n">g191_data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">]</span>
+    <span class="n">wavelength</span> <span class="o">=</span> <span class="n">g191_data</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Multiplying the current file&#39;s flux by the approproiate scaling factor</span>
+    <span class="n">g191_data</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flux</span> <span class="o">*</span> <span class="n">scale_factor</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="c1"># Writing this scaled data to data directory</span>
+    <span class="n">g191_hdul</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stis_scaled_data_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                      <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Plotting this flux vs wavelength</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span>
+                <span class="n">s</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    
+    <span class="n">g191_hdul</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1"># Adding formatting</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Scaled Flux as function of Wavelength, STIS G191B2B&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Flux&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">2e-12</span><span class="p">,</span> <span class="mf">1e-11</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">1450</span><span class="p">,</span> <span class="mi">1500</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;./stis_scaled_data/scaled_flux_vs_wavelength.png&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/27179b3b4fb8a1af5338215d4b6e774137abaaf23629cd8ea56b4e10d456b807.png" src="../../../_images/27179b3b4fb8a1af5338215d4b6e774137abaaf23629cd8ea56b4e10d456b807.png" />
+</div>
+</div>
+<p><a id = rerunning></a></p>
+</section>
+<section id="re-running-the-co-add-script">
+<h3>4.3 Re-running the co-add Script<a class="headerlink" href="#re-running-the-co-add-script" title="Link to this heading">#</a></h3>
+<p>Now that the input files for <code class="docutils literal notranslate"><span class="pre">E140M</span></code> have been rescaled, we can re-run the co-add script:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>swrapper<span class="w"> </span>-i<span class="w"> </span>./stis_scaled_data<span class="w"> </span>-o<span class="w"> </span>./stis_scaled_products
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HASP version 1.2.3
+Ullyses version 4.1.0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Creating list of unique modes from these files:
+./stis_scaled_data/o5jy03010_x1d.fits G191B2B STIS FUV-MAMA E140M 0.1X0.03 0 8435 (8435, &#39;03&#39;)
+./stis_scaled_data/o5jy03020_x1d.fits G191B2B STIS FUV-MAMA E140M 0.1X0.03 0 8435 (8435, &#39;03&#39;)
+./stis_scaled_data/o5jy03030_x1d.fits G191B2B STIS FUV-MAMA E140M 0.1X0.03 0 8435 (8435, &#39;03&#39;)
+Looping over visits
+Processing product (8435, &#39;03&#39;)
+Targets in visit (8435, &#39;03&#39;): [&#39;G191B2B&#39;]
+Processing target G191B2B in visit (8435, &#39;03&#39;)
+Processing grating STIS/E140M
+Importing files [&#39;./stis_scaled_data/o5jy03010_x1d.fits&#39;, &#39;./stis_scaled_data/o5jy03020_x1d.fits&#39;, &#39;./stis_scaled_data/o5jy03030_x1d.fits&#39;]
+Processing file ./stis_scaled_data/o5jy03010_x1d.fits
+Processing file ./stis_scaled_data/o5jy03020_x1d.fits
+Processing file ./stis_scaled_data/o5jy03030_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/ullyses/coadd.py:550: RuntimeWarning: divide by zero encountered in divide
+  weighted_gross = weight_function[self.weighting_method](gross, exptime, net/flux)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using a maximum SNR of 20.0 in flux-based filtering
+No good pixels for order #86 of segment o5jy03jxq from file ./stis_scaled_data/o5jy03010_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #86 of segment o5jy03k0q from file ./stis_scaled_data/o5jy03020_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #86 of segment o5jy03k1q from file ./stis_scaled_data/o5jy03030_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Yellow">WARNING</span>: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   Wrote ./stis_scaled_products/hst_8435_stis_g191b2b_e140m_o5jy03_cspec.fits
+Only 1 grating to abut, skipping abutment
+Looping over proposals
+Processing product 8435
+Targets in proposal 8435: [&#39;G191B2B&#39;]
+Processing target G191B2B in proposal 8435
+Processing grating STIS/E140M
+Importing files [&#39;./stis_scaled_data/o5jy03010_x1d.fits&#39;, &#39;./stis_scaled_data/o5jy03020_x1d.fits&#39;, &#39;./stis_scaled_data/o5jy03030_x1d.fits&#39;]
+Processing file ./stis_scaled_data/o5jy03010_x1d.fits
+Processing file ./stis_scaled_data/o5jy03020_x1d.fits
+Processing file ./stis_scaled_data/o5jy03030_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/ullyses/coadd.py:550: RuntimeWarning: divide by zero encountered in divide
+  weighted_gross = weight_function[self.weighting_method](gross, exptime, net/flux)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using a maximum SNR of 20.0 in flux-based filtering
+No good pixels for order #86 of segment o5jy03jxq from file ./stis_scaled_data/o5jy03010_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #86 of segment o5jy03k0q from file ./stis_scaled_data/o5jy03020_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No good pixels for order #86 of segment o5jy03k1q from file ./stis_scaled_data/o5jy03030_x1d.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   Wrote ./stis_scaled_products/hst_8435_stis_g191b2b_e140m_o5jy_cspec.fits
+Only 1 grating to abut, skipping abutment
+</pre></div>
+</div>
+</div>
+</div>
+<p>We see in the output above that no spectra were rejected from the co-add script. Further, we have increased the SNR of the final co-add spectrum:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Getting the co-add data</span>
+<span class="n">gd191_scaled_hdul</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stis_scaled_products_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">coadd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">gd191_scaled</span> <span class="o">=</span> <span class="n">gd191_scaled_hdul</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+<span class="c1"># Getting the wavelength and flux data for the scaled file</span>
+<span class="n">w_scaled</span> <span class="o">=</span> <span class="n">gd191_scaled</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">]</span>
+<span class="n">f_scaled</span> <span class="o">=</span> <span class="n">gd191_scaled</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">]</span>
+<span class="n">SNR_scaled</span> <span class="o">=</span> <span class="n">gd191_scaled</span><span class="p">[</span><span class="s2">&quot;SNR&quot;</span><span class="p">]</span>
+
+<span class="c1"># Remove elements where original SNR = 0</span>
+<span class="n">SNR_scaled_nonzero</span> <span class="o">=</span> <span class="n">SNR_scaled</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">SNR</span><span class="p">)]</span>
+<span class="n">SNR_nonzero</span> <span class="o">=</span> <span class="n">SNR</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">SNR</span><span class="p">)]</span>
+
+<span class="n">SNR_scaled</span> <span class="o">=</span> <span class="n">SNR_scaled_nonzero</span> <span class="o">/</span> <span class="n">SNR_nonzero</span>
+
+<span class="n">w_scaled_nonzero</span> <span class="o">=</span> <span class="n">w_scaled</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">SNR</span><span class="p">)]</span>
+
+<span class="c1"># Finally we check the SNR of the co-add for comparison to the original co-add</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">w_scaled_nonzero</span><span class="p">,</span> <span class="n">SNR_scaled</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="c1"># Formatting the plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Relative SNR gain as function of Wavelength, STIS G191B2B&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wavelength&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Scaled SNR/Original SNR&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">1200</span><span class="p">,</span> <span class="mi">1700</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stis_scaled_products_dir</span><span class="si">}</span><span class="s2">/scaled_rel_snr_vs_wavelength.png&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">gd191_scaled_hdul</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/9b95e08c4d35e9eaf7096109a294bad6fd6f2c58d63473aec8c43acd1abe5261.png" src="../../../_images/9b95e08c4d35e9eaf7096109a294bad6fd6f2c58d63473aec8c43acd1abe5261.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="congrats-on-completing-the-notebook">
+<h1>Congrats on completing the notebook!<a class="headerlink" href="#congrats-on-completing-the-notebook" title="Link to this heading">#</a></h1>
+<section id="there-are-more-tutorial-notebooks-for-custom-co-addition-cases-in-this-notebooks-repo-check-them-out">
+<h2>There are more tutorial notebooks for custom co-addition cases in <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/tree/main/notebooks/HASP">this notebooks repo</a>, check them out!<a class="headerlink" href="#there-are-more-tutorial-notebooks-for-custom-co-addition-cases-in-this-notebooks-repo-check-them-out" title="Link to this heading">#</a></h2>
+</section>
+<section id="about-this-notebook">
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
+<p><strong>Authors:</strong> John Debes (debes&#64;stsci.edu), Sierra Gomez (sigomez&#64;stsci.edu)</p>
+<p><strong>Updated on:</strong> 01/29/2024</p>
+<p><em>This tutorial was generated to be in compliance with the <a class="reference external" href="https://github.com/spacetelescope/style-guides">STScI style guides</a> and would like to cite the <a class="reference external" href="https://github.com/spacetelescope/style-guides/blob/master/templates/example_notebook.ipynb">Jupyter guide</a> in particular.</em></p>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, or <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, for published research, please cite the authors. Follow these links for more information about citations:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.astropy.org/en/stable/index.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/users/project/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+</ul>
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" />
+</a>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/HASP/FluxScaleTutorial"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../CoaddTutorial/CoaddTutorial.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Inputting User Data using the Hubble Advanced Spectral Products Script</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../DataDiagnostic/DataDiagnostics.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">HASP Data Diagnostic Notebook</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Scaling Flux while using the Hubble Advanced Spectral Products Script</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#this-notebook-is-designed-to-walk-you-through-handling-input-spectra-with-differing-fluxes-with-the-hubble-advanced-spectral-products-hasp-co-add-script"><span style="font-weight:normal">This Notebook is designed to walk you through handling input spectra with differing fluxes with the <strong>Hubble Advanced Spectral Products (HASP)</strong> co-add script.</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">0. Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#downloading-hst-spectroscopic-data">1. Downloading HST Spectroscopic Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-astroquery-to-download-stis-data">1.1 Using <code class="docutils literal notranslate"><span class="pre">Astroquery</span></code> to Download STIS Data</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-co-add-script">2. Running the Co-add Script</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checking-input-spectra-for-flux-variance">3. Checking Input Spectra for Flux Variance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-input-spectra-relative-to-each-to-other-to-search-for-variability">3.1 Plot Input Spectra Relative to Each to Other to Search for Variability</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scaling-input-data">4. Scaling Input Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#determine-scaling-factors">4.1 Determine Scaling Factors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rescaling-the-data">4.2 Rescaling the Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#re-running-the-co-add-script">4.3 Re-running the co-add Script</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#congrats-on-completing-the-notebook">Congrats on completing the notebook!</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#there-are-more-tutorial-notebooks-for-custom-co-addition-cases-in-this-notebooks-repo-check-them-out">There are more tutorial notebooks for custom co-addition cases in this notebooks repo, check them out!</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

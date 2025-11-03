@@ -1,0 +1,1089 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>1D Spectra Extraction &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css?v=cd6c26fb" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/STIS/extraction/1D_Extraction';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Low Count Uncertainties in STIS" href="../low_count_uncertainties/Low_Count_Uncertainties.html" />
+    <link rel="prev" title="Viewing STIS Data" href="../view_data/view_data.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="HST Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="HST Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI HST Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">ACS Pixel Area Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html">Focus Diverse ePSFs for ACS/WFC</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_exception_report/exception_report_checks.html">HST Exception Report - Investigate your ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/hst_orbits_ephem/hst_orbits_ephem.html">Getting HST Ephemeris and Related Data for an Observation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ExceptionReport/ExceptionReport.html">What to do when you get an Exception Report for COS</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Improving Astrometry Using Alternate WCS Solutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an Absolute Reference Catalog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/use_ds9_regions_in_tweakreg/use_ds9_regions_in_tweakreg.html">TWEAKREG Tips - Using DS9 Regions for Source Inclusion/Exclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_mosaics/align_mosaics.html">Aligning HST Mosaics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/sky_matching/sky_matching.html">Sky Matching for HST Mosaics <a id="top"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling new WFPC2 FLT data products with chip-normalization   </a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HASP</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/Setup/Setup.html">Installing the Hubble Advanced Spectral Products Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/CoaddTutorial/CoaddTutorial.html">Inputting User Data using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/FluxScaleTutorial/FluxScaleTutorial.html">Scaling Flux while using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/DataDiagnostic/DataDiagnostics.html">HASP Data Diagnostic Notebook</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/COSLifetimePositions/COSLifetimePositions.html">Combining COS Data from Multiple Lifetime Positions and Central Wavelengths</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">STIS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">1D Spectra Extraction <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../low_count_uncertainties/Low_Count_Uncertainties.html">Low Count Uncertainties in STIS <a class="tocSkip"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contrast_sensitivity/STIS_Coronagraphic_Observation_Feasibility.html">STIS Coronagraphic Observation Feasibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../WFC3/README.html">WFC3 Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/general_tools.html">General Tools</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_g280_transit/G280_Exoplanet_Transits.html">Analyzing WFC3/UVIS G280 Exoplanet Transit Observations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/ir_tvb.html">WFC3/IR Time Variable Background (TVB)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/photometry.html">Photometry</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/point_spread_function.html">Point Spread Function (PSF)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/point_spread_function/hst_point_spread_function.html">HST WFC3 Point Spread Function Modeling   </a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/mast_api_psf/download_psf_cutouts.html">Downloading WFC3 and WFPC2 PSF Cutouts from MAST</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/STIS/extraction/1D_Extraction.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/STIS/extraction/1D_Extraction.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/STIS/extraction/1D_Extraction.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>1D Spectra Extraction <a class="tocSkip"></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p><a id=top></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="d-spectra-extraction">
+<h1>1D Spectra Extraction <a class="tocSkip"><a class="headerlink" href="#d-spectra-extraction" title="Link to this heading">#</a></h1>
+<h1>Learning Goals<span class="tocSkip"></span></h1>
+<div class="toc"><ul class="toc-item"><li><span><a href="#0-Introduction" data-toc-modified-id="0-Introduction-0">0 Introduction</a></span><ul class="toc-item"><li><span><a href="#0.1-Import-Necessary-Packages" data-toc-modified-id="0.1-Import-Necessary-Packages-0.1">0.1 Import Necessary Packages</a></span></li><li><span><a href="#0.2-Collect-Data-Set-From-the-MAST-Archive-Using-Astroquery" data-toc-modified-id="0.2-Collect-Data-Set-From-the-MAST-Archive-Using-Astroquery-0.2">0.2 Collect Data Set From the MAST Archive Using Astroquery</a></span></li></ul></li><li><span><a href="#1-x1d-FITS-File-Structure" data-toc-modified-id="1-x1d-FITS-File-Structure-1">1 <code>x1d</code> FITS File Structure</a></span></li><li><span><a href="#2-Plot-the-Extraction-Region" data-toc-modified-id="2-Plot-the-Extraction-Region-2">2 Plot the Extraction Region</a></span></li><li><span><a href="#3-Extracted-Spectra-of-STIS-Echelle" data-toc-modified-id="3-Extracted-Spectra-of-STIS-Echelle-3">3 Extracted Spectra of STIS Echelle</a></span></li></ul></div><section id="introduction">
+<h2>0 Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">x1d</span></code> FITS file is the one-dimensional extracted spectra for individual imsets of <code class="docutils literal notranslate"><span class="pre">flt</span></code>, <code class="docutils literal notranslate"><span class="pre">sfl</span></code>, or <code class="docutils literal notranslate"><span class="pre">crj</span></code> images. The <code class="docutils literal notranslate"><span class="pre">x1d</span></code> file is in binary table with the science information stored in the ‘SCI’ extension. In this notebook, we will show how to visualize the extraction regions when generating the <code class="docutils literal notranslate"><span class="pre">x1d</span></code> extracted spectra from a <code class="docutils literal notranslate"><span class="pre">flt</span></code> image. In some cases when users work with images with multiple sources or extended background, they might want to customize extraction. The goal of visualizing extraction region is to help confirm that the proper extraction parameters are selected, and the extraction regions do not overlap.</p>
+<p>For more information on extracted spectra, see the STIS Data Handbook: <a class="reference external" href="https://hst-docs.stsci.edu/stisdhb/chapter-5-stis-data-analysis/5-5-working-with-extracted-spectra">5.5 Working with Extracted Spectra</a></p>
+<section id="import-necessary-packages">
+<h3>0.1 Import Necessary Packages<a class="headerlink" href="#import-necessary-packages" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy.io.fits</span></code> and <code class="docutils literal notranslate"><span class="pre">astropy.table.Table</span></code> for accessing FITS files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astroquery.mast.Observations</span></code> for finding and downloading data from the <a class="reference external" href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST</a> archive</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">os</span></code> for managing system paths</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> to handle array functions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stistools</span></code> for operations on STIS Data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> for plotting data</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import for: Reading in fits file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
+
+<span class="c1"># Import for: Downloading necessary files. (Not necessary if you choose to collect data from MAST)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.mast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observations</span>
+
+<span class="c1"># Import for: Managing system variables and paths</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1"># Import for: Quick Calculation and Data Analysis</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Import for: Operations on STIS Data</span>
+<span class="c1"># import stistools</span>
+
+<span class="c1"># Import for: Plotting and specifying plotting parameters</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="c1"># from matplotlib.ticker import FixedLocator</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.cmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;viridis&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="collect-data-set-from-the-mast-archive-using-astroquery">
+<h3>0.2 Collect Data Set From the MAST Archive Using Astroquery<a class="headerlink" href="#collect-data-set-from-the-mast-archive-using-astroquery" title="Link to this heading">#</a></h3>
+<p>There are other ways to download data from MAST such as using CyberDuck. The steps of collecting data is beyond the scope of this notebook, and we are only showing how to use astroquery.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># change this field in you have a specific dataset to be explored</span>
+<span class="n">obs_id</span> <span class="o">=</span> <span class="s1">&#39;odj102010&#39;</span>
+<span class="c1"># Search target object by obs_id</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">obs_id</span><span class="p">)</span>
+<span class="c1"># get a list of files assiciated with that target</span>
+<span class="n">target_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+<span class="c1"># Download fits files</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">target_list</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_flt.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;_x1d.fits&#39;</span><span class="p">],</span> <span class="n">productType</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SCIENCE&#39;</span><span class="p">])</span>
+<span class="n">flt_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./mastDownload/HST/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">)</span>
+<span class="n">x1d_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./mastDownload/HST/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">_x1d.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj102010_flt.fits to ./mastDownload/HST/odj102010/odj102010_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/odj102010_x1d.fits to ./mastDownload/HST/odj102010/odj102010_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="x1d-fits-file-structure">
+<h2>1 <code class="docutils literal notranslate"><span class="pre">x1d</span></code> FITS File Structure<a class="headerlink" href="#x1d-fits-file-structure" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">x1d</span></code> file is a multi-extension FITS file with header information stored in the primary extension (note that for CCD data the similar extension is <code class="docutils literal notranslate"><span class="pre">sx1</span></code>), and the science data stored in the first extension called “SCI”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fits</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Filename: ./mastDownload/HST/odj102010/odj102010_x1d.fits
+No.    Name      Ver    Type      Cards   Dimensions   Format
+  0  PRIMARY       1 PrimaryHDU     275   ()      
+  1  SCI           1 BinTableHDU    157   1R x 19C   [1I, 1I, 1024D, 1024E, 1024E, 1024E, 1024E, 1024E, 1024E, 1024I, 1E, 1E, 1I, 1E, 1E, 1E, 1E, 1024E, 1E]   
+</pre></div>
+</div>
+</div>
+</div>
+<p>The SCI extension contains the science data of the spectra along the spectral direction such as the wavelength and the flux, and information on the extraction region and the background region when performing the 1D spectra extraction:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Column name</p></th>
+<th class="head text-left"><p>Description</p></th>
+<th class="head text-left"><p>Data Type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>EXTRLOCY</p></td>
+<td class="text-left"><p>an array that gives the location of the center of the spectral trace for each pixel along the Y direction</p></td>
+<td class="text-left"><p>float32 array[1024]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>A2CENTER</p></td>
+<td class="text-left"><p>row number in the y direction at which the spectral trace is centered</p></td>
+<td class="text-left"><p>float32</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>EXTRSIZE</p></td>
+<td class="text-left"><p>height of extraction region</p></td>
+<td class="text-left"><p>float32</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>BK1SIZE</p></td>
+<td class="text-left"><p>height of background region above the extraction region</p></td>
+<td class="text-left"><p>float32</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>BK2SIZE</p></td>
+<td class="text-left"><p>height of background region below the extraction region</p></td>
+<td class="text-left"><p>float32</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>BK1OFFST</p></td>
+<td class="text-left"><p>background region offset from the center of the extraction region above the extraction region</p></td>
+<td class="text-left"><p>float32</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>BK2OFFST</p></td>
+<td class="text-left"><p>background region offset from the center of the extraction region below the extraction region</p></td>
+<td class="text-left"><p>float32</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SPORDER&#39;</span><span class="p">,</span> <span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX&#39;</span><span class="p">,</span> <span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">,</span> <span class="s1">&#39;A2CENTER&#39;</span><span class="p">,</span> <span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">,</span> <span class="s1">&#39;BK1SIZE&#39;</span><span class="p">,</span> <span class="s1">&#39;BK2SIZE&#39;</span><span class="p">,</span> <span class="s1">&#39;BK1OFFST&#39;</span><span class="p">,</span> <span class="s1">&#39;BK2OFFST&#39;</span><span class="p">]</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">)[</span><span class="n">cols</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: UnitsWarning: &#39;Angstroms&#39; did not parse as fits unit: At col 0, Unit &#39;Angstroms&#39; not supported by the FITS standard. Did you mean Angstrom or angstrom? If this is meant to be a custom unit, define it with &#39;u.def_unit&#39;. To have it recognized inside a file reader or other code, enable it with &#39;u.add_enabled_units&#39;. For details, see https://docs.astropy.org/en/latest/units/combining_and_defining.html [astropy.units.core]
+WARNING: UnitsWarning: &#39;Counts/s&#39; did not parse as fits unit: At col 0, Unit &#39;Counts&#39; not supported by the FITS standard. Did you mean count? If this is meant to be a custom unit, define it with &#39;u.def_unit&#39;. To have it recognized inside a file reader or other code, enable it with &#39;u.add_enabled_units&#39;. For details, see https://docs.astropy.org/en/latest/units/combining_and_defining.html [astropy.units.core]
+WARNING: UnitsWarning: &#39;Counts/s&#39; did not parse as fits unit: At col 0, Unit &#39;Counts&#39; not supported by the FITS standard. Did you mean count? If this is meant to be a custom unit, define it with &#39;u.def_unit&#39;. To have it recognized inside a file reader or other code, enable it with &#39;u.add_enabled_units&#39;. For details, see https://docs.astropy.org/en/latest/units/combining_and_defining.html [astropy.units.core]
+WARNING: UnitsWarning: &#39;Counts/s&#39; did not parse as fits unit: At col 0, Unit &#39;Counts&#39; not supported by the FITS standard. Did you mean count? If this is meant to be a custom unit, define it with &#39;u.def_unit&#39;. To have it recognized inside a file reader or other code, enable it with &#39;u.add_enabled_units&#39;. For details, see https://docs.astropy.org/en/latest/units/combining_and_defining.html [astropy.units.core]
+WARNING: UnitsWarning: &#39;Counts/s&#39; did not parse as fits unit: At col 0, Unit &#39;Counts&#39; not supported by the FITS standard. Did you mean count? If this is meant to be a custom unit, define it with &#39;u.def_unit&#39;. To have it recognized inside a file reader or other code, enable it with &#39;u.add_enabled_units&#39;. For details, see https://docs.astropy.org/en/latest/units/combining_and_defining.html [astropy.units.core]
+</pre></div>
+</div>
+<div class="output text_html"><div><i>Table length=1</i>
+<table id="table140521569741520" class="table-striped table-bordered table-condensed">
+<thead><tr><th>SPORDER</th><th>WAVELENGTH</th><th>FLUX</th><th>EXTRLOCY</th><th>A2CENTER</th><th>EXTRSIZE</th><th>BK1SIZE</th><th>BK2SIZE</th><th>BK1OFFST</th><th>BK2OFFST</th></tr></thead>
+<thead><tr><th></th><th>Angstroms</th><th>erg / (Angstrom s cm2)</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th></tr></thead>
+<thead><tr><th>int16</th><th>float64[1024]</th><th>float32[1024]</th><th>float32[1024]</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th></tr></thead>
+<tr><td>1</td><td>1513.611692349868 ..         1567.668670092399</td><td>1.969044e-12 ..    9.896183e-14</td><td>382.2857 ..        397.2364</td><td>389.5777</td><td>11</td><td>5</td><td>5</td><td>-300</td><td>300</td></tr>
+</table></div></div></div>
+</div>
+<p><strong>Note that X1D columns in pixel units (e.g. <code class="docutils literal notranslate"><span class="pre">EXTRLOCY</span></code>) are in one-indexed coordinates. Thus when visualizing the extraction region with Python (zero-indexed), the pixel coordinates need to be subtracted by 1. Additionally, the n-th pixel (in one-index coordinates) ranges from n-0.5 to n+0.5.</strong></p>
+</section>
+<section id="plot-the-extraction-region">
+<h2>2 Plot the Extraction Region<a class="headerlink" href="#plot-the-extraction-region" title="Link to this heading">#</a></h2>
+<p><strong>Left:</strong>  The 2D <code class="docutils literal notranslate"><span class="pre">FLT</span></code> image.</p>
+<p><strong>Right:</strong>  The 2D <code class="docutils literal notranslate"><span class="pre">FLT</span></code> image with extraction regions over-plotted. The extraction region is plotted in red, and the 2 background regions are plotted in orange.</p>
+<p>To zoom in to a specific region along the Y axis, pass in the optional parameter yrange.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">show_extraction_regions</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">,</span> <span class="n">flt_filename</span><span class="p">,</span> <span class="n">sci_ext</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xrange</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yrange</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.88</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">set_figwidth</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">set_figheight</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">))</span>
+    
+    <span class="n">x1d</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="n">sci_ext</span><span class="p">)[</span><span class="n">row</span><span class="p">]</span>
+    <span class="n">flt</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">flt_filename</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="n">sci_ext</span><span class="p">))</span>
+    
+    <span class="c1"># LEFT &amp; Right PLOTS:</span>
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]:</span>
+        <span class="c1"># Display the 2D FLT spectrum on the left:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">flt</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">6</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Right PLOT:</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A2CENTER=</span><span class="si">{</span><span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;A2CENTER&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Extraction region in red:</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;r:&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="c1"># Background regions in orange:</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK1OFFST&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK1SIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK1OFFST&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK1SIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK2OFFST&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK2SIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> 
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> 
+                 <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK2OFFST&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">x1d</span><span class="p">[</span><span class="s1">&#39;BK2SIZE&#39;</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> 
+                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+    
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1023.5</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1023.5</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1023.5</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1023.5</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">xrange</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">yrange</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">yrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">yrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_extraction_regions</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">,</span> <span class="n">flt_filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/730d305a3d201ac9233aedad5f0701f516a93dc76061f6cc5a16438d1596e77d.png" src="../../../_images/730d305a3d201ac9233aedad5f0701f516a93dc76061f6cc5a16438d1596e77d.png" />
+</div>
+</div>
+<p>Zoom in to the extraction region:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_extraction_regions</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">,</span> <span class="n">flt_filename</span><span class="p">,</span> <span class="n">yrange</span><span class="o">=</span><span class="p">[</span><span class="mi">350</span><span class="p">,</span> <span class="mi">450</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/891d188a4f68e61c7debf2302fb84079449d29701c5e702880da58c455232f2b.png" src="../../../_images/891d188a4f68e61c7debf2302fb84079449d29701c5e702880da58c455232f2b.png" />
+</div>
+</div>
+<p>Zoom in to the background region above the extraction region:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_extraction_regions</span><span class="p">(</span><span class="n">x1d_filename</span><span class="p">,</span> <span class="n">flt_filename</span><span class="p">,</span> <span class="n">yrange</span><span class="o">=</span><span class="p">[</span><span class="mi">650</span><span class="p">,</span> <span class="mi">720</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/01410ddc0253fa2cbd5fb895ab656bd65b95ef88456587f996626eb14e7b51a3.png" src="../../../_images/01410ddc0253fa2cbd5fb895ab656bd65b95ef88456587f996626eb14e7b51a3.png" />
+</div>
+</div>
+</section>
+<section id="extracted-spectra-of-stis-echelle">
+<h2>3 Extracted Spectra of STIS Echelle<a class="headerlink" href="#extracted-spectra-of-stis-echelle" title="Link to this heading">#</a></h2>
+<p>The method of visualizing the extracted region also applies to echelle data, except that echelle data has multiple spectra orders, and therefore has multiple <code class="docutils literal notranslate"><span class="pre">EXTRLOCY</span></code> corresponding to each <code class="docutils literal notranslate"><span class="pre">SPORDER</span></code>. In the plotting method, there is a parameter called ‘row’ which specifies the <code class="docutils literal notranslate"><span class="pre">SPORDER</span></code> we want to extract. We’ll show how to visualize the extracted region for STIS echelle data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download the octx01030 dataset, which is a NUV-MAMA echelle data</span>
+<span class="n">obs_id</span> <span class="o">=</span> <span class="s1">&#39;octx01030&#39;</span>
+<span class="c1"># Search target objscy by obs_id</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">obs_id</span><span class="p">)</span>
+<span class="c1"># get a list of files assiciated with that target</span>
+<span class="n">echelle_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+<span class="c1"># Download fits files</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">echelle_list</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_flt.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;_x1d.fits&#39;</span><span class="p">],</span> <span class="n">productType</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SCIENCE&#39;</span><span class="p">,])</span>
+<span class="n">echelle_flt</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./mastDownload/HST/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">_flt.fits&#39;</span><span class="p">)</span>
+<span class="n">echelle_x1d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./mastDownload/HST/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">obs_id</span><span class="si">}</span><span class="s1">_x1d.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/octx01030_flt.fits to ./mastDownload/HST/octx01030/octx01030_flt.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/octx01030_x1d.fits to ./mastDownload/HST/octx01030/octx01030_x1d.fits ...
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
+</pre></div>
+</div>
+</div>
+</div>
+<p>As shown in the table data, there are multiple rows with each row having a different <code class="docutils literal notranslate"><span class="pre">SPORDER</span></code>. Each row also has different <code class="docutils literal notranslate"><span class="pre">EXTRLOCY</span></code>, which corresponds to different extraction regions in the <code class="docutils literal notranslate"><span class="pre">flt</span></code> image for each <code class="docutils literal notranslate"><span class="pre">SPORDER</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SPORDER&#39;</span><span class="p">,</span> <span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX&#39;</span><span class="p">,</span> <span class="s1">&#39;EXTRLOCY&#39;</span><span class="p">,</span> <span class="s1">&#39;EXTRSIZE&#39;</span><span class="p">,</span> <span class="s1">&#39;BK1SIZE&#39;</span><span class="p">,</span> <span class="s1">&#39;BK2SIZE&#39;</span><span class="p">,</span> <span class="s1">&#39;BK1OFFST&#39;</span><span class="p">,</span> <span class="s1">&#39;BK2OFFST&#39;</span><span class="p">]</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">echelle_x1d</span><span class="p">,</span> <span class="n">hdu</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">cols</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: UnitsWarning: &#39;Angstroms&#39; did not parse as fits unit: At col 0, Unit &#39;Angstroms&#39; not supported by the FITS standard. Did you mean Angstrom or angstrom? If this is meant to be a custom unit, define it with &#39;u.def_unit&#39;. To have it recognized inside a file reader or other code, enable it with &#39;u.add_enabled_units&#39;. For details, see https://docs.astropy.org/en/latest/units/combining_and_defining.html [astropy.units.core]
+WARNING: UnitsWarning: &#39;Counts/s&#39; did not parse as fits unit: At col 0, Unit &#39;Counts&#39; not supported by the FITS standard. Did you mean count? If this is meant to be a custom unit, define it with &#39;u.def_unit&#39;. To have it recognized inside a file reader or other code, enable it with &#39;u.add_enabled_units&#39;. For details, see https://docs.astropy.org/en/latest/units/combining_and_defining.html [astropy.units.core]
+WARNING: UnitsWarning: &#39;Counts/s&#39; did not parse as fits unit: At col 0, Unit &#39;Counts&#39; not supported by the FITS standard. Did you mean count? If this is meant to be a custom unit, define it with &#39;u.def_unit&#39;. To have it recognized inside a file reader or other code, enable it with &#39;u.add_enabled_units&#39;. For details, see https://docs.astropy.org/en/latest/units/combining_and_defining.html [astropy.units.core]
+WARNING: UnitsWarning: &#39;Counts/s&#39; did not parse as fits unit: At col 0, Unit &#39;Counts&#39; not supported by the FITS standard. Did you mean count? If this is meant to be a custom unit, define it with &#39;u.def_unit&#39;. To have it recognized inside a file reader or other code, enable it with &#39;u.add_enabled_units&#39;. For details, see https://docs.astropy.org/en/latest/units/combining_and_defining.html [astropy.units.core]
+WARNING: UnitsWarning: &#39;Counts/s&#39; did not parse as fits unit: At col 0, Unit &#39;Counts&#39; not supported by the FITS standard. Did you mean count? If this is meant to be a custom unit, define it with &#39;u.def_unit&#39;. To have it recognized inside a file reader or other code, enable it with &#39;u.add_enabled_units&#39;. For details, see https://docs.astropy.org/en/latest/units/combining_and_defining.html [astropy.units.core]
+</pre></div>
+</div>
+<div class="output text_html"><div><i>Table length=24</i>
+<table id="table140520012695376" class="table-striped table-bordered table-condensed">
+<thead><tr><th>SPORDER</th><th>WAVELENGTH</th><th>FLUX</th><th>EXTRLOCY</th><th>EXTRSIZE</th><th>BK1SIZE</th><th>BK2SIZE</th><th>BK1OFFST</th><th>BK2OFFST</th></tr></thead>
+<thead><tr><th></th><th>Angstroms</th><th>erg / (Angstrom s cm2)</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th><th>pix</th></tr></thead>
+<thead><tr><th>int16</th><th>float64[1024]</th><th>float32[1024]</th><th>float32[1024]</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th></tr></thead>
+<tr><td>66</td><td>3067.682086787238 ..         3119.012536824325</td><td>-2.024925e-14 ..    2.961075e-12</td><td>19.4528 ..        9.476286</td><td>7</td><td>5</td><td>5</td><td>28.01995</td><td>-28.77343</td></tr>
+<tr><td>67</td><td>3021.857426990342 ..         3072.451048939282</td><td>-1.016979e-14 ..    3.081053e-12</td><td>75.9551 ..        66.73717</td><td>7</td><td>5</td><td>5</td><td>27.28738</td><td>-28.01995</td></tr>
+<tr><td>68</td><td>2977.380919743117 ..         3027.257338436938</td><td>-3.668029e-14 ..    1.092327e-12</td><td>131.2862 ..        122.4106</td><td>7</td><td>5</td><td>5</td><td>26.57536</td><td>-27.28738</td></tr>
+<tr><td>69</td><td>2934.193937177996 ..         2983.372006753561</td><td>-2.182534e-14 ..    2.149785e-12</td><td>184.4561 ..        176.3899</td><td>7</td><td>5</td><td>5</td><td>25.88353</td><td>-26.57536</td></tr>
+<tr><td>70</td><td>2892.241202224274 ..         2940.739045949361</td><td>-1.473246e-14 ..    3.039156e-12</td><td>236.3518 ..        228.9839</td><td>7</td><td>5</td><td>5</td><td>25.21152</td><td>-25.88353</td></tr>
+<tr><td>71</td><td>2851.470552596696 ..         2899.305600156981</td><td>-3.943758e-15 ..    2.763269e-12</td><td>286.8198 ..        280.1042</td><td>7</td><td>5</td><td>5</td><td>24.55895</td><td>-25.21152</td></tr>
+<tr><td>72</td><td>2811.832724454624 ..         2859.021746892561</td><td>-7.33356e-15 ..    7.601616e-13</td><td>335.8839 ..        329.9276</td><td>7</td><td>5</td><td>5</td><td>23.92547</td><td>-24.55895</td></tr>
+<tr><td>73</td><td>2773.281153845325 ..         2819.840296326157</td><td>-1.82008e-14 ..     1.55503e-12</td><td>383.655 ..        378.4149</td><td>7</td><td>5</td><td>5</td><td>23.31071</td><td>-23.92547</td></tr>
+<tr><td>74</td><td>2735.771794248858 ..         2781.716606813955</td><td>-6.061262e-15 ..    6.815853e-13</td><td>430.1284 ..        425.6361</td><td>7</td><td>5</td><td>5</td><td>22.7143</td><td>-23.31071</td></tr>
+<tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+<tr><td>81</td><td>2499.145134153861 ..         2541.180702643316</td><td>-2.612488e-15 ..    4.338765e-13</td><td>723.0333 ..         722.767</td><td>7</td><td>5</td><td>5</td><td>19.02243</td><td>-19.50066</td></tr>
+<tr><td>82</td><td>2468.640092303987 ..         2510.167438546871</td><td>-2.433021e-15 ..   -2.118669e-14</td><td>760.7409 ..        761.0948</td><td>7</td><td>5</td><td>5</td><td>18.55963</td><td>-19.02243</td></tr>
+<tr><td>83</td><td>2438.870300692775 ..         2479.900734218312</td><td>-2.507119e-15 ..    4.131679e-14</td><td>797.6779 ..        798.4939</td><td>7</td><td>5</td><td>5</td><td>18.11187</td><td>-18.55963</td></tr>
+<tr><td>84</td><td>2409.809495372872 ..         2450.353954398244</td><td>-2.10243e-14 ..   -1.404878e-13</td><td>833.6879 ..        835.0538</td><td>7</td><td>5</td><td>5</td><td>17.6788</td><td>-18.11187</td></tr>
+<tr><td>85</td><td>2381.432648558161 ..         2421.501716060622</td><td>-2.435009e-15 ..    5.788485e-14</td><td>868.6306 ..          870.58</td><td>7</td><td>5</td><td>5</td><td>17.26004</td><td>-17.6788</td></tr>
+<tr><td>86</td><td>2353.715896742346 ..         2393.319815671447</td><td>-3.619407e-15 ..   -5.706289e-15</td><td>903.117 ..        905.5424</td><td>7</td><td>5</td><td>5</td><td>16.85524</td><td>-17.26004</td></tr>
+<tr><td>87</td><td>2326.636473776193 ..         2365.785161460157</td><td>-2.211804e-15 ..   -2.487948e-13</td><td>936.3604 ..        939.4835</td><td>7</td><td>5</td><td>5</td><td>16.46401</td><td>-16.85524</td></tr>
+<tr><td>88</td><td>2300.172648507885 ..         2338.875710305259</td><td>-2.019401e-15 ..   -1.999815e-13</td><td>969.1396 ..        972.7735</td><td>7</td><td>5</td><td>5</td><td>16.08601</td><td>-16.46401</td></tr>
+<tr><td>89</td><td>2274.303666628806 ..         2312.570408871539</td><td>-1.739565e-15 ..   -2.858723e-13</td><td>1001.029 ..        1005.438</td><td>7</td><td>5</td><td>5</td><td>15.72085</td><td>-16.08601</td></tr>
+</table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_extraction_regions</span><span class="p">(</span><span class="n">echelle_x1d</span><span class="p">,</span> <span class="n">echelle_flt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/49801fd9398b83c16acd30ee504990242afacb3998517ed122fb11a518d88326.png" src="../../../_images/49801fd9398b83c16acd30ee504990242afacb3998517ed122fb11a518d88326.png" />
+</div>
+</div>
+<p>Similarly, we can show the extraction region of the next <code class="docutils literal notranslate"><span class="pre">SPORDER</span></code> by passing the row number into the plotting method:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_extraction_regions</span><span class="p">(</span><span class="n">echelle_x1d</span><span class="p">,</span> <span class="n">echelle_flt</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/c99b72b3c1c687f4dcbd655adf3f1de614d5005c641da705942fb154c8b343ca.png" src="../../../_images/c99b72b3c1c687f4dcbd655adf3f1de614d5005c641da705942fb154c8b343ca.png" />
+</div>
+</div>
+<p>After visualizing the extraction, we can use the <code class="docutils literal notranslate"><span class="pre">x1d()</span></code> function in stistools to customize extraction. For more information, see <a class="reference external" href="https://stistools.readthedocs.io/en/latest/x1d.html"><code class="docutils literal notranslate"><span class="pre">x1d</span></code></a>.</p>
+</section>
+<hr class="docutils" />
+<section id="about-this-notebook">
+<h2>About this Notebook <a class="tocSkip"><a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
+<p><strong>Author:</strong> <a class="reference internal" href="#kding&#64;stsci.edu"><span class="xref myst">Keyi Ding</span></a></p>
+<p><strong>Updated On:</strong> 2023-01-05</p>
+<blockquote>
+<div><p><em>This tutorial was generated to be in compliance with the <a class="reference external" href="https://github.com/spacetelescope/style-guides">STScI style guides</a> and would like to cite the <a class="reference external" href="https://github.com/spacetelescope/style-guides/blob/master/templates/example_notebook.ipynb">Jupyter guide</a> in particular.</em></p>
+</div></blockquote>
+</section>
+<section id="citations">
+<h2>Citations <a class="tocSkip"><a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, or <code class="docutils literal notranslate"><span class="pre">numpy</span></code> for published research, please cite the
+authors. Follow these links for more information about citations:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://matplotlib.org/stable/users/project/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+</ul>
+<hr>
+<p><a class="reference internal" href="#top"><span class="xref myst">Top of Page</span></a>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/STIS/extraction"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../view_data/view_data.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Viewing STIS Data</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../low_count_uncertainties/Low_Count_Uncertainties.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Low Count Uncertainties in STIS <a class="tocSkip"></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
