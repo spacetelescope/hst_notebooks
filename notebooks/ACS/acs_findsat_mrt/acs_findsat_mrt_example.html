@@ -189,10 +189,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../acs_pixel_area_maps/acs_pixel_area_maps.html">ACS Pixel Area Maps</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html">Focus Diverse ePSFs for ACS/WFC</a></li>
-
 <li class="toctree-l1"><a class="reference internal" href="../acs_exception_report/exception_report_checks.html">HST Exception Report - Investigate your ACS Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../hst_orbits_ephem/hst_orbits_ephem.html">Getting HST Ephemeris and Related Data for an Observation</a></li>
 </ul>
@@ -586,7 +586,6 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-setup-and-data">Imports, setup, and data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-finding-trails-in-an-flc-image">Example 1: Finding trails in an FLC image</a></li>
@@ -596,7 +595,8 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-find-trails-in-an-flc-image-using-the-wfc-wrapper">Example 3: find trails in an FLC image using the WFC wrapper</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-4-finding-trails-in-a-drc-image">Example 4: Finding trails in a DRC image</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-5-finding-trails-in-a-drc-image-using-the-wfc-wrapper">Example 5:  Finding trails in a DRC image using the WFC Wrapper</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6-create-a-new-kernel-for-trail-detection">Example 6:  Create a new kernel for trail detection</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6-create-a-new-kernel-for-trail-detection">Example 6:  Create a new kernel for trail detection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#for-more-help">For more help:</a></li>
 </ul>
 </li>
@@ -611,7 +611,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <p><a id="titleFindsat"></a></p>
+  <p><img alt="STScI Logo" src="../../../_images/stsci_header.png" /></p>
+<p><a id="titleFindsat"></a></p>
 <section class="tex2jax_ignore mathjax_ignore" id="satellite-trail-detection-in-acs-wfc-data-using-acstools-findsat-mrt">
 <h1>Satellite trail detection in ACS/WFC data using acstools.findsat_mrt<a class="headerlink" href="#satellite-trail-detection-in-acs-wfc-data-using-acstools-findsat-mrt" title="Link to this heading">#</a></h1>
 <p>This notebook provides examples of how to find and create masks for satellite trails in ACS/WFC imaging data using <a href= 'https://acstools.readthedocs.io/en/latest/findsat_mrt.html'>acstools.findsat_mrt</a>, which is based on the method described in <a href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr2208.pdf">ACS ISR 2022-08</a>. Many of the tools presented here should be applicable to any imaging data.</p>
@@ -624,13 +625,8 @@ document.write(`
 <a class="reference internal" href="#example3"><span class="xref myst">Example 3: Find trails in an FLC image using the WFC wrapper</span></a> <br>
 <a class="reference internal" href="#example4"><span class="xref myst">Example 4: Step-by-step guide to find trails in a DRC image</span></a> <br>
 <a class="reference internal" href="#example5"><span class="xref myst">Example 5: Find trails in a DRC image using the WFC wrapper</span></a><br>
-<a class="reference internal" href="#example6"><span class="xref myst">Example 6: Create a new kernel for detection</span></a><br></p>
-</section>
-<section id="about-this-notebook">
-<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
-<p><strong>Author:</strong> David V. Stark, ACS Instrument Team, Space Telescope Science Institute <br>
-<strong>First Published On:</strong> 5/13/2023 <br>
-<strong>Updated On:</strong> 5/15/2023</p>
+<a class="reference internal" href="#example6"><span class="xref myst">Example 6: Create a new kernel for detection</span></a><br>
+<a class="reference internal" href="#about"><span class="xref myst">About this Notebook</span></a> <br></p>
 <p><a id="intro_ID"></a></p>
 </section>
 <section id="introduction">
@@ -1014,7 +1010,7 @@ document.write(`
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/9742877a40138f260163fbbc3a292f25f8f54eda11ff8d7db7b68c642ae93fac.png" src="../../../_images/9742877a40138f260163fbbc3a292f25f8f54eda11ff8d7db7b68c642ae93fac.png" />
+<img alt="../../../_images/2174e2905144bcf112d9ef491014ca397d299148f5e1c8af563db840d7a3791e.png" src="../../../_images/2174e2905144bcf112d9ef491014ca397d299148f5e1c8af563db840d7a3791e.png" />
 </div>
 </div>
 <p>If you’re having trouble seeing the trails, you can adjust the scale keyword (the min and max values to show given as multiples of the image standard deviation)</p>
@@ -1241,7 +1237,7 @@ document.write(`
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/c54ec5da3a27ba2d10da15fa34453be71f1d094250b2028aa7b3ccc0d4ae5327.png" src="../../../_images/c54ec5da3a27ba2d10da15fa34453be71f1d094250b2028aa7b3ccc0d4ae5327.png" />
+<img alt="../../../_images/21177128ba2d963bd32ba943722a44255cc3d54c7f4418bfa0ff750caf1a4b9d.png" src="../../../_images/21177128ba2d963bd32ba943722a44255cc3d54c7f4418bfa0ff750caf1a4b9d.png" />
 </div>
 </div>
 <p>Next we run the Median Radon Transform. This step can take some time depending on the image size and number of processes being used. This tutorial assumes you can run 8 processes at the same time, but adjust as needed. If you’re not sure how many processes you can run, you can see how many CPU cores are available and adjust based on that.</p>
@@ -1491,7 +1487,7 @@ document.write(`
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/712ac8df6c5f3226e7ad7f6940ce31df4876a8b42122ac6bc2287246aa70a879.png" src="../../../_images/712ac8df6c5f3226e7ad7f6940ce31df4876a8b42122ac6bc2287246aa70a879.png" />
+<img alt="../../../_images/86698183d0b4426666783f798176f54863cf797556cd81dcab7f72427f6cc858.png" src="../../../_images/86698183d0b4426666783f798176f54863cf797556cd81dcab7f72427f6cc858.png" />
 </div>
 </div>
 <p>Note that the x axis in in pixels, not degrees or radians. The <code class="docutils literal notranslate"><span class="pre">theta</span></code> array ranges from 0 to 180 with a spacing of 0.5 degrees, hence 360 pixels.</p>
@@ -1509,7 +1505,7 @@ document.write(`
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Detection threshold: 5
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width15.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width15.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 2
@@ -1518,7 +1514,7 @@ document.write(`
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:2 sources found using kernel
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width7.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width7.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 4
@@ -1527,7 +1523,7 @@ document.write(`
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:4 sources found using kernel
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width3.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width3.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 8
@@ -1767,7 +1763,7 @@ document.write(`
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/a4d5f63113fe4a3a79c45870997c91979aba16a89698e637bbc2cdcc3c62477b.png" src="../../../_images/a4d5f63113fe4a3a79c45870997c91979aba16a89698e637bbc2cdcc3c62477b.png" />
+<img alt="../../../_images/41e55919db5c60ed7ae475769dad290456306f9068f9bc4fb9ad5c893971b16a.png" src="../../../_images/41e55919db5c60ed7ae475769dad290456306f9068f9bc4fb9ad5c893971b16a.png" />
 </div>
 </div>
 <p>We filter the sources further based on a reassessment of their S/N, width, and persistence. The default parameters (namely width) have been chosen for ACS data binned by 2 pixels in each direction. It’s possible different defaults will be better for different imaging data.</p>
@@ -2321,7 +2317,7 @@ snr of feature = 3.4224676357600043
 </pre></div>
 </div>
 <div class="output text_html"><div><i>QTable length=8</i>
-<table id="table140320380833168" class="table-striped table-bordered table-condensed">
+<table id="table140499696175760" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>xcentroid</th><th>ycentroid</th><th>fwhm</th><th>roundness</th><th>pa</th><th>max_value</th><th>flux</th><th>mag</th><th>theta</th><th>rho</th><th>endpoints</th><th>status</th><th>mean flux</th><th>width</th><th>snr</th><th>persistence</th></tr></thead>
 <thead><tr><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64[2,2]</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>1</td><td>149.82861105630025</td><td>1477.0451590340901</td><td>10.006171249354978</td><td>0.8268922957188881</td><td>90.34106279991074</td><td>25.149939411833273</td><td>1165.2352429959637</td><td>-7.66603402890213</td><td>74.91430552815012</td><td>29.045159034090148</td><td>0.0 .. 757.305511828876</td><td>2</td><td>21.61210315571154</td><td>28.121276073737363</td><td>20.845589943623423</td><td>0.9047619047619048</td></tr>
@@ -2580,7 +2576,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/cad4c9e119c81b23de61f1ba43abae76772a17b5b74f81ccad6f7ac3b8c01356.png" src="../../../_images/cad4c9e119c81b23de61f1ba43abae76772a17b5b74f81ccad6f7ac3b8c01356.png" />
+<img alt="../../../_images/851539883148ad81dda96098d5c565be2716da52645f9b0b23abbc372ae9ee2d.png" src="../../../_images/851539883148ad81dda96098d5c565be2716da52645f9b0b23abbc372ae9ee2d.png" />
 </div>
 </div>
 <p>Now we can make the mask itself. By default it only uses sources in the MRT with <code class="docutils literal notranslate"><span class="pre">status=2</span></code>. We make two types of masks, one a simple boolean mask, and one a segementation mask where pixels corresponding to each streak are assigned the ID number. We create these below.</p>
@@ -2917,7 +2913,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/cae46f2076940cc98d1ba7e1e50495eb8c9918f7afac546f695c6a93d3a562fa.png" src="../../../_images/cae46f2076940cc98d1ba7e1e50495eb8c9918f7afac546f695c6a93d3a562fa.png" />
+<img alt="../../../_images/93a49393216033bd73151ce648942c847f473ef7c1d8537038b88d8f4a610a58.png" src="../../../_images/93a49393216033bd73151ce648942c847f473ef7c1d8537038b88d8f4a610a58.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
@@ -3038,7 +3034,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/42b3b42df17da176534259bd6d5d79cb099c80a498fd5f09e1b9ab72203b44a3.png" src="../../../_images/42b3b42df17da176534259bd6d5d79cb099c80a498fd5f09e1b9ab72203b44a3.png" />
+<img alt="../../../_images/3dd737515f0a6408ad36b9f3f041c22b43ad90a5b456732533b1eda7bbc4dd66.png" src="../../../_images/3dd737515f0a6408ad36b9f3f041c22b43ad90a5b456732533b1eda7bbc4dd66.png" />
 </div>
 </div>
 <p>We can also overlay the mask on top of the image to make sure it makes sense.</p>
@@ -3265,7 +3261,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/0391583c3450fd55e25bc0c591a190c3e532c6d0f7d8444ee956178d994b1880.png" src="../../../_images/0391583c3450fd55e25bc0c591a190c3e532c6d0f7d8444ee956178d994b1880.png" />
+<img alt="../../../_images/09bd9b3fbbdf0feffd5190b720931bbe395f8da51662031139f059d52ea0983f.png" src="../../../_images/09bd9b3fbbdf0feffd5190b720931bbe395f8da51662031139f059d52ea0983f.png" />
 </div>
 </div>
 <p>We can save the results now. You have the optional of saving the catalog, mask, MRT, and a diagnostic image that shows the results. In this example we’ll just save everything.</p>
@@ -3807,7 +3803,7 @@ snr of feature = 3.4224676357600043
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f9ee2327950&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7fc8a2377f50&gt;
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
@@ -4002,7 +3998,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/cfdb8981f73727909c1ce7d3e7de6d142450b4edf82af4cef0beaf0f6a838002.png" src="../../../_images/cfdb8981f73727909c1ce7d3e7de6d142450b4edf82af4cef0beaf0f6a838002.png" />
+<img alt="../../../_images/5d42ec636b9569b666eaafcba4119e41e2755cd5ce1c207a59e65e5899ff8a97.png" src="../../../_images/5d42ec636b9569b666eaafcba4119e41e2755cd5ce1c207a59e65e5899ff8a97.png" />
 </div>
 </div>
 </section>
@@ -4089,7 +4085,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Detection threshold: 5
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width15.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width15.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 2
@@ -4098,7 +4094,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:2 sources found using kernel
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width7.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width7.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 4
@@ -4107,7 +4103,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:4 sources found using kernel
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width3.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width3.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 8
@@ -5366,7 +5362,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/cae46f2076940cc98d1ba7e1e50495eb8c9918f7afac546f695c6a93d3a562fa.png" src="../../../_images/cae46f2076940cc98d1ba7e1e50495eb8c9918f7afac546f695c6a93d3a562fa.png" />
+<img alt="../../../_images/93a49393216033bd73151ce648942c847f473ef7c1d8537038b88d8f4a610a58.png" src="../../../_images/93a49393216033bd73151ce648942c847f473ef7c1d8537038b88d8f4a610a58.png" />
 </div>
 </div>
 </section>
@@ -5622,7 +5618,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/9742877a40138f260163fbbc3a292f25f8f54eda11ff8d7db7b68c642ae93fac.png" src="../../../_images/9742877a40138f260163fbbc3a292f25f8f54eda11ff8d7db7b68c642ae93fac.png" />
+<img alt="../../../_images/2174e2905144bcf112d9ef491014ca397d299148f5e1c8af563db840d7a3791e.png" src="../../../_images/2174e2905144bcf112d9ef491014ca397d299148f5e1c8af563db840d7a3791e.png" />
 </div>
 </div>
 <p>From here, everything is the same as the last example:</p>
@@ -5641,7 +5637,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Detection threshold: 5
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width15.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width15.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 2
@@ -5650,7 +5646,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:2 sources found using kernel
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width7.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width7.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 4
@@ -5659,7 +5655,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:4 sources found using kernel
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width3.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width3.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 8
@@ -6207,7 +6203,7 @@ snr of feature = 3.4224676357600043
 </pre></div>
 </div>
 <div class="output text_html"><div><i>QTable length=8</i>
-<table id="table140320372260688" class="table-striped table-bordered table-condensed">
+<table id="table140499687578256" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>xcentroid</th><th>ycentroid</th><th>fwhm</th><th>roundness</th><th>pa</th><th>max_value</th><th>flux</th><th>mag</th><th>theta</th><th>rho</th><th>endpoints</th><th>status</th><th>mean flux</th><th>width</th><th>snr</th><th>persistence</th></tr></thead>
 <thead><tr><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64[2,2]</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>1</td><td>149.82861105630025</td><td>1477.0451590340901</td><td>10.006171249354978</td><td>0.8268922957188881</td><td>90.34106279991074</td><td>25.149939411833273</td><td>1165.2352429959637</td><td>-7.66603402890213</td><td>74.91430552815012</td><td>29.045159034090148</td><td>0.0 .. 757.305511828876</td><td>2</td><td>21.61210315571154</td><td>28.121276073737363</td><td>20.845589943623423</td><td>0.9047619047619048</td></tr>
@@ -6465,7 +6461,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/cad4c9e119c81b23de61f1ba43abae76772a17b5b74f81ccad6f7ac3b8c01356.png" src="../../../_images/cad4c9e119c81b23de61f1ba43abae76772a17b5b74f81ccad6f7ac3b8c01356.png" />
+<img alt="../../../_images/851539883148ad81dda96098d5c565be2716da52645f9b0b23abbc372ae9ee2d.png" src="../../../_images/851539883148ad81dda96098d5c565be2716da52645f9b0b23abbc372ae9ee2d.png" />
 </div>
 </div>
 <p>Lastly, we generate the mask</p>
@@ -6672,7 +6668,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/cae46f2076940cc98d1ba7e1e50495eb8c9918f7afac546f695c6a93d3a562fa.png" src="../../../_images/cae46f2076940cc98d1ba7e1e50495eb8c9918f7afac546f695c6a93d3a562fa.png" />
+<img alt="../../../_images/93a49393216033bd73151ce648942c847f473ef7c1d8537038b88d8f4a610a58.png" src="../../../_images/93a49393216033bd73151ce648942c847f473ef7c1d8537038b88d8f4a610a58.png" />
 </div>
 </div>
 <p>If you’re really feeling very confident, you can run everything in a single line by setting <code class="docutils literal notranslate"><span class="pre">execute=True</span></code>.</p>
@@ -6705,7 +6701,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Detection threshold: 5
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width15.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width15.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 2
@@ -6714,7 +6710,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:2 sources found using kernel
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width7.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width7.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 4
@@ -6723,7 +6719,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:4 sources found using kernel
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width3.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width3.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 8
@@ -8003,7 +7999,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/0391583c3450fd55e25bc0c591a190c3e532c6d0f7d8444ee956178d994b1880.png" src="../../../_images/0391583c3450fd55e25bc0c591a190c3e532c6d0f7d8444ee956178d994b1880.png" />
+<img alt="../../../_images/09bd9b3fbbdf0feffd5190b720931bbe395f8da51662031139f059d52ea0983f.png" src="../../../_images/09bd9b3fbbdf0feffd5190b720931bbe395f8da51662031139f059d52ea0983f.png" />
 </div>
 </div>
 <p><a id="example4"></a></p>
@@ -8216,7 +8212,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/964401b28c4da7b17ca4a9d93d32ec294805adca45284364da61d508e9c3c7a7.png" src="../../../_images/964401b28c4da7b17ca4a9d93d32ec294805adca45284364da61d508e9c3c7a7.png" />
+<img alt="../../../_images/4c01f5d202ae2a73d8f3f6f76b4be51da001214aa538c1d46658aabf756a13f6.png" src="../../../_images/4c01f5d202ae2a73d8f3f6f76b4be51da001214aa538c1d46658aabf756a13f6.png" />
 </div>
 </div>
 <p>Now run the MRT calculation and plot the results</p>
@@ -8468,7 +8464,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/f0b1b25184486990a6b08c84e04862a81581fce1cec0a866d6ffae536360b02c.png" src="../../../_images/f0b1b25184486990a6b08c84e04862a81581fce1cec0a866d6ffae536360b02c.png" />
+<img alt="../../../_images/fdb76d73c6f0727c1f1a97c8c2d73dd8757830a9a84020e750bf5607332ecf04.png" src="../../../_images/fdb76d73c6f0727c1f1a97c8c2d73dd8757830a9a84020e750bf5607332ecf04.png" />
 </div>
 </div>
 <p>This example has a clear gradient in the background due to the cluster. This causes some large scale variation in the RT, but you can see the “point source” signals from the satellite trails around <code class="docutils literal notranslate"><span class="pre">x,y</span> <span class="pre">=</span> <span class="pre">(90,700)</span></code> and <code class="docutils literal notranslate"><span class="pre">x,y</span> <span class="pre">=</span> <span class="pre">(300,700)</span></code>. This is a case where we may have wanted to explore some different background subtraction methods, but we’ll proceed with the simpler approach here. Now we’ll try to pull the sources out.</p>
@@ -8482,7 +8478,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Detection threshold: 5
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width15.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width15.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 54
@@ -8491,7 +8487,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:54 sources found using kernel
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width7.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width7.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 72
@@ -8500,7 +8496,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:72 sources found using kernel
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width3.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width3.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 122
@@ -8516,7 +8512,7 @@ snr of feature = 3.4224676357600043
 </pre></div>
 </div>
 <div class="output text_html"><div><i>QTable length=137</i>
-<table id="table140320377513360" class="table-striped table-bordered table-condensed">
+<table id="table140499693897680" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>xcentroid</th><th>ycentroid</th><th>fwhm</th><th>roundness</th><th>pa</th><th>max_value</th><th>flux</th><th>mag</th><th>theta</th><th>rho</th><th>endpoints</th><th>status</th></tr></thead>
 <thead><tr><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64[2,2]</th><th>int64</th></tr></thead>
 <tr><td>1</td><td>166.32632848500526</td><td>784.1620364707945</td><td>8.97661040342012</td><td>0.7918843725916062</td><td>90.0847777688511</td><td>47.2651673120286</td><td>3758.814804907941</td><td>-8.937627321874395</td><td>83.16316424250263</td><td>-983.8379635292055</td><td>0.0 .. 2368.752557372936</td><td>0</td></tr>
@@ -8798,7 +8794,7 @@ snr of feature = 3.4224676357600043
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/ce56b11a7389cc55e4afc0108e4f289ace5dcbd72cc7e328b1a73133090c117d.png" src="../../../_images/ce56b11a7389cc55e4afc0108e4f289ace5dcbd72cc7e328b1a73133090c117d.png" />
+<img alt="../../../_images/6682f800567e87659664fabdd7f74efbf413329cb9ab28b3a0c5cd982512d631.png" src="../../../_images/6682f800567e87659664fabdd7f74efbf413329cb9ab28b3a0c5cd982512d631.png" />
 </div>
 </div>
 <p>It’s clearly shredding those large-scale features quite a bit, but we’ll try to filter these out.</p>
@@ -9118,7 +9114,7 @@ snr of feature = 4.634727180298878
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:width of feature = 26.324605193464606
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 6.851761817932129
 baseline noise: 0.0
@@ -9143,7 +9139,7 @@ Section size for persistence check: 308.0
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 8
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -9264,7 +9260,7 @@ snr of feature = 0.1317059539880958
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 8 of 8
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -9300,7 +9296,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -9319,7 +9315,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -9655,7 +9651,7 @@ snr of feature = 10.790707313545887
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 25 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -9674,7 +9670,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 26 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -9693,7 +9689,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 27 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -9797,7 +9793,7 @@ snr of feature = 4.426310631859094
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 5 of 5
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -9841,7 +9837,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -9860,7 +9856,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -9879,7 +9875,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 3 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -10262,7 +10258,7 @@ Number of sections that passed: 21
 persistance score: 0.75
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 1.0303595066070557
 baseline noise: 0.0
@@ -10279,7 +10275,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 29
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -10298,7 +10294,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 29
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -10484,7 +10480,7 @@ snr of feature = -1.0
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 13 of 29
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 174.13859595690707
 baseline noise: 0
@@ -10741,9 +10737,11 @@ snr of feature = 5.493316255639088
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 28 of 29
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
-INFO:utils_findsat_mrt:amplitude of feature: 0.0
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
 snr of feature = nan
 </pre></div>
@@ -10760,7 +10758,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 29 of 29
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -10804,7 +10802,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -11194,7 +11192,7 @@ snr of feature = -0.44352393079921465
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 24 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -11213,7 +11211,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 25 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -11234,7 +11232,7 @@ Number of sections that passed: 1
 persistance score: 0.04
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 4.098998069763184
 baseline noise: 0.0
@@ -11251,7 +11249,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -11713,7 +11711,7 @@ snr of feature = 5.427372141701842
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:width of feature = 75.12367692686587
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 1.0855026245117188
 baseline noise: 0.0
@@ -11730,7 +11728,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 31
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -11749,7 +11747,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 31
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -11768,7 +11766,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 3 of 31
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -12229,7 +12227,7 @@ snr of feature = -0.7437222480227731
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 30 of 31
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 81.75603485107422
 baseline noise: 0.0
@@ -12248,7 +12246,7 @@ snr of feature = inf
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 31 of 31
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -12269,7 +12267,7 @@ Number of sections that passed: 0
 persistance score: 0.0
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 1.9238338470458984
 baseline noise: 0.0
@@ -12286,7 +12284,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 30
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -12305,7 +12303,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 30
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -12780,7 +12778,7 @@ snr of feature = 3.2623814724283737
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 30 of 30
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -12801,7 +12799,7 @@ Number of sections that passed: 1
 persistance score: 0.03333333333333333
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.7078640460968018
 baseline noise: 0.0
@@ -12818,7 +12816,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 29
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -13072,7 +13070,7 @@ snr of feature = 0.47933941367717353
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 16 of 29
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 44.85531624605429
 baseline noise: 0
@@ -13272,7 +13270,7 @@ snr of feature = -1.0
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 28 of 29
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 80.51618957519531
 baseline noise: 0.0
@@ -13291,7 +13289,7 @@ snr of feature = inf
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 29 of 29
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -13312,7 +13310,7 @@ Number of sections that passed: 3
 persistance score: 0.10344827586206896
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 7.232807159423828
 baseline noise: 0.0
@@ -13762,7 +13760,7 @@ snr of feature = 10.109851833975947
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 27 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -13783,7 +13781,7 @@ Number of sections that passed: 3
 persistance score: 0.1111111111111111
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 7.7386016845703125
 baseline noise: 0.0
@@ -13968,7 +13966,7 @@ snr of feature = -0.4924552842369769
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 9 of 9
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 40.22935485839844
 baseline noise: 0.0
@@ -14004,7 +14002,7 @@ Section size for persistence check: 409.0
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 6
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -14126,7 +14124,7 @@ snr of feature = 1.7097777975851374
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:width of feature = 29.313834254263554
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 4.755313375455463
 baseline noise: 0
@@ -14272,7 +14270,7 @@ snr of feature = 725.7745468958259
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:width of feature = 226.42864521076115
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 1.4922080039978027
 baseline noise: 0.0
@@ -14289,7 +14287,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -14308,7 +14306,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -14596,7 +14594,7 @@ snr of feature = 2.6029192577327547
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 19 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 39.57997463429029
 baseline noise: 0
@@ -14717,7 +14715,7 @@ snr of feature = 0.06369950662652052
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 26 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 69.44119262695312
 baseline noise: 0.0
@@ -14736,7 +14734,7 @@ snr of feature = inf
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 27 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -14755,7 +14753,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 28 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -14807,7 +14805,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -15194,7 +15192,7 @@ snr of feature = -1.3077004683298497
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 24 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -15213,7 +15211,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 25 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -15234,7 +15232,7 @@ Number of sections that passed: 2
 persistance score: 0.08
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -15244,7 +15242,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:width of feature = 30.00000001027169
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.7018728256225586
 baseline noise: 0.0
@@ -15261,7 +15259,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 31
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -15280,7 +15278,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 31
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -15758,7 +15756,7 @@ snr of feature = 2.3280588469116776
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 30 of 31
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -15777,7 +15775,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 31 of 31
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -16252,7 +16250,7 @@ snr of feature = 0.5956673960829891
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 27 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 63.72228240966797
 baseline noise: 0.0
@@ -16288,7 +16286,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -16307,7 +16305,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -16697,9 +16695,11 @@ snr of feature = 6.271334608976109
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 25 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
-INFO:utils_findsat_mrt:amplitude of feature: 0.0
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
 snr of feature = nan
 </pre></div>
@@ -17171,7 +17171,7 @@ snr of feature = -1.7723276771840113
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:width of feature = 23.07422964240675
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 1.4500722885131836
 baseline noise: 0.0
@@ -17188,7 +17188,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -17207,7 +17207,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -17574,7 +17574,7 @@ snr of feature = 4.366271399989311
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 24 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -17593,7 +17593,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 25 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -17612,7 +17612,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 26 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -17631,7 +17631,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 27 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -17683,7 +17683,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -18073,7 +18073,7 @@ snr of feature = 1.72997665950052
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 24 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -18092,7 +18092,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 25 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -18113,7 +18113,7 @@ Number of sections that passed: 1
 persistance score: 0.04
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0
 baseline noise: 0.0
@@ -18138,7 +18138,7 @@ Section size for persistence check: 511.0
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 6
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -18225,7 +18225,7 @@ snr of feature = 2.8223214030945174
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 6 of 6
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 5.062824249267578
 baseline noise: 0.0
@@ -18277,7 +18277,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -18296,7 +18296,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -18655,9 +18655,11 @@ snr of feature = -1.0
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 23 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
-INFO:utils_findsat_mrt:amplitude of feature: 0.0
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
 snr of feature = nan
 </pre></div>
@@ -18674,7 +18676,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 24 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -18693,7 +18695,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 25 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -18745,7 +18747,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -19284,7 +19286,7 @@ snr of feature = 10.344792381412692
 </pre></div>
 </div>
 <div class="output text_html"><div><i>QTable length=137</i>
-<table id="table140320377513360" class="table-striped table-bordered table-condensed">
+<table id="table140499693897680" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>xcentroid</th><th>ycentroid</th><th>fwhm</th><th>roundness</th><th>pa</th><th>max_value</th><th>flux</th><th>mag</th><th>theta</th><th>rho</th><th>endpoints</th><th>status</th><th>mean flux</th><th>width</th><th>snr</th><th>persistence</th></tr></thead>
 <thead><tr><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64[2,2]</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>1</td><td>166.32632848500526</td><td>784.1620364707945</td><td>8.97661040342012</td><td>0.7918843725916062</td><td>90.0847777688511</td><td>47.2651673120286</td><td>3758.814804907941</td><td>-8.937627321874395</td><td>83.16316424250263</td><td>-983.8379635292055</td><td>0.0 .. 2368.752557372936</td><td>0</td><td>10.766564246247055</td><td>144.11032104424442</td><td>8.949418734191653</td><td>0.0</td></tr>
@@ -19590,7 +19592,7 @@ snr of feature = 10.344792381412692
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/fad194dc813eb4562f36b4d43e3919b415d6b8cad47d060d8c6b83a7bc59630b.png" src="../../../_images/fad194dc813eb4562f36b4d43e3919b415d6b8cad47d060d8c6b83a7bc59630b.png" />
+<img alt="../../../_images/b27be61c232b3f234d4af33769795d8898527826c246a4ba56edda3b560b2ca1.png" src="../../../_images/b27be61c232b3f234d4af33769795d8898527826c246a4ba56edda3b560b2ca1.png" />
 </div>
 </div>
 <p>That seems to have worked! Let’s make the map to confirm</p>
@@ -19819,7 +19821,7 @@ snr of feature = 10.344792381412692
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/0311308894d2e8b677cc785c0a71d439dc8b39c9d532e6acba91154ee7a9ffdd.png" src="../../../_images/0311308894d2e8b677cc785c0a71d439dc8b39c9d532e6acba91154ee7a9ffdd.png" />
+<img alt="../../../_images/fbe2a2bdb72dbf6b2e7cf25b3c628f60a06edebcd72c72b4a1786012630a8383.png" src="../../../_images/fbe2a2bdb72dbf6b2e7cf25b3c628f60a06edebcd72c72b4a1786012630a8383.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
@@ -19907,7 +19909,7 @@ snr of feature = 10.344792381412692
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/7ed6f180683a7622ba23213fe3ed33a282d6feba2398352e4d64362088ed693d.png" src="../../../_images/7ed6f180683a7622ba23213fe3ed33a282d6feba2398352e4d64362088ed693d.png" />
+<img alt="../../../_images/576c5dad21d10b1d16f9baf7d2c0bbaccdfc9ac7b08bbc126373452f6987c507.png" src="../../../_images/576c5dad21d10b1d16f9baf7d2c0bbaccdfc9ac7b08bbc126373452f6987c507.png" />
 </div>
 </div>
 <p>Let’s make a version plotting the mask on top of the original image</p>
@@ -20068,7 +20070,7 @@ snr of feature = 10.344792381412692
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/51f5531c9eb2d3412530fa908746b805703f03ef822654d56a5794aac86ae200.png" src="../../../_images/51f5531c9eb2d3412530fa908746b805703f03ef822654d56a5794aac86ae200.png" />
+<img alt="../../../_images/e1775f1c9e61fcd55037ef103b32bd65fac760588045d7324fbd11e9e537bb6e.png" src="../../../_images/e1775f1c9e61fcd55037ef103b32bd65fac760588045d7324fbd11e9e537bb6e.png" />
 </div>
 </div>
 <p><a id="example5"></a></p>
@@ -20116,7 +20118,7 @@ Extra rows/columns will be trimmed first.
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Detection threshold: 5
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width15.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width15.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 6
@@ -20125,7 +20127,7 @@ Extra rows/columns will be trimmed first.
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:6 sources found using kernel
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width7.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width7.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 11
@@ -20134,7 +20136,7 @@ Extra rows/columns will be trimmed first.
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:11 sources found using kernel
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width3.fits
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Using kernel /home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/data/rt_line_kernel_width3.fits
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:{no} sources found using kernel: 22
@@ -20159,7 +20161,7 @@ Check persistence: True
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:findsat_mrt:Min persistence: 0.5
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.001411164179444313
 baseline noise: 0.0
@@ -20176,7 +20178,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 23
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -20195,7 +20197,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 23
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -20510,7 +20512,7 @@ snr of feature = 7.379356971863787
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 22 of 23
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -20529,7 +20531,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 23 of 23
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -20550,7 +20552,7 @@ Number of sections that passed: 9
 persistance score: 0.391304347826087
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.01355403009802103
 baseline noise: 0.0
@@ -20567,7 +20569,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -20586,7 +20588,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -20605,7 +20607,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 3 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 8.270610123872757e-06
 baseline noise: 0.0
@@ -20927,7 +20929,7 @@ snr of feature = 19.2510577862455
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 25 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -20946,7 +20948,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 26 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -20965,7 +20967,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 27 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -20986,7 +20988,7 @@ Number of sections that passed: 18
 persistance score: 0.6666666666666666
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.15870659053325653
 baseline noise: 0.0
@@ -21003,7 +21005,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -21022,7 +21024,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -21041,7 +21043,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 3 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -21408,7 +21410,7 @@ snr of feature = 9.884067459728657
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 28 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -21429,7 +21431,7 @@ Number of sections that passed: 20
 persistance score: 0.7142857142857143
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.002465298864990473
 baseline noise: 0.0
@@ -21446,7 +21448,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -21881,7 +21883,7 @@ snr of feature = -1.7685836987171386
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 27 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -21902,7 +21904,7 @@ Number of sections that passed: 3
 persistance score: 0.1111111111111111
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0029083238914608955
 baseline noise: 0.0
@@ -21912,7 +21914,7 @@ snr of feature = inf
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:width of feature = 102.61080647704088
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.001887783408164978
 baseline noise: 0.0
@@ -21929,7 +21931,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -21948,7 +21950,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -22332,7 +22334,7 @@ snr of feature = 38.52658934351427
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 25 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -22353,7 +22355,7 @@ Number of sections that passed: 3
 persistance score: 0.12
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0004662323044613004
 baseline noise: 0.0
@@ -22370,7 +22372,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -22389,7 +22391,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -22727,7 +22729,7 @@ snr of feature = 16.983626152554837
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 23 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -22746,7 +22748,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 24 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -22765,7 +22767,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 25 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -22786,7 +22788,7 @@ Number of sections that passed: 7
 persistance score: 0.28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.002934725722298026
 baseline noise: 0.0
@@ -23727,7 +23729,7 @@ Number of sections that passed: 4
 persistance score: 0.14814814814814814
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.002492113970220089
 baseline noise: 0.0
@@ -23744,7 +23746,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -24145,9 +24147,11 @@ snr of feature = 29.75830869663037
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 25 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
-INFO:utils_findsat_mrt:amplitude of feature: 0.0
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
 snr of feature = nan
 </pre></div>
@@ -24166,7 +24170,7 @@ Number of sections that passed: 3
 persistance score: 0.12
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0012397635728120804
 baseline noise: 0.0
@@ -24176,7 +24180,7 @@ snr of feature = inf
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:width of feature = 79.89087079954629
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0005722552305087447
 baseline noise: 0.0
@@ -24193,7 +24197,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 26
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -24608,7 +24612,7 @@ snr of feature = 1.2662284894157616
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 26 of 26
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -24629,7 +24633,7 @@ Number of sections that passed: 4
 persistance score: 0.15384615384615385
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.001497750636190176
 baseline noise: 0.0
@@ -24646,7 +24650,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -25044,7 +25048,7 @@ snr of feature = 7.643378663182956
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 25 of 25
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -25065,7 +25069,7 @@ Number of sections that passed: 4
 persistance score: 0.16
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.00029566249577328563
 baseline noise: 0.0
@@ -25082,7 +25086,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -25523,7 +25527,7 @@ snr of feature = -0.37446647352142864
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 27 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -25544,7 +25548,7 @@ Number of sections that passed: 1
 persistance score: 0.037037037037037035
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0009551611728966236
 baseline noise: 0.0
@@ -25561,7 +25565,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 24
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -25951,7 +25955,7 @@ snr of feature = -2.024536528954778
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 24 of 24
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -25972,7 +25976,7 @@ Number of sections that passed: 1
 persistance score: 0.041666666666666664
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.001623440533876419
 baseline noise: 0.0
@@ -25989,7 +25993,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -26305,7 +26309,7 @@ snr of feature = 3.0016375529725288
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 20 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.039278151441432554
 baseline noise: 0
@@ -26423,7 +26427,7 @@ snr of feature = -1.6992117917688092
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 27 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -26444,7 +26448,7 @@ Number of sections that passed: 4
 persistance score: 0.14814814814814814
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 6.144901999505237e-05
 baseline noise: 0.0
@@ -26461,7 +26465,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -26910,7 +26914,7 @@ snr of feature = 10.801005240970735
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 28 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -26946,7 +26950,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 26
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -27373,7 +27377,7 @@ snr of feature = -1.0
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 26 of 26
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -28326,7 +28330,7 @@ snr of feature = 1760317.9073173134
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 28 of 28
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0023808921687304974
 baseline noise: 0.0
@@ -28347,7 +28351,7 @@ Number of sections that passed: 4
 persistance score: 0.14285714285714285
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0003165900707244873
 baseline noise: 0.0
@@ -28364,7 +28368,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 24
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -28383,7 +28387,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 2 of 24
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -28402,7 +28406,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 3 of 24
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -28755,7 +28759,7 @@ snr of feature = -0.20747104252841253
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 24 of 24
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -28791,7 +28795,7 @@ Section size for persistence check: 100
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 1 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -28946,7 +28950,7 @@ snr of feature = -0.5768019351827247
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 10 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: divide by zero encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.5711710494963025
 baseline noise: 0
@@ -29234,9 +29238,11 @@ snr of feature = 80819.5334159404
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:Checking persistence, step 27 of 27
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
-INFO:utils_findsat_mrt:amplitude of feature: 0.0
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
 snr of feature = nan
 </pre></div>
@@ -29255,7 +29261,7 @@ Number of sections that passed: 1
 persistance score: 0.037037037037037035
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:297: RuntimeWarning: invalid value encountered in scalar divide
   snr = (peak - noise) / noise
 INFO:utils_findsat_mrt:amplitude of feature: 0.0
 baseline noise: 0.0
@@ -29875,7 +29881,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/9d519855f4c6d448c5bb5152a5a072422f56d2354d4525d284631bd5e3146cd3.png" src="../../../_images/9d519855f4c6d448c5bb5152a5a072422f56d2354d4525d284631bd5e3146cd3.png" />
+<img alt="../../../_images/163999c24d1c6d5a90055ec93da2ab87898f45d785422421122c56f2e5263dd3.png" src="../../../_images/163999c24d1c6d5a90055ec93da2ab87898f45d785422421122c56f2e5263dd3.png" />
 </div>
 </div>
 <p>And there you go!</p>
@@ -30486,7 +30492,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/d3855d720e3aec8eb2c43fc868802ec21bdef621542f7c211a26ab4a04b09f6f.png" src="../../../_images/d3855d720e3aec8eb2c43fc868802ec21bdef621542f7c211a26ab4a04b09f6f.png" />
+<img alt="../../../_images/52fc3abfe3bc500ec2d86013dbde93997aee4414dab783d31d679fa4f3189130.png" src="../../../_images/52fc3abfe3bc500ec2d86013dbde93997aee4414dab783d31d679fa4f3189130.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
@@ -30598,7 +30604,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/5b0fa89a8e7abc818b21c9d930be285bce99263857ad967e916b5b3742fdb9d5.png" src="../../../_images/5b0fa89a8e7abc818b21c9d930be285bce99263857ad967e916b5b3742fdb9d5.png" />
+<img alt="../../../_images/d3238f9e30f0da95e05bcf6e1103a99efed959750914772dee7ca2f06a413962.png" src="../../../_images/d3238f9e30f0da95e05bcf6e1103a99efed959750914772dee7ca2f06a413962.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
@@ -30767,7 +30773,7 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/a7d63e73a0fde862875bf967eb92ec7986292a6cb6d0c5f3b2611b2bf6491984.png" src="../../../_images/a7d63e73a0fde862875bf967eb92ec7986292a6cb6d0c5f3b2611b2bf6491984.png" />
+<img alt="../../../_images/576ce7525eae10246eb95fc8d8cf4964adcb297c268f1d84051879cf0a2f4d24.png" src="../../../_images/576ce7525eae10246eb95fc8d8cf4964adcb297c268f1d84051879cf0a2f4d24.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
@@ -30858,20 +30864,28 @@ snr of feature = nan
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:matplotlib.font_manager:findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Georgia
 </pre></div>
 </div>
-<img alt="../../../_images/ab8044ff8a1a67ffbf89ab9903948fe6db6c9ecd1d47675b13c47ad1966f23fd.png" src="../../../_images/ab8044ff8a1a67ffbf89ab9903948fe6db6c9ecd1d47675b13c47ad1966f23fd.png" />
+<img alt="../../../_images/2803905faf2205036a0788b0a94d768924179ce8bf49005a5e6e76de9e7f5311.png" src="../../../_images/2803905faf2205036a0788b0a94d768924179ce8bf49005a5e6e76de9e7f5311.png" />
 </div>
 </div>
 <p>The first plot show the model streak. The second plot shows the resulting MRT. The kernsl is created by taking a cutout around the signal in the MRT. The third double-plot shows 1D slices of the signal in the MRT, with orange lines showing the location of the maximum values. These serve as first guesses of the center, after which the center is redetermined using a Guassian fit and the cutout extracted with the kernel perfectly centered. The 4th plot above shows the final kernel.</p>
 <p>The kernel can be saved by defining the <code class="docutils literal notranslate"><span class="pre">outfile</span></code> keyword in <code class="docutils literal notranslate"><span class="pre">create_mrt_line_kernel</span></code>. By adding this file path into the <code class="docutils literal notranslate"><span class="pre">kernels</span></code> keyword in <code class="docutils literal notranslate"><span class="pre">TrailFinder</span></code> or <code class="docutils literal notranslate"><span class="pre">WfcWrapper</span></code>, it will be used for source detection when running <code class="docutils literal notranslate"><span class="pre">find_mrt_sources</span></code>.</p>
+<p><a id="about"></a></p>
+</section>
+<section id="about-this-notebook">
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
+<p><strong>Author:</strong> David V. Stark, ACS Instrument Team, Space Telescope Science Institute <br>
+<strong>First Published On:</strong> 5/13/2023 <br>
+<strong>Updated On:</strong> 5/15/2023</p>
 <section id="for-more-help">
 <h3>For more help:<a class="headerlink" href="#for-more-help" title="Link to this heading">#</a></h3>
 <p>More details may be found on the <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/acs">ACS website</a> and in the <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB">ACS Instrument</a> and <a class="reference external" href="https://hst-docs.stsci.edu/acsdhb">Data Handbooks</a>.</p>
 <p>Please visit the <a class="reference external" href="http://hsthelp.stsci.edu">HST Help Desk</a>. Through the help desk portal, you can explore the HST Knowledge Base and request additional help from experts.</p>
 <hr>
-[Top of Page](#titleFindsat)
-<img style="float: right;" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" alt="Space Telescope Logo" width="200px"/> 
+<p><a class="reference internal" href="#titleFindsat"><span class="xref myst">Top of Page</span></a>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a>
 <br></br>
-<br></br></section>
+<br></br></p>
+</section>
 </section>
 </section>
 
@@ -30940,7 +30954,6 @@ snr of feature = nan
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-setup-and-data">Imports, setup, and data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-finding-trails-in-an-flc-image">Example 1: Finding trails in an FLC image</a></li>
@@ -30950,7 +30963,8 @@ snr of feature = nan
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-find-trails-in-an-flc-image-using-the-wfc-wrapper">Example 3: find trails in an FLC image using the WFC wrapper</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-4-finding-trails-in-a-drc-image">Example 4: Finding trails in a DRC image</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-5-finding-trails-in-a-drc-image-using-the-wfc-wrapper">Example 5:  Finding trails in a DRC image using the WFC Wrapper</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6-create-a-new-kernel-for-trail-detection">Example 6:  Create a new kernel for trail detection</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6-create-a-new-kernel-for-trail-detection">Example 6:  Create a new kernel for trail detection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#for-more-help">For more help:</a></li>
 </ul>
 </li>
