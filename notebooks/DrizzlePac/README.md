@@ -1,3 +1,5 @@
+![STScI Logo](../../../_static/stsci_header.png)
+
 DrizzlePac Notebooks
 =================
 
