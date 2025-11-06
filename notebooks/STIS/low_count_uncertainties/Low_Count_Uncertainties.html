@@ -668,14 +668,14 @@ By the end of this tutorial, you will:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/stsci/tools/nmpfit.py:8: UserWarning: NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.
-  warnings.warn(&quot;NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.&quot;)
-/home/runner/micromamba/envs/hstcal/lib/python3.11/site-packages/stsci/tools/gfit.py:18: UserWarning: GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.Use astropy.modeling instead.
-  warnings.warn(&quot;GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.&quot;
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following tasks in the stistools package can be run with TEAL:
    basic2d      calstis     ocrreject     wavecal        x1d          x2d
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/stsci/tools/nmpfit.py:8: UserWarning: NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.
+  warnings.warn(&quot;NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.&quot;)
+/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/stsci/tools/gfit.py:18: UserWarning: GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.Use astropy.modeling instead.
+  warnings.warn(&quot;GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.&quot;
 </pre></div>
 </div>
 </div>
@@ -776,6 +776,9 @@ Time: 2012-12-07 10:58:55
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/1a0081122ff0587704fc0d3a76c7e3d4515ca5f9ff9f7c0a5ff2fa6c2fc139dc.png" src="../../../_images/1a0081122ff0587704fc0d3a76c7e3d4515ca5f9ff9f7c0a5ff2fa6c2fc139dc.png" />
+</div>
 </div>
 <p>You can see large flux from the star’s Lyman-<span class="math notranslate nohighlight">\(\alpha\)</span> emission. The core of the line is getting absorbed by the interstellar medium, or “ISM”, yet the wide wings of the line do show appreciable flux. This is an important indicator of chromospheric activity in low-mass stars. But if you look outside the line, you’ll see almost no flux! This is because low-mass stars, like GJ436, will have very little UV-continuum, mostly because of their relatively cool temperatures.</p>
 <p>Now let’s look at the uncertainties associated with these measurements. The error in the net counts (and subsequently the flux measurement) is initialized in <code class="docutils literal notranslate"><span class="pre">calstis</span></code>. For MAMA data such as this, the pipeline simply takes the square-root of the counts, <span class="math notranslate nohighlight">\(I\)</span>, as the error in the counts: <span class="math notranslate nohighlight">\(\sigma = \sqrt{I}\)</span>. For CCD data, we must also account for the gain and readnoise, such that <span class="math notranslate nohighlight">\(\sigma = \sqrt{\frac{I-bias}{gain}+(\frac{readnoise}{gain})^2}\)</span>. <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/stis/documentation/instrument-science-reports/_documents/199826.pdf">See ISR 98-26</a>. Note that the square-root must be taken on the <em>counts</em>, not the <em>count rate</em> or the <em>flux</em>.</p>
@@ -814,6 +817,9 @@ Time: 2012-12-07 10:58:55
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/c78806871267d7cd0287f5dbb9f699fb6ca619c08ba3265ee94779f52e8613e0.png" src="../../../_images/c78806871267d7cd0287f5dbb9f699fb6ca619c08ba3265ee94779f52e8613e0.png" />
 </div>
 </div>
 <p>As you can see, the pipeline uncertainties are mostly just the square root of the counts. Error from dark subtraction is generally pretty small in the FUV; In our observations, the science header states the the mean dark count was 0.0184 counts per pixel (<code class="docutils literal notranslate"><span class="pre">hdu[1].header['MEANDARK']</span></code>) and that’s over the whole 2,905 s exposure. In the extraction routines, the pipeline defaults to an extraction height of 11 pixels, so the dark rate is still adding less than a count per wavelength. In the NUV, however, dark rates can be as much as 0.002 counts per second per pixel, which can result in dozens of “extra” counts and thus do need to be taken into account in the errors. Errors in the flat-field division will also contribute minutely to the flux error.</p>
@@ -890,6 +896,9 @@ Time: 2012-12-07 10:58:55
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/63a295cfb7ebc23154b92d2b8f6d8b0dbce4475d2bdfa26d0411916896f7bba7.png" src="../../../_images/63a295cfb7ebc23154b92d2b8f6d8b0dbce4475d2bdfa26d0411916896f7bba7.png" />
+</div>
 </div>
 <p>The asymmetry in the Poisson distribution therefore implies we need a different approach to estimate our uncertainties. For that, we’ll need to define an upper- and lower-limits on the confidence interval (CI). Formally, <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1986ApJ...303..336G/abstract">Geherels (1986)</a> defines these, respectively, as:</p>
 <p><span class="math notranslate nohighlight">\(\sum_{x=0}^{N}\frac{\lambda_u^x e^{-\lambda_u}}{x!} = 1 - CL\)</span></p>
@@ -928,6 +937,9 @@ Time: 2012-12-07 10:58:55
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/1b449aa05a3b8b8634843e0a0dd96581ad7e97d83daa49d4d4587ce73e9b8039.png" src="../../../_images/1b449aa05a3b8b8634843e0a0dd96581ad7e97d83daa49d4d4587ce73e9b8039.png" />
 </div>
 </div>
 <p>As you can see, the uncertainties calculated for a measurement from the Poisson distribution are not well-approximated by the Gaussian root-N approximation, especially for the upper bounds. This is because the upper bounds is basically the root-N approximation plus 1. Futhermore, and importantly, at N=0, the root-N approximation says that our uncertinaity goes to zero, which is clearly absurd! If we don’t measure any counts on a pixel, we shouldn’t somehow be inifintely sure there were no photons there. The Poisson distribution handles N=0 with an upper limit of 1.866 (while the lower limit does indeed go to zero; we cannot have negative counts!).</p>
@@ -974,6 +986,9 @@ Time: 2012-12-07 10:58:55
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/5f742805c00b84b0c2a19302014f24819b4c44a7ed924dd914ff53a191dddd7d.png" src="../../../_images/5f742805c00b84b0c2a19302014f24819b4c44a7ed924dd914ff53a191dddd7d.png" />
+</div>
 </div>
 <p>You can see just what we were warning about above at the end of Section 3: when the measured counts go to (or near) zero, our uncertainty now becomes infintesimal… or equivalently, our certainty becomes infinite! So let’s see what the proper Poisson unceratinties are.</p>
 <div class="cell docutils container">
@@ -1003,6 +1018,9 @@ Time: 2012-12-07 10:58:55
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/101bf81e38914816dba451edde59735e5681ecd5c50551b4f0e9fa7456d0753d.png" src="../../../_images/101bf81e38914816dba451edde59735e5681ecd5c50551b4f0e9fa7456d0753d.png" />
 </div>
 </div>
 <p>When just assuming root-N errors, as the <code class="docutils literal notranslate"><span class="pre">calstis</span></code> pipeline currently does, we are therefore clearly underestimating the true Poisson uncertainty in this low-count regime.</p>
@@ -1105,6 +1123,7 @@ Time: 2012-12-07 10:58:55
 )
 </pre></div>
 </div>
+<img alt="../../../_images/8ad0a8bed41cd87d6e83c4d8b4e6131eaf87caae8da96208a2579fc454868ee8.png" src="../../../_images/8ad0a8bed41cd87d6e83c4d8b4e6131eaf87caae8da96208a2579fc454868ee8.png" />
 </div>
 </div>
 <p>As you can see, the stistools.poisson_err.poisson_err function re-creates our manual calculation of the Poisson confidence interval with Astropy.</p>
@@ -1265,6 +1284,10 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/9ae34f6eb486b0e79f656ac6bc33fdd2523770285bf04aebb7e6509c05b63655.png" src="../../../_images/9ae34f6eb486b0e79f656ac6bc33fdd2523770285bf04aebb7e6509c05b63655.png" />
+<img alt="../../../_images/5bae2353c366fdafce4a481d680689bfab99e6f8a1acc4e7408f7b517dd31d84.png" src="../../../_images/5bae2353c366fdafce4a481d680689bfab99e6f8a1acc4e7408f7b517dd31d84.png" />
+</div>
 </div>
 <p>You can see that outside of the emission lines seen between 1300 and 1307 Angstrom, counts are varying between 0, 1, or 2. This is the regime where the Gaussian root-N approximation breaks down. Below, we show how the pipeline Poisson Confidence Interval upper and lower limits compare to the root-N approximation.</p>
 <div class="cell docutils container">
@@ -1290,13 +1313,14 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2896/1276255037.py:4: RuntimeWarning: invalid value encountered in divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2936/1276255037.py:4: RuntimeWarning: invalid value encountered in divide
   sensitivity = net/flux  # counts per second per flux
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;Wavelength ($\\mathrm{\\AA}$)&#39;)
 </pre></div>
 </div>
+<img alt="../../../_images/504903d31315b99ba6550443f3c37ab736303b55fc467015b5ac80a6eef975fc.png" src="../../../_images/504903d31315b99ba6550443f3c37ab736303b55fc467015b5ac80a6eef975fc.png" />
 </div>
 </div>
 <p>You can see that the COS pipeline gives lower bound uncertainties lower than root-N, but the upper bound uncertainties are significantly higher than root-N (coming from the “extra +1” in the Poisson upper confidence interval, related to the “continuity correction” between the discrete Poisson and continuous Gaussian distributions). This is crucial for quantifying non-detections. For example, the sorts of upper limits you can place on something like the FUV continuum of an M-dwarf can come down to how you treat these sorts of uncertainties.</p>
@@ -1314,7 +1338,9 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 <p>After we split the file up, we’ll then run <code class="docutils literal notranslate"><span class="pre">calstis</span></code> to compare the new calibrated x1d file to the original, non-split x1d file. To do this, we’ll need to set some paths for the CRDS reference files. You can read more about them here: https://hst-crds.stsci.edu/</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let&#39;s grab the tag file associated with the x1d STIS file</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+
+<span class="c1"># Let&#39;s grab the tag file associated with the x1d STIS file</span>
 <span class="c1"># that we downloaded above</span>
 <span class="n">target_id</span> <span class="o">=</span> <span class="s2">&quot;obgh07020&quot;</span>
 <span class="n">target</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="p">[</span><span class="n">target_id</span><span class="p">])</span>
@@ -1344,7 +1370,7 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CRDS_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">crds_path</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CRDS_SERVER_URL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;https://hst-crds.stsci.edu&quot;</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;oref&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">crds_path</span><span class="p">,</span> <span class="s2">&quot;references/hst/oref/&quot;</span><span class="p">)</span>
-<span class="o">!</span>crds<span class="w"> </span>bestrefs<span class="w"> </span>--update-bestrefs<span class="w"> </span>--sync-references<span class="o">=</span><span class="m">1</span><span class="w"> </span>--files<span class="w"> </span><span class="o">{</span>raw_file<span class="o">}</span>
+<span class="err">!</span><span class="n">crds</span> <span class="n">bestrefs</span> <span class="o">--</span><span class="n">update</span><span class="o">-</span><span class="n">bestrefs</span> <span class="o">--</span><span class="n">sync</span><span class="o">-</span><span class="n">references</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">files</span> <span class="p">{</span><span class="n">raw_file</span><span class="p">}</span>
 
 <span class="c1"># We need to remove the x1d file we downloaded before</span>
 <span class="c1"># because we&#39;ll replace it with the inttag version</span>
@@ -1368,548 +1394,15 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/obgh07020_tag.fits to ./mastDownload/HST/obgh07020/obgh07020_tag.fits ...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>imset: 1, start: 0.092375, stop: 968.4659166666667, exposure time: 968.3735416666667
-imset: 2, start: 968.4659166666667, stop: 1936.8394583333334, exposure time: 968.3735416666667
-imset: 3, start: 1936.8394583333334, stop: 2905.213, exposure time: 968.3735416666668
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading URL https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HST/product/obgh07020_wav.fits to ./mastDownload/HST/obgh07020/obgh07020_wav.fits ...
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> [Done]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_wf4tfile_0250.rmap      678 bytes  (1 / 142 files) (0 / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_shadfile_0250.rmap      977 bytes  (2 / 142 files) (678 / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_offtab_0250.rmap      642 bytes  (3 / 142 files) (1.7 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_maskfile_0250.rmap      685 bytes  (4 / 142 files) (2.3 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_idctab_0250.rmap      696 bytes  (5 / 142 files) (3.0 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_flatfile_0250.rmap   30.0 K bytes  (6 / 142 files) (3.7 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_dgeofile_0250.rmap      801 bytes  (7 / 142 files) (33.7 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_darkfile_0250.rmap  178.4 K bytes  (8 / 142 files) (34.5 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_biasfile_0250.rmap    3.3 K bytes  (9 / 142 files) (212.8 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_atodfile_0250.rmap      874 bytes  (10 / 142 files) (216.1 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfpc2_0250.imap      782 bytes  (11 / 142 files) (217.0 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_snkcfile_0003.rmap      681 bytes  (12 / 142 files) (217.8 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_satufile_0003.rmap    1.0 K bytes  (13 / 142 files) (218.5 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_pfltfile_0253.rmap   34.2 K bytes  (14 / 142 files) (219.5 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_pctetab_0004.rmap      698 bytes  (15 / 142 files) (253.7 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_oscntab_0250.rmap      747 bytes  (16 / 142 files) (254.4 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_npolfile_0254.rmap    4.0 K bytes  (17 / 142 files) (255.1 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_nlinfile_0250.rmap      726 bytes  (18 / 142 files) (259.2 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_mdriztab_0254.rmap      845 bytes  (19 / 142 files) (259.9 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_imphttab_0257.rmap      683 bytes  (20 / 142 files) (260.7 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_idctab_0254.rmap      661 bytes  (21 / 142 files) (261.4 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_flshfile_0257.rmap    6.0 K bytes  (22 / 142 files) (262.1 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_drkcfile_0208.rmap  252.5 K bytes  (23 / 142 files) (268.1 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_dfltfile_0002.rmap   17.1 K bytes  (24 / 142 files) (520.6 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_darkfile_0508.rmap  299.8 K bytes  (25 / 142 files) (537.7 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_d2imfile_0251.rmap      605 bytes  (26 / 142 files) (837.5 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_crrejtab_0250.rmap      803 bytes  (27 / 142 files) (838.1 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_ccdtab_0250.rmap      799 bytes  (28 / 142 files) (838.9 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_bpixtab_0328.rmap   12.6 K bytes  (29 / 142 files) (839.7 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_biasfile_0268.rmap   23.6 K bytes  (30 / 142 files) (852.3 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_biacfile_0003.rmap      692 bytes  (31 / 142 files) (875.9 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_atodtab_0250.rmap      651 bytes  (32 / 142 files) (876.6 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_wfc3_0631.imap    1.3 K bytes  (33 / 142 files) (877.3 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_tmttab_0002.rmap      745 bytes  (34 / 142 files) (878.6 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_tmgtab_0013.rmap      767 bytes  (35 / 142 files) (879.3 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_tmctab_0061.rmap      743 bytes  (36 / 142 files) (880.1 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_thruput_0065.rmap  332.2 K bytes  (37 / 142 files) (880.8 K / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_thermal_0003.rmap   20.4 K bytes  (38 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_obsmodes_0004.rmap      743 bytes  (39 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_synphot_0075.imap      579 bytes  (40 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_xtractab_0250.rmap      815 bytes  (41 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_wcptab_0251.rmap      578 bytes  (42 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_teltab_0250.rmap      745 bytes  (43 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_tdstab_0256.rmap      921 bytes  (44 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_tdctab_0253.rmap      650 bytes  (45 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_srwtab_0250.rmap      745 bytes  (46 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_sptrctab_0251.rmap      895 bytes  (47 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_sdctab_0251.rmap      889 bytes  (48 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_riptab_0254.rmap      877 bytes  (49 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_phottab_0259.rmap    1.6 K bytes  (50 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_pfltfile_0250.rmap   23.7 K bytes  (51 / 142 files) (1.2 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_pctab_0250.rmap    3.1 K bytes  (52 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_mofftab_0250.rmap      747 bytes  (53 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_mlintab_0250.rmap      601 bytes  (54 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_lfltfile_0250.rmap   11.8 K bytes  (55 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_lamptab_0250.rmap      610 bytes  (56 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_inangtab_0250.rmap      815 bytes  (57 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_imphttab_0253.rmap      616 bytes  (58 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_idctab_0251.rmap      775 bytes  (59 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_halotab_0250.rmap      747 bytes  (60 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_gactab_0250.rmap      651 bytes  (61 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_exstab_0250.rmap      745 bytes  (62 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_echsctab_0250.rmap      749 bytes  (63 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_disptab_0250.rmap      813 bytes  (64 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_darkfile_0369.rmap   63.4 K bytes  (65 / 142 files) (1.3 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_crrejtab_0250.rmap      711 bytes  (66 / 142 files) (1.4 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_cdstab_0250.rmap      745 bytes  (67 / 142 files) (1.4 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_ccdtab_0252.rmap      893 bytes  (68 / 142 files) (1.4 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_bpixtab_0250.rmap      845 bytes  (69 / 142 files) (1.4 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_biasfile_0370.rmap  124.8 K bytes  (70 / 142 files) (1.4 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_apertab_0250.rmap      588 bytes  (71 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_apdestab_0252.rmap      636 bytes  (72 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_stis_0390.imap    1.7 K bytes  (73 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_zprattab_0250.rmap      646 bytes  (74 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_tempfile_0250.rmap    1.1 K bytes  (75 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_tdffile_0250.rmap    8.9 K bytes  (76 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_saadfile_0250.rmap      771 bytes  (77 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_saacntab_0250.rmap      594 bytes  (78 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_rnlcortb_0250.rmap      771 bytes  (79 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_pmskfile_0250.rmap      603 bytes  (80 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_pmodfile_0250.rmap      603 bytes  (81 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_phottab_0250.rmap      862 bytes  (82 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_pedsbtab_0250.rmap      594 bytes  (83 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_noisfile_0250.rmap    2.6 K bytes  (84 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_nlinfile_0250.rmap    1.7 K bytes  (85 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_maskfile_0250.rmap    1.2 K bytes  (86 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_illmfile_0250.rmap    5.8 K bytes  (87 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_idctab_0250.rmap      767 bytes  (88 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_flatfile_0250.rmap   11.0 K bytes  (89 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_darkfile_0250.rmap   14.9 K bytes  (90 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_nicmos_0250.imap    1.1 K bytes  (91 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_ywlkfile_0004.rmap      922 bytes  (92 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_xwlkfile_0003.rmap      922 bytes  (93 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_xtractab_0272.rmap    1.9 K bytes  (94 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_wcptab_0262.rmap    1.2 K bytes  (95 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_twozxtab_0282.rmap    1.5 K bytes  (96 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_tracetab_0280.rmap    1.5 K bytes  (97 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_tdstab_0274.rmap      749 bytes  (98 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_spwcstab_0255.rmap    1.1 K bytes  (99 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_spottab_0008.rmap      766 bytes  (100 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_proftab_0280.rmap    1.5 K bytes  (101 / 142 files) (1.5 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_phatab_0250.rmap      668 bytes  (102 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_lamptab_0268.rmap    1.7 K bytes  (103 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_hvtab_0259.rmap      567 bytes  (104 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_hvdstab_0003.rmap    1.0 K bytes  (105 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_gsagtab_0263.rmap      603 bytes  (106 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_geofile_0251.rmap      640 bytes  (107 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_fluxtab_0289.rmap    1.8 K bytes  (108 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_flatfile_0268.rmap    2.3 K bytes  (109 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_disptab_0279.rmap    1.8 K bytes  (110 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_dgeofile_0003.rmap      909 bytes  (111 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_deadtab_0250.rmap      711 bytes  (112 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_brsttab_0250.rmap      696 bytes  (113 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_brftab_0251.rmap      583 bytes  (114 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_bpixtab_0261.rmap      773 bytes  (115 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_badttab_0252.rmap      643 bytes  (116 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_cos_0374.imap     1.4 K bytes  (117 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_spottab_0251.rmap      641 bytes  (118 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_snkcfile_0113.rmap    8.2 K bytes  (119 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_shadfile_0251.rmap      531 bytes  (120 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_satufile_0002.rmap    1.2 K bytes  (121 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_pfltfile_0253.rmap   69.2 K bytes  (122 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_pctetab_0254.rmap      615 bytes  (123 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_oscntab_0251.rmap      781 bytes  (124 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_npolfile_0253.rmap    3.2 K bytes  (125 / 142 files) (1.6 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_mlintab_0250.rmap      646 bytes  (126 / 142 files) (1.7 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_mdriztab_0253.rmap      769 bytes  (127 / 142 files) (1.7 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_imphttab_0261.rmap      769 bytes  (128 / 142 files) (1.7 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_idctab_0256.rmap    1.5 K bytes  (129 / 142 files) (1.7 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_flshfile_0270.rmap    3.5 K bytes  (130 / 142 files) (1.7 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_drkcfile_0466.rmap   15.7 K bytes  (131 / 142 files) (1.7 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_dgeofile_0250.rmap    3.2 K bytes  (132 / 142 files) (1.7 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_darkfile_0456.rmap   87.7 K bytes  (133 / 142 files) (1.7 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_d2imfile_0253.rmap      601 bytes  (134 / 142 files) (1.8 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_crrejtab_0251.rmap      945 bytes  (135 / 142 files) (1.8 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_cfltfile_0250.rmap    1.2 K bytes  (136 / 142 files) (1.8 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_ccdtab_0256.rmap    1.4 K bytes  (137 / 142 files) (1.8 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_bpixtab_0253.rmap    1.1 K bytes  (138 / 142 files) (1.8 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_biasfile_0453.rmap   57.7 K bytes  (139 / 142 files) (1.8 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_atodtab_0251.rmap      528 bytes  (140 / 142 files) (1.8 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_acs_0562.imap     1.3 K bytes  (141 / 142 files) (1.8 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/mappings/hst/hst_1283.pmap           495 bytes  (142 / 142 files) (1.8 M / 1.8 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  No comparison context or source comparison requested.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  ===&gt; Processing ./mastDownload/HST/obgh07020/obgh07020_raw.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/16j16005o_apd.fits   49.0 K bytes  (1 / 26 files) (0 / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/16j1600ao_sdc.fits  167.0 K bytes  (2 / 26 files) (49.0 K / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/16j1600co_wcp.fits   20.2 K bytes  (3 / 26 files) (216.0 K / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/6471931ao_rip.fits    4.1 M bytes  (4 / 26 files) (236.2 K / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/77o1827do_1dt.fits    4.4 M bytes  (5 / 26 files) (4.4 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/93q1947bo_tds.fits   57.6 K bytes  (6 / 26 files) (8.8 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/95118570o_pht.fits    4.3 M bytes  (7 / 26 files) (8.8 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/97a1641fo_imp.fits  817.9 K bytes  (8 / 26 files) (13.1 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/h1v1541eo_iac.fits   11.5 K bytes  (9 / 26 files) (13.9 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/h4s1350io_moc.fits   11.5 K bytes  (10 / 26 files) (14.0 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/j9r16559o_lin.fits   11.5 K bytes  (11 / 26 files) (14.0 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/k8m09584o_cds.fits    8.6 K bytes  (12 / 26 files) (14.0 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/k8m09585o_ech.fits    1.0 M bytes  (13 / 26 files) (14.0 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/k8m09586o_exs.fits   11.5 K bytes  (14 / 26 files) (15.0 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/k8m09587o_hal.fits   67.1 M bytes  (15 / 26 files) (15.0 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/k8m09589o_srw.fits   11.5 K bytes  (16 / 26 files) (82.1 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/k8m0958ao_tel.fits  933.1 K bytes  (17 / 26 files) (82.1 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/l421050oo_lmp.fits    7.2 M bytes  (18 / 26 files) (83.1 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/m1b2139no_lfl.fits  673.9 K bytes  (19 / 26 files) (90.3 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/m7p16110o_dsp.fits  342.7 K bytes  (20 / 26 files) (91.0 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/mbj1658bo_pfl.fits   42.0 M bytes  (21 / 26 files) (91.3 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/n7p10323o_1dx.fits  129.6 K bytes  (22 / 26 files) (133.3 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/q591955ro_drk.fits   42.0 M bytes  (23 / 26 files) (133.4 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/uce15153o_bpx.fits  521.3 K bytes  (24 / 26 files) (175.4 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/y2r1559to_apt.fits   11.6 M bytes  (25 / 26 files) (175.9 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Fetching  /home/runner/crds_cache/references/hst/stis/y2r16005o_pct.fits   89.3 K bytes  (26 / 26 files) (187.5 M / 187.6 M bytes)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  0 errors
-CRDS - INFO -  0 warnings
-CRDS - INFO -  170 infos
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    02-Oct-2025 18:12:24 UTC
+Begin    06-Nov-2025 16:22:43 UTC
 
 Input    ./mastDownload/HST/obgh07020/obgh07020_raw.fits
 Outroot  ./mastDownload/HST/obgh07020/inttag
 Wavecal  ./mastDownload/HST/obgh07020/obgh07020_wav.fits
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    02-Oct-2025 18:12:24 UTC
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    06-Nov-2025 16:22:43 UTC
 Input    ./mastDownload/HST/obgh07020/obgh07020_raw.fits
 Output   ./mastDownload/HST/obgh07020/inttag_flt.fits
 OBSMODE  TIME-TAG
@@ -1917,125 +1410,7 @@ APERTURE 52X0.1
 OPT_ELEM G140M
 DETECTOR FUV-MAMA
 
-Imset 1  Begin 18:12:24 UTC
-
-DQICORR  PERFORM
-DQITAB   oref$uce15153o_bpx.fits
-DQITAB   PEDIGREE=GROUND
-DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
-DQICORR  COMPLETE
-         Uncertainty array initialized.
-
-LORSCORR OMIT
-
-GLINCORR PERFORM
-LFLGCORR PERFORM
-MLINTAB  oref$j9r16559o_lin.fits
-MLINTAB  PEDIGREE=GROUND
-MLINTAB  DESCRIP =T. Danks gathered Info
-MLINTAB  DESCRIP =T. Danks Gathered Info
-GLINCORR COMPLETE
-LFLGCORR COMPLETE
-
-DARKCORR PERFORM
-DARKFILE oref$q591955ro_drk.fits
-DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
-DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DARKCORR COMPLETE
-
-FLATCORR PERFORM
-PFLTFILE oref$mbj1658bo_pfl.fits
-PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
-PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
-LFLTFILE oref$m1b2139no_lfl.fits
-LFLTFILE PEDIGREE=DUMMY
-LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
-
-PHOTCORR OMIT
-
-DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
-
-STATFLAG PERFORM
-STATFLAG COMPLETE
-Imset 1  End 18:12:24 UTC
-
-Imset 2  Begin 18:12:24 UTC
-
-DQICORR  PERFORM
-DQICORR  COMPLETE
-         Uncertainty array initialized.
-
-LORSCORR OMIT
-
-GLINCORR PERFORM
-LFLGCORR PERFORM
-GLINCORR COMPLETE
-LFLGCORR COMPLETE
-
-DARKCORR PERFORM
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DARKCORR COMPLETE
-
-FLATCORR PERFORM
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
-
-DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
-
-STATFLAG PERFORM
-STATFLAG COMPLETE
-Imset 2  End 18:12:24 UTC
-
-Imset 3  Begin 18:12:24 UTC
-
-DQICORR  PERFORM
-DQICORR  COMPLETE
-         Uncertainty array initialized.
-
-LORSCORR OMIT
-
-GLINCORR PERFORM
-LFLGCORR PERFORM
-GLINCORR COMPLETE
-LFLGCORR COMPLETE
-
-DARKCORR PERFORM
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DARKCORR COMPLETE
-
-FLATCORR PERFORM
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
-
-DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
-
-STATFLAG PERFORM
-STATFLAG COMPLETE
-Imset 3  End 18:12:25 UTC
-
-End      02-Oct-2025 18:12:25 UTC
-
-*** CALSTIS-1 complete ***
-
-*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    02-Oct-2025 18:12:25 UTC
-Input    ./mastDownload/HST/obgh07020/obgh07020_wav.fits
-Output   ./mastDownload/HST/obgh07020/inttag_fwv_tmp.fits
-OBSMODE  ACCUM
-APERTURE 52X0.1
-OPT_ELEM G140M
-DETECTOR FUV-MAMA
-
-Imset 1  Begin 18:12:25 UTC
+Imset 1  Begin 16:22:43 UTC
 
 DQICORR  PERFORM
 DQITAB   oref$uce15153o_bpx.fits
@@ -2074,13 +1449,13 @@ LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
 
 PHOTCORR OMIT
 
-DOPPCORR OMIT
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
 
 STATFLAG PERFORM
 STATFLAG COMPLETE
-Imset 1  End 18:12:25 UTC
+Imset 1  End 16:22:43 UTC
 
-Imset 2  Begin 18:12:25 UTC
+Imset 2  Begin 16:22:43 UTC
 
 DQICORR  PERFORM
 DQICORR  COMPLETE
@@ -2094,9 +1469,118 @@ GLINCORR COMPLETE
 LFLGCORR COMPLETE
 
 DARKCORR PERFORM
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DARKCORR COMPLETE
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 2  End 16:22:43 UTC
+
+Imset 3  Begin 16:22:43 UTC
+
+DQICORR  PERFORM
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 3  End 16:22:43 UTC
+
+End      06-Nov-2025 16:22:43 UTC
+
+*** CALSTIS-1 complete ***
+
+*** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
+Begin    06-Nov-2025 16:22:43 UTC
+Input    ./mastDownload/HST/obgh07020/obgh07020_wav.fits
+Output   ./mastDownload/HST/obgh07020/inttag_fwv_tmp.fits
+OBSMODE  ACCUM
+APERTURE 52X0.1
+OPT_ELEM G140M
+DETECTOR FUV-MAMA
+
+Imset 1  Begin 16:22:43 UTC
+
+DQICORR  PERFORM
+DQITAB   oref$uce15153o_bpx.fits
+DQITAB   PEDIGREE=GROUND
+DQITAB   DESCRIP =New BPIXTAB with opt_elem column and correct repeller wire flag----
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+MLINTAB  oref$j9r16559o_lin.fits
+MLINTAB  PEDIGREE=GROUND
+MLINTAB  DESCRIP =T. Danks gathered Info
+MLINTAB  DESCRIP =T. Danks Gathered Info
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKFILE oref$q591955ro_drk.fits
+DARKFILE PEDIGREE=INFLIGHT 29/01/2003 03/08/2004
+DARKFILE DESCRIP =Avg of 152 1380s darks from 9615 10034
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+PFLTFILE oref$mbj1658bo_pfl.fits
+PFLTFILE PEDIGREE=INFLIGHT 17/03/1998 17/05/2002
+PFLTFILE DESCRIP =On-orbit FUV P-flat created from proposals 7645,8428,8862,8922
+LFLTFILE oref$m1b2139no_lfl.fits
+LFLTFILE PEDIGREE=DUMMY
+LFLTFILE DESCRIP =Dummy file created by M. Mcgrath. Modified by C Proffitt
+FLATCORR COMPLETE
+
+PHOTCORR OMIT
+
+DOPPCORR OMIT
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 1  End 16:22:43 UTC
+
+Imset 2  Begin 16:22:43 UTC
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DQICORR  PERFORM
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKCORR COMPLETE
 
 FLATCORR PERFORM
 FLATCORR COMPLETE
@@ -2105,23 +1589,23 @@ DOPPCORR OMIT
 
 STATFLAG PERFORM
 STATFLAG COMPLETE
-Imset 2  End 18:12:25 UTC
+Imset 2  End 16:22:44 UTC
 
-End      02-Oct-2025 18:12:25 UTC
+End      06-Nov-2025 16:22:44 UTC
 
 *** CALSTIS-1 complete ***
 
 *** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    02-Oct-2025 18:12:25 UTC
+Begin    06-Nov-2025 16:22:44 UTC
 Input    ./mastDownload/HST/obgh07020/inttag_fwv_tmp.fits
 Output   ./mastDownload/HST/obgh07020/inttag_w2d_tmp.fits
 OBSMODE  ACCUM
 APERTURE 52X0.1
 OPT_ELEM G140M
 DETECTOR FUV-MAMA
-Imset 1  Begin 18:12:25 UTC
+Imset 1  Begin 16:22:44 UTC
 
-Order 1  Begin 18:12:25 UTC
+Order 1  Begin 16:22:44 UTC
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>X2DCORR  PERFORM
@@ -2148,33 +1632,32 @@ SPTRCTAB DESCRIP =New traces for select echelle secondary modes
 SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
 X2DCORR  COMPLETE
 DISPCORR COMPLETE
-Order 1  End 18:12:25 UTC
-Imset 1  End 18:12:25 UTC
-Imset 2  Begin 18:12:25 UTC
+Order 1  End 16:22:44 UTC
+Imset 1  End 16:22:44 UTC
+Imset 2  Begin 16:22:44 UTC
 
-Order 1  Begin 18:12:25 UTC
+Order 1  Begin 16:22:44 UTC
 
 X2DCORR  PERFORM
 DISPCORR PERFORM
 X2DCORR  COMPLETE
 DISPCORR COMPLETE
-Order 1  End 18:12:25 UTC
-Imset 2  End 18:12:25 UTC
+Order 1  End 16:22:44 UTC
+Imset 2  End 16:22:44 UTC
 
-End      02-Oct-2025 18:12:25 UTC
+End      06-Nov-2025 16:22:44 UTC
 
 *** CALSTIS-7 complete ***
 
 *** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    02-Oct-2025 18:12:25 UTC
+Begin    06-Nov-2025 16:22:44 UTC
 Input    ./mastDownload/HST/obgh07020/inttag_w2d_tmp.fits
 OBSMODE  ACCUM
 APERTURE 52X0.1
 OPT_ELEM G140M
 DETECTOR FUV-MAMA
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 1  Begin 18:12:25 UTC
+
+Imset 1  Begin 16:22:44 UTC
 
 WAVECORR PERFORM
 WCPTAB   oref$16j1600co_wcp.fits
@@ -2195,9 +1678,9 @@ Warning  which is outside the allowed range 0.5 to 1.5
          Shift in dispersion direction is -2.254 pixels.
          Shift in spatial direction is 6.357 pixels.
 WAVECORR COMPLETE
-Imset 1  End 18:12:25 UTC
+Imset 1  End 16:22:44 UTC
 
-Imset 2  Begin 18:12:25 UTC
+Imset 2  Begin 16:22:44 UTC
 
 WAVECORR PERFORM
 Warning  Skipping current occulting bar ... \
@@ -2206,51 +1689,51 @@ Warning  which is outside the allowed range 0.5 to 1.5
          Shift in dispersion direction is -2.312 pixels.
          Shift in spatial direction is 7.221 pixels.
 WAVECORR COMPLETE
-Imset 2  End 18:12:25 UTC
+Imset 2  End 16:22:44 UTC
 
-End      02-Oct-2025 18:12:25 UTC
+End      06-Nov-2025 16:22:44 UTC
 
 *** CALSTIS-4 complete ***
 
 *** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    02-Oct-2025 18:12:25 UTC
+Begin    06-Nov-2025 16:22:44 UTC
 Wavecal  ./mastDownload/HST/obgh07020/inttag_w2d_tmp.fits
 Science  ./mastDownload/HST/obgh07020/inttag_flt.fits
 OBSMODE  TIME-TAG
 APERTURE 52X0.1
 OPT_ELEM G140M
 DETECTOR FUV-MAMA
-Imset 1  Begin 18:12:25 UTC
+Imset 1  Begin 16:22:44 UTC
          SHIFTA1 set to -2.29187
          SHIFTA2 set to 6.92031
-Imset 1  End 18:12:25 UTC
-Imset 2  Begin 18:12:25 UTC
+Imset 1  End 16:22:44 UTC
+Imset 2  Begin 16:22:44 UTC
          SHIFTA1 set to -2.29918
          SHIFTA2 set to 7.03006
-Imset 2  End 18:12:25 UTC
-Imset 3  Begin 18:12:25 UTC
+Imset 2  End 16:22:44 UTC
+Imset 3  Begin 16:22:44 UTC
          SHIFTA1 set to -2.30648
          SHIFTA2 set to 7.1398
-Imset 3  End 18:12:25 UTC
+Imset 3  End 16:22:44 UTC
 
-End      02-Oct-2025 18:12:25 UTC
+End      06-Nov-2025 16:22:44 UTC
 
 *** CALSTIS-12 complete ***
 
 *** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    02-Oct-2025 18:12:25 UTC
+Begin    06-Nov-2025 16:22:44 UTC
 Input    ./mastDownload/HST/obgh07020/inttag_flt.fits
 Output   ./mastDownload/HST/obgh07020/inttag_x2d.fits
 OBSMODE  TIME-TAG
 APERTURE 52X0.1
 OPT_ELEM G140M
 DETECTOR FUV-MAMA
-Imset 1  Begin 18:12:25 UTC
+Imset 1  Begin 16:22:44 UTC
 
 HELCORR  PERFORM
 HELCORR  COMPLETE
 
-Order 1  Begin 18:12:25 UTC
+Order 1  Begin 16:22:44 UTC
 
 X2DCORR  PERFORM
 DISPCORR PERFORM
@@ -2296,15 +1779,16 @@ Warning  Keyword `BUNIT&#39; is being added to header.
 FLUXCORR COMPLETE
 X2DCORR  COMPLETE
 DISPCORR COMPLETE
-Order 1  End 18:12:25 UTC
-Imset 1  End 18:12:25 UTC
-Imset 2  Begin 18:12:25 UTC
+Order 1  End 16:22:44 UTC
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HELCORR  PERFORM
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 1  End 16:22:44 UTC
+Imset 2  Begin 16:22:44 UTC
+
+HELCORR  PERFORM
 HELCORR  COMPLETE
 
-Order 1  Begin 18:12:25 UTC
+Order 1  Begin 16:22:44 UTC
 
 X2DCORR  PERFORM
 DISPCORR PERFORM
@@ -2315,17 +1799,16 @@ Warning  Keyword `BUNIT&#39; is being added to header.
 FLUXCORR COMPLETE
 X2DCORR  COMPLETE
 DISPCORR COMPLETE
-Order 1  End 18:12:25 UTC
-Imset 2  End 18:12:25 UTC
-Imset 3  Begin 18:12:25 UTC
+Order 1  End 16:22:44 UTC
+Imset 2  End 16:22:44 UTC
+Imset 3  Begin 16:22:44 UTC
 
 HELCORR  PERFORM
 HELCORR  COMPLETE
 
-Order 1  Begin 18:12:25 UTC
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>X2DCORR  PERFORM
+Order 1  Begin 16:22:44 UTC
+
+X2DCORR  PERFORM
 DISPCORR PERFORM
 
 FLUXCORR PERFORM
@@ -2334,15 +1817,15 @@ Warning  Keyword `BUNIT&#39; is being added to header.
 FLUXCORR COMPLETE
 X2DCORR  COMPLETE
 DISPCORR COMPLETE
-Order 1  End 18:12:25 UTC
-Imset 3  End 18:12:25 UTC
+Order 1  End 16:22:44 UTC
+Imset 3  End 16:22:44 UTC
 
-End      02-Oct-2025 18:12:25 UTC
+End      06-Nov-2025 16:22:44 UTC
 
 *** CALSTIS-7 complete ***
 
 *** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    02-Oct-2025 18:12:25 UTC
+Begin    06-Nov-2025 16:22:44 UTC
 
 Warning  Grating-aperture throughput correction table (GACTAB) was not found,
          and no gac corrections will be applied
@@ -2362,9 +1845,9 @@ SPTRCTAB oref$77o1827do_1dt.fits
 SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 01/12/2009
 SPTRCTAB DESCRIP =New traces for select echelle secondary modes
 
-Imset 1  Begin 18:12:25 UTC
+Imset 1  Begin 16:22:44 UTC
          Input read into memory.
-Order 1  Begin 18:12:25 UTC
+Order 1  Begin 16:22:44 UTC
 X1DCORR  PERFORM
 BACKCORR PERFORM
 ******** Calling Slfit ***********BACKCORR COMPLETE
@@ -2405,17 +1888,17 @@ FLUXCORR COMPLETE
 SGEOCORR OMIT
 
          Row 1 written to disk.
-Order 1  End 18:12:25 UTC
+Order 1  End 16:22:44 UTC
 
-Imset 1  End 18:12:25 UTC
+Imset 1  End 16:22:44 UTC
 
-Imset 2  Begin 18:12:25 UTC
-         Input read into memory.
-Order 1  Begin 18:12:26 UTC
-X1DCORR  PERFORM
+Imset 2  Begin 16:22:44 UTC
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BACKCORR PERFORM
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>         Input read into memory.
+Order 1  Begin 16:22:44 UTC
+X1DCORR  PERFORM
+BACKCORR PERFORM
 ******** Calling Slfit ***********BACKCORR COMPLETE
 X1DCORR  COMPLETE
          Spectrum extracted at y position = 405.962
@@ -2431,13 +1914,13 @@ FLUXCORR COMPLETE
 SGEOCORR OMIT
 
          Row 1 written to disk.
-Order 1  End 18:12:26 UTC
+Order 1  End 16:22:44 UTC
 
-Imset 2  End 18:12:26 UTC
+Imset 2  End 16:22:44 UTC
 
-Imset 3  Begin 18:12:26 UTC
+Imset 3  Begin 16:22:44 UTC
          Input read into memory.
-Order 1  Begin 18:12:26 UTC
+Order 1  Begin 16:22:44 UTC
 X1DCORR  PERFORM
 BACKCORR PERFORM
 ******** Calling Slfit ***********BACKCORR COMPLETE
@@ -2455,21 +1938,18 @@ FLUXCORR COMPLETE
 SGEOCORR OMIT
 
          Row 1 written to disk.
-Order 1  End 18:12:26 UTC
+Order 1  End 16:22:44 UTC
 
-Imset 3  End 18:12:26 UTC
+Imset 3  End 16:22:44 UTC
 
 Warning  Keyword `XTRACALG&#39; is being added to header.
-End      02-Oct-2025 18:12:26 UTC
+End      06-Nov-2025 16:22:44 UTC
 
 *** CALSTIS-6 complete ***
 
-End      02-Oct-2025 18:12:26 UTC
+End      06-Nov-2025 16:22:44 UTC
 
 *** CALSTIS-0 complete ***
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0
 </pre></div>
 </div>
 </div>
@@ -2509,6 +1989,7 @@ End      02-Oct-2025 18:12:26 UTC
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;New INTTAG Implementation&#39;)
 </pre></div>
 </div>
+<img alt="../../../_images/f0098d8c3e60e88415ff66600f1b394a5606b6bba95644d512a1320903787ab1.png" src="../../../_images/f0098d8c3e60e88415ff66600f1b394a5606b6bba95644d512a1320903787ab1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2610,12 +2091,12 @@ Poisson upper limit, sum column, then calculate error:  4.266949761009391
 </div>
 <p><strong>Recommendation:</strong> In the end, our recommendation is to use the Poisson confidence intervals, but not at the pixel level because measurements along a column are not independent events. You would therefore be justified in calculating the Poisson confidence interval on the summed flux at each wavelength/column.</p>
 <p>This bug has been fixed in <code class="docutils literal notranslate"><span class="pre">stistools.inttag</span></code> <a class="reference external" href="https://github.com/spacetelescope/stistools/releases/tag/1.4.5">here</a>.</p>
+<hr>
 </section>
-<hr class="docutils" />
 <section id="about-this-notebook">
-<h2>About this Notebook <a class="tocSkip"><a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
-<p><strong>Author:</strong> <a class="reference internal" href="#jlothringer&#64;stsci.edu"><span class="xref myst">Joshua Lothringer</span></a> with help from <a class="reference internal" href="#ldsantos&#64;stsci.edu"><span class="xref myst">Leo dos Santos</span></a></p>
-<p><strong>Updated On:</strong> 2025-04-10</p>
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
+<p><strong>Author:</strong> Joshua Lothringer with help from Leo dos Santos</p>
+<p><strong>Updated On:</strong> 2025-11-05</p>
 <blockquote>
 <div><p><em>This tutorial was generated to be in compliance with the <a class="reference external" href="https://github.com/spacetelescope/style-guides">STScI style guides</a> and would like to cite the <a class="reference external" href="https://github.com/spacetelescope/style-guides/blob/master/templates/example_notebook.ipynb">Jupyter guide</a> in particular.</em></p>
 </div></blockquote>
