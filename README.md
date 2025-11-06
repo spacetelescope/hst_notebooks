@@ -1,5 +1,4 @@
-[![Notebook Execution and Validation](https://github.com/spacetelescope/hst_notebooks/actions/workflows/ci_runner.yml/badge.svg)](https://github.com/spacetelescope/hst_notebooks/actions/workflows/ci_runner.yml)
-[![Scheduled Notebook Execution](https://github.com/spacetelescope/hst_notebooks/actions/workflows/ci_nightly.yml/badge.svg)]([https://github.com/alyssaguzman/hst_notebooks/blob/main/.github/workflows/notebook-scheduled.yml])
+[![Scheduled Notebook Execution](https://github.com/spacetelescope/hst_notebooks/actions/workflows/notebook-scheduled.yml/badge.svg)](https://github.com/spacetelescope/hst_notebooks/actions/workflows/notebook-scheduled.yml)
 [![Weekly broken link check](https://github.com/spacetelescope/hst_notebooks/actions/workflows/weekly_broken_link_finder.yml/badge.svg)](https://github.com/spacetelescope/hst_notebooks/actions/workflows/weekly_broken_link_finder.yml)
 [![Weekly HTML Accessibility Check](https://github.com/spacetelescope/hst_notebooks/actions/workflows/weekly_html_accessibility_check.yml/badge.svg)](https://github.com/spacetelescope/hst_notebooks/actions/workflows/weekly_html_accessibility_check.yml)
 [![Weekly PEP8 Style Checks](https://github.com/spacetelescope/hst_notebooks/actions/workflows/weekly_pep8_style_check.yml/badge.svg)](https://github.com/spacetelescope/hst_notebooks/actions/workflows/weekly_pep8_style_check.yml)
