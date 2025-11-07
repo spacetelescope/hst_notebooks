@@ -1,3 +1,5 @@
+![STScI Logo](../../../_static/stsci_header.png)
+
 # STIS Notebooks
 
 ## Jupyter Notebook Tutorials for Working with Space Telescope Imaging Spectrograph (STIS) Data and Observation Planning.
