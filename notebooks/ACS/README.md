@@ -28,18 +28,23 @@ Before running these examples you **must** follow the general instructions on cr
 
 * **acs_polarization_tools**: ACS/WFC offers two sets of polarizers, UV and visible, for imaging polarimetry and imaging spectropolarimetry. This notebook provides guidance on using the `acstools.polarization_tools` module to retrieve polarization calibration coefficients and calculate polarization properties of a source.
 
+* **acs_exception_report**: This notebook provides a step-by-step guide for examining your ACS data and observing logs to identify potential data quality issues via an HST Exception Report, and outlines the process for deciding whether a HOPR or Help Desk ticket is warranted. 
+
 ### Complex Workflow Notebooks
 
 * **acs_reduction**: This worked example demonstrates how to use the CALACS pipeline to re-process raw ACS data retrieved from MAST. Users are shown how to update reference files in the image headers, retrieve reference files from the Calibration Reference Data System (CRDS), and how to toggle steps in the calibration pipeline (e.g., CTE correction).
 
-* **acs_cte_forward_model** The capability to simulate the readout of an ACS image at a given epoch is a feature of CALACS that does not run during standard calibration. This example demonstrates how to take a pristine image, or one corrected for time-dependent CTE loss, and simulate CTE losses for an arbitrary observation date using `acstools.acscteforwardmodel`.
+* **acs_cte_forward_model**: The capability to simulate the readout of an ACS image at a given epoch is a feature of CALACS that does not run during standard calibration. This example demonstrates how to take a pristine image, or one corrected for time-dependent CTE loss, and simulate CTE losses for an arbitrary observation date using `acstools.acscteforwardmodel`.
 
-* **acs_saturation_trails** The ACS/WFC CCDs remain linear beyond the full-well saturation, which allows users the opportunity to perform photometry on saturated stars. This notebook demonstrates the methods and caveats when performing saturated star photometry.
+* **acs_saturation_trails**: The ACS/WFC CCDs remain linear beyond the full-well saturation, which allows users the opportunity to perform photometry on saturated stars. This notebook demonstrates the methods and caveats when performing saturated star photometry.
 
 * **acs_sbc_dark_analysis**: The ACS Solar Blind Channel (SBC) has nominally negligible dark current. However, the temperature of the SBC detector increases steadily over time while it is in use, and the dark current is proportional to temperature. At temperatures above 25 ºC, the dark current is no longer negligible and must be subracted. This workflow demonstrates how to account for dark current in ACS/SBC observations.
 
-* **acs_findsat_mrt_example.ipynb**: ACS/WFC imaging data is often affected by contamination by artificial satellites, compromising science data. The `acstools.findsat_mrt` module can be used to identify satellite trails and create masks to reject affected pixels from further analysis.
+* **acs_findsat_mrt_example**: ACS/WFC imaging data is often affected by contamination by artificial satellites, compromising science data. The `acstools.findsat_mrt` module can be used to identify satellite trails and create masks to reject affected pixels from further analysis.
 
+* **acs_focus_diverse_epsfs**: This notebook provides instructions on using the `acstools.focus_diverse_epsfs` module to retrieve empirical, focus-diverse ePSFs for ACS/WFC data. 
+
+* **hst_orbits_ephem**: Instructions on how to obtain information about HST’s location and pointing direction relative to Earth and the Sun for a given observation.
 
 ## Contributing
 
