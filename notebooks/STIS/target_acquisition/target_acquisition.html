@@ -599,8 +599,31 @@ document.write(`
 <p><a id=top></a></p>
 <section class="tex2jax_ignore mathjax_ignore" id="evaluating-stis-target-acquisitions">
 <h1>Evaluating STIS Target Acquisitions <a class="tocSkip"><a class="headerlink" href="#evaluating-stis-target-acquisitions" title="Link to this heading">#</a></h1>
-<h2>Learning Goals<span class="tocSkip"></span></h2>
-<div class="toc"><ul class="toc-item"><li><span><a href="#Introduction" data-toc-modified-id="Introduction-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Introduction</a></span><ul class="toc-item"><li><span><a href="#Import-necessary-packages" data-toc-modified-id="Import-necessary-packages-1.1"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Import necessary packages</a></span></li></ul></li><li><span><a href="#Define-Function-for-Plotting-Acquisition-Images-and-Performing-Target-Acquisition" data-toc-modified-id="Define-Function-for-Plotting-Acquisition-Images-and-Performing-Target-Acquisition-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Define Function for Plotting Acquisition Images and Performing Target Acquisition</a></span></li><li><span><a href="#Successful-Target-Acquisition" data-toc-modified-id="Successful-Target-Acquisition-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Successful Target Acquisition</a></span></li><li><span><a href="#Target-Acquisition-Failure-Cases" data-toc-modified-id="Target-Acquisition-Failure-Cases-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Target Acquisition Failure Cases</a></span><ul class="toc-item"><li><span><a href="#Guide-Stars-not-Acquired" data-toc-modified-id="Guide-Stars-not-Acquired-4.1"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Guide Stars not Acquired</a></span></li><li><span><a href="#Guide-Star-Acquisition-Delayed" data-toc-modified-id="Guide-Star-Acquisition-Delayed-4.2"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>Guide Star Acquisition Delayed</a></span></li><li><span><a href="#Lamp-not-illuminated" data-toc-modified-id="Lamp-not-illuminated-4.3"><span class="toc-item-num">4.3&nbsp;&nbsp;</span>Lamp not illuminated</a></span></li><li><span><a href="#Multiple-Bright-Sources" data-toc-modified-id="Multiple-Bright-Sources-4.4"><span class="toc-item-num">4.4&nbsp;&nbsp;</span>Multiple Bright Sources</a></span></li><li><span><a href="#Saturation-of-Pixels" data-toc-modified-id="Saturation-of-Pixels-4.5"><span class="toc-item-num">4.5&nbsp;&nbsp;</span>Saturation of Pixels</a></span></li><li><span><a href="#No-Target-in-the-Acquisition-Image" data-toc-modified-id="No-Target-in-the-Acquisition-Image-4.6"><span class="toc-item-num">4.6&nbsp;&nbsp;</span>No Target in the Acquisition Image</a></span></li></ul></li></ul></div><section id="introduction">
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#section1"><span class="xref myst">1. Introduction</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#section1.1"><span class="xref myst">1.1 Import necessary packages</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#section2"><span class="xref myst">2. Define Function for Plotting Acquisition Images and Performing Target Acquisition</span></a></p></li>
+<li><p><a class="reference internal" href="#section3"><span class="xref myst">3. Successful Target Acquisition</span></a></p></li>
+<li><p><a class="reference internal" href="#section4"><span class="xref myst">4. Target Acquisition Failure Cases</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#section4.1"><span class="xref myst">4.1 Guide Stars not Acquired</span></a></p></li>
+<li><p><a class="reference internal" href="#section4.2"><span class="xref myst">4.2 Guide Star Acquisition Delayed</span></a></p></li>
+<li><p><a class="reference internal" href="#section4.3"><span class="xref myst">4.3 Lamp not illuminated</span></a></p></li>
+<li><p><a class="reference internal" href="#section4.4"><span class="xref myst">4.4 Multiple Bright Sources</span></a></p></li>
+<li><p><a class="reference internal" href="#section4.5"><span class="xref myst">4.5 Saturation of Pixels</span></a></p></li>
+<li><p><a class="reference internal" href="#section4.6"><span class="xref myst">4.6 No Target in the Acquisition Image</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#about"><span class="xref myst">About this Notebook</span></a></p></li>
+</ul>
+<p><a id=section1></a></p>
+</section>
+<section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
 <p>There are two types of STIS target acquisitions: ACQ and ACQ/PEAKUP. The ACQ is used in almost all STIS observations to center the target. The ACQ/PEAKUP can be taken after the ACQ to further refine the centering and is recommended for observations using slits with widths less than 0.2”. In this notebook, we will go through the steps for ACQ observations, and explore some success and failure cases.</p>
 <p>For ACQ observations, the target acquisition data has three science extensions:</p>
@@ -611,6 +634,7 @@ document.write(`
 </ul>
 <p>The first science extension (Coarse Phase) of the acquisition raw file is an image of target in the target acquisition sub-array based on initial pointing. Then the coarse centering is performed: the software determines the position of the target with a flux weighted pointing algorithm, and calculates the slew needed to place the target at a reference point in the target acquisition sub-array; the coarse centered image is stored in the second science extension (Fine Phase). The next step is to perform fine centering: a 32 <span class="math notranslate nohighlight">\(\times\)</span> 32 pixel image of the reference aperture is obtained and stored in the third science extension (Reference Aperture), the location of the aperture on the detector is determined, and a fine slew is performed to center the taret in the reference aperture (to place the object precisely in a slit).</p>
 <p>For more information on ACQ target acquisition, see <a class="reference external" href="https://hst-docs.stsci.edu/stisdhb/chapter-5-stis-data-analysis/5-2-evaluating-target-acquisitions-and-guiding">Evaluating Target Acquisitions and Guiding</a>.</p>
+<p><a id=section1.1></a></p>
 <section id="import-necessary-packages">
 <h3>Import necessary packages<a class="headerlink" href="#import-necessary-packages" title="Link to this heading">#</a></h3>
 <p><strong>We will import the following packages:</strong></p>
@@ -659,6 +683,7 @@ document.write(`
 </div>
 </div>
 </div>
+<p><a id=section2></a></p>
 </section>
 </section>
 <section id="define-function-for-plotting-acquisition-images-and-performing-target-acquisition">
@@ -731,6 +756,7 @@ document.write(`
 </div>
 </div>
 </div>
+<p><a id=section3></a></p>
 </section>
 <section id="successful-target-acquisition">
 <h2>Successful Target Acquisition<a class="headerlink" href="#successful-target-acquisition" title="Link to this heading">#</a></h2>
@@ -743,10 +769,10 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/octka2daq/octka2daq_spt.fits with expected size 155520. [astroquery.query]
+INFO: Found cached file ./mastDownload/HST/octka2daq/octka2daq_raw.fits with expected size 129600. [astroquery.query]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/octka2daq/octka2daq_raw.fits with expected size 129600. [astroquery.query]
-===============================================================================
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===============================================================================
 octka2daq       HST/STIS    MIRVIS      F25ND3             ACQ/POINT
 prop: 14161      visit: A2    line: 1   target: HD-84937
 obs date, time: 2016-04-30    10:09:43   exposure time:  2.10
@@ -787,6 +813,7 @@ and fine stages agree within 25% and the fine slews were less than
 <img alt="../../../_images/b2fc6cabe5c7432e607889bdbc097a849f1930f16efb1ab12ed741bcf6c06c12.png" src="../../../_images/b2fc6cabe5c7432e607889bdbc097a849f1930f16efb1ab12ed741bcf6c06c12.png" />
 </div>
 </div>
+<p><a id=section4></a></p>
 </section>
 <section id="target-acquisition-failure-cases">
 <h2>Target Acquisition Failure Cases<a class="headerlink" href="#target-acquisition-failure-cases" title="Link to this heading">#</a></h2>
@@ -799,6 +826,7 @@ and fine stages agree within 25% and the fine slews were less than
 <li><p>Saturation of pixels in the second image may have affected the final centering.</p></li>
 </ul>
 <p>Sometimes a failure case might be caused by multiple acquisition warnings. In this section, we will go through several typical cases of acquisition failure.</p>
+<p><a id=section4.1></a></p>
 <section id="guide-stars-not-acquired">
 <h3>Guide Stars not Acquired<a class="headerlink" href="#guide-stars-not-acquired" title="Link to this heading">#</a></h3>
 <p>The Take Data Flag (TDF) is an onboard pointing control system flag which, when ON, indicates that the spacecraft is ready for an observation and that the guide star tracking performance is nomial. If the TDF is down, exposures are not performed until TDF comes up.</p>
@@ -812,10 +840,10 @@ and fine stages agree within 25% and the fine slews were less than
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/oeds03rzq/oeds03rzq_spt.fits with expected size 155520. [astroquery.query]
+INFO: Found cached file ./mastDownload/HST/oeds03rzq/oeds03rzq_raw.fits with expected size 129600. [astroquery.query]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/oeds03rzq/oeds03rzq_raw.fits with expected size 129600. [astroquery.query]
-===============================================================================
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===============================================================================
 oeds03rzq       HST/STIS    MIRVIS     F28X50LP             ACQ/POINT
 prop: 16218      visit: 03    line: 1   target: 47TUC-OFFSET1
 obs date, time: 2022-02-24    05:53:24   exposure time:  2.27
@@ -874,6 +902,7 @@ The flux in the third image of the ACQ is lower than the typical value for
 </div>
 </div>
 </div>
+<p><a id=section4.2></a></p>
 </section>
 <section id="guide-star-acquisition-delayed">
 <h3>Guide Star Acquisition Delayed<a class="headerlink" href="#guide-star-acquisition-delayed" title="Link to this heading">#</a></h3>
@@ -886,10 +915,10 @@ The flux in the third image of the ACQ is lower than the typical value for
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/oe1l55vjq/oe1l55vjq_spt.fits with expected size 155520. [astroquery.query]
+INFO: Found cached file ./mastDownload/HST/oe1l55vjq/oe1l55vjq_raw.fits with expected size 129600. [astroquery.query]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/oe1l55vjq/oe1l55vjq_raw.fits with expected size 129600. [astroquery.query]
-===============================================================================
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===============================================================================
 oe1l55vjq       HST/STIS    MIRVIS      F25ND5             ACQ/POINT
 prop: 15905      visit: 55    line: 1   target: FOMALHAUT2
 obs date, time: 2021-08-20    08:11:54   exposure time:  2.87
@@ -945,6 +974,7 @@ by more than 25%.  This may indicate a problem with your acquisition.
 </div>
 </div>
 </div>
+<p><a id=section4.3></a></p>
 </section>
 <section id="lamp-not-illuminated">
 <h3>Lamp not illuminated<a class="headerlink" href="#lamp-not-illuminated" title="Link to this heading">#</a></h3>
@@ -957,10 +987,10 @@ by more than 25%.  This may indicate a problem with your acquisition.
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/oec62hj6q/oec62hj6q_spt.fits with expected size 155520. [astroquery.query]
+INFO: Found cached file ./mastDownload/HST/oec62hj6q/oec62hj6q_raw.fits with expected size 129600. [astroquery.query]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/oec62hj6q/oec62hj6q_raw.fits with expected size 129600. [astroquery.query]
-===============================================================================
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===============================================================================
 oec62hj6q       HST/STIS    MIRVIS     F28X50LP             ACQ/POINT
 prop: 16230      visit: 2H    line: 1   target: LMC-X-4
 obs date, time: 2021-04-11    23:09:27   exposure time:  4.77
@@ -1016,6 +1046,7 @@ The flux in the third image of the ACQ is lower than the typical value for
 </div>
 </div>
 </div>
+<p><a id=section4.4></a></p>
 </section>
 <section id="multiple-bright-sources">
 <h3>Multiple Bright Sources<a class="headerlink" href="#multiple-bright-sources" title="Link to this heading">#</a></h3>
@@ -1028,10 +1059,10 @@ The flux in the third image of the ACQ is lower than the typical value for
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/odkt01bvq/odkt01bvq_spt.fits with expected size 155520. [astroquery.query]
+INFO: Found cached file ./mastDownload/HST/odkt01bvq/odkt01bvq_raw.fits with expected size 129600. [astroquery.query]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/odkt01bvq/odkt01bvq_raw.fits with expected size 129600. [astroquery.query]
-===============================================================================
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===============================================================================
 odkt01bvq       HST/STIS    MIRVIS     F28X50LP             ACQ/POINT
 prop: 15273      visit: 01    line: 1   target: V838HER
 obs date, time: 2018-10-01    06:13:32   exposure time: 50.10
@@ -1072,6 +1103,7 @@ and fine stages agree within 25% and the fine slews were less than
 <img alt="../../../_images/c3b852f0a68059b50819703298b8e4b975eecff52431eaa76b68766d8bd41071.png" src="../../../_images/c3b852f0a68059b50819703298b8e4b975eecff52431eaa76b68766d8bd41071.png" />
 </div>
 </div>
+<p><a id=section4.5></a></p>
 </section>
 <section id="saturation-of-pixels">
 <h3>Saturation of Pixels<a class="headerlink" href="#saturation-of-pixels" title="Link to this heading">#</a></h3>
@@ -1084,10 +1116,10 @@ and fine stages agree within 25% and the fine slews were less than
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/oe4h03rdq/oe4h03rdq_spt.fits with expected size 155520. [astroquery.query]
+INFO: Found cached file ./mastDownload/HST/oe4h03rdq/oe4h03rdq_raw.fits with expected size 129600. [astroquery.query]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/oe4h03rdq/oe4h03rdq_raw.fits with expected size 129600. [astroquery.query]
-===============================================================================
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===============================================================================
 oe4h03rdq       HST/STIS    MIRVIS     F28X50LP             ACQ/POINT
 prop: 15836      visit: 03    line: 1   target: V-AU-MIC-1
 obs date, time: 2020-07-03    00:20:25   exposure time:  0.50
@@ -1146,6 +1178,7 @@ the final centering.
 <img alt="../../../_images/36130551782efc3c1d8bf65365a01ca1a0bfa49b04b25d5f35ec0756a8747313.png" src="../../../_images/36130551782efc3c1d8bf65365a01ca1a0bfa49b04b25d5f35ec0756a8747313.png" />
 </div>
 </div>
+<p><a id=section4.6></a></p>
 </section>
 <section id="no-target-in-the-acquisition-image">
 <h3>No Target in the Acquisition Image<a class="headerlink" href="#no-target-in-the-acquisition-image" title="Link to this heading">#</a></h3>
@@ -1158,9 +1191,7 @@ the final centering.
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/ocyg39yoq/ocyg39yoq_spt.fits with expected size 155520. [astroquery.query]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/ocyg39yoq/ocyg39yoq_raw.fits with expected size 129600. [astroquery.query]
+INFO: Found cached file ./mastDownload/HST/ocyg39yoq/ocyg39yoq_raw.fits with expected size 129600. [astroquery.query]
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===============================================================================
@@ -1203,7 +1234,7 @@ than 4 pixels.  This may indicate a problem with your acquisition.
 <img alt="../../../_images/7e240a7e4befb11fc6a6c4708b49d49c07becc84d147c5c3a9ee92a17efbdafa.png" src="../../../_images/7e240a7e4befb11fc6a6c4708b49d49c07becc84d147c5c3a9ee92a17efbdafa.png" />
 </div>
 </div>
-<hr>
+<p><a id=about></a></p>
 </section>
 </section>
 <section id="about-this-notebook">
@@ -1224,7 +1255,6 @@ authors. Follow these links for more information about citations:</p>
 <li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
 <li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
 </ul>
-<hr>
 <p><a class="reference internal" href="#top"><span class="xref myst">Top of Page</span></a>
 <a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
 </section>

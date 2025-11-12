@@ -4,7 +4,7 @@
 
 [![DOI](https://zenodo.org/badge/605151805.svg)](https://zenodo.org/badge/latestdoi/605151805)
 
-Welcome to the STScI HST Notebook Repository
+Welcome to the STScI HST Notebook Repository!
 
 This resource provides comprehensive documentation and interactive notebooks created by the Hubble Space Telescope instruments' teams.
 

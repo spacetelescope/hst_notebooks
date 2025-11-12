@@ -599,6 +599,26 @@ document.write(`
 <p><a id=top></a></p>
 <section class="tex2jax_ignore mathjax_ignore" id="low-count-uncertainties-in-stis">
 <h1>Low Count Uncertainties in STIS <a class="tocSkip"><a class="headerlink" href="#low-count-uncertainties-in-stis" title="Link to this heading">#</a></h1>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#section1"><span class="xref myst">1. Learning Goals</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#section1.1"><span class="xref myst">1.1 Import Necessary Packages</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#section2"><span class="xref myst">2. Introduction</span></a></p></li>
+<li><p><a class="reference internal" href="#section3"><span class="xref myst">3. Fetch and Read In Data</span></a></p></li>
+<li><p><a class="reference internal" href="#section4"><span class="xref myst">4. Pipeline Uncertainties</span></a></p></li>
+<li><p><a class="reference internal" href="#section5"><span class="xref myst">5. Poisson Uncertainties</span></a></p></li>
+<li><p><a class="reference internal" href="#section6"><span class="xref myst">6. Poisson Uncertainties Applied to STIS</span></a></p></li>
+<li><p><a class="reference internal" href="#section7"><span class="xref myst">7. New stistools Functionality</span></a></p></li>
+<li><p><a class="reference internal" href="#section8"><span class="xref myst">8. Comparison to COS</span></a></p></li>
+<li><p><a class="reference internal" href="#section9"><span class="xref myst">9. Recommendations</span></a></p></li>
+<li><p><a class="reference internal" href="#section10"><span class="xref myst">10. Appendix: INTTAG</span></a></p></li>
+<li><p><a class="reference internal" href="#about"><span class="xref myst">About this Notebook</span></a></p></li>
+</ul>
+<p><a id=section1></a></p>
 <h2>Learning Goals<span class="tocSkip"></span></h2>
 By the end of this tutorial, you will:
 <ul class="simple">
@@ -608,17 +628,9 @@ By the end of this tutorial, you will:
 <li><p>Compare uncertainties with STIS to those calculated for COS</p></li>
 <li><p>Know about a bug in the uncertainties calculated in <code class="docutils literal notranslate"><span class="pre">inttag</span></code> when making sub-exposures from TIME-TAG data</p></li>
 </ul>
-<div class="toc">
-<ul class="toc-item"><li><span><a href="#Introduction" data-toc-modified-id="0-Introduction-0">0 Introduction</a></span></li></ul>
-<ul class="toc-item"><li><span><a href="#Fetch-and-Read-In-Data" data-toc-modified-id="1-Fetch-and-Read-In-Data-1">1 Fetch and Read In Data</a></span></li></ul>
-<ul class="toc-item"><li><span><a href="#Pipeline-Uncertainties" data-toc-modified-id="2-Pipeline-Uncertainties-2">2 Pipeline Uncertainties</a></span></li></ul>
-<ul class="toc-item"><li><span><a href="#Poisson-Uncertainties" data-toc-modified-id="3-Poisson-Uncertainties-3">3 Poisson Uncertainties</a></span></li></ul>
-<ul class="toc-item"><li><span><a href="#Poisson-Uncertainties-Applied-to-STIS" data-toc-modified-id="4-Poisson-Uncertainties-Applied-to-STIS-4">4 Poisson Uncertainties Applied to STIS</a></span></li></ul>
-<ul class="toc-item"><li><span><a href="#New-stistools-Functionality" data-toc-modified-id="5-New-stistools-Functionality-5">5 New stistools Functionality</a><span></li></ul>
-<ul class="toc-item"><li><span><a href="#Comparison-to-COS" data-toc-modified-id="6-Comparison-to-COS-6">6 Comparison to COS</a></span></li></ul>
-<ul class="toc-item"><li><span><a href="#Recommendations" data-toc-modified-id="7-Recommendations-7">7 Recommendations</a></span></li></ul>
-<ul class="toc-item"><li><span><a href="#Appendix:-INTTAG" data-toc-modified-id="Appendix:-INTTAG">Appendix: INTTAG</a></span></li></ul>
-</div><section id="introduction">
+<p><a id=section2></a></p>
+</section>
+<section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
 <p>The root-N approximation for error calculation is ubiquitous in astronomy and is appropriate for a wide-range of observing scenarios. The root-N approximation means that the 1-<span class="math notranslate nohighlight">\(\sigma\)</span> uncertainty associated with any measurement of counts (i.e., electrons on a CCD detector) can be approximated by just taking the square root of the number of counts, <span class="math notranslate nohighlight">\(N\)</span>. However, this approximation <em>does</em> break down for low counts <span class="math notranslate nohighlight">\(\lesssim10\)</span> (inclusive of dark rate and read noise) sometimes seen in UV observations with instruments like HST/STIS and HST/COS.</p>
 <p>In this notebook, we will look at where and why the root-N approximation breaks down, how the calculate appropriate Poisson confidence intervals, and how to apply that to HST/STIS observations. Some of these issues have been address in the HST/COS pipeline, CalCOS, so we compare to that in Section 5 as well.</p>
@@ -627,6 +639,7 @@ By the end of this tutorial, you will:
 <li><p><a class="reference external" href="https://hst-docs.stsci.edu/stisdhb/chapter-3-stis-calibration">STIS Calibration in the STIS Data Handbook</a></p></li>
 <li><p><a class="reference external" href="https://stistools.readthedocs.io/en/latest/calstis.html">the <code class="docutils literal notranslate"><span class="pre">stistools</span></code> package documentation</a></p></li>
 </ul>
+<p><a id=section1.1></a></p>
 <section id="import-necessary-packages">
 <h3>Import Necessary Packages<a class="headerlink" href="#import-necessary-packages" title="Link to this heading">#</a></h3>
 <ul class="simple">
@@ -687,6 +700,7 @@ By the end of this tutorial, you will:
 </div>
 </div>
 </div>
+<p><a id=section3></a></p>
 </section>
 </section>
 <section id="fetch-and-read-in-data">
@@ -755,6 +769,7 @@ Time: 2012-12-07 10:58:55
 </div>
 </div>
 </div>
+<p><a id=section4></a></p>
 </section>
 <section id="pipeline-uncertainties">
 <h2>Pipeline Uncertainties<a class="headerlink" href="#pipeline-uncertainties" title="Link to this heading">#</a></h2>
@@ -831,6 +846,7 @@ Time: 2012-12-07 10:58:55
 </div>
 <p>As you can see, the pipeline uncertainties are mostly just the square root of the counts. Error from dark subtraction is generally pretty small in the FUV; In our observations, the science header states the the mean dark count was 0.0184 counts per pixel (<code class="docutils literal notranslate"><span class="pre">hdu[1].header['MEANDARK']</span></code>) and that’s over the whole 2,905 s exposure. In the extraction routines, the pipeline defaults to an extraction height of 11 pixels, so the dark rate is still adding less than a count per wavelength. In the NUV, however, dark rates can be as much as 0.002 counts per second per pixel, which can result in dozens of “extra” counts and thus do need to be taken into account in the errors. Errors in the flat-field division will also contribute minutely to the flux error.</p>
 <p>For this notebook, since we’re looking at FUV data, we therefore assume the majority of our error comes from photon noise.</p>
+<p><a id=section5></a></p>
 </section>
 <section id="poisson-uncertainties">
 <h2>Poisson Uncertainties<a class="headerlink" href="#poisson-uncertainties" title="Link to this heading">#</a></h2>
@@ -950,6 +966,7 @@ Time: 2012-12-07 10:58:55
 </div>
 </div>
 <p>As you can see, the uncertainties calculated for a measurement from the Poisson distribution are not well-approximated by the Gaussian root-N approximation, especially for the upper bounds. This is because the upper bounds is basically the root-N approximation plus 1. Futhermore, and importantly, at N=0, the root-N approximation says that our uncertinaity goes to zero, which is clearly absurd! If we don’t measure any counts on a pixel, we shouldn’t somehow be inifintely sure there were no photons there. The Poisson distribution handles N=0 with an upper limit of 1.866 (while the lower limit does indeed go to zero; we cannot have negative counts!).</p>
+<p><a id=section6></a></p>
 </section>
 <section id="poisson-uncertainties-applied-to-stis">
 <h2>Poisson Uncertainties Applied to STIS<a class="headerlink" href="#poisson-uncertainties-applied-to-stis" title="Link to this heading">#</a></h2>
@@ -1031,6 +1048,7 @@ Time: 2012-12-07 10:58:55
 </div>
 </div>
 <p>When just assuming root-N errors, as the <code class="docutils literal notranslate"><span class="pre">calstis</span></code> pipeline currently does, we are therefore clearly underestimating the true Poisson uncertainty in this low-count regime.</p>
+<p><a id=section7></a></p>
 </section>
 <section id="new-stistools-functionality">
 <h2>New <code class="docutils literal notranslate"><span class="pre">stistools</span></code> Functionality<a class="headerlink" href="#new-stistools-functionality" title="Link to this heading">#</a></h2>
@@ -1134,6 +1152,7 @@ Time: 2012-12-07 10:58:55
 </div>
 </div>
 <p>As you can see, the stistools.poisson_err.poisson_err function re-creates our manual calculation of the Poisson confidence interval with Astropy.</p>
+<p><a id=section8></a></p>
 </section>
 <section id="comparison-to-cos">
 <h2>Comparison to COS<a class="headerlink" href="#comparison-to-cos" title="Link to this heading">#</a></h2>
@@ -1320,7 +1339,7 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2962/1276255037.py:4: RuntimeWarning: invalid value encountered in divide
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2894/1276255037.py:4: RuntimeWarning: invalid value encountered in divide
   sensitivity = net/flux  # counts per second per flux
 </pre></div>
 </div>
@@ -1332,11 +1351,13 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 </div>
 <p>You can see that the COS pipeline gives lower bound uncertainties lower than root-N, but the upper bound uncertainties are significantly higher than root-N (coming from the “extra +1” in the Poisson upper confidence interval, related to the “continuity correction” between the discrete Poisson and continuous Gaussian distributions). This is crucial for quantifying non-detections. For example, the sorts of upper limits you can place on something like the FUV continuum of an M-dwarf can come down to how you treat these sorts of uncertainties.</p>
 <p>Thus, the COS pipeline does indeed give the correct Poisson uncertainties. This must be kept in mind when comparing STIS and COS data, especially when taken directly from the pipelines. Make sure you’re uncertainties are calculated in the way you expect/desire.</p>
+<p><a id=section9></a></p>
 </section>
 <section id="recommendations">
 <h2>Recommendations<a class="headerlink" href="#recommendations" title="Link to this heading">#</a></h2>
 <p>As of 04/2025, the <code class="docutils literal notranslate"><span class="pre">calstis</span></code> pipeline calculates all errors according to the root-N approximation. We have therefore implemented a <code class="docutils literal notranslate"><span class="pre">stistools</span></code> function, <code class="docutils literal notranslate"><span class="pre">poisson_err.poisson_err</span></code> that calculates Poisson confidence intervals for STIS data. The function adds columns with the new errors to any x1d file.</p>
 <p>In the NUV, long exposures generally have enough dark counts to be in the regime where the Gaussian approximation is at least somewhat valid. For short exposures, however, measured counts may indeed be and users may want to opt for a Poisson confidence interval. Because the FUV dark rate is significantly lower than in the NUV, users will want to add the dark counts to the measured number of counts for NUV observations before calculating the Poisson confidence intervals, which is done in <code class="docutils literal notranslate"><span class="pre">poisson_err.poisson_err</span></code> by reconstructing the measured counts from the NET_ERROR, which will include the wavelength-specific dark counts as well.</p>
+<p><a id=section10></a></p>
 </section>
 <section id="appendix-inttag">
 <h2>Appendix: INTTAG<a class="headerlink" href="#appendix-inttag" title="Link to this heading">#</a></h2>
@@ -1402,14 +1423,14 @@ Mean of VARIANCE_BKG, VARIANCE_FLAT, and VARIANCE_COUNTS:
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:38 UTC
+Begin    12-Nov-2025 21:15:19 UTC
 
 Input    ./mastDownload/HST/obgh07020/obgh07020_raw.fits
 Outroot  ./mastDownload/HST/obgh07020/inttag
 Wavecal  ./mastDownload/HST/obgh07020/obgh07020_wav.fits
 
 *** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:38 UTC
+Begin    12-Nov-2025 21:15:19 UTC
 Input    ./mastDownload/HST/obgh07020/obgh07020_raw.fits
 Output   ./mastDownload/HST/obgh07020/inttag_flt.fits
 OBSMODE  TIME-TAG
@@ -1417,7 +1438,7 @@ APERTURE 52X0.1
 OPT_ELEM G140M
 DETECTOR FUV-MAMA
 
-Imset 1  Begin 16:41:38 UTC
+Imset 1  Begin 21:15:19 UTC
 
 DQICORR  PERFORM
 DQITAB   oref$uce15153o_bpx.fits
@@ -1460,36 +1481,9 @@ DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
 
 STATFLAG PERFORM
 STATFLAG COMPLETE
-Imset 1  End 16:41:39 UTC
+Imset 1  End 21:15:19 UTC
 
-Imset 2  Begin 16:41:39 UTC
-
-DQICORR  PERFORM
-DQICORR  COMPLETE
-         Uncertainty array initialized.
-
-LORSCORR OMIT
-
-GLINCORR PERFORM
-LFLGCORR PERFORM
-GLINCORR COMPLETE
-LFLGCORR COMPLETE
-
-DARKCORR PERFORM
-DARKCORR COMPLETE
-
-FLATCORR PERFORM
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
-
-DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
-
-STATFLAG PERFORM
-STATFLAG COMPLETE
-Imset 2  End 16:41:39 UTC
-
-Imset 3  Begin 16:41:39 UTC
+Imset 2  Begin 21:15:19 UTC
 
 DQICORR  PERFORM
 DQICORR  COMPLETE
@@ -1514,14 +1508,41 @@ DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
 
 STATFLAG PERFORM
 STATFLAG COMPLETE
-Imset 3  End 16:41:39 UTC
+Imset 2  End 21:15:20 UTC
 
-End      07-Nov-2025 16:41:39 UTC
+Imset 3  Begin 21:15:20 UTC
+
+DQICORR  PERFORM
+DQICORR  COMPLETE
+         Uncertainty array initialized.
+
+LORSCORR OMIT
+
+GLINCORR PERFORM
+LFLGCORR PERFORM
+GLINCORR COMPLETE
+LFLGCORR COMPLETE
+
+DARKCORR PERFORM
+DARKCORR COMPLETE
+
+FLATCORR PERFORM
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FLATCORR COMPLETE
+
+DOPPCORR applied to DQICORR, DARKCORR, FLATCORR
+
+STATFLAG PERFORM
+STATFLAG COMPLETE
+Imset 3  End 21:15:20 UTC
+
+End      12-Nov-2025 21:15:20 UTC
 
 *** CALSTIS-1 complete ***
 
 *** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:39 UTC
+Begin    12-Nov-2025 21:15:20 UTC
 Input    ./mastDownload/HST/obgh07020/obgh07020_wav.fits
 Output   ./mastDownload/HST/obgh07020/inttag_fwv_tmp.fits
 OBSMODE  ACCUM
@@ -1529,7 +1550,7 @@ APERTURE 52X0.1
 OPT_ELEM G140M
 DETECTOR FUV-MAMA
 
-Imset 1  Begin 16:41:39 UTC
+Imset 1  Begin 21:15:20 UTC
 
 DQICORR  PERFORM
 DQITAB   oref$uce15153o_bpx.fits
@@ -1572,9 +1593,9 @@ STATFLAG PERFORM
 STATFLAG COMPLETE
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 1  End 16:41:39 UTC
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 1  End 21:15:20 UTC
 
-Imset 2  Begin 16:41:39 UTC
+Imset 2  Begin 21:15:20 UTC
 
 DQICORR  PERFORM
 DQICORR  COMPLETE
@@ -1597,23 +1618,23 @@ DOPPCORR OMIT
 
 STATFLAG PERFORM
 STATFLAG COMPLETE
-Imset 2  End 16:41:40 UTC
+Imset 2  End 21:15:20 UTC
 
-End      07-Nov-2025 16:41:40 UTC
+End      12-Nov-2025 21:15:20 UTC
 
 *** CALSTIS-1 complete ***
 
 *** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:40 UTC
+Begin    12-Nov-2025 21:15:20 UTC
 Input    ./mastDownload/HST/obgh07020/inttag_fwv_tmp.fits
 Output   ./mastDownload/HST/obgh07020/inttag_w2d_tmp.fits
 OBSMODE  ACCUM
 APERTURE 52X0.1
 OPT_ELEM G140M
 DETECTOR FUV-MAMA
-Imset 1  Begin 16:41:40 UTC
+Imset 1  Begin 21:15:20 UTC
 
-Order 1  Begin 16:41:40 UTC
+Order 1  Begin 21:15:20 UTC
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>X2DCORR  PERFORM
@@ -1640,32 +1661,32 @@ SPTRCTAB DESCRIP =New traces for select echelle secondary modes
 SPTRCTAB DESCRIP =Sandoval, Initial Postlaunch Calibration
 X2DCORR  COMPLETE
 DISPCORR COMPLETE
-Order 1  End 16:41:40 UTC
-Imset 1  End 16:41:40 UTC
-Imset 2  Begin 16:41:40 UTC
+Order 1  End 21:15:20 UTC
+Imset 1  End 21:15:20 UTC
+Imset 2  Begin 21:15:20 UTC
 
-Order 1  Begin 16:41:40 UTC
+Order 1  Begin 21:15:20 UTC
 
 X2DCORR  PERFORM
 DISPCORR PERFORM
 X2DCORR  COMPLETE
 DISPCORR COMPLETE
-Order 1  End 16:41:40 UTC
-Imset 2  End 16:41:40 UTC
+Order 1  End 21:15:20 UTC
+Imset 2  End 21:15:20 UTC
 
-End      07-Nov-2025 16:41:40 UTC
+End      12-Nov-2025 21:15:20 UTC
 
 *** CALSTIS-7 complete ***
 
 *** CALSTIS-4 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:40 UTC
+Begin    12-Nov-2025 21:15:20 UTC
 Input    ./mastDownload/HST/obgh07020/inttag_w2d_tmp.fits
 OBSMODE  ACCUM
 APERTURE 52X0.1
 OPT_ELEM G140M
 DETECTOR FUV-MAMA
 
-Imset 1  Begin 16:41:40 UTC
+Imset 1  Begin 21:15:20 UTC
 
 WAVECORR PERFORM
 WCPTAB   oref$16j1600co_wcp.fits
@@ -1686,9 +1707,9 @@ Warning  which is outside the allowed range 0.5 to 1.5
          Shift in dispersion direction is -2.254 pixels.
          Shift in spatial direction is 6.357 pixels.
 WAVECORR COMPLETE
-Imset 1  End 16:41:40 UTC
+Imset 1  End 21:15:20 UTC
 
-Imset 2  Begin 16:41:40 UTC
+Imset 2  Begin 21:15:20 UTC
 
 WAVECORR PERFORM
 Warning  Skipping current occulting bar ... \
@@ -1697,51 +1718,51 @@ Warning  which is outside the allowed range 0.5 to 1.5
          Shift in dispersion direction is -2.312 pixels.
          Shift in spatial direction is 7.221 pixels.
 WAVECORR COMPLETE
-Imset 2  End 16:41:40 UTC
+Imset 2  End 21:15:20 UTC
 
-End      07-Nov-2025 16:41:40 UTC
+End      12-Nov-2025 21:15:20 UTC
 
 *** CALSTIS-4 complete ***
 
 *** CALSTIS-12 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:40 UTC
+Begin    12-Nov-2025 21:15:20 UTC
 Wavecal  ./mastDownload/HST/obgh07020/inttag_w2d_tmp.fits
 Science  ./mastDownload/HST/obgh07020/inttag_flt.fits
 OBSMODE  TIME-TAG
 APERTURE 52X0.1
 OPT_ELEM G140M
 DETECTOR FUV-MAMA
-Imset 1  Begin 16:41:40 UTC
+Imset 1  Begin 21:15:20 UTC
          SHIFTA1 set to -2.29187
          SHIFTA2 set to 6.92031
-Imset 1  End 16:41:40 UTC
-Imset 2  Begin 16:41:40 UTC
+Imset 1  End 21:15:20 UTC
+Imset 2  Begin 21:15:20 UTC
          SHIFTA1 set to -2.29918
          SHIFTA2 set to 7.03006
-Imset 2  End 16:41:40 UTC
-Imset 3  Begin 16:41:40 UTC
+Imset 2  End 21:15:20 UTC
+Imset 3  Begin 21:15:20 UTC
          SHIFTA1 set to -2.30648
          SHIFTA2 set to 7.1398
-Imset 3  End 16:41:40 UTC
+Imset 3  End 21:15:20 UTC
 
-End      07-Nov-2025 16:41:40 UTC
+End      12-Nov-2025 21:15:20 UTC
 
 *** CALSTIS-12 complete ***
 
 *** CALSTIS-7 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:40 UTC
+Begin    12-Nov-2025 21:15:20 UTC
 Input    ./mastDownload/HST/obgh07020/inttag_flt.fits
 Output   ./mastDownload/HST/obgh07020/inttag_x2d.fits
 OBSMODE  TIME-TAG
 APERTURE 52X0.1
 OPT_ELEM G140M
 DETECTOR FUV-MAMA
-Imset 1  Begin 16:41:40 UTC
+Imset 1  Begin 21:15:20 UTC
 
 HELCORR  PERFORM
 HELCORR  COMPLETE
 
-Order 1  Begin 16:41:40 UTC
+Order 1  Begin 21:15:21 UTC
 
 X2DCORR  PERFORM
 DISPCORR PERFORM
@@ -1787,16 +1808,16 @@ Warning  Keyword `BUNIT&#39; is being added to header.
 FLUXCORR COMPLETE
 X2DCORR  COMPLETE
 DISPCORR COMPLETE
-Order 1  End 16:41:40 UTC
+Order 1  End 21:15:21 UTC
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 1  End 16:41:40 UTC
-Imset 2  Begin 16:41:40 UTC
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Imset 1  End 21:15:21 UTC
+Imset 2  Begin 21:15:21 UTC
 
 HELCORR  PERFORM
 HELCORR  COMPLETE
 
-Order 1  Begin 16:41:40 UTC
+Order 1  Begin 21:15:21 UTC
 
 X2DCORR  PERFORM
 DISPCORR PERFORM
@@ -1807,14 +1828,14 @@ Warning  Keyword `BUNIT&#39; is being added to header.
 FLUXCORR COMPLETE
 X2DCORR  COMPLETE
 DISPCORR COMPLETE
-Order 1  End 16:41:40 UTC
-Imset 2  End 16:41:40 UTC
-Imset 3  Begin 16:41:40 UTC
+Order 1  End 21:15:21 UTC
+Imset 2  End 21:15:21 UTC
+Imset 3  Begin 21:15:21 UTC
 
 HELCORR  PERFORM
 HELCORR  COMPLETE
 
-Order 1  Begin 16:41:40 UTC
+Order 1  Begin 21:15:21 UTC
 
 X2DCORR  PERFORM
 DISPCORR PERFORM
@@ -1825,15 +1846,15 @@ Warning  Keyword `BUNIT&#39; is being added to header.
 FLUXCORR COMPLETE
 X2DCORR  COMPLETE
 DISPCORR COMPLETE
-Order 1  End 16:41:40 UTC
-Imset 3  End 16:41:40 UTC
+Order 1  End 21:15:21 UTC
+Imset 3  End 21:15:21 UTC
 
-End      07-Nov-2025 16:41:40 UTC
+End      12-Nov-2025 21:15:21 UTC
 
 *** CALSTIS-7 complete ***
 
 *** CALSTIS-6 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:40 UTC
+Begin    12-Nov-2025 21:15:21 UTC
 
 Warning  Grating-aperture throughput correction table (GACTAB) was not found,
          and no gac corrections will be applied
@@ -1853,11 +1874,13 @@ SPTRCTAB oref$77o1827do_1dt.fits
 SPTRCTAB PEDIGREE=INFLIGHT 27/02/1997 01/12/2009
 SPTRCTAB DESCRIP =New traces for select echelle secondary modes
 
-Imset 1  Begin 16:41:40 UTC
+Imset 1  Begin 21:15:21 UTC
          Input read into memory.
-Order 1  Begin 16:41:40 UTC
+Order 1  Begin 21:15:21 UTC
 X1DCORR  PERFORM
-BACKCORR PERFORM
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>BACKCORR PERFORM
 ******** Calling Slfit ***********BACKCORR COMPLETE
 X1DCORR  COMPLETE
          Spectrum extracted at y position = 404.909
@@ -1896,15 +1919,13 @@ FLUXCORR COMPLETE
 SGEOCORR OMIT
 
          Row 1 written to disk.
-Order 1  End 16:41:40 UTC
+Order 1  End 21:15:21 UTC
 
-Imset 1  End 16:41:40 UTC
+Imset 1  End 21:15:21 UTC
 
-Imset 2  Begin 16:41:40 UTC
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>         Input read into memory.
-Order 1  Begin 16:41:40 UTC
+Imset 2  Begin 21:15:21 UTC
+         Input read into memory.
+Order 1  Begin 21:15:21 UTC
 X1DCORR  PERFORM
 BACKCORR PERFORM
 ******** Calling Slfit ***********BACKCORR COMPLETE
@@ -1922,13 +1943,13 @@ FLUXCORR COMPLETE
 SGEOCORR OMIT
 
          Row 1 written to disk.
-Order 1  End 16:41:40 UTC
+Order 1  End 21:15:21 UTC
 
-Imset 2  End 16:41:40 UTC
+Imset 2  End 21:15:21 UTC
 
-Imset 3  Begin 16:41:40 UTC
+Imset 3  Begin 21:15:21 UTC
          Input read into memory.
-Order 1  Begin 16:41:40 UTC
+Order 1  Begin 21:15:21 UTC
 X1DCORR  PERFORM
 BACKCORR PERFORM
 ******** Calling Slfit ***********BACKCORR COMPLETE
@@ -1946,16 +1967,16 @@ FLUXCORR COMPLETE
 SGEOCORR OMIT
 
          Row 1 written to disk.
-Order 1  End 16:41:40 UTC
+Order 1  End 21:15:21 UTC
 
-Imset 3  End 16:41:40 UTC
+Imset 3  End 21:15:21 UTC
 
 Warning  Keyword `XTRACALG&#39; is being added to header.
-End      07-Nov-2025 16:41:40 UTC
+End      12-Nov-2025 21:15:21 UTC
 
 *** CALSTIS-6 complete ***
 
-End      07-Nov-2025 16:41:40 UTC
+End      12-Nov-2025 21:15:21 UTC
 
 *** CALSTIS-0 complete ***
 </pre></div>
@@ -2099,7 +2120,7 @@ Poisson upper limit, sum column, then calculate error:  4.266949761009391
 </div>
 <p><strong>Recommendation:</strong> In the end, our recommendation is to use the Poisson confidence intervals, but not at the pixel level because measurements along a column are not independent events. You would therefore be justified in calculating the Poisson confidence interval on the summed flux at each wavelength/column.</p>
 <p>This bug has been fixed in <code class="docutils literal notranslate"><span class="pre">stistools.inttag</span></code> <a class="reference external" href="https://github.com/spacetelescope/stistools/releases/tag/1.4.5">here</a>.</p>
-<hr>
+<p><a id=about></a></p>
 </section>
 <section id="about-this-notebook">
 <h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
@@ -2120,7 +2141,6 @@ authors. Follow these links for more information about citations:</p>
 <li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
 <li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
 </ul>
-<hr>
 <p><a class="reference internal" href="#top"><span class="xref myst">Top of Page</span></a>
 <a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
 </section>

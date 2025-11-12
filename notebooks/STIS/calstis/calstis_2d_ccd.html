@@ -599,9 +599,30 @@ document.write(`
 <p><a id=top></a></p>
 <section class="tex2jax_ignore mathjax_ignore" id="calstis-2-d-ccd-data-reduction">
 <h1>Calstis 2-D CCD Data Reduction <a class="tocSkip"><a class="headerlink" href="#calstis-2-d-ccd-data-reduction" title="Link to this heading">#</a></h1>
-<h2>Learning Goals<span class="tocSkip"></span></h2>
-<div class="toc"><ul class="toc-item"><li><span><a href="#0-Introduction" data-toc-modified-id="0-Introduction-0">0 Introduction</a></span><ul class="toc-item"><li><span><a href="#0.1-Import-Necessary-Packages" data-toc-modified-id="0.1-Import-Necessary-Packages-0.1">0.1 Import Necessary Packages</a></span></li><li><span><a href="#0.2-Collect-Data-Set-From-the-MAST-Archive-Using-Astroquery" data-toc-modified-id="0.2-Collect-Data-Set-From-the-MAST-Archive-Using-Astroquery-0.2">0.2 Collect Data Set From the MAST Archive Using Astroquery</a></span></li></ul></li><li><span><a href="#1-Control-Calstis-Steps-Through-Calibration-Switches" data-toc-modified-id="1-Control-Calstis-Steps-Through-Calibration-Switches-1">1 Control Calstis Steps Through Calibration Switches</a></span></li><li><span><a href="#2-Define-Functions-for-Calibration-and-Showing-Image" data-toc-modified-id="2-Define-Functions-for-Calibration-and-Showing-Image-2">2 Define Functions for Calibration and Showing Image</a></span></li><li><span><a href="#3-DQICORR:-Initialize-Data-Quality-File" data-toc-modified-id="3-DQICORR:-Initialize-Data-Quality-File-3">3 DQICORR: Initialize Data Quality File</a></span></li><li><span><a href="#4-BLEVCORR:-Large-Scale-Bias-&amp;-Overscan-Subtraction" data-toc-modified-id="4-BLEVCORR:-Large-Scale-Bias-&amp;-Overscan-Subtraction-4">4 BLEVCORR: Large Scale Bias &amp; Overscan Subtraction</a></span></li><li><span><a href="#5-BIASCORR:-Small-Scale-Bias-Subtraction" data-toc-modified-id="5-BIASCORR:-Small-Scale-Bias-Subtraction-5">5 BIASCORR: Small Scale Bias Subtraction</a></span></li><li><span><a href="#6-CRCORR:-Cosmic-Ray-Correction" data-toc-modified-id="6-CRCORR:-Cosmic-Ray-Correction-6">6 CRCORR: Cosmic Ray Correction</a></span></li><li><span><a href="#7-DARKCORR:-Dark-Signal-Subtraction" data-toc-modified-id="7-DARKCORR:-Dark-Signal-Subtraction-7">7 DARKCORR: Dark Signal Subtraction</a></span></li><li><span><a href="#8-FLATCORR:-Flat-Field-Correction" data-toc-modified-id="8-FLATCORR:-Flat-Field-Correction-8">8 FLATCORR: Flat Field Correction</a></span></li><li><span><a href="#9-Summary" data-toc-modified-id="9-Summary-9">9 Summary</a></span></li></ul></div><section id="introduction">
-<h2>0 Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<section id="learning-goals">
+<h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#section0"><span class="xref myst">0. Introduction</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#section0.1"><span class="xref myst">0.1 Import Necessary Packages</span></a></p></li>
+<li><p><a class="reference internal" href="#section0.2"><span class="xref myst">0.2 Collect Data Set From the MAST Archive Using Astroquery</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#section1"><span class="xref myst">1. Control Calstis Steps Through Calibration Switches</span></a></p></li>
+<li><p><a class="reference internal" href="#section2"><span class="xref myst">2. Define Functions for Calibration and Showing Image</span></a></p></li>
+<li><p><a class="reference internal" href="#section3"><span class="xref myst">3. DQICORR: Initialize Data Quality File</span></a></p></li>
+<li><p><a class="reference internal" href="#section4"><span class="xref myst">4. BLEVCORR: Large Scale Bias &amp; Overscan Subtraction</span></a></p></li>
+<li><p><a class="reference internal" href="#section5"><span class="xref myst">5. BIASCORR: Small Scale Bias Subtraction</span></a></p></li>
+<li><p><a class="reference internal" href="#section6"><span class="xref myst">6. CRCORR: Cosmic Ray Correction</span></a></p></li>
+<li><p><a class="reference internal" href="#section7"><span class="xref myst">7. DARKCORR: Dark Signal Subtraction</span></a></p></li>
+<li><p><a class="reference internal" href="#section8"><span class="xref myst">8. FLATCORR: Flat Field Correction</span></a></p></li>
+<li><p><a class="reference internal" href="#section9"><span class="xref myst">9. Summary</span></a></p></li>
+<li><p><a class="reference internal" href="#about"><span class="xref myst">About this Notebook</span></a></p></li>
+</ul>
+<p><a id=section0></a></p>
+</section>
+<section id="introduction">
+<h2>0. Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
 <p>The STIS calibration pipeline, calstis, performs the calibration of STIS science data. Calstis consists of a series of individual modules that performs initial 2D image reduction, contemporaneous wavecal processing, spectroscopic calibration, extraction, rectification, and summation of images. In this notebook, we will go through the data flow through calstis of 2D CCD data reduction common to imaging and spectroscopy (for creating the <code class="docutils literal notranslate"><span class="pre">flt</span></code> data product from a <code class="docutils literal notranslate"><span class="pre">raw</span></code> file). This notebook also shows how negative count values are produced in the pipeline.</p>
 <p>Some calibration process may require the application of calibration reference files. The names of which are found in the fits file header. To download reference files and configure reference environment variables, follow the steps in <a class="reference external" href="https://hst-crds.stsci.edu/docs/cmdline_bestrefs/">HST Calibration Reference Data System (CRDS)</a> for personal or offsite use.</p>
 <p>For more information about calstis see:</p>
@@ -609,6 +630,7 @@ document.write(`
 <li><p><a class="reference external" href="https://hst-docs.stsci.edu/stisdhb/chapter-3-stis-calibration">STIS Calibration in the STIS Data Handbook</a></p></li>
 <li><p><a class="reference external" href="https://stistools.readthedocs.io/en/latest/calstis.html">the <code class="docutils literal notranslate"><span class="pre">stistools</span></code> package documentation</a></p></li>
 </ul>
+<p><a id=section0.1></a></p>
 <section id="import-necessary-packages">
 <h3>0.1 Import Necessary Packages<a class="headerlink" href="#import-necessary-packages" title="Link to this heading">#</a></h3>
 <ul class="simple">
@@ -654,6 +676,7 @@ document.write(`
 </div>
 </div>
 </div>
+<p><a id=section0.2></a></p>
 </section>
 <section id="collect-data-set-from-the-mast-archive-using-astroquery">
 <h3>0.2 Collect Data Set From the MAST Archive Using Astroquery<a class="headerlink" href="#collect-data-set-from-the-mast-archive-using-astroquery" title="Link to this heading">#</a></h3>
@@ -705,6 +728,7 @@ document.write(`
 </div>
 </div>
 </div>
+<p><a id=section1></a></p>
 </section>
 </section>
 <section id="control-calstis-steps-through-calibration-switches">
@@ -748,6 +772,7 @@ CTECORR :	OMIT
 </div>
 </div>
 <p>Notice: the switches must be turned on in the same order as explained in this notebook</p>
+<p><a id=section2></a></p>
 </section>
 <section id="define-functions-for-calibration-and-showing-image">
 <h2>2 Define Functions for Calibration and Showing Image<a class="headerlink" href="#define-functions-for-calibration-and-showing-image" title="Link to this heading">#</a></h2>
@@ -890,6 +915,7 @@ CTECORR :	OMIT
 <img alt="../../../_images/a0966a94849df3bb46b4e2ee394873ec58789739110d0b9df1765c8378498311.png" src="../../../_images/a0966a94849df3bb46b4e2ee394873ec58789739110d0b9df1765c8378498311.png" />
 </div>
 </div>
+<p><a id=section3></a></p>
 </section>
 <section id="dqicorr-initialize-data-quality-file">
 <h2>3 DQICORR: Initialize Data Quality File<a class="headerlink" href="#dqicorr-initialize-data-quality-file" title="Link to this heading">#</a></h2>
@@ -903,14 +929,14 @@ CTECORR :	OMIT
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:31 UTC
+Begin    12-Nov-2025 21:14:01 UTC
 
 Input    o5f301010_raw.fits
 Outroot  ./DQICORR/o5f301010_raw.fits
 Warning  WAVECAL was specified, but WAVECORR is not PERFORM.
 
 *** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:31 UTC
+Begin    12-Nov-2025 21:14:01 UTC
 Input    o5f301010_raw.fits
 Output   ./DQICORR/o5f301010_flt.fits
 OBSMODE  ACCUM
@@ -918,7 +944,7 @@ APERTURE 52X0.2
 OPT_ELEM G430L
 DETECTOR CCD
 
-Imset 1  Begin 16:41:31 UTC
+Imset 1  Begin 21:14:01 UTC
 
 CCDTAB   oref$0841734eo_ccd.fits
 CCDTAB   PEDIGREE=INFLIGHT 01/05/1999 01/05/1999
@@ -948,9 +974,9 @@ PHOTCORR OMIT
 
 STATFLAG PERFORM
 STATFLAG COMPLETE
-Imset 1  End 16:41:31 UTC
+Imset 1  End 21:14:01 UTC
 
-Imset 2  Begin 16:41:31 UTC
+Imset 2  Begin 21:14:01 UTC
 
 DQICORR  PERFORM
 DQICORR  COMPLETE
@@ -970,13 +996,13 @@ SHADCORR OMIT
 
 STATFLAG PERFORM
 STATFLAG COMPLETE
-Imset 2  End 16:41:31 UTC
+Imset 2  End 21:14:01 UTC
 
-End      07-Nov-2025 16:41:31 UTC
+End      12-Nov-2025 21:14:01 UTC
 
 *** CALSTIS-1 complete ***
 
-End      07-Nov-2025 16:41:31 UTC
+End      12-Nov-2025 21:14:01 UTC
 
 *** CALSTIS-0 complete ***
 </pre></div>
@@ -993,6 +1019,7 @@ End      07-Nov-2025 16:41:31 UTC
 <img alt="../../../_images/b77e151e15df1758c1542fdd80765e0bdffbb2ab597a8453e4b79e1eaa8a5ccd.png" src="../../../_images/b77e151e15df1758c1542fdd80765e0bdffbb2ab597a8453e4b79e1eaa8a5ccd.png" />
 </div>
 </div>
+<p><a id=section4></a></p>
 </section>
 <section id="blevcorr-large-scale-bias-overscan-subtraction">
 <h2>4 BLEVCORR: Large Scale Bias &amp; Overscan Subtraction<a class="headerlink" href="#blevcorr-large-scale-bias-overscan-subtraction" title="Link to this heading">#</a></h2>
@@ -1013,14 +1040,14 @@ End      07-Nov-2025 16:41:31 UTC
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:32 UTC
+Begin    12-Nov-2025 21:14:02 UTC
 
 Input    o5f301010_raw.fits
 Outroot  ./BLEVCORR/o5f301010_raw.fits
 Warning  WAVECAL was specified, but WAVECORR is not PERFORM.
 
 *** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:32 UTC
+Begin    12-Nov-2025 21:14:02 UTC
 Input    o5f301010_raw.fits
 Output   ./BLEVCORR/o5f301010_flt.fits
 OBSMODE  ACCUM
@@ -1028,7 +1055,7 @@ APERTURE 52X0.2
 OPT_ELEM G430L
 DETECTOR CCD
 
-Imset 1  Begin 16:41:32 UTC
+Imset 1  Begin 21:14:02 UTC
 
 CCDTAB   oref$0841734eo_ccd.fits
 CCDTAB   PEDIGREE=INFLIGHT 01/05/1999 01/05/1999
@@ -1061,9 +1088,9 @@ PHOTCORR OMIT
 
 STATFLAG PERFORM
 STATFLAG COMPLETE
-Imset 1  End 16:41:32 UTC
+Imset 1  End 21:14:02 UTC
 
-Imset 2  Begin 16:41:32 UTC
+Imset 2  Begin 21:14:02 UTC
 
 DQICORR  PERFORM
 DQICORR  COMPLETE
@@ -1086,13 +1113,13 @@ SHADCORR OMIT
 
 STATFLAG PERFORM
 STATFLAG COMPLETE
-Imset 2  End 16:41:32 UTC
+Imset 2  End 21:14:02 UTC
 
-End      07-Nov-2025 16:41:32 UTC
+End      12-Nov-2025 21:14:02 UTC
 
 *** CALSTIS-1 complete ***
 
-End      07-Nov-2025 16:41:32 UTC
+End      12-Nov-2025 21:14:02 UTC
 
 *** CALSTIS-0 complete ***
 </pre></div>
@@ -1132,6 +1159,7 @@ End      07-Nov-2025 16:41:32 UTC
 <img alt="../../../_images/989da169ed1640e2b3b3c4191fac5f8de2452df40e8dc65aefc0fc09485f6915.png" src="../../../_images/989da169ed1640e2b3b3c4191fac5f8de2452df40e8dc65aefc0fc09485f6915.png" />
 </div>
 </div>
+<p><a id=section5></a></p>
 </section>
 <section id="biascorr-small-scale-bias-subtraction">
 <h2>5 BIASCORR: Small Scale Bias Subtraction<a class="headerlink" href="#biascorr-small-scale-bias-subtraction" title="Link to this heading">#</a></h2>
@@ -1145,14 +1173,14 @@ End      07-Nov-2025 16:41:32 UTC
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:34 UTC
+Begin    12-Nov-2025 21:14:04 UTC
 
 Input    o5f301010_raw.fits
 Outroot  ./BIASCORR/o5f301010_raw.fits
 Warning  WAVECAL was specified, but WAVECORR is not PERFORM.
 
 *** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:34 UTC
+Begin    12-Nov-2025 21:14:04 UTC
 Input    o5f301010_raw.fits
 Output   ./BIASCORR/o5f301010_flt.fits
 OBSMODE  ACCUM
@@ -1160,7 +1188,7 @@ APERTURE 52X0.2
 OPT_ELEM G430L
 DETECTOR CCD
 
-Imset 1  Begin 16:41:34 UTC
+Imset 1  Begin 21:14:04 UTC
 
 CCDTAB   oref$0841734eo_ccd.fits
 CCDTAB   PEDIGREE=INFLIGHT 01/05/1999 01/05/1999
@@ -1197,9 +1225,9 @@ PHOTCORR OMIT
 
 STATFLAG PERFORM
 STATFLAG COMPLETE
-Imset 1  End 16:41:34 UTC
+Imset 1  End 21:14:04 UTC
 
-Imset 2  Begin 16:41:34 UTC
+Imset 2  Begin 21:14:04 UTC
 
 DQICORR  PERFORM
 DQICORR  COMPLETE
@@ -1223,13 +1251,13 @@ SHADCORR OMIT
 
 STATFLAG PERFORM
 STATFLAG COMPLETE
-Imset 2  End 16:41:34 UTC
+Imset 2  End 21:14:04 UTC
 
-End      07-Nov-2025 16:41:34 UTC
+End      12-Nov-2025 21:14:04 UTC
 
 *** CALSTIS-1 complete ***
 
-End      07-Nov-2025 16:41:34 UTC
+End      12-Nov-2025 21:14:04 UTC
 
 *** CALSTIS-0 complete ***
 </pre></div>
@@ -1246,6 +1274,7 @@ End      07-Nov-2025 16:41:34 UTC
 <img alt="../../../_images/c13a67109279a4e89f706425690a5a303f91565c18bf905b37177056d925940a.png" src="../../../_images/c13a67109279a4e89f706425690a5a303f91565c18bf905b37177056d925940a.png" />
 </div>
 </div>
+<p><a id=section6></a></p>
 </section>
 <section id="crcorr-cosmic-ray-correction">
 <h2>6 CRCORR: Cosmic Ray Correction<a class="headerlink" href="#crcorr-cosmic-ray-correction" title="Link to this heading">#</a></h2>
@@ -1267,14 +1296,14 @@ End      07-Nov-2025 16:41:34 UTC
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:35 UTC
+Begin    12-Nov-2025 21:14:04 UTC
 
 Input    o5f301010_raw.fits
 Outroot  ./CRCORR/o5f301010_raw.fits
 Warning  WAVECAL was specified, but WAVECORR is not PERFORM.
 
 *** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:35 UTC
+Begin    12-Nov-2025 21:14:04 UTC
 Input    o5f301010_raw.fits
 Output   ./CRCORR/o5f301010_blv_tmp.fits
 OBSMODE  ACCUM
@@ -1282,7 +1311,7 @@ APERTURE 52X0.2
 OPT_ELEM G430L
 DETECTOR CCD
 
-Imset 1  Begin 16:41:35 UTC
+Imset 1  Begin 21:14:04 UTC
 
 CCDTAB   oref$0841734eo_ccd.fits
 CCDTAB   PEDIGREE=INFLIGHT 01/05/1999 01/05/1999
@@ -1316,9 +1345,9 @@ FLATCORR OMIT
 SHADCORR OMIT
 
 PHOTCORR OMIT
-Imset 1  End 16:41:35 UTC
+Imset 1  End 21:14:04 UTC
 
-Imset 2  Begin 16:41:35 UTC
+Imset 2  Begin 21:14:04 UTC
 
 DQICORR  PERFORM
 DQICORR  COMPLETE
@@ -1339,14 +1368,14 @@ DARKCORR OMIT
 FLATCORR OMIT
 
 SHADCORR OMIT
-Imset 2  End 16:41:35 UTC
+Imset 2  End 21:14:04 UTC
 
-End      07-Nov-2025 16:41:35 UTC
+End      12-Nov-2025 21:14:04 UTC
 
 *** CALSTIS-1 complete ***
 
 *** CALSTIS-2 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:35 UTC
+Begin    12-Nov-2025 21:14:04 UTC
 Input    ./CRCORR/o5f301010_blv_tmp.fits
 Output   ./CRCORR/o5f301010_crj.fits
 
@@ -1355,11 +1384,11 @@ Total number of input image sets = 2
 CRREJTAB oref$j3m1403io_crr.fits
 CRCORR   COMPLETE
 
-End      07-Nov-2025 16:41:35 UTC
+End      12-Nov-2025 21:14:05 UTC
 
 *** CALSTIS-2 complete ***
 
-End      07-Nov-2025 16:41:35 UTC
+End      12-Nov-2025 21:14:05 UTC
 
 *** CALSTIS-0 complete ***
 </pre></div>
@@ -1394,6 +1423,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <img alt="../../../_images/14a9ba9fdc325adb51320077274802683f8cd44ce7974617bdf0945132575d53.png" src="../../../_images/14a9ba9fdc325adb51320077274802683f8cd44ce7974617bdf0945132575d53.png" />
 </div>
 </div>
+<p><a id=section7></a></p>
 </section>
 <section id="darkcorr-dark-signal-subtraction">
 <h2>7 DARKCORR: Dark Signal Subtraction<a class="headerlink" href="#darkcorr-dark-signal-subtraction" title="Link to this heading">#</a></h2>
@@ -1408,14 +1438,14 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:35 UTC
+Begin    12-Nov-2025 21:14:05 UTC
 
 Input    o5f301010_raw.fits
 Outroot  ./DARKCORR/o5f301010_raw.fits
 Warning  WAVECAL was specified, but WAVECORR is not PERFORM.
 
 *** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:35 UTC
+Begin    12-Nov-2025 21:14:05 UTC
 Input    o5f301010_raw.fits
 Output   ./DARKCORR/o5f301010_blv_tmp.fits
 OBSMODE  ACCUM
@@ -1423,7 +1453,7 @@ APERTURE 52X0.2
 OPT_ELEM G430L
 DETECTOR CCD
 
-Imset 1  Begin 16:41:35 UTC
+Imset 1  Begin 21:14:05 UTC
 
 CCDTAB   oref$0841734eo_ccd.fits
 CCDTAB   PEDIGREE=INFLIGHT 01/05/1999 01/05/1999
@@ -1457,9 +1487,9 @@ FLATCORR OMIT
 SHADCORR OMIT
 
 PHOTCORR OMIT
-Imset 1  End 16:41:35 UTC
+Imset 1  End 21:14:05 UTC
 
-Imset 2  Begin 16:41:35 UTC
+Imset 2  Begin 21:14:05 UTC
 
 DQICORR  PERFORM
 DQICORR  COMPLETE
@@ -1480,14 +1510,14 @@ DARKCORR OMIT
 FLATCORR OMIT
 
 SHADCORR OMIT
-Imset 2  End 16:41:36 UTC
+Imset 2  End 21:14:05 UTC
 
-End      07-Nov-2025 16:41:36 UTC
+End      12-Nov-2025 21:14:05 UTC
 
 *** CALSTIS-1 complete ***
 
 *** CALSTIS-2 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:36 UTC
+Begin    12-Nov-2025 21:14:05 UTC
 Input    ./DARKCORR/o5f301010_blv_tmp.fits
 Output   ./DARKCORR/o5f301010_crj_tmp.fits
 
@@ -1496,12 +1526,12 @@ Total number of input image sets = 2
 CRREJTAB oref$j3m1403io_crr.fits
 CRCORR   COMPLETE
 
-End      07-Nov-2025 16:41:36 UTC
+End      12-Nov-2025 21:14:05 UTC
 
 *** CALSTIS-2 complete ***
 
 *** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:36 UTC
+Begin    12-Nov-2025 21:14:05 UTC
 Input    ./DARKCORR/o5f301010_crj_tmp.fits
 Output   ./DARKCORR/o5f301010_crj.fits
 OBSMODE  ACCUM
@@ -1509,7 +1539,7 @@ APERTURE 52X0.2
 OPT_ELEM G430L
 DETECTOR CCD
 
-Imset 1  Begin 16:41:36 UTC
+Imset 1  Begin 21:14:05 UTC
 
 CCDTAB   oref$0841734eo_ccd.fits
 CCDTAB   PEDIGREE=INFLIGHT 01/05/1999 01/05/1999
@@ -1540,13 +1570,13 @@ PHOTCORR OMIT
 
 STATFLAG PERFORM
 STATFLAG COMPLETE
-Imset 1  End 16:41:36 UTC
+Imset 1  End 21:14:05 UTC
 
-End      07-Nov-2025 16:41:36 UTC
+End      12-Nov-2025 21:14:05 UTC
 
 *** CALSTIS-1 complete ***
 
-End      07-Nov-2025 16:41:36 UTC
+End      12-Nov-2025 21:14:05 UTC
 
 *** CALSTIS-0 complete ***
 </pre></div>
@@ -1563,6 +1593,7 @@ End      07-Nov-2025 16:41:36 UTC
 <img alt="../../../_images/e6165f6f6746b3b9232961bc86d4e20b5b5684581e3d4ccad965c1bb2c097aeb.png" src="../../../_images/e6165f6f6746b3b9232961bc86d4e20b5b5684581e3d4ccad965c1bb2c097aeb.png" />
 </div>
 </div>
+<p><a id=section8></a></p>
 </section>
 <section id="flatcorr-flat-field-correction">
 <h2>8 FLATCORR: Flat Field Correction<a class="headerlink" href="#flatcorr-flat-field-correction" title="Link to this heading">#</a></h2>
@@ -1582,14 +1613,14 @@ End      07-Nov-2025 16:41:36 UTC
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>*** CALSTIS-0 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:37 UTC
+Begin    12-Nov-2025 21:14:06 UTC
 
 Input    o5f301010_raw.fits
 Outroot  ./FLATCORR/o5f301010_raw.fits
 Warning  WAVECAL was specified, but WAVECORR is not PERFORM.
 
 *** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:37 UTC
+Begin    12-Nov-2025 21:14:06 UTC
 Input    o5f301010_raw.fits
 Output   ./FLATCORR/o5f301010_blv_tmp.fits
 OBSMODE  ACCUM
@@ -1597,7 +1628,7 @@ APERTURE 52X0.2
 OPT_ELEM G430L
 DETECTOR CCD
 
-Imset 1  Begin 16:41:37 UTC
+Imset 1  Begin 21:14:06 UTC
 
 CCDTAB   oref$0841734eo_ccd.fits
 CCDTAB   PEDIGREE=INFLIGHT 01/05/1999 01/05/1999
@@ -1631,9 +1662,9 @@ FLATCORR OMIT
 SHADCORR OMIT
 
 PHOTCORR OMIT
-Imset 1  End 16:41:37 UTC
+Imset 1  End 21:14:06 UTC
 
-Imset 2  Begin 16:41:37 UTC
+Imset 2  Begin 21:14:06 UTC
 
 DQICORR  PERFORM
 DQICORR  COMPLETE
@@ -1654,14 +1685,14 @@ DARKCORR OMIT
 FLATCORR OMIT
 
 SHADCORR OMIT
-Imset 2  End 16:41:37 UTC
+Imset 2  End 21:14:06 UTC
 
-End      07-Nov-2025 16:41:37 UTC
+End      12-Nov-2025 21:14:06 UTC
 
 *** CALSTIS-1 complete ***
 
 *** CALSTIS-2 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:37 UTC
+Begin    12-Nov-2025 21:14:06 UTC
 Input    ./FLATCORR/o5f301010_blv_tmp.fits
 Output   ./FLATCORR/o5f301010_crj_tmp.fits
 
@@ -1670,12 +1701,12 @@ Total number of input image sets = 2
 CRREJTAB oref$j3m1403io_crr.fits
 CRCORR   COMPLETE
 
-End      07-Nov-2025 16:41:37 UTC
+End      12-Nov-2025 21:14:06 UTC
 
 *** CALSTIS-2 complete ***
 
 *** CALSTIS-1 -- Version 3.4.2 (19-Jan-2018) ***
-Begin    07-Nov-2025 16:41:37 UTC
+Begin    12-Nov-2025 21:14:06 UTC
 Input    ./FLATCORR/o5f301010_crj_tmp.fits
 Output   ./FLATCORR/o5f301010_crj.fits
 OBSMODE  ACCUM
@@ -1683,7 +1714,7 @@ APERTURE 52X0.2
 OPT_ELEM G430L
 DETECTOR CCD
 
-Imset 1  Begin 16:41:37 UTC
+Imset 1  Begin 21:14:06 UTC
 
 CCDTAB   oref$0841734eo_ccd.fits
 CCDTAB   PEDIGREE=INFLIGHT 01/05/1999 01/05/1999
@@ -1721,13 +1752,13 @@ PHOTCORR OMIT
 
 STATFLAG PERFORM
 STATFLAG COMPLETE
-Imset 1  End 16:41:37 UTC
+Imset 1  End 21:14:07 UTC
 
-End      07-Nov-2025 16:41:37 UTC
+End      12-Nov-2025 21:14:07 UTC
 
 *** CALSTIS-1 complete ***
 
-End      07-Nov-2025 16:41:37 UTC
+End      12-Nov-2025 21:14:07 UTC
 
 *** CALSTIS-0 complete ***
 </pre></div>
@@ -1744,6 +1775,7 @@ End      07-Nov-2025 16:41:37 UTC
 <img alt="../../../_images/ce7da889ea8536b06b01cc42e674129623d875d83da97446423a4bb44366877e.png" src="../../../_images/ce7da889ea8536b06b01cc42e674129623d875d83da97446423a4bb44366877e.png" />
 </div>
 </div>
+<p><a id=section9></a></p>
 </section>
 <section id="summary">
 <h2>9 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
@@ -1799,6 +1831,7 @@ End      07-Nov-2025 16:41:37 UTC
 <img alt="../../../_images/7dc6af4696d9be2399cbbe9da08a425f572d4240454a2d9bd6183ae5e2003c9b.png" src="../../../_images/7dc6af4696d9be2399cbbe9da08a425f572d4240454a2d9bd6183ae5e2003c9b.png" />
 </div>
 </div>
+<p><a id=about></a></p>
 </section>
 <hr class="docutils" />
 <section id="about-this-notebook">
