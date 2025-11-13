@@ -1,3 +1,5 @@
+![STScI Logo](../../_static/stsci_header.png)
+
 # HASP Notebooks 
 
 ## Jupyter Notebook Walkthroughs of Hubble Advanced Spectral Products (HASP) Data
@@ -7,7 +9,7 @@ The ultimate goal of HASP is to simplify and enhance access to HST spectroscopic
 
 
 ## Before Running a Notebook
-Before running these examples you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [Installation Instructions](https://spacetelescope.github.io/hst_notebooks/index.html).
+Before running these examples you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [**Installation Instructions**](https://spacetelescope.github.io/hst_notebooks/index.html).
 
 
 ## Current Notebooks

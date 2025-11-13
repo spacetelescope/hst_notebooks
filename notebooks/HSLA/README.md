@@ -1,3 +1,5 @@
+![STScI Logo](../../_static/stsci_header.png)
+
 # HSLA Notebooks 
 
 ## Jupyter Notebook Walkthroughs of Hubble Spectroscopic Legacy Archive (HSLA) Data
@@ -7,7 +9,7 @@ A key feature of the new HSLA is that it automatically defines individual target
 
 
 ## Before Running a Notebook
-Before running these examples you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [Installation Instructions](https://spacetelescope.github.io/hst_notebooks/index.html).
+Before running these examples, you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [**Installation Instructions**](https://spacetelescope.github.io/hst_notebooks/index.html).
 
 
 ## Current Notebooks

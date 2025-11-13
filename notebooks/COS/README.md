@@ -1,3 +1,5 @@
+![STScI Logo](../../_static/stsci_header.png)
+
 # COS Notebooks 
 
 ## Jupyter Notebook Walkthroughs of Cosmic Origins Spectrograph (COS) Data Processing
@@ -6,7 +8,7 @@ This is a repository of interactive walkthrough guides to common COS data proced
 
 
 ## Before Running a Notebook
-Before running these examples you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [Installation Instructions](https://spacetelescope.github.io/hst_notebooks/index.html).
+Before running these examples, you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [**Installation Instructions**](https://spacetelescope.github.io/hst_notebooks/index.html).
 
 
 ## Current Notebooks
