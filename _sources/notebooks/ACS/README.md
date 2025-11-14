@@ -15,7 +15,7 @@ Jupyter Notebooks allow code to be packaged with formatted text to create illust
 
 
 ## Before Running a Notebook
-Before running these examples you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [**Installation Instructions**](https://spacetelescope.github.io/hst_notebooks/index.html).
+Before running these examples, you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [**Installation Instructions**](https://spacetelescope.github.io/hst_notebooks/index.html).
 
 
 ## Contents
@@ -38,7 +38,7 @@ Before running these examples you **must** follow the general instructions on cr
 
 * [**acs_saturation_trails**](https://spacetelescope.github.io/hst_notebooks/notebooks/ACS/acs_saturation_trails/acs_saturation_trails.html): The ACS/WFC CCDs remain linear beyond the full-well saturation, which allows users the opportunity to perform photometry on saturated stars. This notebook demonstrates the methods and caveats when performing saturated star photometry.
 
-* [**acs_sbc_dark_analysis**](https://spacetelescope.github.io/hst_notebooks/notebooks/ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html): The ACS Solar Blind Channel (SBC) has nominally negligible dark current. However, the temperature of the SBC detector increases steadily over time while it is in use, and the dark current is proportional to temperature. At temperatures above 25 ºC, the dark current is no longer negligible and must be subracted. This workflow demonstrates how to account for dark current in ACS/SBC observations.
+* [**acs_sbc_dark_analysis**](https://spacetelescope.github.io/hst_notebooks/notebooks/ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html): The ACS Solar Blind Channel (SBC) has nominally negligible dark current. However, the temperature of the SBC detector increases steadily over time while it is in use, and the dark current is proportional to temperature. At temperatures above 25 ºC, the dark current is no longer negligible and must be subtracted. This workflow demonstrates how to account for dark current in ACS/SBC observations.
 
 * [**acs_findsat_mrt_example**](https://spacetelescope.github.io/hst_notebooks/notebooks/ACS/acs_findsat_mrt/acs_findsat_mrt_example.html): ACS/WFC imaging data is often affected by contamination by artificial satellites, compromising science data. The `acstools.findsat_mrt` module can be used to identify satellite trails and create masks to reject affected pixels from further analysis.
 
