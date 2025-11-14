@@ -6,7 +6,7 @@
 The [Space Telescope Imaging Spectrograph](https://www.stsci.edu/hst/instrumentation/stis) (STIS) is an instrument on board the [Hubble Space Telescope](https://www.stsci.edu/hst/about) (HST). This is a repository of interactive tutorials for working with STIS data and planning observations.  A complete list of available tools can be found on the [STIS data and software tools website](https://www.stsci.edu/hst/instrumentation/stis/data-analysis-and-software-tools).
 
 ## Before Running a Notebook
-Before running these examples you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [Installation Instructions](https://spacetelescope.github.io/hst_notebooks/index.html). 
+Before running these examples, you **must** follow the general instructions on creating an environment that can run the notebooks, shown in STScI HST Notebook Repository HQ page under [**Installation Instructions**](https://spacetelescope.github.io/hst_notebooks/index.html). 
 
 
 ## Currently Operational Notebooks
