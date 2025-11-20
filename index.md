@@ -4,7 +4,7 @@
 
 [![DOI](https://zenodo.org/badge/605151805.svg)](https://zenodo.org/badge/latestdoi/605151805)
 
-Welcome to the STScI HST Notebook Repository
+Welcome to the STScI HST Notebook Repository!
 
 This resource provides comprehensive documentation and interactive notebooks created by the Hubble Space Telescope instruments' teams.
 
@@ -13,6 +13,8 @@ Explore our interactive notebooks for hands-on experience with HST data.
 - [ACS notebooks](./notebooks/ACS/README.md)
 - [COS notebooks](./notebooks/COS/README.md)
 - [DrizzlePac notebooks](./notebooks/DrizzlePac/README.md)
+- [HASP notebooks](./notebooks/HASP/README.md)
+- [HSLA notebooks](./notebooks/HSLA/README.md)
 - [NICMOS notebooks](./notebooks/NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.ipynb)
 - [STIS notebooks](./notebooks/STIS/README.md)
 - [WFC3 notebooks](./notebooks/WFC3/README.md)
@@ -25,6 +27,10 @@ Here, you can find detailed documentation for each instrument the Hubble Space T
 - [Cosmic Origins Spectrograph (COS)](https://www.stsci.edu/hst/instrumentation/cos)
 
 - [DrizzlePac](https://www.stsci.edu/scientific-community/software/drizzlepac)
+
+- [Hubble Advanced Spectral Products (HASP)](https://archive.stsci.edu/missions-and-data/hst/hasp)
+
+-[Hubble Spectroscopic Legacy Archive (HSLA)](https://archive.stsci.edu/missions-and-data/hsla)
 
 - [Near Infrared Camera and Multi-Object Spectrometer (NICMOS)](https://www.stsci.edu/hst/instrumentation/legacy/nicmos)
 
@@ -46,7 +52,7 @@ You can also click the "Download ZIP" option for the entire repository listed un
 
 Most notebooks have additional associated files in their folder,
 including a requirements file that lists packages necessary to run the notebooks.
-The packages in the requirements file can be installed using `pip <https://pip.pypa.io/en/stable/>` . 
+The packages in the requirements file can be installed using `pip <https://pip.pypa.io/en/stable/>`. 
 
 Any version dependencies are contained in the requirements file in 
 each notebook folder. Please use at least the minimum supported
