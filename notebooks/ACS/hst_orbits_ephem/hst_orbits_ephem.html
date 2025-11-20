@@ -641,9 +641,10 @@ document.write(`
 <p>This notebook walks through how to get various information about where HST is, and where it is pointing, in relation to Earth and the Sun, for a given observation.</p>
 <p>The methods laid out in this notebook do not necessarily represent the “official” way that one would extract these quantities from the full NASA engineering data. However, interacting with the engineering data can be non-trivial, and there is often limited documentation.</p>
 <p>Therefore, this notebook aims to provide ways to calculate various ephemeris (and related) quantities in ways that are reliable, whilst also still being relatively straightforward.</p>
-<p>Some of the examples laid out in this notebook use information available in the FITS header, and some use the JPL <code class="docutils literal notranslate"><span class="pre">Horizons</span></code> service or <code class="docutils literal notranslate"><span class="pre">pvlib</span></code> package. To run this notebook, you will require <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, and <code class="docutils literal notranslate"><span class="pre">pvlib</span></code> to be installed (along with their dependences).</p>
+<p>Some of the examples laid out in this notebook use information available in the FITS header, and some use other data available online. To run this notebook, you will require <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, <code class="docutils literal notranslate"><span class="pre">pandas</span></code>, <code class="docutils literal notranslate"><span class="pre">pvlib</span></code>, and <code class="docutils literal notranslate"><span class="pre">ppigrf</span></code> to be installed (along with their dependences).</p>
 <p>In this example, we will be using an observation from the ACS/SBC - namely <code class="docutils literal notranslate"><span class="pre">jec0c6aeq_flc.fits</span></code>. It’s an observation of part of nearby galaxy NGC7793, looking at a bunch of young stars and star-forming regions. This file will be downloaded from MAST, and put in a directory your current working directory (in general, this will automatically be the same directory as the notebook itself, under standard notebook kernel server settings).</p>
 <p>Note that the methods demonstrated in this notebook <em>require</em> you to be working with a file associated with an individual expoure (ie, a <code class="docutils literal notranslate"><span class="pre">raw</span></code>, <code class="docutils literal notranslate"><span class="pre">flt</span></code>, or <code class="docutils literal notranslate"><span class="pre">flc</span></code> file). This is because a drizzled file, or other combined data product, will consist of data from different observations, where the telescope, Earth, and Sun will have been in different relative positions.</p>
+<p>This notebook reflects the methods used to obtain various observaitonal parameters used in ACS ISR 2025-05.</p>
 <p><a id="imports"></a></p>
 </section>
 </section>
@@ -653,7 +654,10 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Required imports all here</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringIO</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">astropy.io.fits</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">astropy.wcs</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">astropy.time</span>
@@ -661,7 +665,8 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">astropy.units</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">u</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">astropy.coordinates</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">astroquery.mast</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.jplhorizons</span><span class="w"> </span><span class="kn">import</span> <span class="n">Horizons</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">skyfield.api</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ppigrf</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pvlib</span>
 
 <span class="c1"># Report to user where data folder will be palced</span>
@@ -790,7 +795,7 @@ document.write(`
 <section id="hst-lattude-longitude-during-observation">
 <h2>2. HST Lattude &amp; Longitude During Observation<a class="headerlink" href="#hst-lattude-longitude-during-observation" title="Link to this heading">#</a></h2>
 <p>If you want to know the position of HST over the Earth during a given observation, you have to account for the fact that HST is continually moving in three dimensions around the Earth, which is continually moving in three dimensions around the Sun (thanks, Copernicus). This is a whole bunch of 3D ephemeris maths we’d rather not do by hand.</p>
-<p>Fortunately, we don’t have to! We can use <code class="docutils literal notranslate"><span class="pre">astropy.coordinates</span></code> and the JPL <code class="docutils literal notranslate"><span class="pre">Horizons</span></code> service instead.</p>
+<p>Fortunately, we don’t have to! The United States Space Command (USSPACECOM) provides public orbital information, which can be converted into the necessary ephemeres using the <code class="docutils literal notranslate"><span class="pre">skyfield</span></code> package.</p>
 <p>First, we have to know exactly when the observation was taken, which we can get from the header. We then use that to construct an <code class="docutils literal notranslate"><span class="pre">astropy.time.Time</span></code> object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -799,7 +804,9 @@ document.write(`
 <span class="n">time_string</span> <span class="o">=</span> <span class="n">flt_hdr_0</span><span class="p">[</span><span class="s1">&#39;TIME-OBS&#39;</span><span class="p">]</span>
 
 <span class="c1"># Convert into an astropy Time object</span>
-<span class="n">datetime_obs_start</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">(</span><span class="n">date_string</span><span class="o">+</span><span class="s1">&#39;T&#39;</span><span class="o">+</span><span class="n">time_string</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;isot&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;utc&#39;</span><span class="p">)</span>
+<span class="n">datetime_obs_start</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">(</span><span class="n">date_string</span><span class="o">+</span><span class="s1">&#39;T&#39;</span><span class="o">+</span><span class="n">time_string</span><span class="p">,</span> 
+                                       <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;isot&#39;</span><span class="p">,</span> 
+                                       <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;utc&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -813,7 +820,9 @@ document.write(`
 <span class="n">datetime_obs_mid</span> <span class="o">=</span> <span class="n">datetime_obs_start</span> <span class="o">+</span> <span class="n">datetime_mid_delta</span>
 
 <span class="c1"># Make array densely sampling time throughot the observation (1000 points is a good arbitrary dense sampling)</span>
-<span class="n">datetime_obs_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">datetime_obs_start</span><span class="p">,</span> <span class="p">(</span><span class="n">datetime_obs_start</span> <span class="o">+</span> <span class="n">exp_time</span><span class="p">),</span> <span class="n">num</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">datetime_obs_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">datetime_obs_start</span><span class="p">,</span> 
+                               <span class="p">(</span><span class="n">datetime_obs_start</span> <span class="o">+</span> <span class="n">exp_time</span><span class="p">),</span> 
+                               <span class="n">num</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 
 <span class="c1"># Record date and time info</span>
 <span class="n">mjd_obs_mid</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">(</span><span class="n">datetime_obs_mid</span><span class="p">)</span><span class="o">.</span><span class="n">mjd</span>
@@ -831,58 +840,65 @@ The mid-point time of the exposure was at MJD of 59694.13942
 </div>
 </div>
 </div>
-<p>With all this date &amp; time info ready, we can now use the JPL <code class="docutils literal notranslate"><span class="pre">Horizons</span></code> service to work out exactly where HST was during this exposure.</p>
-<p>We can query the service via <code class="docutils literal notranslate"><span class="pre">astroquery.jplhorizons.Horizons</span></code>. The <code class="docutils literal notranslate"><span class="pre">Horizons</span></code> service uses Navigation and Ancillary Information Facility (NAIF) ID codes to identify objects and coordinates. HST has a dedicated NAIF ID code: namely, -48. We set the <code class="docutils literal notranslate"><span class="pre">location</span></code> of the query to <code class="docutils literal notranslate"><span class="pre">500&#64;399</span></code>; this is combination of NAIF ID codes that corresponds to the location of Earth (the <code class="docutils literal notranslate"><span class="pre">&#64;339</span></code> part), described in a Geocentric frame (the <code class="docutils literal notranslate"><span class="pre">500</span></code> part). The <code class="docutils literal notranslate"><span class="pre">Horizons</span></code> and <code class="docutils literal notranslate"><span class="pre">astropy.coordinates</span></code> systems are smart enough that nothing critically depends on choosing the ‘correct’ <code class="docutils literal notranslate"><span class="pre">location</span></code> here - but as HST orbits the Earth, this reference frame will make all the numbers involved a little more easily interpretable.</p>
+<p>With all this date &amp; time info ready, we can now use the USSPACECOM data to work out exactly where HST was during this exposure.</p>
+<p>The data provided by USSPACECOM comes in the form of ‘Two Line Elements’, or TLEs. A table of TLEs for HST complete up until early November 2025 is provided with this notebook, called <code class="docutils literal notranslate"><span class="pre">HST_TLEs.dat</span></code>. If you need data that extend to later dates, the official USSPACECOM TLE tables can be retrieved from <code class="docutils literal notranslate"><span class="pre">https://www.space-track.org/basicspacedata/query/class/tle_publish/NORAD_CAT_ID/20580/format/tle</span></code>.</p>
+<p>With that data in-hand, we can now use the skyfield package to read in the TLE table.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Query JPL Horizons, getting values for middle of observation</span>
-<span class="n">jplhz_hst_id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">48</span>
-<span class="n">jplhz_obj_obs_mid</span> <span class="o">=</span> <span class="n">Horizons</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">jplhz_hst_id</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s1">&#39;500@399&#39;</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">datetime_obs_mid</span><span class="o">.</span><span class="n">jd</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up a skyfield timescale object, and prepare a storage variable for results</span>
+<span class="n">timescale</span> <span class="o">=</span> <span class="n">skyfield</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">timescale</span><span class="p">()</span>
+<span class="n">tle_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Read in TLE file</span>
+<span class="n">tle_file</span> <span class="o">=</span> <span class="s1">&#39;HST_TLEs.dat&#39;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tle_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span> <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+
+<span class="c1"># Loop over lines of TLE file, processing them with skyfield</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="n">line1</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">line2</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">sat</span> <span class="o">=</span> <span class="n">skyfield</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">EarthSatellite</span><span class="p">(</span><span class="n">line1</span><span class="p">,</span> <span class="n">line2</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="n">timescale</span><span class="p">)</span>
+    <span class="n">tle_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sat</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>Now we extract the 3D position of HST in relation to Earth, in the International Terrestrial Reference System (ITRS), and use this to construct an <code class="docutils literal notranslate"><span class="pre">astropy.coordinates</span></code> object for Earth’s location.</p>
+<p>Having read in our TLE data, we now search through the TLEs to find the one that most closely matches the date of our observation, and use the <code class="docutils literal notranslate"><span class="pre">skyfield</span></code> package to compute the corresponding positional data. Note that the Skyfield package uses Julia dates, not <em>modifed</em> Julian dates, for this.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get HST vectors from Horizons object</span>
-<span class="n">jplhz_vector</span> <span class="o">=</span> <span class="n">jplhz_obj_obs_mid</span><span class="o">.</span><span class="n">vectors</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up a skyfield timescale object, and prepare a storage variable for results</span>
+<span class="n">timescale</span> <span class="o">=</span> <span class="n">skyfield</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">timescale</span><span class="p">()</span>
+<span class="n">hst_orbit_coords</span> <span class="o">=</span> <span class="p">[]</span>
 
-<span class="c1"># Extract position in ITRS (International Terrestrial Reference System)</span>
-<span class="n">hst_geo_x</span> <span class="o">=</span> <span class="n">jplhz_vector</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">AU</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span>
-<span class="n">hst_geo_y</span> <span class="o">=</span> <span class="n">jplhz_vector</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">AU</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span>
-<span class="n">hst_geo_z</span> <span class="o">=</span> <span class="n">jplhz_vector</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">AU</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span>
+<span class="c1"># Get Julian date (which skyfield uses) </span>
+<span class="n">datetime_obs_mid_jd</span> <span class="o">=</span> <span class="n">datetime_obs_mid</span><span class="o">.</span><span class="n">jd</span>
+<span class="n">time_sf</span> <span class="o">=</span> <span class="n">timescale</span><span class="o">.</span><span class="n">tt_jd</span><span class="p">(</span><span class="n">datetime_obs_mid_jd</span><span class="p">)</span>
 
-<span class="c1"># Create an EarthLocation object for the HST</span>
-<span class="n">hst_location</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">EarthLocation</span><span class="o">.</span><span class="n">from_geocentric</span><span class="p">(</span><span class="n">hst_geo_x</span><span class="p">,</span> <span class="n">hst_geo_y</span><span class="p">,</span> <span class="n">hst_geo_z</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>In order to use this to work out the terrestrial latitude and longitude that HST was above during observations, we need to convert to geodetic coordinates, and use that to build a <code class="docutils literal notranslate"><span class="pre">astropy.coordinates.EarthLocation</span></code> object.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute HST location in map coordiantes</span>
-<span class="n">hst_location</span> <span class="o">=</span> <span class="n">hst_location</span><span class="o">.</span><span class="n">to_geodetic</span><span class="p">()</span>
-<span class="n">hst_location</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">EarthLocation</span><span class="o">.</span><span class="n">from_geodetic</span><span class="p">(</span><span class="n">lat</span><span class="o">=</span><span class="n">hst_location</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
-                                                               <span class="n">lon</span><span class="o">=</span><span class="n">hst_location</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span>
-                                                               <span class="n">height</span><span class="o">=</span><span class="n">hst_location</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+<span class="c1"># Select the TLE whose epoch is closest to the requested date</span>
+<span class="n">closest_sat</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">tle_list</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">epoch</span><span class="o">.</span><span class="n">tt</span> <span class="o">-</span> <span class="n">datetime_obs_mid_jd</span><span class="p">))</span>
+<span class="n">subpoint</span> <span class="o">=</span> <span class="n">closest_sat</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">time_sf</span><span class="p">)</span><span class="o">.</span><span class="n">subpoint</span><span class="p">()</span>
+
+<span class="c1"># Get coordinates, and put them into an astropy coordinates object</span>
+<span class="n">hst_location_lat</span> <span class="o">=</span> <span class="n">subpoint</span><span class="o">.</span><span class="n">latitude</span><span class="o">.</span><span class="n">degrees</span> <span class="o">*</span> <span class="n">astropy</span><span class="o">.</span><span class="n">units</span><span class="o">.</span><span class="n">deg</span>
+<span class="n">hst_location_lon</span> <span class="o">=</span> <span class="n">subpoint</span><span class="o">.</span><span class="n">longitude</span><span class="o">.</span><span class="n">degrees</span> <span class="o">*</span> <span class="n">astropy</span><span class="o">.</span><span class="n">units</span><span class="o">.</span><span class="n">deg</span>
+<span class="n">hst_location_height</span> <span class="o">=</span> <span class="n">subpoint</span><span class="o">.</span><span class="n">elevation</span><span class="o">.</span><span class="n">km</span> <span class="o">*</span> <span class="n">astropy</span><span class="o">.</span><span class="n">units</span><span class="o">.</span><span class="n">km</span>
+<span class="n">hst_location</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">EarthLocation</span><span class="p">(</span><span class="n">lat</span><span class="o">=</span><span class="n">hst_location_lat</span><span class="p">,</span> 
+                                                 <span class="n">lon</span><span class="o">=</span><span class="n">hst_location_lon</span><span class="p">,</span> 
+                                                 <span class="n">height</span><span class="o">=</span><span class="n">hst_location_height</span><span class="p">)</span>
 
 <span class="c1"># Report location to user</span>
-<span class="n">hst_location_lat</span> <span class="o">=</span> <span class="n">hst_location</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">value</span>
-<span class="n">hst_location_lon</span> <span class="o">=</span> <span class="n">hst_location</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">value</span>
-<span class="n">hst_location_height</span> <span class="o">=</span> <span class="n">hst_location</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">km</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;During exposure mid-point, HST was above lat = </span><span class="si">{</span><span class="n">hst_location_lat</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, lon = </span><span class="si">{</span><span class="n">hst_location_lon</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, at </span><span class="si">{</span><span class="n">hst_location_height</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;During exposure mid-point, HST was above lat = </span><span class="si">{</span><span class="n">hst_location_lat</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, lon = </span><span class="si">{</span><span class="n">hst_location_lon</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">, at height of </span><span class="si">{</span><span class="n">hst_location_height</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>During exposure mid-point, HST was above lat = -46.67, lon = 46.65, at 547 km
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>During exposure mid-point, HST was above lat = -27.87 deg, lon = 154.90 deg, at height of 541 km
 </pre></div>
 </div>
 </div>
 </div>
-<p>As an example use-case of this, we can compute <em>rough</em> distance from the South Atlantic Anomaly (SAA). Note that the SAA is not symmetric, and that any proper SAA calculations should take account of its contours. And the central point of the SAA changes. So this for illustrative purposes only.</p>
+<p>As an example use-case of this, we can compute the <em>rough</em> distance from the South Atlantic Anomaly (SAA). Note that the SAA is not symmetric, and that any proper SAA calculations should take account of its contours. And the central point of the SAA changes. So this for illustrative purposes only.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Give approxiamte coords of centre of SAA</span>
@@ -893,12 +909,33 @@ The mid-point time of the exposure was at MJD of 59694.13942
 <span class="n">saa_itrs</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">SkyCoord</span><span class="p">(</span><span class="n">saa_location</span><span class="o">.</span><span class="n">get_itrs</span><span class="p">())</span>
 <span class="n">hst_itrs</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">SkyCoord</span><span class="p">(</span><span class="n">hst_location</span><span class="o">.</span><span class="n">get_itrs</span><span class="p">())</span>
 <span class="n">saa_distance</span> <span class="o">=</span> <span class="n">saa_itrs</span><span class="o">.</span><span class="n">separation</span><span class="p">(</span><span class="n">hst_itrs</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;HST was </span><span class="si">{</span><span class="n">saa_distance</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> from the middle of the SAA&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;HST was </span><span class="si">{</span><span class="n">saa_distance</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> from the approximate middle of the SAA&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HST was 69.8 deg from the middle of the SAA
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HST was 124.8 deg from the approximate middle of the SAA
+</pre></div>
+</div>
+</div>
+</div>
+<p>Another use for knowing HST’s position is to compute the geomagnetic field strength at that location, at the time of obesrvaiton. The strength of the geomagnetic field can affect UV airglow, and impact HST’s electronics (most notably over the SAA, where the field is especially weak). To to this, we can use the 14th version of the International Geomagnetic Reference Field (IGRF-14; <a class="reference external" href="http://dx.doi.org/10.1186/s40623-020-01288-x">Alken et al., 2021</a>), as implemented by the <code class="docutils literal notranslate"><span class="pre">ppigrf</span></code> package.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use pyigrf to get the geomagnetic field strength components at the location of HST during the observation</span>
+<span class="n">igrf_components</span> <span class="o">=</span> <span class="n">ppigrf</span><span class="o">.</span><span class="n">igrf</span><span class="p">(</span><span class="n">hst_location_lon</span><span class="p">,</span> 
+                              <span class="n">hst_location_lat</span><span class="p">,</span> 
+                              <span class="n">hst_location_height</span><span class="p">,</span>
+                              <span class="n">datetime_obs_mid</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span>
+
+<span class="c1"># pyigrf gives the eastward, northward, and upward components of the field; add them in quadrature to get total field stegnth</span>
+<span class="n">igrf_total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">igrf_components</span><span class="p">)</span><span class="o">**</span><span class="mf">2.0</span><span class="p">))</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">nT</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Geomagnetic field strength during mid-point of observation was </span><span class="si">{</span><span class="n">igrf_total</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Geomagnetic field strength during mid-point of observation was 40786 nT
 </pre></div>
 </div>
 </div>
@@ -929,7 +966,7 @@ The mid-point time of the exposure was at MJD of 59694.13942
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Solar time for HST during exposure was 06.49 hours (in 24-hour notation)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Solar time for HST during exposure was 13.71 hours (in 24-hour notation)
 </pre></div>
 </div>
 </div>
@@ -948,29 +985,36 @@ The mid-point time of the exposure was at MJD of 59694.13942
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sun&#39;s position during exposure was altitude = -4.61 deg, azimuth = 75.68 deg
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sun&#39;s position during exposure was altitude = 42.06 deg, azimuth = 325.50 deg
 </pre></div>
 </div>
 </div>
 </div>
-<p>Now to finish with a couple of easy calculations. Firstly, lets find out how far the observations are from the closest Solar cycle maximum (either forward or backward in time). The atmosphere extends to higher altitudes during Solar maxima, so this can once again be a relevant quantitity for airglow.</p>
-<p>We take the dates of past maxima from the International Sunspot Numbers v2.0, as available at SILSO. (Maxima dates are reported as months only in ISNv2.0; here we take the middle of each month as the peak for each, for convenience.)</p>
+<p>Now to finish with a couple of easy calculations. Firstly, lets find out how many sunspots were on the Sun, during our observation. The atmosphere extends to higher altitudes during increased Solar activity (which is traced by more sunspots), so this can once again be a relevant quantitity for airglow.</p>
+<p>Historical daily sunspot numbers are provided by the Royal Observatory of Belgium’s Sunspot Index and Long-term Solar Observations (SILSO) database.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First, state the dates of of the Solar maxima  the once before HST launch</span>
-<span class="n">solar_cycle_peaks_mjd</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;2024-06-15&#39;</span><span class="p">,</span> <span class="s1">&#39;2014-04-15&#39;</span><span class="p">,</span> <span class="s1">&#39;2001-11-15&#39;</span><span class="p">,</span> <span class="s1">&#39;1989-11-15&#39;</span><span class="p">]</span>
+<span class="n">silso_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.sidc.be/silso/DATA/SN_d_tot_V2.0.csv&#39;</span>
+<span class="n">silso_query</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">silso_url</span><span class="p">)</span>
+<span class="n">silso_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="s1">&#39;decimal_date&#39;</span><span class="p">,</span> <span class="s1">&#39;daily_sunspot_number&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;std_dev&#39;</span><span class="p">,</span> <span class="s1">&#39;observations&#39;</span><span class="p">,</span> <span class="s1">&#39;definitive_provisional&#39;</span><span class="p">]</span>
+<span class="n">silso_frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">silso_query</span><span class="o">.</span><span class="n">text</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">silso_cols</span><span class="p">)</span>
 
-<span class="c1"># Convert this date strings into astropy.time.Time objects</span>
-<span class="n">solar_cycle_peaks_mjd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">astropy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">(</span><span class="n">solar_cycle_peak_mjd</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;iso&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mjd</span> <span class="k">for</span> <span class="n">solar_cycle_peak_mjd</span> <span class="ow">in</span> <span class="n">solar_cycle_peaks_mjd</span><span class="p">])</span>
+<span class="c1"># Extract SILSO sunspot counts in date range of interest</span>
+<span class="n">silso_frame</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">silso_frame</span><span class="p">[[</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="s1">&#39;day&#39;</span><span class="p">]])</span>
+<span class="n">silso_date_start</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime_obs_mid</span> <span class="o">-</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">day</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">silso_date_end</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime_obs_mid</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">day</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">silso_date_where</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">silso_frame</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">silso_date_start</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">silso_frame</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">silso_date_end</span><span class="p">))</span>
 
-<span class="c1"># Calculate how many days, in MJD, separate our HST observation from the closest solar maximum (forward or backward in time)</span>
-<span class="n">solar_peak_gap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mjd_obs_mid</span> <span class="o">-</span> <span class="n">solar_cycle_peaks_mjd</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Observation happened </span><span class="si">{</span><span class="n">solar_peak_gap</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1"> days away from nearest Solar maximum&#39;</span><span class="p">)</span>
+<span class="c1"># Find average number of sunspots for week centred on observation date, and report</span>
+<span class="n">silso_spots_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">silso_frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">silso_date_where</span><span class="p">,</span> <span class="s1">&#39;daily_sunspot_number&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Average number of sunspots was </span><span class="si">{</span><span class="n">silso_spots_mean</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> during week of observation &#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Observation happened 782 days away from nearest Solar maximum
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average number of sunspots was 126.3 during week of observation 
 </pre></div>
 </div>
 </div>
@@ -1012,7 +1056,11 @@ The mid-point time of the exposure was at MJD of 59694.13942
 <p>Please visit the <a class="reference external" href="http://hsthelp.stsci.edu">HST Help Desk</a>. Through the help desk portal, you can explore the HST Knowledge Base and request additional help from experts.</p>
 <hr>
 <p><a class="reference internal" href="#titleEphemeris"><span class="xref myst">Top of Page</span></a>
-<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/hst_notebooks/main/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/hst_notebooks/main/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a>
+<br></br>
+<br></br></p>
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" />
+</a>
 </section>
 </section>
 </section>
