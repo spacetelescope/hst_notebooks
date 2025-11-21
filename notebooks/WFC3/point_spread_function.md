@@ -1,3 +1,5 @@
+![STScI Logo](../../_static/stsci_header.png)
+
 # Point Spread Function (PSF)
 Here are brief descriptions of the WFC3 Notebooks for Point Spread Function 
 modeling.
