@@ -1,3 +1,5 @@
+![STScI Logo](../../_static/stsci_header.png)
+
 # WFC3/IR Time Variable Background (TVB)
 Here are brief descriptions of WFC3 Notebooks for WFC3/IR TVB:
 
