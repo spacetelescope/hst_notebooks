@@ -1,3 +1,5 @@
+![STScI Logo](../../_static/stsci_header.png)
+
 # Photometry
 
 Here are brief descriptions of WFC3 Notebooks for photometry:

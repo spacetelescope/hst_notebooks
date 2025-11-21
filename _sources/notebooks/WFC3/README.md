@@ -1,3 +1,5 @@
+![STScI Logo](../../_static/stsci_header.png)
+
 # WFC3 Notebooks
 
 WFC3 Notebooks is the primary repository for analyzing data from the 
