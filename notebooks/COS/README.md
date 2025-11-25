@@ -13,7 +13,7 @@ Before running these examples, you **must** follow the general instructions on c
 
 ## Current Notebooks
 
-If you don't want to run the Notebooks for yourself but just want to see rendered html versions of the Notebooks, *(with outputs,)* you may use the rendered `html` file.
+If you don't want to run the Notebooks for yourself but just want to see rendered html versions of the Notebooks, *(with outputs)*, you may use the rendered `html` file.
 
 |Name|Topic|Notebook file (`ipynb`)|Rendered file (`html`)|
 |-|-|-|-|

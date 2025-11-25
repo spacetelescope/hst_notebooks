@@ -30,7 +30,7 @@ Here, you can find detailed documentation for each instrument the Hubble Space T
 
 - [Hubble Advanced Spectral Products (HASP)](https://archive.stsci.edu/missions-and-data/hst/hasp)
 
-- [Hubble Spectroscopic Legacy Archive (HSLA)](https://archive.stsci.edu/missions-and-data/hsla)
+- [Hubble Spectroscopic Legacy Archive (HSLA)](https://archive.stsci.edu/missions-and-data/hst/hsla)
 
 - [Near Infrared Camera and Multi-Object Spectrometer (NICMOS)](https://www.stsci.edu/hst/instrumentation/legacy/nicmos)
 
