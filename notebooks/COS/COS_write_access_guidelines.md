@@ -1,4 +1,4 @@
-# Rules for writing to the [spacetelescope/notebooks GitHub repository](https://github.com/spacetelescope/notebooks/)
+# Rules for writing to the [spacetelescope/hst_notebooks GitHub repository](https://github.com/spacetelescope/hst_notebooks)
 
 **Contributors:** Nat Kerman @nkerman, Marc Rafelski @mrafelski, Erik Tollerud @etollerud
 
@@ -8,9 +8,9 @@
 
 ## Motivation
 
-For Notebooks under active development, as well as those simply being maintained, INS needs to be able to make changes and corrections in a timely fashion. This is especially important for minor user-facing changes: edits to markdown explanations, comments on the code, typo fixes, etc., which add clarity or formality without altering the message or code. It was determined that this level of changes may be made without a full DMD review, and that a member of the COS Notebooks development team, (in this case Nat Kerman,) would be given write access to the notebooks repo to merge their own edits on a limited basis. However, it is extremely important that this workflow of merging one's own edits only be used for minor changes. It is considered bad version control "hygiene" to merge one's own commits for good reason: it is dangerous to publish changes that no one else has looked over. To establish good precedent for this procedure, this document of **ground rules** was established.
+For Notebooks under active development, as well as those simply being maintained, INS needs to be able to make changes and corrections in a timely fashion. This is especially important for minor user-facing changes: edits to markdown explanations, comments on the code, typo fixes, etc., which add clarity or formality without altering the message or code. It was determined that this level of changes may be made without a full DMD review, and that a member of the COS Notebooks development team, (in this case Anna Payne), would be given write access to the notebooks repo to merge their own edits on a limited basis. However, it is extremely important that this workflow of merging one's own edits only be used for minor changes. It is considered bad version control "hygiene" to merge one's own commits for good reason: it is dangerous to publish changes that no one else has looked over. To establish good precedent for this procedure, this document of **ground rules** was established.
 
-*At present these rules apply only to the COS team altering the spacetelescope/notebooks repo.*
+*At present these rules apply only to the COS team altering the spacetelescope/hst_notebooks repo.*
 
 ---
 
@@ -86,7 +86,7 @@ If, for some reason, no reviewer can provide approval before a hard deadline, me
 * Adding minor functionality to a class or function
 * Increasing verbosity of output to the user, as in notebooks issue [#171](https://github.com/spacetelescope/notebooks/issues/171). This is also an example where a user could count as the second set of eyes.
 
-## Additional guidelines for contributing to the [spacetelescope/notebooks](https://github.com/spacetelescope/notebooks/) repository
+## Additional guidelines for contributing to the [spacetelescope/hst_notebooks](https://github.com/spacetelescope/hst_notebooks) repository
 
 Aim for *smaller commits in larger, detailed PRs*:
 
