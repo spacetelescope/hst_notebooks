@@ -1,3 +1,5 @@
+![STScI Logo](./_static/stsci_header.png)
+
 [![Scheduled Notebook Execution](https://github.com/spacetelescope/hst_notebooks/actions/workflows/notebook-scheduled.yml/badge.svg)](https://github.com/spacetelescope/hst_notebooks/actions/workflows/notebook-scheduled.yml)
 [![Weekly broken link check](https://github.com/spacetelescope/hst_notebooks/actions/workflows/weekly_broken_link_finder.yml/badge.svg)](https://github.com/spacetelescope/hst_notebooks/actions/workflows/weekly_broken_link_finder.yml)
 [![Weekly HTML Accessibility Check](https://github.com/spacetelescope/hst_notebooks/actions/workflows/weekly_html_accessibility_check.yml/badge.svg)](https://github.com/spacetelescope/hst_notebooks/actions/workflows/weekly_html_accessibility_check.yml)
@@ -23,7 +25,7 @@ Here, you can find detailed documentation for each instrument the Hubble Space T
 
 - [Hubble Advanced Spectral Products (HASP)](https://archive.stsci.edu/missions-and-data/hst/hasp)
 
-- [Hubble Spectroscopic Legacy Archive (HSLA)](https://archive.stsci.edu/missions-and-data/hsla)
+- [Hubble Spectroscopic Legacy Archive (HSLA)](https://archive.stsci.edu/missions-and-data/hst/hsla)
 
 - [Near Infrared Camera and Multi-Object Spectrometer (NICMOS)](https://www.stsci.edu/hst/instrumentation/legacy/nicmos)
 
