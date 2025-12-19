@@ -1,0 +1,1197 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Plannning WFC Imaging While Taking into Account CTE-related Losses &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css?v=cd6c26fb" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-2XDY0S4S5Q"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-2XDY0S4S5Q');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-2XDY0S4S5Q');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/ACS/acs_etc_cte/acs_etc_cte';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="HST Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="HST Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI HST Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">ACS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../acs_pixel_area_maps/acs_pixel_area_maps.html">ACS Pixel Area Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html">Focus Diverse ePSFs for ACS/WFC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acs_exception_report/exception_report_checks.html">HST Exception Report - Investigate your ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hst_orbits_ephem/hst_orbits_ephem.html">Getting HST Ephemeris and Related Data for an Observation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ExceptionReport/ExceptionReport.html">What to do when you get an Exception Report for COS</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Improving Astrometry Using Alternate WCS Solutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an Absolute Reference Catalog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/use_ds9_regions_in_tweakreg/use_ds9_regions_in_tweakreg.html">TWEAKREG Tips - Using DS9 Regions for Source Inclusion/Exclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_mosaics/align_mosaics.html">Aligning HST Mosaics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/sky_matching/sky_matching.html">Sky Matching for HST Mosaics <a id="top"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling new WFPC2 FLT data products with chip-normalization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HASP</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/README.html">HASP Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/Setup/Setup.html">Installing the Hubble Advanced Spectral Products Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/CoaddTutorial/CoaddTutorial.html">Inputting User Data using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/FluxScaleTutorial/FluxScaleTutorial.html">Scaling Flux while using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/DataDiagnostic/DataDiagnostics.html">HASP Data Diagnostic Notebook</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HSLA</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../HSLA/README.html">HSLA Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HSLA/COSLifetimePositions/COSLifetimePositions.html">Combining COS Data from Multiple Lifetime Positions and Central Wavelengths</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HSLA/Intro/Intro.html">Introduction to the HSLA Data Products and Tools</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HSLA/Setup/Setup.html">Installing the HASP/HSLA Spectral-Combination Script</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/README.html">STIS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/extraction/1D_Extraction.html">1D Spectra Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/low_count_uncertainties/Low_Count_Uncertainties.html">Low Count Uncertainties in STIS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../STIS/contrast_sensitivity/STIS_Coronagraphic_Observation_Feasibility.html">STIS Coronagraphic Observation Feasibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../WFC3/README.html">WFC3 Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/general_tools.html">General Tools</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_g280_transit/G280_Exoplanet_Transits.html">Analyzing WFC3/UVIS G280 Exoplanet Transit Observations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/ir_tvb.html">WFC3/IR Time Variable Background (TVB)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/photometry.html">Photometry</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/point_spread_function.html">Point Spread Function (PSF)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/point_spread_function/hst_point_spread_function.html">HST WFC3 Point Spread Function Modeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/mast_api_psf/download_psf_cutouts.html">Downloading WFC3 and WFPC2 PSF Cutouts from MAST</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/ACS/acs_etc_cte/acs_etc_cte.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/ACS/acs_etc_cte/acs_etc_cte.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/ACS/acs_etc_cte/acs_etc_cte.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Plannning WFC Imaging While Taking into Account CTE-related Losses</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-signal-to-noise-ratio-and-exposure-time-for-a-point-source">1. Estimating Signal-to-Noise Ratio and Exposure Time for a Point Source</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-estimating-the-real-source-brightness-and-snr-using-the-photometric-cte-correction-formula">1a. Estimating the real source brightness and SNR using the photometric CTE correction formula</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-approaches-to-increase-the-snr">1b. Approaches to increase the SNR</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#option-1-place-the-target-closer-to-the-serial-register">Option 1: Place the target closer to the serial register</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-apply-post-flash">Option 2: Apply post-flash</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#option-3-increase-exposure-time">Option 3: Increase exposure time</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-snr-of-an-extended-source-affected-by-degraded-cte">2. Estimating SNR of an extended source affected by degraded CTE</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p><img alt="STScI Logo" src="../../../_images/stsci_header.png" /></p>
+<p><a id="top"></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="plannning-wfc-imaging-while-taking-into-account-cte-related-losses">
+<h1>Plannning WFC Imaging While Taking into Account CTE-related Losses<a class="headerlink" href="#plannning-wfc-imaging-while-taking-into-account-cte-related-losses" title="Link to this heading">#</a></h1>
+<hr class="docutils" />
+<section id="learning-goals">
+<h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Link to this heading">#</a></h2>
+<p>By the end of this tutorial, you will:</p>
+<ul class="simple">
+<li><p>Learn how to estimate the degree to which degraded CTE will artificially reduce source brightness</p></li>
+<li><p>Understand how to adjust exposure times to account for artificially dimmed point sources</p></li>
+<li><p>Understand how to adjust exposure times to account for artificially dimmed extended sources</p></li>
+</ul>
+</section>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="#intro"><span class="xref myst">Introduction</span></a> <br>
+<a class="reference internal" href="#imports"><span class="xref myst">Imports</span></a> <br>
+<a class="reference internal" href="#section1"><span class="xref myst">1. Estimating Signal-to-Noise Ratio and Exposure Time for a Point Source</span></a> <br></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#section1a"><span class="xref myst">1a. Estimating the real source brightness and SNR using the photometric CTE correction formula</span></a> <br></p></li>
+<li><p><a class="reference internal" href="#section1b"><span class="xref myst">1b. Approaches to increase the SNR</span></a> <br></p>
+<ul>
+<li><p><a class="reference internal" href="#opt1"><span class="xref myst">Option 1: Place the target closer to the serial register</span></a> <br></p></li>
+<li><p><a class="reference internal" href="#opt2"><span class="xref myst">Option 2: Apply post-flash</span></a></p></li>
+<li><p><a class="reference internal" href="#opt3"><span class="xref myst">Option 3: Increase exposure time</span></a></p></li>
+</ul>
+</li>
+</ul>
+<p><a class="reference internal" href="#section2"><span class="xref myst">2. Estimating SNR of an extended source affected by degraded CTE</span></a> <br>
+<a class="reference internal" href="#additional"><span class="xref myst">Additional Resources</span></a> <br>
+<a class="reference internal" href="#about"><span class="xref myst">About this Notebook</span></a> <br>
+<a class="reference internal" href="#citations"><span class="xref myst">Citations</span></a></p>
+<p><a id="intro"></a></p>
+</section>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>The <a href="https://etc.stsci.edu/etc/input/acs/imaging/">ACS Imaging Exposure Time Calculator (ETC)</a> is a powerful tool for users to determine the exposure time to reach a given signal-to-noise, or vice versa. However, the ETC does not take into account the impact that degraded Charge Transfer Efficiency (CTE) has on the measured brightnesses of targets. In reality, the degraded CTE of the WFC detectors leads to sources being fainter than expected, and this effect increases for fainter backgrounds, fainter sources, and increased number of pixel transfers during the read-out process (see e.g., <a href="https://ui.adsabs.harvard.edu/abs/2022acs..rept....6C/abstract">ACS ISR 2022-06</a>). This tutorial will guide you through the steps needed to assess the impact of degraded CTE and how to adjust exposure times to recover a desired signal-to-noise ratio (SNR). Throughout, we assume users are working with the FLT products produced by the ACS calibration pipeline.</p>
+<p>This tutorial makes extensive use of the ACS Imaging ETC v34.1 which assumes an observation date of April 1, 2027. Output from specific ETC runs are linked throughout.</p>
+<p><a id="imports"></a></p>
+</section>
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>numpy</em> to handle array functions</p></li>
+<li><p><em>matplotlib.pyplot</em> for plotting data</p></li>
+<li><p><em>acstools.acsphotcte</em> for estimating the impact of degraded CTE on source brightness</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span><span class="w"> </span><span class="nn">acstools</span><span class="w"> </span><span class="kn">import</span> <span class="n">acsphotcte</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:24: UserWarning: skimage not installed. MRT calculation will not work: ModuleNotFoundError(&quot;No module named &#39;skimage&#39;&quot;)
+  warnings.warn(f&#39;skimage not installed. MRT calculation will not work: {repr(e)}&#39;)  # noqa
+/home/runner/micromamba/envs/ci-env/lib/python3.11/site-packages/acstools/utils_findsat_mrt.py:30: UserWarning: scipy not installed. Kernel generation will not work
+  warnings.warn(&#39;scipy not installed. Kernel generation will not work&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<p><a id="section1"></a></p>
+</section>
+<section id="estimating-signal-to-noise-ratio-and-exposure-time-for-a-point-source">
+<h2>1. Estimating Signal-to-Noise Ratio and Exposure Time for a Point Source<a class="headerlink" href="#estimating-signal-to-noise-ratio-and-exposure-time-for-a-point-source" title="Link to this heading">#</a></h2>
+<p>In this first example, our goal is to estimate the exposure time needed to obtain SNR = 10 for a V = 23 mag (Vega system) B5V star using the F658N narrow-band filter. We’ll assume default sky backgrounds, and assume we are measuring brightness using a five pixel (0.25 arcsecond) radius circular aperture.</p>
+<p>Set up the <a href="https://etc.stsci.edu/etc/input/acs/imaging/">ETC</a> with the following parameters:</p>
+<ul class="simple">
+<li><p>Filter Wheel 1: H-alpha (F658N)</p></li>
+<li><p>Filter Wheel 2: WFC Clear (CLEAR2L)</p></li>
+<li><p># Frames: 1</p></li>
+<li><p>Exposure parameters –&gt; Exposure time needed to obtain a SNR of 10.0</p></li>
+<li><p>Exposure Parameters –&gt; Point Source –&gt; Use a circular region of radius (arcsec): 0.25</p></li>
+<li><p>Spectral Distributions –&gt; Castelli and Kurucz Models: B5V 15000 4.0</p></li>
+<li><p>Normalize the target’s flux: 23 Vega magnitude in Johnson/V</p></li>
+</ul>
+<p><a href="https://etc.stsci.edu/etc/results/ACS.im.2252187/">The ETC tells us we need a total time of 1436 seconds to reach this SNR in a single exposure (# frames = 1)</a>, but we need multiple exposures to remove image defects. Let’s assume we are doing a two-point line dither, so we set # frames = 2, and get <a href="https://etc.stsci.edu/etc/results/ACS.im.2252188/">a total time of 1742 seconds, or 2x871 seconds.</a></p>
+<p>However, the real SNR measured in this exposure time will be less than 10 due to degraded CTE. This is especially true because the ETC warns us that the background level is only 19e-, well below the recommended minimum background level of 30e- (although degraded CTE still has an impact at a background of 30e-).</p>
+<p><a id="section1a"></a></p>
+<section id="a-estimating-the-real-source-brightness-and-snr-using-the-photometric-cte-correction-formula">
+<h3>1a. Estimating the real source brightness and SNR using the photometric CTE correction formula<a class="headerlink" href="#a-estimating-the-real-source-brightness-and-snr-using-the-photometric-cte-correction-formula" title="Link to this heading">#</a></h3>
+<p>The specific degree to which sources are dimmed is discussed in <a href="https://ui.adsabs.harvard.edu/abs/2022acs..rept....6C/abstract">ACS ISR 2022-06</a>, which also provides a formula to estimate the true brightness in counts, C<sub>true</sub>, as a function of the measured (artificially dimmed by degraded CTE) brightness, C<sub>meas</sub>, background, location on the detector, and date. For our purposes, we actually want to invert this formula to estimate C<sub>meas</sub> as a function of C<sub>true</sub> (and the other parameters), but this is not trivial due to its complex form. One workaround is to generate a curve of C<sub>true</sub> vs. C<sub>meas</sub> (with all other parameters fixed) and then interpolate to estimate C<sub>meas</sub>. Below, we define a function to do all this for us in one line.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">estimate_uncorrected_brightness</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">ytransfers</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> <span class="n">background</span><span class="p">,</span> 
+                                    <span class="n">true_counts</span><span class="p">,</span> <span class="n">array_min</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">array_max</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                    <span class="n">array_size</span><span class="o">=</span><span class="mi">101</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Estimates the measured brightness of an object after it has been artificially</span>
+<span class="sd">    dimmed by degraded CTE. Uses the photometric CTE correction formula of</span>
+<span class="sd">    ACS ISR 2022-06.</span>
+<span class="sd">       </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    radius : {3, 5}</span>
+<span class="sd">        Aperture radius used to extract photometry</span>
+<span class="sd">    </span>
+<span class="sd">    ytransfers : float</span>
+<span class="sd">        Number of row transfers during readout. For chip 2 on WFC, this is the Y</span>
+<span class="sd">        value. For chip 1, this is ``2048-Y``.</span>
+<span class="sd">    </span>
+<span class="sd">    mdj : float</span>
+<span class="sd">        MJD of the observation</span>
+<span class="sd">        </span>
+<span class="sd">    background : float</span>
+<span class="sd">        Local sky background in e- per pixel</span>
+<span class="sd">    </span>
+<span class="sd">    true_counts : float</span>
+<span class="sd">        True source brightness in e-, i.e.</span>
+<span class="sd">    </span>
+<span class="sd">    array_min : float, optional</span>
+<span class="sd">        Minimum measured brightness in the array used for interpolation. Default</span>
+<span class="sd">        is 100</span>
+<span class="sd">        </span>
+<span class="sd">    array_max : float, optional</span>
+<span class="sd">        Maximum measured brightness in the array used for interpolation. Default</span>
+<span class="sd">        is 1000</span>
+<span class="sd">        </span>
+<span class="sd">    array_size: int, optional</span>
+<span class="sd">        Size of measured brightness array used for interpolation. Default is 101</span>
+<span class="sd">        </span>
+<span class="sd">    plot: bool, optional</span>
+<span class="sd">        Flag to turn on plotting. Default is True.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    measured_brightness : float</span>
+<span class="sd">        The expected meassured brightness of the source after artificially being</span>
+<span class="sd">        dimmed by degraded CTE.</span>
+<span class="sd">    </span>
+<span class="sd">    delta_mag : float</span>
+<span class="sd">        The magnitude difference between the true brightness and the measured</span>
+<span class="sd">        brightness</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="c1"># initialize the photCTE API</span>
+    <span class="n">photctecalc</span> <span class="o">=</span> <span class="n">acsphotcte</span><span class="o">.</span><span class="n">PhotCTEAPI</span><span class="p">()</span>
+
+    <span class="c1"># generate an array of measured (uncorrected) brightnesses. The range be</span>
+    <span class="c1"># adjusted with the parameters above</span>
+    <span class="n">measured_flux_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">array_min</span><span class="p">,</span> <span class="n">array_max</span><span class="p">,</span> <span class="n">array_size</span><span class="p">)</span> 
+
+    <span class="c1"># apply the photCTE correction to get the corrected &quot;true&quot; brightnesses. Some</span>
+    <span class="c1"># inputs need to be converted onto arrays</span>
+    <span class="n">y_transfers_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">measured_flux_array</span><span class="p">))</span> <span class="o">+</span> <span class="n">ytransfers</span>
+    <span class="n">local_skys_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">measured_flux_array</span><span class="p">))</span> <span class="o">+</span> <span class="n">background</span>
+    <span class="n">cte_corrected_magnitudes</span> <span class="o">=</span> <span class="n">photctecalc</span><span class="o">.</span><span class="n">correct_photometry</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> 
+                                                              <span class="n">ytransfers</span><span class="o">=</span><span class="n">y_transfers_array</span><span class="p">,</span> 
+                                                              <span class="n">mjd</span><span class="o">=</span><span class="n">mjd</span><span class="p">,</span> 
+                                                              <span class="n">local_skys</span><span class="o">=</span><span class="n">local_skys_array</span><span class="p">,</span> 
+                                                              <span class="n">fluxes</span><span class="o">=</span><span class="n">measured_flux_array</span><span class="p">)</span>
+
+    <span class="c1"># The corrected brightnesses come out as magnitudes. Convert back to counts</span>
+    <span class="n">true_flux_array</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">cte_corrected_magnitudes</span> <span class="o">/</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">)</span>
+
+    <span class="c1"># interpolate along this curve to get the measured brightness at the input true brightness</span>
+    <span class="c1"># (i.e., what the ETC told us we would get)</span>
+    <span class="n">measured_brightness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">true_counts</span><span class="p">,</span> <span class="n">true_flux_array</span><span class="p">,</span> <span class="n">measured_flux_array</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
+        <span class="c1"># Plot the measured (CTE-impacted) vs. expected true brightness. Interpolate</span>
+        <span class="c1"># to get the CTE-impacted brightness for the target we put into the ETC.</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">true_flux_array</span><span class="p">,</span> <span class="n">measured_flux_array</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;measured vs. true flux trend&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;True brightness [e-]&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Measured brightness [e-]&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axline</span><span class="p">(</span><span class="n">xy1</span><span class="o">=</span><span class="p">(</span><span class="n">array_min</span><span class="p">,</span> <span class="n">array_min</span><span class="p">),</span> <span class="n">slope</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;1-to-line&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">true_counts</span><span class="p">,</span> <span class="n">measured_brightness</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;our target&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="c1"># print some useful output</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;A </span><span class="si">{</span><span class="n">true_counts</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> e- source on a background of </span><span class="si">{</span><span class="n">background</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">e-/pixel &#39;</span>
+          <span class="sa">f</span><span class="s1">&#39;undergoing </span><span class="si">{</span><span class="n">ytransfers</span><span class="si">}</span><span class="s1"> pixel transfers will have a measured brightness of </span><span class="si">{</span><span class="n">measured_brightness</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">e-&#39;</span><span class="p">)</span>
+
+    <span class="c1"># calculate effective difference in magnitude of expected vs measured source brightness</span>
+    <span class="n">delta_mag</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">measured_brightness</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">true_counts</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;This corresponds to an effective magnitude difference of </span><span class="si">{</span><span class="n">delta_mag</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> mags due to CTE losses.&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">measured_brightness</span><span class="p">,</span> <span class="n">delta_mag</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we apply this function to estimate the CTE-affected measured brightness (C<sub>meas</sub>) for our expected “true” brightness (C<sub>true</sub>). We need to assume a date of our observations and number of y transfers during readout (related to where the object sits on the detector). Let’s assume our star lies at the center of one of the WFC detectors, so undergoes 1024 pixel transfers during readout. We’ll assume our observations take place on April 1, 2026 (mjd = 60766). We’ll add these parameters as variables, along with the <a href="https://etc.stsci.edu/etc/results/ACS.im.2252188/">total source counts, background counts, aperture area, and number of frames from the ETC output</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define number of y transfers and date of observations</span>
+<span class="n">y_transfers</span> <span class="o">=</span> <span class="mi">1024</span>  <span class="c1"># pixels</span>
+<span class="n">mjd</span> <span class="o">=</span> <span class="mi">61496</span>  <span class="c1"># April 1, 2027</span>
+
+<span class="c1"># place ETC output here:</span>
+<span class="n">source_counts</span> <span class="o">=</span> <span class="mf">847.23</span>
+<span class="n">background_counts</span> <span class="o">=</span> <span class="mf">3122.79</span>
+<span class="n">aperture_area</span> <span class="o">=</span> <span class="mf">80.30</span>  <span class="c1"># in pixels</span>
+<span class="n">n_frames</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get source and background counts per exposure</span>
+<span class="n">c_true</span> <span class="o">=</span> <span class="n">source_counts</span> <span class="o">/</span> <span class="n">n_frames</span>  <span class="c1"># in e-</span>
+<span class="n">background_per_exposure</span> <span class="o">=</span> <span class="n">background_counts</span> <span class="o">/</span> <span class="n">n_frames</span> <span class="o">/</span> <span class="n">aperture_area</span>  <span class="c1"># in e-/pixel</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;expected source counts per exposure = </span><span class="si">{</span><span class="n">c_true</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;background per pixel per exposure = </span><span class="si">{</span><span class="n">background_per_exposure</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># now run the function to estimate the CTE-impacted measured brightness</span>
+<span class="n">aperture_radius</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># aperture radius in pixels. Can be 3 or 5.</span>
+<span class="n">estimate_uncorrected_brightness</span><span class="p">(</span><span class="n">aperture_radius</span><span class="p">,</span> <span class="n">y_transfers</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> 
+                                <span class="n">background_per_exposure</span><span class="p">,</span> <span class="n">c_true</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>expected source counts per exposure = 423.6
+background per pixel per exposure = 19.4
+A 423.6 e- source on a background of 19.4e-/pixel undergoing 1024 pixel transfers will have a measured brightness of 302.5e-
+This corresponds to an effective magnitude difference of 0.37 mags due to CTE losses.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(302.5036819209198), np.float64(0.3656016620770126))
+</pre></div>
+</div>
+<img alt="../../../_images/ca1b99463fe49554fdb090bf8a7775364ad1a3c08cdca509de8fcad1dc6146a9.png" src="../../../_images/ca1b99463fe49554fdb090bf8a7775364ad1a3c08cdca509de8fcad1dc6146a9.png" />
+</div>
+</div>
+<p>The ETC predicts we’ll have 423.6 counts per exposure, but in reality, we should have more like 302.5 counts per exposure. In other words, our V = 23 mag star will actually look more like a V = 23.37 mag star.</p>
+<p>To estimate the SNR given this artificial dimming, we can replace V = 23 mag with V = 23.37 mags under “Normalize the target’s flux”, and tell the ETC to calculate the SNR reached in an exposure time of 1742 seconds under “Specify the exposure parameters”.</p>
+<p>We get an <a href="https://etc.stsci.edu/etc/results/ACS.im.2252288/">expected SNR of about 7.2</a>.</p>
+<p><a id="section1b"></a></p>
+</section>
+<section id="b-approaches-to-increase-the-snr">
+<h3>1b. Approaches to increase the SNR<a class="headerlink" href="#b-approaches-to-increase-the-snr" title="Link to this heading">#</a></h3>
+<p>If a SNR of 7.2 is not satisfactory, users can explore a few options:</p>
+<ol class="arabic simple">
+<li><p>Move the source closer to the serial registers</p></li>
+<li><p>Apply post-flash to increase the background</p></li>
+<li><p>Increase exposure time</p></li>
+</ol>
+<p>We discuss each of these options below.</p>
+<p><a id="opt1"></a></p>
+<section id="option-1-place-the-target-closer-to-the-serial-register">
+<h4>Option 1: Place the target closer to the serial register<a class="headerlink" href="#option-1-place-the-target-closer-to-the-serial-register" title="Link to this heading">#</a></h4>
+<p>Moving the target close to the serial registers equates to lowering the number of pixel transfers for readout. This means fewer opportunities for charge to get trapped, reducing the overall dimming effect caused by degraded CTE. For example, let’s rerun our calculations assuming the source is placed only 100 pixels from the serial registers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">estimate_uncorrected_brightness</span><span class="p">(</span><span class="n">aperture_radius</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> 
+                                <span class="n">background_per_exposure</span><span class="p">,</span> <span class="n">c_true</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>A 423.6 e- source on a background of 19.4e-/pixel undergoing 100 pixel transfers will have a measured brightness of 411.2e-
+This corresponds to an effective magnitude difference of 0.03 mags due to CTE losses.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(411.2370304320248), np.float64(0.0321977886034821))
+</pre></div>
+</div>
+<img alt="../../../_images/0200acf3790a99f6338e92fe443f40d8e5e8fe37588145d95746164170007be8.png" src="../../../_images/0200acf3790a99f6338e92fe443f40d8e5e8fe37588145d95746164170007be8.png" />
+</div>
+</div>
+<p>We estimate only ~10 e- are lost during readout, equating to 0.03 mags. Plugging in an apparent target brightness of V = 23.03 mags to the ETC, <a href="https://etc.stsci.edu/etc/results/ACS.im.2252192/">we estimate an SNR of 9.7 in 1742 seconds</a>, pretty close to our desired SNR of 10.</p>
+<p><a id="opt2"></a></p>
+</section>
+<section id="option-2-apply-post-flash">
+<h4>Option 2: Apply post-flash<a class="headerlink" href="#option-2-apply-post-flash" title="Link to this heading">#</a></h4>
+<p>Maybe you cannot move your target for whatever reason. You could consider applying post-flash. This is generally not recommeded if the background can be increased via other means (see the next section), but can be done for compact sources if need be. Generally, post-flash will have the biggest impact on extremely weak sources. For sources with brightnesses of a few hundred e- like we are considering here, any gains in recovered counts and SNR obtained by raising the background with post-flash will be typically be outweighed by the added noise, lowering the overall SNR (see Figure 5 of <a href="https://ui.adsabs.harvard.edu/abs/2024acs..rept....2S/abstract">ACS ISR 2024-02</a>). To test this likelihood, let’s recalculate the expected measured brightness assuming we use post-flash to increase our background to the minimum recommended 30e-.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">estimate_uncorrected_brightness</span><span class="p">(</span><span class="n">aperture_radius</span><span class="p">,</span> <span class="n">y_transfers</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> 
+                                <span class="mi">30</span><span class="p">,</span> <span class="n">c_true</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>A 423.6 e- source on a background of 30.0e-/pixel undergoing 1024 pixel transfers will have a measured brightness of 314.5e-
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This corresponds to an effective magnitude difference of 0.32 mags due to CTE losses.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(314.5017230898439), np.float64(0.3233707516639308))
+</pre></div>
+</div>
+<img alt="../../../_images/ad17a2bf3a97fc231d13cf856b3c4445163b57456d7d948c106097f5a2aaf25b.png" src="../../../_images/ad17a2bf3a97fc231d13cf856b3c4445163b57456d7d948c106097f5a2aaf25b.png" />
+</div>
+</div>
+<p>Our target still looks 0.32 mags dimmer than we expect. Set the target brightness to V = 23.32 mags and Post Flash to 11 e-. Then have the ETC calculate the SNR in 1742 seconds. <a href="https://etc.stsci.edu/etc/results/ACS.im.2252290/">We get SNR = 6.7</a>, so actually slightly worse than if we never did post-flash in the first place.</p>
+<p><a id="opt3"></a></p>
+</section>
+<section id="option-3-increase-exposure-time">
+<h4>Option 3: Increase exposure time<a class="headerlink" href="#option-3-increase-exposure-time" title="Link to this heading">#</a></h4>
+<p>Let’s explore the last option of simply increasing our exposure time. This process will likely be iterative, because once we adjust the time of individual exposures, the degree to which degraded CTE impacts source brightness can change (because the source and background counts change). As a starting point, we can use the ETC to see how long we would need to detect our artificially dimmed V = 23.37 mag star at SNR = 10. In the ETC, set the source brightness to V = 23.37 and makes sure post-flash is set back to 0 e-. The ETC says <a href="https://etc.stsci.edu/etc/results/ACS.im.2252291/">we need 2759 seconds to reach SNR = 10</a>, but we should probably divide this into three exposures. Setting # frames = 3 and rerunning the ETC, it tells us <a href="https://etc.stsci.edu/etc/results/ACS.im.2252292/">we need 3088 seconds</a>, or 3x1029 seconds. We get a warning that the background is only 23e-.</p>
+<p>Let’s again go through the process of calculating the measured brightness given the true brightness and background. First, rerun the ETC using this exposure time our original brightness of V = 23 mags and new time of 3088 seconds to get the true source and background counts in this three-exposure setup (<a href="https://etc.stsci.edu/etc/results/ACS.im.2252293/">it should be 1502 and 5536 over all exposures</a>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define number of y transfers and date of observations</span>
+<span class="n">y_transfers</span> <span class="o">=</span> <span class="mi">1024</span>  <span class="c1"># pixels</span>
+<span class="n">mjd</span> <span class="o">=</span> <span class="mi">61496</span>  <span class="c1"># April 1, 2027</span>
+
+<span class="c1"># place ETC output here:</span>
+<span class="n">source_counts</span> <span class="o">=</span> <span class="mi">1502</span>
+<span class="n">background_counts</span> <span class="o">=</span> <span class="mi">5536</span>
+<span class="n">aperture_area</span> <span class="o">=</span> <span class="mf">80.30</span>  <span class="c1"># in pixels</span>
+<span class="n">n_frames</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="c1"># get source and background counts per exposure</span>
+<span class="n">c_true</span> <span class="o">=</span> <span class="n">source_counts</span> <span class="o">/</span> <span class="n">n_frames</span>  <span class="c1"># in e-</span>
+<span class="n">background_per_exposure</span> <span class="o">=</span> <span class="n">background_counts</span> <span class="o">/</span> <span class="n">n_frames</span> <span class="o">/</span> <span class="n">aperture_area</span>  <span class="c1"># in e-/pixel</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;expected source counts per exposure = </span><span class="si">{</span><span class="n">c_true</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;background per pixel per exposure = </span><span class="si">{</span><span class="n">background_per_exposure</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># now run the function to estimate the CTE-impacted measured brightness</span>
+<span class="n">aperture_radius</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># aperture radius in pixels. Can be 3 or 5.</span>
+<span class="n">estimate_uncorrected_brightness</span><span class="p">(</span><span class="n">aperture_radius</span><span class="p">,</span> <span class="n">y_transfers</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> 
+                                <span class="n">background_per_exposure</span><span class="p">,</span> <span class="n">c_true</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>expected source counts per exposure = 500.7
+background per pixel per exposure = 23.0
+A 500.7 e- source on a background of 23.0e-/pixel undergoing 1024 pixel transfers will have a measured brightness of 370.2e-
+This corresponds to an effective magnitude difference of 0.33 mags due to CTE losses.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(370.2002472199651), np.float64(0.32777993377342085))
+</pre></div>
+</div>
+<img alt="../../../_images/836cef60ad185fd842f5983228a90e1261ed2e8507bd004c53f28e5f7a1bddf4.png" src="../../../_images/836cef60ad185fd842f5983228a90e1261ed2e8507bd004c53f28e5f7a1bddf4.png" />
+</div>
+</div>
+<p>This tells us our V = 23 star looks like a V = 23.30 star. Plug that into the ETC with our exposure time, and see that <a href="https://etc.stsci.edu/etc/results/ACS.im.2252294/">the predicted SNR is 10.35</a>, close to our desired SNR = 10. It is slightly higher because the exposure times in this three-exposure setup are slightly longer than the exposure times of our two-exposure setup, meaning source and background counts per exposure are slightly higher, meaning artificial dimming from degraded CTE is slightly less severe. One could iterate further, possibly reducing exposure times a bit a still obtain SNR ~ 10, but for the purposes of this example, we will stop here.</p>
+<p><a id="section2"></a></p>
+</section>
+</section>
+</section>
+<section id="estimating-snr-of-an-extended-source-affected-by-degraded-cte">
+<h2>2. Estimating SNR of an extended source affected by degraded CTE<a class="headerlink" href="#estimating-snr-of-an-extended-source-affected-by-degraded-cte" title="Link to this heading">#</a></h2>
+<p>It was shown in <a href="https://ui.adsabs.harvard.edu/abs/2025acs..rept....2S/abstract">ACS ISR 2025-02</a> that degraded CTE can impact extended sources like galaxies as well as point sources. Integrated brightnesses (e.g. using large apertures) are generally reliable as long as backgrounds are above 20e-/pixel and targets are brighter than ~300 e- per exposure, but brightness measurements on smaller scales suffer measurable losses. <em><strong>At this point, there is no correction formula for extended sources like there is for point sources</strong></em>, but preliminary analysis has shown that the point-source CTE correction formula provides corrected brightnesses for extended sources that are broadly consistent with their true brightnesses in 3 or 5 pixel radius apertures, at least for sources with sizes ranging from 10s to a few hundred pixels.</p>
+<p>Let’s go through a simple example of trying to observe an object with a surface brightness of 7.5e-19 erg/s/cm^2/A in the F435W filter to SNR=10. We’ll assume a 4-point dither. In the ETC, set the following</p>
+<ul class="simple">
+<li><p>Filter Wheel 1: WFC Clear (CLEAR1L)</p></li>
+<li><p>Filter Wheel 2: Johnson B (F435W)</p></li>
+<li><p># Frames: 4</p></li>
+<li><p>Exposure time needed to obtain a SNR of: 10</p></li>
+<li><p>Extended Source –&gt; Use an arbitrarily sized circular region of radius (arcsec): 0.25</p></li>
+<li><p>Spectral Distribution –&gt; Non-Stellar Objects: Spiral Galaxy [260.0, 34000.0 A]</p></li>
+<li><p>Target flux: 7.5e-19 erg/s/cm^2/A (per arcsec^2) in ACS/F435W</p></li>
+</ul>
+<p>We find that <a href="https://etc.stsci.edu/etc/results/ACS.im.2252228/">we’ll need 3040 seconds to reach our desired SNR = 10</a>, or 4x760 seconds.</p>
+<p>This time, let’s say the target is far from the serial registers, around 2000 pixels.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define number of y transfers and date of observations</span>
+<span class="n">y_transfers</span> <span class="o">=</span> <span class="mi">2000</span>  <span class="c1"># pixels</span>
+<span class="n">mjd</span> <span class="o">=</span> <span class="mi">61496</span>  <span class="c1"># April 1, 2027</span>
+
+<span class="c1"># place ETC output here:</span>
+<span class="n">source_counts</span> <span class="o">=</span> <span class="mi">1396</span>
+<span class="n">background_counts</span> <span class="o">=</span> <span class="mi">11682</span>
+<span class="n">aperture_area</span> <span class="o">=</span> <span class="mf">80.30</span>  <span class="c1"># in pixels</span>
+<span class="n">n_frames</span> <span class="o">=</span> <span class="mi">4</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get source and background counts per exposure</span>
+<span class="n">c_true</span> <span class="o">=</span> <span class="n">source_counts</span> <span class="o">/</span> <span class="n">n_frames</span>  <span class="c1"># in e-</span>
+<span class="n">background_per_exposure</span> <span class="o">=</span> <span class="n">background_counts</span> <span class="o">/</span> <span class="n">n_frames</span> <span class="o">/</span> <span class="n">aperture_area</span>  <span class="c1"># in e-/pixel</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;expected source counts per exposure = </span><span class="si">{</span><span class="n">c_true</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;background per pixel per exposure = </span><span class="si">{</span><span class="n">background_per_exposure</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># now run the function to estimate the CTE-impacted measured brightness</span>
+<span class="n">aperture_radius</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># aperture radius in pixels. Can be 3 or 5.</span>
+<span class="n">estimate_uncorrected_brightness</span><span class="p">(</span><span class="n">aperture_radius</span><span class="p">,</span> <span class="n">y_transfers</span><span class="p">,</span> <span class="n">mjd</span><span class="p">,</span> 
+                                <span class="n">background_per_exposure</span><span class="p">,</span> <span class="n">c_true</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>expected source counts per exposure = 349.0
+background per pixel per exposure = 36.4
+A 349.0 e- source on a background of 36.4e-/pixel undergoing 2000 pixel transfers will have a measured brightness of 177.3e-
+This corresponds to an effective magnitude difference of 0.74 mags due to CTE losses.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(177.31249576656393), np.float64(0.7352152104706953))
+</pre></div>
+</div>
+<img alt="../../../_images/3e756b1109e620d0dbdbf264224120219f952b47db0e0c4764d8f522b04deb20.png" src="../../../_images/3e756b1109e620d0dbdbf264224120219f952b47db0e0c4764d8f522b04deb20.png" />
+</div>
+</div>
+<p>With 2000 pixel transfers, we expect pretty significant losses. In this case, the 7.5e-19 erg/s/cm^2/A/arcsec^2 target looks more like a 3.8e-19 erg/s/cm^2/A/arcsec^2 target. If we plug in this new surface brightness and our integration time of 3040 seconds, <a href="https://etc.stsci.edu/etc/results/ACS.im.2252295/">we get an expected SNR of around 5</a>.</p>
+<p>We again caution that a fully-vetted extended source correction algorithm has not yet been developed for ACS/WFC. Consider the above results with caution. However, if your science involves analysis of spatially resolved regions of galaxies, it would be prudent to place your target as close to the serial registers as possible.</p>
+<p><a id="additional"></a></p>
+</section>
+<section id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.stsci.edu/hst/instrumentation/acs/performance/cte-information">ACS CTE website</a></p></li>
+</ul>
+<p><a id="about"></a></p>
+</section>
+<section id="about-this-notebook">
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
+<p><strong>Author:</strong> David V. Stark, Senior Staff Scientist, ACS/HST Team</p>
+<p><strong>Updated On:</strong> 2025-12-05</p>
+<p><a id="citations"></a></p>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<p>If you use Python packages for published research, please cite the
+authors. Follow these links for more information about citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, and <code class="docutils literal notranslate"><span class="pre">acstools</span></code>.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/project/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
+<li><p><a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2020ascl.soft11024L/abstract">Citing <code class="docutils literal notranslate"><span class="pre">actools</span></code></a></p></li>
+</ul>
+<hr class="docutils" />
+<p><a class="reference internal" href="#top"><span class="xref myst">Top of Page</span></a>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/hst_notebooks/main/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/hst_notebooks/main/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/ACS/acs_etc_cte"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-signal-to-noise-ratio-and-exposure-time-for-a-point-source">1. Estimating Signal-to-Noise Ratio and Exposure Time for a Point Source</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-estimating-the-real-source-brightness-and-snr-using-the-photometric-cte-correction-formula">1a. Estimating the real source brightness and SNR using the photometric CTE correction formula</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-approaches-to-increase-the-snr">1b. Approaches to increase the SNR</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#option-1-place-the-target-closer-to-the-serial-register">Option 1: Place the target closer to the serial register</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-apply-post-flash">Option 2: Apply post-flash</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#option-3-increase-exposure-time">Option 3: Increase exposure time</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-snr-of-an-extended-source-affected-by-degraded-cte">2. Estimating SNR of an extended source affected by degraded CTE</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
