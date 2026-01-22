@@ -30,6 +30,8 @@ Before running these examples, you **must** follow the general instructions on c
 
 * [**acs_exception_report**](https://spacetelescope.github.io/hst_notebooks/notebooks/ACS/acs_exception_report/exception_report_checks.html): This notebook provides a step-by-step guide for examining your ACS data and observing logs to identify potential data quality issues via an HST Exception Report, and outlines the process for deciding whether a HOPR or Help Desk ticket is warranted. 
 
+* [**acs_etc_cte**](https://spacetelescope.github.io/hst_notebooks/notebooks/ACS/acs_etc_cte/acs_etc_cte.html): This notebook teaches how degraded CTE affects observed source brightness and how to compensate for it by adjusting exposure times for both point sources and extended sources.
+
 ### Complex Workflow Notebooks
 
 * [**acs_reduction**](https://spacetelescope.github.io/hst_notebooks/notebooks/ACS/acs_reduction/acs_reduction.html): This worked example demonstrates how to use the CALACS pipeline to re-process raw ACS data retrieved from MAST. Users are shown how to update reference files in the image headers, retrieve reference files from the Calibration Reference Data System (CRDS), and how to toggle steps in the calibration pipeline (e.g., CTE correction).
