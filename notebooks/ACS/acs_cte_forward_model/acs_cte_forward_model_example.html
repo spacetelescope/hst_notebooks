@@ -786,7 +786,7 @@ document.write(`
 <p>Next, update and download the correct flat and dark reference files for the <code class="docutils literal notranslate"><span class="pre">jd0q14ctq</span></code> dataset from the <a class="reference external" href="https://hst-crds.stsci.edu/">Calibration Reference Data System</a> (CRDS). We use the <a class="reference external" href="https://hst-crds.stsci.edu/static/users_guide/command_line_tools.html#crds-bestrefs">CRDS command line tools</a> to do this.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache&#39;</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;jref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache/references/hst/acs/&#39;</span>
 
@@ -825,7 +825,7 @@ CRDS - INFO -  2 infos
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The jref environment variable gives the directory containing the reference files</span>
-<span class="n">flat_hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;jref&#39;</span><span class="p">],</span> <span class="n">flat</span><span class="p">))</span>
+<span class="n">flat_hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;jref&#39;</span><span class="p">],</span> <span class="n">flat</span><span class="p">))</span>
 
 <span class="n">flat_wfc1</span> <span class="o">=</span> <span class="n">flat_hdu</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">flat_wfc2</span> <span class="o">=</span> <span class="n">flat_hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
@@ -835,7 +835,7 @@ CRDS - INFO -  2 infos
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dkc_hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;jref&#39;</span><span class="p">],</span> <span class="n">dkc</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dkc_hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;jref&#39;</span><span class="p">],</span> <span class="n">dkc</span><span class="p">))</span>
 
 <span class="n">dkc_wfc1</span> <span class="o">=</span> <span class="n">dkc_hdu</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">dkc_wfc2</span> <span class="o">=</span> <span class="n">dkc_hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
@@ -850,7 +850,7 @@ CRDS - INFO -  2 infos
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bias_hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;jref&#39;</span><span class="p">],</span> <span class="n">bias</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bias_hdu</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;jref&#39;</span><span class="p">],</span> <span class="n">bias</span><span class="p">))</span>
 
 <span class="n">err_bias_wfc1</span> <span class="o">=</span> <span class="n">bias_hdu</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="n">err_bias_wfc2</span> <span class="o">=</span> <span class="n">bias_hdu</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
@@ -863,7 +863,7 @@ CRDS - INFO -  2 infos
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># flash_dhu = fits.open(&#39;{}/{}&#39;.format(os.environ[&#39;jref&#39;], flash))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># flash_dhu = fits.open(os.path.join(os.environ[&#39;jref&#39;], flash))</span>
 
 <span class="c1"># flash_wfc1 = flash_hdu[4].data</span>
 <span class="c1"># flash_wfc2 = flash_hdu[1].data</span>
@@ -903,7 +903,7 @@ CRDS - INFO -  2 infos
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>QTable length=300</i>
-<table id="table139848542688528" class="table-striped table-bordered table-condensed">
+<table id="table140554424815312" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>x_mean</th><th>y_mean</th><th>amplitude</th><th>x_stddev</th><th>y_stddev</th><th>theta</th></tr></thead>
 <thead><tr><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>1</td><td>931.1683480255269</td><td>2034.731927781212</td><td>24273.448018412746</td><td>1.052614567617044</td><td>1.0578600277164938</td><td>2.8992449842520105</td></tr>
@@ -952,10 +952,10 @@ CRDS - INFO -  2 infos
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7f312972a690&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fd54a6809d0&gt;]
 </pre></div>
 </div>
-<img alt="../../../_images/e948fafcafe5817b62ab30bcdc70824dec8269958513b059833ea781ba02e369.png" src="../../../_images/e948fafcafe5817b62ab30bcdc70824dec8269958513b059833ea781ba02e369.png" />
+<img alt="../../../_images/a514d397b152e10aa3b5dc95ccb673933eb4cf2ef2f96c3ea0b5eede8cd5bbca.png" src="../../../_images/a514d397b152e10aa3b5dc95ccb673933eb4cf2ef2f96c3ea0b5eede8cd5bbca.png" />
 </div>
 </div>
 <p><a id="option-a"></a></p>
@@ -980,7 +980,7 @@ CRDS - INFO -  2 infos
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/5d2b42add617ac18e6e96c1a7471d26c545404cb692738958257e778cbe91324.png" src="../../../_images/5d2b42add617ac18e6e96c1a7471d26c545404cb692738958257e778cbe91324.png" />
+<img alt="../../../_images/0bda142aff6d4f33ad1e2e4470b8c90a4f22640ef12f29a732441de87765c09e.png" src="../../../_images/0bda142aff6d4f33ad1e2e4470b8c90a4f22640ef12f29a732441de87765c09e.png" />
 </div>
 </div>
 <p><a class="reference internal" href="#title_ID"><span class="xref myst">Top of Page</span></a></p>
@@ -1024,7 +1024,7 @@ CRDS - INFO -  2 infos
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/7c330b83520d427f71319c7bab6375a89dbd9292775310433209ba71c610a833.png" src="../../../_images/7c330b83520d427f71319c7bab6375a89dbd9292775310433209ba71c610a833.png" />
+<img alt="../../../_images/1cc22025930828ddad418d9d560882a3755e551858882c204c25164d187f7ccd.png" src="../../../_images/1cc22025930828ddad418d9d560882a3755e551858882c204c25164d187f7ccd.png" />
 </div>
 </div>
 <p><a class="reference internal" href="#title_ID"><span class="xref myst">Top of Page</span></a></p>
@@ -1087,16 +1087,16 @@ CRDS - INFO -  2 infos
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 0090c701-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: d11b028b-dirty
 git branch: HEAD
-HEAD @: 0090c701d894003cfc690e9f8d5fde81e6939090
+HEAD @: d11b028bd316e388903f16e28736fbdb97848a57
 Setting max threads to 4 out of 4 available
 Trying to open jd0q14ctq_stars_pfl_dkc.fits...
 Read in Primary header from jd0q14ctq_stars_pfl_dkc.fits...
 
 
 CALBEG*** ACSCTE -- Version 10.4.0 (07-May-2024) ***
-Begin    02-Dec-2025 20:49:21 UTC
+Begin    17-Feb-2026 23:42:16 UTC
 Input    jd0q14ctq_stars_pfl_dkc.fits
 Output   jd0q14ctq_stars_pfl_dkc_ctefmod.fits
 Trying to open jd0q14ctq_stars_pfl_dkc.fits...
@@ -1208,7 +1208,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -23159.580078 (-0.003276%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -23156.359375 (-0.003276%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: C
@@ -1224,8 +1224,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -361068.468750 (-0.051091%)
-(pctecorr) CTE run time for current chip: 46.98(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -361246.750000 (-0.051116%)
+(pctecorr) CTE run time for current chip: 46.99(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -1267,7 +1267,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -17034.068359 (-0.002019%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -17044.263672 (-0.002020%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: D
@@ -1283,8 +1283,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -414984.781250 (-0.049179%)
-(pctecorr) CTE run time for current chip: 54.35(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -415088.093750 (-0.049191%)
+(pctecorr) CTE run time for current chip: 54.40(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -1326,7 +1326,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -21612.359375 (-0.003730%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -21580.621094 (-0.003725%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: A
@@ -1342,8 +1342,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -291053.562500 (-0.050237%)
-(pctecorr) CTE run time for current chip: 49.46(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -291141.687500 (-0.050253%)
+(pctecorr) CTE run time for current chip: 49.48(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -1385,7 +1385,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -29917.306641 (-0.002641%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -29890.523438 (-0.002639%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: B
@@ -1401,13 +1401,13 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -474393.062500 (-0.041882%)
-(pctecorr) CTE run time for current chip: 63.94(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -474233.406250 (-0.041868%)
+(pctecorr) CTE run time for current chip: 63.92(s) with 4 procs/threads
 
 PCTECORR COMPLETE
 
 
-End      02-Dec-2025 20:52:58 UTC
+End      17-Feb-2026 23:45:53 UTC
 
 
 *** ACSCTE complete ***
@@ -1495,16 +1495,16 @@ End      02-Dec-2025 20:52:58 UTC
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 0090c701-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: d11b028b-dirty
 git branch: HEAD
-HEAD @: 0090c701d894003cfc690e9f8d5fde81e6939090
+HEAD @: d11b028bd316e388903f16e28736fbdb97848a57
 Setting max threads to 4 out of 4 available
 Trying to open jd0q14ctq_stars_ctefmod_blv_tmp.fits...
 Read in Primary header from jd0q14ctq_stars_ctefmod_blv_tmp.fits...
 
 
 CALBEG*** ACSCTE -- Version 10.4.0 (07-May-2024) ***
-Begin    02-Dec-2025 20:52:58 UTC
+Begin    17-Feb-2026 23:45:54 UTC
 Input    jd0q14ctq_stars_ctefmod_blv_tmp.fits
 Output   jd0q14ctq_stars_ctefmod_blc_tmp.fits
 Warning    Output file `jd0q14ctq_stars_ctefmod_blc_tmp.fits&#39; already exists.
@@ -1531,15 +1531,15 @@ ERROR:             status = 1021
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 0090c701-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: d11b028b-dirty
 git branch: HEAD
-HEAD @: 0090c701d894003cfc690e9f8d5fde81e6939090
+HEAD @: d11b028bd316e388903f16e28736fbdb97848a57
 Trying to open jd0q14ctq_stars_ctefmod_blv_tmp.fits...
 Read in Primary header from jd0q14ctq_stars_ctefmod_blv_tmp.fits...
 
 
 CALBEG*** ACS2D -- Version 10.4.0 (07-May-2024) ***
-Begin    02-Dec-2025 20:52:58 UTC
+Begin    17-Feb-2026 23:45:54 UTC
 Input    jd0q14ctq_stars_ctefmod_blv_tmp.fits
 Output   jd0q14ctq_stars_ctefmod_flt.fits
 Warning    Output file `jd0q14ctq_stars_ctefmod_flt.fits&#39; already exists.
@@ -1562,15 +1562,15 @@ ERROR:             status = 1021
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 0090c701-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: d11b028b-dirty
 git branch: HEAD
-HEAD @: 0090c701d894003cfc690e9f8d5fde81e6939090
+HEAD @: d11b028bd316e388903f16e28736fbdb97848a57
 Trying to open jd0q14ctq_stars_ctefmod_blc_tmp.fits...
 Read in Primary header from jd0q14ctq_stars_ctefmod_blc_tmp.fits...
 
 
 CALBEG*** ACS2D -- Version 10.4.0 (07-May-2024) ***
-Begin    02-Dec-2025 20:52:58 UTC
+Begin    17-Feb-2026 23:45:54 UTC
 Input    jd0q14ctq_stars_ctefmod_blc_tmp.fits
 Output   jd0q14ctq_stars_ctefmod_flc.fits
 Warning    Output file `jd0q14ctq_stars_ctefmod_flc.fits&#39; already exists.
@@ -1602,7 +1602,7 @@ ERROR:             status = 1021
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/f91ebd3b94642d7651b6cbc77c03a3d9b80fd0e86fe145d155e508a412aafdec.png" src="../../../_images/f91ebd3b94642d7651b6cbc77c03a3d9b80fd0e86fe145d155e508a412aafdec.png" />
+<img alt="../../../_images/6bf24a49fdf5b63c69e80dc10f4159d8aa95e7c74f9dfd5dd2bdd93cea9f5764.png" src="../../../_images/6bf24a49fdf5b63c69e80dc10f4159d8aa95e7c74f9dfd5dd2bdd93cea9f5764.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1625,7 +1625,7 @@ ERROR:             status = 1021
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/7f2ce04e7823d6837afbb8ed0f28038b886ba6cebaf7c91d41a0a6c0a77ca545.png" src="../../../_images/7f2ce04e7823d6837afbb8ed0f28038b886ba6cebaf7c91d41a0a6c0a77ca545.png" />
+<img alt="../../../_images/0b9ded336c957044d164fa02c40fea9c603c8b407db340352945ec17c4a616f1.png" src="../../../_images/0b9ded336c957044d164fa02c40fea9c603c8b407db340352945ec17c4a616f1.png" />
 </div>
 </div>
 <p><a class="reference internal" href="#title_ID"><span class="xref myst">Top of Page</span></a></p>
@@ -1647,15 +1647,15 @@ ERROR:             status = 1021
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 0090c701-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: d11b028b-dirty
 git branch: HEAD
-HEAD @: 0090c701d894003cfc690e9f8d5fde81e6939090
+HEAD @: d11b028bd316e388903f16e28736fbdb97848a57
 Trying to open jd0q14ctq_raw.fits...
 Read in Primary header from jd0q14ctq_raw.fits...
 
 
 CALBEG*** ACSCCD -- Version 10.4.0 (07-May-2024) ***
-Begin    02-Dec-2025 20:53:00 UTC
+Begin    17-Feb-2026 23:45:55 UTC
 Input    jd0q14ctq_raw.fits
 Output   jd0q14ctq_blv_tmp.fits
 Warning    Output file `jd0q14ctq_blv_tmp.fits&#39; already exists.
@@ -1714,7 +1714,7 @@ ERROR:             status = 1021
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/9b4a4e75745c9809a5a7bd316238d2070576ace291761a480ba478a759581269.png" src="../../../_images/9b4a4e75745c9809a5a7bd316238d2070576ace291761a480ba478a759581269.png" />
+<img alt="../../../_images/d9026c280fccc9cbce090f3218830d1a29b05fb42b7233d2c216bd5b7e6a02d8.png" src="../../../_images/d9026c280fccc9cbce090f3218830d1a29b05fb42b7233d2c216bd5b7e6a02d8.png" />
 </div>
 </div>
 <p>In order to properly remove the dark current after the forward model is run, we update the exposure time and flash duration header keywords, <code class="docutils literal notranslate"><span class="pre">EXPTIME</span></code> and <code class="docutils literal notranslate"><span class="pre">FLASHDUR</span></code>, with the desired simulated exposure time. The total exposure time used for the dark correction is the combination of exposure time, flash duration, and overhead (which depends on whether the data are post-flashed or not). Here we set <code class="docutils literal notranslate"><span class="pre">EXPTIME</span></code> to 300 seconds and <code class="docutils literal notranslate"><span class="pre">FLASHDUR</span></code> to 0 seconds. In principle one should retrieve the overheads from CCDTAB, but we provide a simpler approach here. Please note that the overhead times may change.</p>
@@ -1784,16 +1784,16 @@ ERROR:             status = 1021
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 0090c701-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: d11b028b-dirty
 git branch: HEAD
-HEAD @: 0090c701d894003cfc690e9f8d5fde81e6939090
+HEAD @: d11b028bd316e388903f16e28736fbdb97848a57
 Setting max threads to 4 out of 4 available
 Trying to open synth_blc_tmp.fits...
 Read in Primary header from synth_blc_tmp.fits...
 
 
 CALBEG*** ACSCTE -- Version 10.4.0 (07-May-2024) ***
-Begin    02-Dec-2025 20:53:03 UTC
+Begin    17-Feb-2026 23:45:58 UTC
 Input    synth_blc_tmp.fits
 Output   synth_blc_tmp_ctefmod.fits
 Trying to open synth_blc_tmp.fits...
@@ -1905,7 +1905,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -7937.993652 (-0.003588%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -7923.560547 (-0.003582%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: C
@@ -1921,7 +1921,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.300000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -300488.468750 (-0.135819%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -300359.312500 (-0.135764%)
 (pctecorr) CTE run time for current chip: 22.16(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
@@ -1964,7 +1964,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -6649.498047 (-0.002859%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -6649.563477 (-0.002859%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: D
@@ -1980,8 +1980,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -312125.125000 (-0.134230%)
-(pctecorr) CTE run time for current chip: 22.22(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -312096.625000 (-0.134211%)
+(pctecorr) CTE run time for current chip: 22.21(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -2023,7 +2023,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -6761.397461 (-0.003201%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -6747.993164 (-0.003195%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: A
@@ -2039,8 +2039,8 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 5.050000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -301597.031250 (-0.142797%)
-(pctecorr) CTE run time for current chip: 21.60(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -301456.406250 (-0.142739%)
+(pctecorr) CTE run time for current chip: 21.59(s) with 4 procs/threads
 
 (pctecorr) Collecting data for Correction Type: serial 
 
@@ -2082,7 +2082,7 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -11495.261719 (-0.005086%)
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -11502.752930 (-0.005089%)
 
 (pctecorr) Invoking de-rotation for CTE Correction Type: serial
 (pctecorr) Derotation for Amp: B
@@ -2098,13 +2098,13 @@ Warning    (pctecorr) IGNORING read noise level PCTERNOI from PCTETAB: 4.350000.
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(pctecorr) ...complete.
-(pctecorr) Total count difference (corrected-raw) incurred from correction: -311609.406250 (-0.137879%)
-(pctecorr) CTE run time for current chip: 22.72(s) with 4 procs/threads
+(pctecorr) Total count difference (corrected-raw) incurred from correction: -311432.687500 (-0.137800%)
+(pctecorr) CTE run time for current chip: 22.73(s) with 4 procs/threads
 
 PCTECORR COMPLETE
 
 
-End      02-Dec-2025 20:54:33 UTC
+End      17-Feb-2026 23:47:28 UTC
 
 
 *** ACSCTE complete ***
@@ -2240,15 +2240,15 @@ End      02-Dec-2025 20:54:33 UTC
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 0090c701-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: d11b028b-dirty
 git branch: HEAD
-HEAD @: 0090c701d894003cfc690e9f8d5fde81e6939090
+HEAD @: d11b028bd316e388903f16e28736fbdb97848a57
 Trying to open synth_ctefmod_rn_raw.fits...
 Read in Primary header from synth_ctefmod_rn_raw.fits...
 
 
 CALBEG*** ACSCCD -- Version 10.4.0 (07-May-2024) ***
-Begin    02-Dec-2025 20:54:34 UTC
+Begin    17-Feb-2026 23:47:29 UTC
 Input    synth_ctefmod_rn_raw.fits
 Output   synth_ctefmod_rn_blv_tmp.fits
 Trying to open synth_ctefmod_rn_raw.fits...
@@ -2302,7 +2302,7 @@ SNKCFILE DESCRIP =Sink pixel reference file ----------------------------
 SINKCORR COMPLETE
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      02-Dec-2025 20:54:34 UTC
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End      17-Feb-2026 23:47:29 UTC
 
 
 *** ACSCCD complete ***
@@ -2363,16 +2363,16 @@ SINKCORR COMPLETE
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 0090c701-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: d11b028b-dirty
 git branch: HEAD
-HEAD @: 0090c701d894003cfc690e9f8d5fde81e6939090
+HEAD @: d11b028bd316e388903f16e28736fbdb97848a57
 Setting max threads to 4 out of 4 available
 Trying to open synth_ctefmod_rn_blv_tmp.fits...
 Read in Primary header from synth_ctefmod_rn_blv_tmp.fits...
 
 
 CALBEG*** ACSCTE -- Version 10.4.0 (07-May-2024) ***
-Begin    02-Dec-2025 20:54:35 UTC
+Begin    17-Feb-2026 23:47:30 UTC
 Input    synth_ctefmod_rn_blv_tmp.fits
 Output   synth_ctefmod_rn_blc_tmp.fits
 Warning    Output file `synth_ctefmod_rn_blc_tmp.fits&#39; already exists.
@@ -2399,15 +2399,15 @@ ERROR:             status = 1021
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 0090c701-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: d11b028b-dirty
 git branch: HEAD
-HEAD @: 0090c701d894003cfc690e9f8d5fde81e6939090
+HEAD @: d11b028bd316e388903f16e28736fbdb97848a57
 Trying to open synth_ctefmod_rn_blv_tmp.fits...
 Read in Primary header from synth_ctefmod_rn_blv_tmp.fits...
 
 
 CALBEG*** ACS2D -- Version 10.4.0 (07-May-2024) ***
-Begin    02-Dec-2025 20:54:35 UTC
+Begin    17-Feb-2026 23:47:30 UTC
 Input    synth_ctefmod_rn_blv_tmp.fits
 Output   synth_ctefmod_rn_flt.fits
 Warning    Output file `synth_ctefmod_rn_flt.fits&#39; already exists.
@@ -2430,15 +2430,15 @@ ERROR:             status = 1021
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: 0090c701-dirty
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>git tag: d11b028b-dirty
 git branch: HEAD
-HEAD @: 0090c701d894003cfc690e9f8d5fde81e6939090
+HEAD @: d11b028bd316e388903f16e28736fbdb97848a57
 Trying to open synth_ctefmod_rn_blc_tmp.fits...
 Read in Primary header from synth_ctefmod_rn_blc_tmp.fits...
 
 
 CALBEG*** ACS2D -- Version 10.4.0 (07-May-2024) ***
-Begin    02-Dec-2025 20:54:35 UTC
+Begin    17-Feb-2026 23:47:30 UTC
 Input    synth_ctefmod_rn_blc_tmp.fits
 Output   synth_ctefmod_rn_flc.fits
 Warning    Output file `synth_ctefmod_rn_flc.fits&#39; already exists.
@@ -2470,7 +2470,7 @@ ERROR:             status = 1021
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/6e6ec8a0dc7aa38916db2635265e652029bb5dd23c1aecd65d422505c2bbf36c.png" src="../../../_images/6e6ec8a0dc7aa38916db2635265e652029bb5dd23c1aecd65d422505c2bbf36c.png" />
+<img alt="../../../_images/f8a1b186075e8771d8ed356b6ec02bf655cd593fa6327fe98d37893e37d2c54c.png" src="../../../_images/f8a1b186075e8771d8ed356b6ec02bf655cd593fa6327fe98d37893e37d2c54c.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2493,7 +2493,7 @@ ERROR:             status = 1021
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(800.0, 1300.0)
 </pre></div>
 </div>
-<img alt="../../../_images/057b960d95c648627d47945cd1310cdc70219a1fcb119b296e368ae689abf9bb.png" src="../../../_images/057b960d95c648627d47945cd1310cdc70219a1fcb119b296e368ae689abf9bb.png" />
+<img alt="../../../_images/125cf7ca6c682e87b9a5133be18daa17af3cf4c0be505adebb89ba7cea8cccd3.png" src="../../../_images/125cf7ca6c682e87b9a5133be18daa17af3cf4c0be505adebb89ba7cea8cccd3.png" />
 </div>
 </div>
 <p><a id="about"></a></p>
