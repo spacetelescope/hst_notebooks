@@ -1,6 +1,6 @@
 #! /usr/bin env python
 """
-Code to estimate and subtract a three-components (Zodiacal, HeI from Earth, and
+Code to estimate and subtract a three-component (Zodiacal, HeI from Earth, and
 Scattered light) background model from WFC3 IR grism data (G102 & G141). 
 
 This code was originally hosted on https://github.com/NorPirzkal/WFC3_Back_Sub.
@@ -32,7 +32,7 @@ from astropy.convolution import Gaussian2DKernel, convolve
 from astropy.io import fits
 from astropy.modeling.functional_models import Gaussian1D
 from photutils.background import Background2D
-from photutils.segmentation import detect_threshold, detect_sources
+from photutils.segmentation import detect_sources
 from stwcs import updatewcs
 from scipy import optimize
 from wfc3tools import calwf3, wf3ir
@@ -43,28 +43,27 @@ module_path = os.path.split(os.path.abspath(__file__))[0]
 # A few paths in case they are not set up.
 
 # We force any CRDS to look for the HST reference file server
-os.environ["CRDS_SERVER_URL"]="https://hst-crds.stsci.edu"
+os.environ["CRDS_SERVER_URL"] = "https://hst-crds.stsci.edu"
 
 # If no CRDS_PATH exists, we create one
-if not "CRDS_PATH" in os.environ.keys():
+if "CRDS_PATH" not in os.environ.keys():
     os.environ["CRDS_PATH"] = os.path.join(os.environ["HOME"], "crds_cache")
 
 # Point to the iref directory in the CRDS_PATH of iref is not already defined 
-if not "iref" in os.environ.keys():
+if "iref" not in os.environ.keys():
     os.environ["iref"] = "$HOME/crds_cache/references/hst/iref/"
 os.environ["tref"] = os.path.join(module_path, "backsub_data/")
 print("Will look for custom back_sub reference files in ", os.environ["tref"])
 print("Will look for standard reference files in ", os.environ["iref"])
 
 
-
 def test(d):
     return d
-    from skimage.restoration import (denoise_tv_chambolle, denoise_bilateral,
-                                 denoise_wavelet, estimate_sigma)
+    from skimage.restoration import denoise_tv_chambolle
     print("de-noising")
     tt = denoise_tv_chambolle(d, weight=.5, multichannel=False)
     return tt
+
 
 def get_visits(pattern):
     """
@@ -156,7 +155,7 @@ class Sub_Back():
         self.bit_mask = (1+2+4+8+16+32+64+128+256+512+1024+2048+4096)
 
     def load_backgrounds(self):
-        if self.grism=="G102":
+        if self.grism == "G102":
             print("Loading ", self.G102_zodi_file)
             self.zodi = fits.open(self.G102_zodi_file)[1].data
             print("Loading ", self.G102_HeI_file)
@@ -164,7 +163,7 @@ class Sub_Back():
             print("Loading ", self.G102_Scatter_file)
             self.Scatter = fits.open(self.G102_Scatter_file)[1].data
             self.FF_file = self.G102_FF_file
-        if self.grism=="G141":
+        if self.grism == "G141":
             self.zodi = fits.open(self.G141_zodi_file)[1].data
             self.HeI = fits.open(self.G141_HeI_file)[1].data
             self.Scatter = fits.open(self.G141_Scatter_file)[1].data
@@ -223,8 +222,8 @@ class Sub_Back():
 
         """
 
-        CRCORR="OMIT"
-        FLATCORR="PERFORM"
+        CRCORR = "OMIT"
+        FLATCORR = "PERFORM"
 
         obs_id = raw_name.split("_raw")[0]
         
@@ -235,19 +234,18 @@ class Sub_Back():
 
         print("Processing ", raw_name)
         res = os.system("crds bestrefs --files {}  --sync-references=1  --update-bestrefs ".format(raw_name))
-        if res!=0:
+        if res != 0:
             print("CRDS did not run.")    
 
         fin = fits.open(raw_name, mode="update")
         fin[0].header["CRCORR"] = CRCORR
         fin[0].header["FLATCORR"] = FLATCORR 
-        filt = fin[0].header["FILTER"]
+        # filt = fin[0].header["FILTER"]
 
         self.org_FF_file = fin[0].header["PFLTFILE"]
 
         fin[0].header["PFLTFILE"] = self.FF_file
     
-
         fin.close()
         calwf3(raw_name)
         flt_name = raw_name.split("_raw.fits")[0]+"_flt.fits"
@@ -273,7 +271,7 @@ class Sub_Back():
             A string containing the name of the FLT file that has been created
         """
 
-        CRCORR="PERFORM"
+        CRCORR = "PERFORM"
         
         fin = fits.open(ima_name, mode="update")
         fin[0].header["CRCORR"] = CRCORR
@@ -297,15 +295,14 @@ class Sub_Back():
         if os.path.isfile(tmp_name):
             os.unlink(tmp_name)
             
-        tmp = fits.open(flt_name)[1].data
+        # tmp = fits.open(flt_name)[1].data
 
         if not os.path.isfile(flt_name):
             print("raw_to_flt() failed to generate ", flt_name)
             sys.exit(1)
 
         return flt_name
-
-
+        
     def create_msk(self, flt_name, kernel_fwhm=1.25, background_box=(1014//6, 2), thr=0.05, npixels=80):  
         """      
         This function will create a FITS files ipppssoot_msk.fits 
@@ -335,20 +332,19 @@ class Sub_Back():
 
         dq3 = dq3.astype(int)
 
-        DQ = np.bitwise_and(dq3, np.zeros(np.shape(dq3), int)+ self.bit_mask)
+        DQ = np.bitwise_and(dq3, np.zeros(np.shape(dq3), int) + self.bit_mask)
 
         kernel = Gaussian2DKernel(x_stddev=1)
         segm = segm*1.
         segm = convolve(segm, kernel)
-        segm[segm>1e-5] = 1.
-        segm[segm<=1e-5] = 0.
-        segm[DQ>0] = 1.
+        segm[segm > 1e-5] = 1.
+        segm[segm <= 1e-5] = 0.
+        segm[DQ > 0] = 1.
         
         msk_name = flt_name.split("_flt.fits")[0]+"_msk.fits"
         fits.writeto(msk_name, segm, overwrite=True)
         return segm
-
-
+        
     def get_mask(self, flt_name, kernel_fwhm=1.25, background_box=20, thr=0.05, npixels=100):
         """
         Function to create a mask (set to 0 for no detection and 1 for detection) appropriate to mask WFC3 slitless data. 
@@ -371,15 +367,15 @@ class Sub_Back():
         mask : arr
             A numpy array containing the mask
         """
-        h = fits.open(flt_name)[0].header
-        filt = h["FILTER"]
+        # h = fits.open(flt_name)[0].header
+        # filt = h["FILTER"]
 
         fin = fits.open(flt_name)
         image = fin["SCI"].data
         err = fin["ERR"].data
 
         dq = fin["DQ"].data
-        dq = np.bitwise_and(dq, np.zeros(np.shape(dq), np.int16)+ self.bit_mask)
+        dq = np.bitwise_and(dq, np.zeros(np.shape(dq), np.int16) + self.bit_mask)
         
         g = Gaussian1D(mean=0., stddev=kernel_fwhm/2.35)
         # x = np.arange(16.)-8
@@ -391,7 +387,7 @@ class Sub_Back():
             b = int(b)+1
         else:
             b = int(b)  
-        kernel = np.tile(a, (b, 1)).T #default values give kernel size of (17,33)
+        kernel = np.tile(a, (b, 1)).T # default values give kernel size of (17,33)
         kernel = kernel/np.sum(kernel)
 
         b = Background2D(image, background_box)
@@ -399,14 +395,14 @@ class Sub_Back():
         image = image-b.background
         threshold = thr * err
         
-        image[dq>0] = 0. #np.nan
+        image[dq > 0] = 0. # np.nan
         
         image = convolve(image, kernel, normalize_kernel=False)
 
         # mask = detect_sources(image, threshold, npixels=npixels,kernel=kernel).data # kernel parameter deprecated in photutils 1.8.0
         mask = detect_sources(image, threshold, npixels=npixels).data
 
-        ok = (mask == 0.) & (dq==0)
+        ok = (mask == 0.) & (dq == 0)
         mask[~ok] = 1.
         
         return mask
@@ -441,7 +437,7 @@ class Sub_Back():
 
         nimas = len(ima_names)
         nexts = [fits.open(ima_name)[-1].header["EXTVER"] for ima_name in ima_names] # We drop the last ext/1st read   
-        filt = fits.open(ima_names[0])[0].header["FILTER"]
+        # filt = fits.open(ima_names[0])[0].header["FILTER"]
 
         # Temp
         zodi = self.zodi*1
@@ -450,7 +446,6 @@ class Sub_Back():
         
         data0s = []
         err0s = []
-        samp0s = []
         dq0s = []
         dqm0s = []
         masks = []
@@ -463,13 +458,12 @@ class Sub_Back():
             err0s.append([fits.open(ima_names[j])["ERR", ext].data[5:1014+5, 5:1014+5]*1 for ext in range(1, nexts[j])])
             dq0s.append([fits.open(ima_names[j])["DQ", ext].data[5:1014+5, 5:1014+5]*1 for ext in range(1, nexts[j])])
 
-        dqm0s = [[np.bitwise_and(dq0, np.zeros(np.shape(dq0), np.int16)+ self.bit_mask) for dq0 in dq0s[j]] for j in range(nimas)]
+        dqm0s = [[np.bitwise_and(dq0, np.zeros(np.shape(dq0), np.int16) + self.bit_mask) for dq0 in dq0s[j]] for j in range(nimas)]
 
         ok = (np.isfinite(zodi)) & (np.isfinite(HeI)) & (np.isfinite(Scatter))
         zodi[~ok] = 0.
         HeI[~ok] = 0.
         Scatter[~ok] = 0.
-
 
         # Setting up image weights
         whts = []
@@ -477,13 +471,12 @@ class Sub_Back():
             whts_j = []
             for i in range(len(err0s[j])):
                 err = err0s[j][i]
-                err[err<=1e-6] = 1e-6
+                err[err <= 1e-6] = 1e-6
                 w = 1./err**2
                 w[~ok] = 0.
                 whts_j.append(w)
             whts.append(whts_j)
             
-
         nflt = sum(nexts)
         npar = 2*nflt+1
         print("We are solving for ", npar, " HeI values")
@@ -498,24 +491,22 @@ class Sub_Back():
             masks[j] = np.array(masks[j])
             dqm0s[j] = np.array(dqm0s[j])
 
-
             whts[j][~np.isfinite(data0s[j])] = 0.
             data0s[j][~np.isfinite(data0s[j])] = 0.
-            whts[j][masks[j]>0] = 0.
-            whts[j][dqm0s[j]!=0] = 0.
+            whts[j][masks[j] > 0] = 0.
+            whts[j][dqm0s[j] != 0] = 0.
             
             for i in range(len(data0s[j])):
                 ii = ii + 1
                 print("name:", ima_names[j], "imset:", i+1, ii)
                 
-                img = data0s[j][i]
+                # img = data0s[j][i]
                 wht = whts[j][i]
                 
-                if border>0:
+                if border > 0:
                     wht[0:border] = 0.
                     wht[-border:0] = 0.
                     
-
                 # Populate up matrix and vector
                 v[ii] = np.sum(wht*data0s[j][i]*HeI)
                 v[-1] += np.sum(wht*data0s[j][i]*zodi)
@@ -536,8 +527,7 @@ class Sub_Back():
                 m[ii+nflt, ii] = m[ii, ii+nflt]
                 
                 m[-1, ii+nflt] = m[ii+nflt, -1]
-       
-        
+                
         res = optimize.lsq_linear(m, v)
         x = res.x
 
@@ -558,7 +548,7 @@ class Sub_Back():
         self.Zodi = Zodi
         self.HeIs = HeIs
         self.Scats = Scats
-
+        
     def sub_HeI_Scat(self):
         """
         Function to subtract the appropriately scaled HeI and Scatter light
@@ -572,25 +562,26 @@ class Sub_Back():
             print("Updating ", f)
             fin = fits.open(f, mode="update")
             
-            filt = fin[0].header["FILTER"]
+            # filt = fin[0].header["FILTER"]
 
-            zodi = self.zodi*1
-            HeI = self.HeI *1
-            Scatter = self.Scatter *1
+            # zodi = self.zodi*1
+            HeI = self.HeI * 1
+            Scatter = self.Scatter * 1
 
             for extver in self.HeIs[f].keys():
-                print("EXTVER:",extver)
+                print("EXTVER:", extver)
                 try:
-                    val = fin["SCI",extver].header["HeI"] # testing
-                    print("HeI found in ",f,"Aborting..")
+                    _ = fin["SCI", extver].header["HeI"] # testing
+                    print("HeI found in ", f, "Aborting..")
                     continue
-                except:
+                except Exception as e:
+                    print(e)
                     pass
         
                 print("IMSET:", extver, "subtracting", self.HeIs[f][extver], self.Scats[f][extver])
-                print("Before:", np.nanmedian(fin["SCI", extver].data[5:1014+5, 5:1014+5] ))
+                print("Before:", np.nanmedian(fin["SCI", extver].data[5:1014+5, 5:1014+5]))
                 fin["SCI", extver].data[5:1014+5, 5:1014+5] = fin["SCI", extver].data[5:1014+5, 5:1014+5] - self.HeIs[f][extver]*HeI - self.Scats[f][extver]*Scatter 
-                print("After:", np.nanmedian(fin["SCI", extver].data[5:1014+5, 5:1014+5] ))
+                print("After:", np.nanmedian(fin["SCI", extver].data[5:1014+5, 5:1014+5]))
                 fin["SCI", extver].header["HeI_{}".format(extver)] = (self.HeIs[f][extver], "HeI level subtracted (e-)")
                 fin["SCI", extver].header["Scat_{}".format(extver)] = (self.Scats[f][extver], "Scat level estimated (e-)")
 
@@ -612,17 +603,18 @@ class Sub_Back():
         fin = fits.open(flt_name, mode="update")
 
         try:
-            val = fin["SCI"].header["Zodi"] # testing
+            _ = fin["SCI"].header["Zodi"] # testing
             print("Subtracted Zodi level found in ", flt_name, "Aborting..")
             return
-        except:
+        except Exception as e:
+            print(e)
             pass
 
         if not os.path.isfile("{}_msk.fits".format(obs_id)):
             print("sub_Zodi could not find the MSK file ", "{}_msk.fits".format(obs_id))
             sys.exit(1)
 
-        filt = fin[0].header["FILTER"]
+        # filt = fin[0].header["FILTER"]
         
         zodi = self.zodi*1
             
@@ -656,12 +648,12 @@ class Sub_Back():
             f = "{}_flt.fits".format(obs)
             d = fits.open(f)[1].data
             dq = fits.open(f)["DQ"].data
-            dq = np.bitwise_and(dq, np.zeros(np.shape(dq), np.int16)+ self.bit_mask)
+            dq = np.bitwise_and(dq, np.zeros(np.shape(dq), np.int16) + self.bit_mask)
             f = "{}_msk.fits".format(obs)
             m = fits.open(f)[0].data
-            ok = (m==0) & (np.isfinite(d))
-            d[m>0]=np.nan
-            plt.plot(np.nanmedian(d, axis=0),label=obs)
+            # ok = (m == 0) & (np.isfinite(d))
+            d[m > 0] = np.nan
+            plt.plot(np.nanmedian(d, axis=0), label=obs)
             plt.grid()
             plt.ylabel("e-/s")
             plt.xlabel("col")
@@ -669,7 +661,7 @@ class Sub_Back():
             plt.ylim(-0.02, 0.02)
             plt.legend()
         oname = "{}_diag.png".format(self.obs_ids[0][0:6])
-        plt.savefig(oname)
+        fig.savefig(oname)
         return "{}_diag.png".format(self.obs_ids[0][0:6])
 
     def restore_FF(self):
@@ -694,12 +686,12 @@ class Sub_Back():
                 fin["SCI"].header["PFLTFILE"] = self.org_FF_file
 
       
-if __name__=="__main__":
+if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Process some WFC3 IR grism observations.')
     parser.add_argument('files', default='*_raw.fits', metavar='raw_files', 
                         help='Files to process, e.g. "*_raw.fits"')
-    parser.add_argument('--grism',choices=['G102', 'G141', 'Both'], default='Both', 
+    parser.add_argument('--grism', choices=['G102', 'G141', 'Both'], default='Both', 
                         help='Filters to process, G102, G141, or Both (default)')
     parser.add_argument('--ipppss', default='All',
                         help="Rootnames to process, 'ipppssoot' or 'All' (default)")
@@ -710,14 +702,14 @@ if __name__=="__main__":
     print("args:", args.files, args.grey_flat)
 
     if args.grism == "Both":
-        grisms  = ["G102", "G141"]
+        grisms = ["G102", "G141"]
     else:
         grisms = [args.grism]
 
     obs_ids = get_visits(args.files)
 
     for grism in grisms:
-        if not grism in obs_ids.keys():
+        if grism not in obs_ids.keys():
             continue
         if args.ipppss == 'All':
             for ipppss in list(obs_ids[grism].keys()):
