@@ -32,7 +32,7 @@ Here, you can find detailed documentation for each instrument the Hubble Space T
 - [Space Telescope Imaging Spectrograph (STIS)](https://www.stsci.edu/hst/instrumentation/stis)
 
 - [Wide Field Camera 3 (WFC3)](https://www.stsci.edu/hst/instrumentation/wfc3)
-  
+
 
 Installation Instructions
 =========================
@@ -43,15 +43,15 @@ See [this website](https://spacetelescope.github.io/hst_notebooks/)
 
 To download and execute the notebooks, we recommend you clone
 the `hst_notebooks <https://github.com/spacetelescope/hst_notebooks>`
-repository to your local computer. 
+repository to your local computer.
 
 You can also click the "Download ZIP" option for the entire repository listed under the green "Code" button at the top of the repository landing page. You are also able to download individual notebooks, but it is not as straight forward or recommended, so we do not provide details here.
 
 Most notebooks have additional associated files in their folder,
 including a requirements file that lists packages necessary to run the notebooks.
-The packages in the requirements file can be installed using `pip <https://pip.pypa.io/en/stable/>`. 
+The packages in the requirements file can be installed using `pip <https://pip.pypa.io/en/stable/>`.
 
-Any version dependencies are contained in the requirements file in 
+Any version dependencies are contained in the requirements file in
 each notebook folder. Please use at least the minimum supported
 version of the Python language in your active environment.
 
@@ -63,7 +63,7 @@ Clone the Repository
 --------------------
 
 Once you've changed to the directory where you cloned this repository, and go to
-the notebook directory you are interested in using, and go to your selected 
+the notebook directory you are interested in using, and go to your selected
 notebook, as below:
 
     git clone https://github.com/spacetelescope/hst_notebooks.git
@@ -91,16 +91,16 @@ In the case that there is no pre-requirements.sh file:
     conda create --name hstnb python pip jupyter
     conda activate hstnb
     pip install -r requirements.txt
-    
+
 
 In the case that there is a pre-requirements.sh file, this file is likely
 only used to install hstcal. You can either install hstcal in the `hstnb`
-environment you created above... 
-    
+environment you created above...
+
     conda install --yes -c conda-forge hstcal
 
 
-or you can create the appropriate environment starting 
+or you can create the appropriate environment starting
 with hstcal using the following:
 
     conda create --yes -n hstcal -c conda-forge hstcal
@@ -114,15 +114,15 @@ In this case, `stenv` should already have hstcal installed. You
 can activate the environment, and then update it to use the notebooks requirements file:
 
     conda activate stenv
-    pip install -r requirments.txt
- 
+    pip install -r requirements.txt
+
 If pip reports conflicts, then you might need to follow the above instructions to create
 a new, isolated environment instead of using `hstcal`
 
 
 Help
 ====
-If you uncover any issues or bugs, you can [open an issue on GitHub](https://github.com/spacetelescope/hst_notebooks/issues/new).  
+If you uncover any issues or bugs, you can [open an issue on GitHub](https://github.com/spacetelescope/hst_notebooks/issues/new).
 For faster responses, however, we encourage you to submit an [HST Help Desk Ticket](https://hsthelp.stsci.edu).
 
 
@@ -130,9 +130,9 @@ For faster responses, however, we encourage you to submit an [HST Help Desk Tick
 Contributing
 ============
 
-New contributions and feedback are very welcomed! Please open a new issue or new 
-pull request for bugs, feedback, or new features you would like to see. If there 
-is an issue you would like to work on, please leave a comment and we will be happy 
+New contributions and feedback are very welcomed! Please open a new issue or new
+pull request for bugs, feedback, or new features you would like to see. If there
+is an issue you would like to work on, please leave a comment and we will be happy
 to assist. Questions can also be sent through the [HST Help Desk](https://stsci.service-now.com/hst).
 
 If you wish to contribute new notebooks or major reworks of existing notebooks, see [contributing instructions](https://github.com/spacetelescope/hst_notebooks/blob/main/CONTRIBUTING.md).
