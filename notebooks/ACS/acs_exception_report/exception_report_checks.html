@@ -16,20 +16,22 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-
-  
-  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
@@ -37,17 +39,18 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/table.css?v=cd6c26fb" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
@@ -78,6 +81,7 @@
     <link rel="prev" title="Focus Diverse ePSFs for ACS/WFC" href="../acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -93,19 +97,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../../../search.html"
       method="get">
@@ -113,7 +106,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -121,8 +113,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -138,7 +130,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -168,21 +161,17 @@
     
     
     <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="HST Notebooks - Home"/>
-    <script>document.write(`<img src="../../../_static/stsci_logo2.png" class="logo__image only-dark" alt="HST Notebooks - Home"/>`);</script>
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-dark pst-js-only" alt="HST Notebooks - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -371,9 +360,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -552,7 +546,7 @@
 
 
 <button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
   title="Fullscreen mode"
   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
@@ -566,25 +560,17 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
 </div></div>
@@ -678,7 +664,7 @@ document.write(`
 </section>
 <section id="imports">
 <h2>Imports<a class="headerlink" href="#imports" title="Link to this heading">#</a></h2>
-<p>We recommend installing the <code class="docutils literal notranslate"><span class="pre">stenv</span></code> Conda environment maintained by STScI. Instructions, including installation of a Conda distribution, can be found in the <a class="reference external" href="https://stenv.readthedocs.io/en/latest/getting_started.html">stenv documentation</a>. If you already have Conda, and would prefer to create an environment with only the packages required by this notebook, please see the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file included in this notebook’s repository.</p>
+<p>We recommend installing the <code class="docutils literal notranslate"><span class="pre">stenv</span></code> Conda environment maintained by STScI. Instructions, including installation of a Conda distribution, can be found in the <a class="reference external" href="https://stenv.readthedocs.io/getting_started.html">stenv documentation</a>. If you already have Conda, and would prefer to create an environment with only the packages required by this notebook, please see the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file included in this notebook’s repository.</p>
 <p>Finally, this notebook contains an optional step to check PSF quality with a Fortran software package <code class="docutils literal notranslate"><span class="pre">hst1pass</span></code>. Instructions to install Fortran, download and compile <code class="docutils literal notranslate"><span class="pre">hst1pass</span></code>, download a PSF model, and run <code class="docutils literal notranslate"><span class="pre">hst1pass</span></code> are provided in Step <a class="reference internal" href="#hst1pass"><span class="xref myst">6. Check PSF quality with hst1pass (Optional)</span></a>.</p>
 <p>For the Python-based steps in this notebook, we import: <br></p>
 <div class="pst-scrollable-table-container"><table class="table">
@@ -941,12 +927,12 @@ File /home/runner/work/hst_notebooks/hst_notebooks/notebooks/ACS/acs_exception_r
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/2f8792fbab9b0f8021dcd153135d0dbc2a91a1de4c2a2888358d62e9b2bf864a.png" src="../../../_images/2f8792fbab9b0f8021dcd153135d0dbc2a91a1de4c2a2888358d62e9b2bf864a.png" />
-<img alt="../../../_images/5334664928a60a60fc4bdd55b066506b8f2baaa5016d8d8481c6ec7f8d1668cb.png" src="../../../_images/5334664928a60a60fc4bdd55b066506b8f2baaa5016d8d8481c6ec7f8d1668cb.png" />
-<img alt="../../../_images/d8123366281b914dccb6a2b8d8b15749f9b5fd27c0cfcf8334bb745c9f367853.png" src="../../../_images/d8123366281b914dccb6a2b8d8b15749f9b5fd27c0cfcf8334bb745c9f367853.png" />
-<img alt="../../../_images/660002b7d67f57933aeecc065d82bbae8b8b953083f9ccfe7aa02c7e3b634947.png" src="../../../_images/660002b7d67f57933aeecc065d82bbae8b8b953083f9ccfe7aa02c7e3b634947.png" />
-<img alt="../../../_images/b5e1495210842a68646a8746b3c7458e6a109ad13398757995eade4347988c91.png" src="../../../_images/b5e1495210842a68646a8746b3c7458e6a109ad13398757995eade4347988c91.png" />
-<img alt="../../../_images/f8656605c3393beef87a60b3bfbd46dd997942b7b8c2e860c00a5c5731fd3bfe.png" src="../../../_images/f8656605c3393beef87a60b3bfbd46dd997942b7b8c2e860c00a5c5731fd3bfe.png" />
+<img alt="../../../_images/6675c56e63bed7f2fced342132cc0620d1ee8825908a7a2afa69ae115dc4437b.png" src="../../../_images/6675c56e63bed7f2fced342132cc0620d1ee8825908a7a2afa69ae115dc4437b.png" />
+<img alt="../../../_images/e6b2805d319ffe63d475a63884c584ba207e55807abfa58b159c20369069e78c.png" src="../../../_images/e6b2805d319ffe63d475a63884c584ba207e55807abfa58b159c20369069e78c.png" />
+<img alt="../../../_images/1c3030da0913ff999936412e40424e51a502aae0171610626fd4b4b3c91b0edd.png" src="../../../_images/1c3030da0913ff999936412e40424e51a502aae0171610626fd4b4b3c91b0edd.png" />
+<img alt="../../../_images/fd0322e7383b5643075ee60ecdfd5840fbcb1a244d3f3cd530a6ff8642046b6e.png" src="../../../_images/fd0322e7383b5643075ee60ecdfd5840fbcb1a244d3f3cd530a6ff8642046b6e.png" />
+<img alt="../../../_images/36ca1e5d29a181084c76697ce37dc009d95ff6b993aae04e60486546f30a29d7.png" src="../../../_images/36ca1e5d29a181084c76697ce37dc009d95ff6b993aae04e60486546f30a29d7.png" />
+<img alt="../../../_images/12cb95162782255d080515502536772516649d382aae74f924d7c2943b122b42.png" src="../../../_images/12cb95162782255d080515502536772516649d382aae74f924d7c2943b122b42.png" />
 </div>
 </div>
 <p>In this example, the third and fourth images, <code class="docutils literal notranslate"><span class="pre">jeg057cmq</span></code> and <code class="docutils literal notranslate"><span class="pre">jeg057coq</span></code>, consist of streaked stars. This is a very clear example of a guiding failure. The other images appear normal with many bright point-like stars in the field of view.</p>
@@ -1217,12 +1203,12 @@ V3_RMS  =                  1.3 / dominant guide star V3 axis RMS (mas)
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/e5ac02ffed822fb80877e86ba51731f5b4b6f12585c6d18b0a0ff3df4c2bfed9.png" src="../../../_images/e5ac02ffed822fb80877e86ba51731f5b4b6f12585c6d18b0a0ff3df4c2bfed9.png" />
-<img alt="../../../_images/d67b450c1ca72d021924f1ee56b3f9ca453dce87dde6c93b7ea9de4e91442f2a.png" src="../../../_images/d67b450c1ca72d021924f1ee56b3f9ca453dce87dde6c93b7ea9de4e91442f2a.png" />
-<img alt="../../../_images/caf25e70d33899bf9df13f8d89f4502c9bf216d0f81c966a0fd80a5379bd5b10.png" src="../../../_images/caf25e70d33899bf9df13f8d89f4502c9bf216d0f81c966a0fd80a5379bd5b10.png" />
-<img alt="../../../_images/c7527797b77fd4afb88ee2dd0d48a6ebc6e82e43a47873ca3800aaf5c6c01a6a.png" src="../../../_images/c7527797b77fd4afb88ee2dd0d48a6ebc6e82e43a47873ca3800aaf5c6c01a6a.png" />
-<img alt="../../../_images/3b825fb7bcd7c66abb937ba9e4f37865a4f44fcf7af8b967e7655b8d9d535129.png" src="../../../_images/3b825fb7bcd7c66abb937ba9e4f37865a4f44fcf7af8b967e7655b8d9d535129.png" />
-<img alt="../../../_images/020acaef4b5fb3ae7ac93652841dacdee984f4d2154a9972e30c93f7865580ae.png" src="../../../_images/020acaef4b5fb3ae7ac93652841dacdee984f4d2154a9972e30c93f7865580ae.png" />
+<img alt="../../../_images/5f8ebed61764e63b4ab0b206d2bc226b4d7eb8c7970379458b81cd5963887391.png" src="../../../_images/5f8ebed61764e63b4ab0b206d2bc226b4d7eb8c7970379458b81cd5963887391.png" />
+<img alt="../../../_images/bbdaff9dd902ff61e721385f4152d501fc589d3c5c1ea3bf762bcb9c3d27be26.png" src="../../../_images/bbdaff9dd902ff61e721385f4152d501fc589d3c5c1ea3bf762bcb9c3d27be26.png" />
+<img alt="../../../_images/5c0da10b683799d2a63b2b9ab3c214d3f567d807156098106ce4166c6402b670.png" src="../../../_images/5c0da10b683799d2a63b2b9ab3c214d3f567d807156098106ce4166c6402b670.png" />
+<img alt="../../../_images/1d869fd0f939a5cd6daac2addb1c5e273bf75937d7949df4e572cb8b743fadf0.png" src="../../../_images/1d869fd0f939a5cd6daac2addb1c5e273bf75937d7949df4e572cb8b743fadf0.png" />
+<img alt="../../../_images/e907ada2e8ac4cac6a2b8c6b5b197db2740118105a7d4d5e71c86cd639ecf7fb.png" src="../../../_images/e907ada2e8ac4cac6a2b8c6b5b197db2740118105a7d4d5e71c86cd639ecf7fb.png" />
+<img alt="../../../_images/5f62b635756cdf58f2f5842ae30b01cb3c6ebe6cf40216c965e0d39b11eb0f76.png" src="../../../_images/5f62b635756cdf58f2f5842ae30b01cb3c6ebe6cf40216c965e0d39b11eb0f76.png" />
 </div>
 </div>
 <p>The third and fourth exposures have jitter values pegged at a nonphysical value of 1.6e38, which is simply a placeholder for observations in which the guide stars were not acquired. The remaining exposures show a very minor amount of telescope motion, typically &lt;3 mas, and the jitter RMS is typically &lt;2 mas.</p>
@@ -1482,15 +1468,13 @@ NIM001 CALL sub_hst2ym on image p16380/jeg057chq_flt.fits
                   ------- --------- --------- ------- ------|- -- --|-------| ----- ----- ----- -----| ----- ----- ----- -----| ------- ------- -------
                         1   232.373     5.959  -8.649   92.9|5  4  7|    662|   559   203   242   169|   178   168   554   116|     92    1295    1295
                         2  1498.119     6.462 -12.916   33.1|5 11 14|  25119| 12834  7221 24396  4880| 10967  7552  4167  2560|     33   52072   52072
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                       24   773.607     7.910 -12.939   24.9|5 11 14|  26952|  7431 22584  9105 12028|  3976  7560  7263  9227|     24   50034   50034
+                       24   773.607     7.910 -12.939   24.9|5 11 14|  26952|  7431 22584  9105 12028|  3976  7560  7263  9227|     24   50034   50034
                        26  1418.179     8.179 -13.191   31.2|5 11 14|  39869| 20767 10043 20285  9870| 11434  6603  7767  4081|     31   64987   64987
-                       85  2771.134    12.741 -13.963   42.0|9  0  0| 384660| 38398 21309 22479 49597| 14865  8321 27500 13910|     41  500050  500050
-                      142  2442.062    19.262 -14.089   52.5|9  0  0| 432198| 40098 30373 64384 25401| 25115 18930 15535  9747|     52  561690  561690
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                      168  3736.694    20.902 -16.584  228.3|9  0  0|4301783| 84776 84051 82731 82837| 82790 83054 83088 83029|    228 4552378 4552378
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                       85  2771.134    12.741 -13.963   42.0|9  0  0| 384660| 38398 21309 22479 49597| 14865  8321 27500 13910|     41  500050  500050
+                      142  2442.062    19.262 -14.089   52.5|9  0  0| 432198| 40098 30373 64384 25401| 25115 18930 15535  9747|     52  561690  561690
+                      168  3736.694    20.902 -16.584  228.3|9  0  0|4301783| 84776 84051 82731 82837| 82790 83054 83088 83029|    228 4552378 4552378
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                      333  3557.848    37.596 -18.797  872.3|9  0  0|*******| 87021 84888 86407 86693| 87692 85098 87649 85433|    872 ******* *******
@@ -2055,15 +2039,13 @@ NIM001 CALL sub_hst2ym on image p16380/jeg057cjq_flt.fits
                   ------- --------- --------- ------- ------|- -- --|-------| ----- ----- ----- -----| ----- ----- ----- -----| ------- ------- -------
                         1   671.390     5.977  -6.607   22.3|5  3  6|    107|    87    32    62    59|    39    18    49    39|     22     158     158
                         2  1498.091     6.436 -12.919   33.8|5 11 14|  26307| 12666  7849 23805  5139| 10391  7850  4225  2723|     33   51747   51747
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                       28   773.564     7.883 -12.940   27.6|5 11 14|  26158|  7207 24027  8350 12328|  3649  7600  7080 10044|     27   51967   51967
+                       28   773.564     7.883 -12.940   27.6|5 11 14|  26158|  7207 24027  8350 12328|  3649  7600  7080 10044|     27   51967   51967
                        30  1418.138     8.150 -13.186   30.7|5 11 14|  41033| 19586 11062 19484 10581| 10402  6798  7662  4454|     30   62731   62731
-                       88  2771.111    12.708 -13.967   39.5|9  0  0| 386213| 37052 22033 22274 51624| 13606  8506 27690 15085|     39  502478  502478
-                      145  2442.038    19.233 -14.091   49.3|9  0  0| 432900| 39319 32290 65045 26615| 23497 18925 15658 10468|     49  560660  560660
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                      172  3736.689    20.894 -16.583  216.3|9  0  0|4298325| 84791 84064 82700 82914| 82831 82974 83065 83053|    216 4548994 4548994
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                       88  2771.111    12.708 -13.967   39.5|9  0  0| 386213| 37052 22033 22274 51624| 13606  8506 27690 15085|     39  502478  502478
+                      145  2442.038    19.233 -14.091   49.3|9  0  0| 432900| 39319 32290 65045 26615| 23497 18925 15658 10468|     49  560660  560660
+                      172  3736.689    20.894 -16.583  216.3|9  0  0|4298325| 84791 84064 82700 82914| 82831 82974 83065 83053|    216 4548994 4548994
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                      339  3557.838    37.585 -18.797  876.1|9  0  0|*******| 87034 84816 86368 86729| 87740 85104 87638 85423|    876 ******* *******
@@ -2700,10 +2682,10 @@ NIM001 CALL sub_hst2ym on image p16380/jeg057cmq_flt.fits
                   ------- --------- --------- ------- ------|- -- --|-------| ----- ----- ----- -----| ----- ----- ----- -----| ------- ------- -------
                         1  1229.450     6.403 -11.306  174.3|5  5  8|   3616|  2431  3499  2929  1113|  1854  3310   936   977|    174    6433    6433
                         6  3206.213     5.540 -11.496  413.0|5  5  8|   5018|  3443  3617  1692  4554|  1546  1280  3944  3079|    413    8305    8305
+                        9  3475.336     6.670 -12.111  587.2|5  5  8|  10818|  7828  6268  3332  6418|  2696  2426  6195  3597|    587   15629   15629
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                        9  3475.336     6.670 -12.111  587.2|5  5  8|  10818|  7828  6268  3332  6418|  2696  2426  6195  3597|    587   15629   15629
-                       17   833.230     8.819 -12.927  320.2|5  6  9|  20808| 15134 12988  6557  9837|  5392  4961  9899  5489|    320   27098   27098
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                       17   833.230     8.819 -12.927  320.2|5  6  9|  20808| 15134 12988  6557  9837|  5392  4961  9899  5489|    320   27098   27098
                        21  1894.201     9.176 -13.772  248.4|5  7 10|  43498| 32942 26239 25260 11836| 17460 17836 12126  7276|    248   65820   65820
                        41  3085.740    11.950 -14.034  351.4|5  7 10|  54183| 36716 44938 21650 22680| 14633 19417 20313 16013|    351   77239   77239
                        77  3234.297    18.779 -14.172  487.4|5  6  9|  66396| 47992 37948 21766 33385| 17298 14641 31199 17792|    487   91297   91297
@@ -3268,10 +3250,10 @@ NIM001 CALL sub_hst2ym on image p16380/jeg057coq_flt.fits
                   ------- --------- --------- ------- ------|- -- --|-------| ----- ----- ----- -----| ----- ----- ----- -----| ------- ------- -------
                    NSTARS     XCEN       YCEN     MAG   SKY |M iS oS|   PCEN|   P02   P03   P04   P05|   P06   P07   P08   P09|    mSKY    F2x2 F2x2-SK
                   ------- --------- --------- ------- ------|- -- --|-------| ----- ----- ----- -----| ----- ----- ----- -----| ------- ------- -------
+                        1  3949.426     6.621 -10.628  376.6|5  4  7|   2416|  2347  1636  1042  1975|  1008   864  1962  1559|    376    3803    3803
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                        1  3949.426     6.621 -10.628  376.6|5  4  7|   2416|  2347  1636  1042  1975|  1008   864  1962  1559|    376    3803    3803
-                        3   458.705     9.293 -11.744   62.2|5  6  9|   5064|  3941  4111  3690  1607|  2834  2977  1565  1304|     62    7337    7337
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                        3   458.705     9.293 -11.744   62.2|5  6  9|   5064|  3941  4111  3690  1607|  2834  2977  1565  1304|     62    7337    7337
                        13  3165.440    18.093 -14.818  757.2|9  0  0| 845510| 70640 56820 27422 48617| 32833 20409 46696 42214|    757 1011194 1011194
 </pre></div>
 </div>
@@ -4998,12 +4980,12 @@ NIM
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/032c14649b8720a115f278d1228bb26ea6491ca7ab1702b4f23b1382ee5ea672.png" src="../../../_images/032c14649b8720a115f278d1228bb26ea6491ca7ab1702b4f23b1382ee5ea672.png" />
-<img alt="../../../_images/518ac74e2ba5714a9800bc00d77538c115995593aa04aa0294775b276f59b071.png" src="../../../_images/518ac74e2ba5714a9800bc00d77538c115995593aa04aa0294775b276f59b071.png" />
-<img alt="../../../_images/eabf7bb31b0b00499fdb21a8b2fd2f32b01e0980e6a65aee7f1d5e9acf8b2333.png" src="../../../_images/eabf7bb31b0b00499fdb21a8b2fd2f32b01e0980e6a65aee7f1d5e9acf8b2333.png" />
-<img alt="../../../_images/57d045ac9f121338039801c3ca8f9adf2f04a4c14b6e6f2575650f3802fa5631.png" src="../../../_images/57d045ac9f121338039801c3ca8f9adf2f04a4c14b6e6f2575650f3802fa5631.png" />
-<img alt="../../../_images/9c9651c153bedd1859189762a33b7bde5734d94a50ab51f11db10be19b173589.png" src="../../../_images/9c9651c153bedd1859189762a33b7bde5734d94a50ab51f11db10be19b173589.png" />
-<img alt="../../../_images/18752585448b0eeccb990068631b05a78202c2e2ab39985f898e010d9f01f9b8.png" src="../../../_images/18752585448b0eeccb990068631b05a78202c2e2ab39985f898e010d9f01f9b8.png" />
+<img alt="../../../_images/52695c5b0805565f5f3dd26f08e25359d61ae4051ee78617332fd4ba81c68001.png" src="../../../_images/52695c5b0805565f5f3dd26f08e25359d61ae4051ee78617332fd4ba81c68001.png" />
+<img alt="../../../_images/3d1fde7b62ad89b278bae545876114b331ecc0b2100af67aca94b142758cc813.png" src="../../../_images/3d1fde7b62ad89b278bae545876114b331ecc0b2100af67aca94b142758cc813.png" />
+<img alt="../../../_images/0a5bcb3b9b3639acf2825f04a4ee4a90359579bd9b1f3def4a8c70ce3caf2f53.png" src="../../../_images/0a5bcb3b9b3639acf2825f04a4ee4a90359579bd9b1f3def4a8c70ce3caf2f53.png" />
+<img alt="../../../_images/15bce021246f796d63ac778237ce24ad864d8c9e7734c8aafa96e3be29d9b7e4.png" src="../../../_images/15bce021246f796d63ac778237ce24ad864d8c9e7734c8aafa96e3be29d9b7e4.png" />
+<img alt="../../../_images/07a7c5f880765bde63f308d62b7d56f2f22119ad8b7d3c7aaddd351f29a58e9c.png" src="../../../_images/07a7c5f880765bde63f308d62b7d56f2f22119ad8b7d3c7aaddd351f29a58e9c.png" />
+<img alt="../../../_images/3d68cc645471a74bd3a9fb77a470c190779fc4adcee4f0845b44162432a559ad.png" src="../../../_images/3d68cc645471a74bd3a9fb77a470c190779fc4adcee4f0845b44162432a559ad.png" />
 </div>
 </div>
 <p>The above plots show a rather typical distribution of <code class="docutils literal notranslate"><span class="pre">q</span></code> as a function of instrumental magnitude for the first, second, fifth, and sixth images. Saturated stars on the lower left of the plots have <code class="docutils literal notranslate"><span class="pre">q</span></code> defined as 0. Bright, well-fit stars have <code class="docutils literal notranslate"><span class="pre">q</span></code> values &lt;~0.2.</p>
@@ -5108,14 +5090,16 @@ information about citing packages such as <code class="docutils literal notransl
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
-  <nav class="bd-toc-nav page-toc">
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
@@ -5184,8 +5168,8 @@ By STScI
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>
