@@ -48,6 +48,8 @@ Before running these examples, you **must** follow the general instructions on c
 
 * [**hst_orbits_ephem**](https://spacetelescope.github.io/hst_notebooks/notebooks/ACS/hst_orbits_ephem/hst_orbits_ephem.html): Instructions on how to obtain information about HST’s location and pointing direction relative to Earth and the Sun for a given observation.
 
+* [**acs_grism_extraction_fullframe**](https://spacetelescope.github.io/hst_notebooks/notebooks/ACS/acs_grism_extraction_fullframe/slitlessutils_ACSWFC_fullframe_extraction.html): This notebook contains a step-by-step guide for performing spectral extractions with `Slitlessutils` for G800L full frame data from ACS/WFC.
+
 ## Contributing
 
 New contributions and feedback are very welcomed! Please open a new [issue](https://github.com/spacetelescope/hst_notebooks/issues) or new pull request for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. Questions can also be sent to the ACS team through the [HST Help Desk](https://stsci.service-now.com/hst).
