@@ -5,7 +5,7 @@
 WFC3 Notebooks is the primary repository for analyzing data from the 
 [Wide Field Camera 3](https://www.stsci.edu/hst/instrumentation/wfc3) on the 
 Hubble Space Telescope. The Jupyter notebooks include tools for general data analysis, 
-WFC3/IR time variable background (TVB), photometry and point spread function (PSF) modeling. This repository contains the 
+WFC3/IR time variable background (TVB), photometry, and point spread function (PSF) modeling. This repository contains the 
 complementary notebooks mentioned in the [WFC3 Data Handbook](https://hst-docs.stsci.edu/wfc3dhb).
 These notebooks include:
 
@@ -14,7 +14,6 @@ General Tools:
 - [Exception Report Checklist - WFC3](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/exception_report/wfc3_exception_report.html)
 - [Processing WFC3/UVIS Data with `calwf3` Using the v1.0 CTE-Correction](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html)
 - [Masking Persistence in WFC3/IR Images](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/persistence/wfc3_ir_persistence.html)
-- [Analyzing WFC3/UVIS G280 Exoplanet Transit Observations](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/uvis_g280_transit/G280_Exoplanet_Transits.html)
 
 WFC3/IR Time Variable Background (TVB):
 - [WFC3/IR IMA Visualization Tools with an Example of Time Variable Background](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html)
@@ -35,6 +34,12 @@ Point Spread Function (PSF):
  - [HST WFC3 Point Spread Function Modeling](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/point_spread_function/hst_point_spread_function.html)
  - [Downloading WFC3 and WFPC2 PSF Cutouts from MAST](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/mast_api_psf/download_psf_cutouts.html)
 
+Grism Spectroscopy:
+- [Analyzing WFC3/UVIS G280 Exoplanet Transit Observations](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/uvis_g280_transit/G280_Exoplanet_Transits.html)
+- [`Slitlessutils` Cookbook: Spectral Extraction for WFC3/IR](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/slitlessutils_IR_extraction/slitlessutils_IR_extraction.html)
+- [`Slitlessutils` Cookbook: Spectral Extraction for WFC3/UVIS Full-Frame](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/slitlessutils_UVIS_fullframe_extraction/slitlessutils_UVIS_fullframe_extraction.html)
+- [`Slitlessutils` Cookbook: Spectral Extraction for WFC3/UVIS Subarray](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/slitlessutils_UVIS_subarray_extraction/slitlessutils_UVIS_subarray_extraction.html)
+  
 See the [WFC3 Instrument Handbook](https://hst-docs.stsci.edu/wfc3ihb),
 [WFC3 Data Handbook](https://hst-docs.stsci.edu/wfc3dhb),
 [wfc3tools](https://github.com/spacetelescope/wfc3tools), and 
@@ -47,15 +52,15 @@ Before running these examples, you **must** follow the general instructions on c
 
 ## Contributing
 
-New contributions and feedback are very welcomed! Please open a new [issue](https://github.com/spacetelescope/hst_notebooks/issues) or new pull request for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. Questions can also be sent to the WFC3 team through the [HST Help Desk](https://stsci.service-now.com/hst).
+New contributions and feedback are very welcome! Please open a new [issue](https://github.com/spacetelescope/hst_notebooks/issues) or new pull request for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. Questions can also be sent to the WFC3 team through the [HST Help Desk](https://stsci.service-now.com/hst).
 
-WFC3 Notebooks follows the 
+WFC3 Notebooks follow the 
 [Astropy Code of Conduct](https://www.astropy.org/code_of_conduct.html)
 and strives to provide a welcoming community to all of our users and 
 contributors.
 
 Want more information about how to make a contribution?  Take a look at
-the the `astropy` 
+the `astropy` 
 [contributing](https://www.astropy.org/contribute.html)
 and [developer](https://docs.astropy.org/en/stable/index.html#developer-documentation) 
 documentation.
