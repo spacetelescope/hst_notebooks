@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Grism Spectroscopy &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/table.css?v=cd6c26fb" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-2XDY0S4S5Q"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-2XDY0S4S5Q');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-2XDY0S4S5Q');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/WFC3/grism_spectroscopy';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Analyzing WFC3/UVIS G280 Exoplanet Transit Observations" href="uvis_g280_transit/G280_Exoplanet_Transits.html" />
+    <link rel="prev" title="Downloading WFC3 and WFPC2 PSF Cutouts from MAST" href="mast_api_psf/download_psf_cutouts.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/stsci_logo2.png" class="logo__image only-light" alt="HST Notebooks - Home"/>
+    <img src="../../_static/stsci_logo2.png" class="logo__image only-dark pst-js-only" alt="HST Notebooks - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    STScI HST Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../ACS/README.html">ACS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">ACS Pixel Area Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ACS/acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html">Focus Diverse ePSFs for ACS/WFC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ACS/acs_exception_report/exception_report_checks.html">HST Exception Report - Investigate your ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ACS/hst_orbits_ephem/hst_orbits_ephem.html">Getting HST Ephemeris and Related Data for an Observation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ACS/acs_etc_cte/acs_etc_cte.html">Planning WFC Imaging While Taking into Account CTE-related Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ACS/acs_grism_extraction_fullframe/slitlessutils_ACSWFC_fullframe_extraction.html"><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Cookbook: Spectral Extraction for ΑCS/WFC Full-Frame</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ACS/acs_grism_extraction_subarray/slitlessutils_ACSWFC_subarray_extraction.html"><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Cookbook: Spectral Extraction for ACS/WFC Subarrays</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../COS/ExceptionReport/ExceptionReport.html">What to do when you get an Exception Report for COS</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../DrizzlePac/README.html">DrizzlePac Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Improving Astrometry Using Alternate WCS Solutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an Absolute Reference Catalog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DrizzlePac/use_ds9_regions_in_tweakreg/use_ds9_regions_in_tweakreg.html">TWEAKREG Tips - Using DS9 Regions for Source Inclusion/Exclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DrizzlePac/align_mosaics/align_mosaics.html">Aligning HST Mosaics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DrizzlePac/sky_matching/sky_matching.html">Sky Matching for HST Mosaics <a id="top"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling new WFPC2 FLT data products with chip-normalization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HASP</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../HASP/README.html">HASP Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../HASP/Setup/Setup.html">Installing the Hubble Advanced Spectral Products Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../HASP/CoaddTutorial/CoaddTutorial.html">Inputting User Data using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../HASP/FluxScaleTutorial/FluxScaleTutorial.html">Scaling Flux while using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../HASP/DataDiagnostic/DataDiagnostics.html">HASP Data Diagnostic Notebook</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../HASP/WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HSLA</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../HSLA/README.html">HSLA Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../HSLA/COSLifetimePositions/COSLifetimePositions.html">Combining COS Data from Multiple Lifetime Positions and Central Wavelengths</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../HSLA/Intro/Intro.html">Introduction to the HSLA Data Products and Tools</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../HSLA/Setup/Setup.html">Installing the HASP/HSLA Spectral-Combination Script</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../STIS/README.html">STIS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../STIS/cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../STIS/custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../STIS/drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../STIS/CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../STIS/calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../STIS/target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../STIS/view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../STIS/extraction/1D_Extraction.html">1D Spectra Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../STIS/low_count_uncertainties/Low_Count_Uncertainties.html">Low Count Uncertainties in STIS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../STIS/contrast_sensitivity/STIS_Coronagraphic_Observation_Feasibility.html">STIS Coronagraphic Observation Feasibility</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="README.html">WFC3 Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="general_tools.html">General Tools</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="ir_tvb.html">WFC3/IR Time Variable Background (TVB)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="photometry.html">Photometry</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="point_spread_function.html">Point Spread Function (PSF)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="point_spread_function/hst_point_spread_function.html">HST WFC3 Point Spread Function Modeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mast_api_psf/download_psf_cutouts.html">Downloading WFC3 and WFPC2 PSF Cutouts from MAST</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Grism Spectroscopy</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="uvis_g280_transit/G280_Exoplanet_Transits.html">Analyzing WFC3/UVIS G280 Exoplanet Transit Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slitlessutils_IR_extraction/slitlessutils_IR_extraction.html"><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Cookbook: Spectral Extraction for WFC3/IR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slitlessutils_UVIS_fullframe_extraction/slitlessutils_UVIS_fullframe_extraction.html"><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Cookbook: Spectral Extraction for WFC3/UVIS Full-Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slitlessutils_UVIS_subarray_extraction/slitlessutils_UVIS_subarray_extraction.html"><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Cookbook: Spectral Extraction for WFC3/UVIS Subarrays</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/WFC3/grism_spectroscopy.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/notebooks/WFC3/grism_spectroscopy.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Grism Spectroscopy</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analyzing-wfc3-uvis-g280-exoplanet-transit-observations">Analyzing WFC3/UVIS G280 Exoplanet Transit Observations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#slitlessutils-cookbook-spectral-extraction-for-wfc3-ir">Slitlessutils Cookbook: Spectral Extraction for WFC3/IR</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#slitlessutils-cookbook-spectral-extraction-for-wfc3-uvis-full-frame">Slitlessutils Cookbook: Spectral Extraction for WFC3/UVIS Full-Frame</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#slitlessutils-cookbook-spectral-extraction-for-wfc3-uvis-subarray">Slitlessutils Cookbook: Spectral Extraction for WFC3/UVIS Subarray</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p><img alt="STScI Logo" src="../../_images/stsci_header.png" /></p>
+<section class="tex2jax_ignore mathjax_ignore" id="grism-spectroscopy">
+<h1>Grism Spectroscopy<a class="headerlink" href="#grism-spectroscopy" title="Link to this heading">#</a></h1>
+<p>Here are brief descriptions of the WFC3 Notebooks for grism spectroscopy
+analysis.</p>
+<section id="analyzing-wfc3-uvis-g280-exoplanet-transit-observations">
+<h2>Analyzing WFC3/UVIS G280 Exoplanet Transit Observations<a class="headerlink" href="#analyzing-wfc3-uvis-g280-exoplanet-transit-observations" title="Link to this heading">#</a></h2>
+<p>We present the reduction and analysis of exoplanet transit observations of the
+hot Jupiter HAT-P-41b taken with the WFC3/UVIS G280 grism. The notebook
+demonstrates source finding, background subtraction, cosmic ray rejection,
+subarray embedding, spectral trace fitting, spectrum extraction, and light curve
+generation.</p>
+</section>
+<section id="slitlessutils-cookbook-spectral-extraction-for-wfc3-ir">
+<h2>Slitlessutils Cookbook: Spectral Extraction for WFC3/IR<a class="headerlink" href="#slitlessutils-cookbook-spectral-extraction-for-wfc3-ir" title="Link to this heading">#</a></h2>
+<p>This notebook demonstrates an end-to-end workflow for extracting 1D spectra from
+G102 or G141 data using <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>. This example guides users through the
+recommended procedure for analyzing slitless data, including downloading data,
+preparing direct and dispersed images, performing background subtraction, and
+executing the traditional extraction mode.</p>
+</section>
+<section id="slitlessutils-cookbook-spectral-extraction-for-wfc3-uvis-full-frame">
+<h2>Slitlessutils Cookbook: Spectral Extraction for WFC3/UVIS Full-Frame<a class="headerlink" href="#slitlessutils-cookbook-spectral-extraction-for-wfc3-uvis-full-frame" title="Link to this heading">#</a></h2>
+<p>This notebook demonstrates an end-to-end workflow for extracting 1D spectra from
+G280 full-frame data using <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>. This example guides users through the
+recommended procedure for analyzing slitless data, including downloading data,
+preparing direct and dispersed images, performing background subtraction, and
+executing the traditional extraction mode.</p>
+</section>
+<section id="slitlessutils-cookbook-spectral-extraction-for-wfc3-uvis-subarray">
+<h2>Slitlessutils Cookbook: Spectral Extraction for WFC3/UVIS Subarray<a class="headerlink" href="#slitlessutils-cookbook-spectral-extraction-for-wfc3-uvis-subarray" title="Link to this heading">#</a></h2>
+<p>This notebook demonstrates an end-to-end workflow for extracting 1D spectra from
+G280 subarray data using <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>. This example guides users through the
+recommended procedure for analyzing slitless data, including downloading data,
+preparing direct and dispersed images, performing background subtraction, and
+executing the traditional extraction mode.</p>
+</section>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/WFC3"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="mast_api_psf/download_psf_cutouts.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Downloading WFC3 and WFPC2 PSF Cutouts from MAST</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="uvis_g280_transit/G280_Exoplanet_Transits.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Analyzing WFC3/UVIS G280 Exoplanet Transit Observations</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analyzing-wfc3-uvis-g280-exoplanet-transit-observations">Analyzing WFC3/UVIS G280 Exoplanet Transit Observations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#slitlessutils-cookbook-spectral-extraction-for-wfc3-ir">Slitlessutils Cookbook: Spectral Extraction for WFC3/IR</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#slitlessutils-cookbook-spectral-extraction-for-wfc3-uvis-full-frame">Slitlessutils Cookbook: Spectral Extraction for WFC3/UVIS Full-Frame</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#slitlessutils-cookbook-spectral-extraction-for-wfc3-uvis-subarray">Slitlessutils Cookbook: Spectral Extraction for WFC3/UVIS Subarray</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
