@@ -19,10 +19,3 @@ We compare `calwf3` v1.0 CTE correction versus v2.0, and explore
 when each version is useful. v1.0 will provide the most up-to-date calibration 
 procedures such as time-dependent photometric corrections and zeropoints, while 
 also including the v1.0 CTE correction.
-
-## Masking Persistence in WFC3/IR Images
-We present how to use the WFC3/IR persistence model to flag pixels affected by 
-persistence in the calibrated (FLT) science images. When the images are 
-sufficiently dithered to step over the observed persistence artifacts, 
-AstroDrizzle may be used to exclude those flagged pixels when combining the FLT 
-frames. 
