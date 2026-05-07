@@ -44,3 +44,10 @@ We present a method to correct for TVB due to scattered light from observing
 close to the Earth's limb. This method illustrates how to mask bad reads in the 
 RAW image and then reprocess with `calwf3`, and it may be used for rejecting 
 anomalous reads occurring either at the beginning or at the end of an exposure.
+
+## Masking Persistence in WFC3/IR Images
+We present how to use the WFC3/IR persistence model to flag pixels affected by 
+persistence in the calibrated (FLT) science images. When the images are 
+sufficiently dithered to step over the observed persistence artifacts, 
+AstroDrizzle may be used to exclude those flagged pixels when combining the FLT 
+frames. 
