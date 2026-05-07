@@ -13,7 +13,6 @@ General Tools:
 - [WFC3 Image Displayer and Analyzer](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/image_displayer_analyzer/wfc3_image_displayer_analyzer.html)
 - [Exception Report Checklist - WFC3](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/exception_report/wfc3_exception_report.html)
 - [Processing WFC3/UVIS Data with `calwf3` Using the v1.0 CTE-Correction](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html)
-- [Masking Persistence in WFC3/IR Images](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/persistence/wfc3_ir_persistence.html)
 
 WFC3/IR Time Variable Background (TVB):
 - [WFC3/IR IMA Visualization Tools with an Example of Time Variable Background](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html)
@@ -21,6 +20,7 @@ WFC3/IR Time Variable Background (TVB):
 - [Correcting for Helium Line Emission Background in WFC3/IR Exposures using the "Flatten-Ramp" Technique](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/tvb_flattenramp/TVB_flattenramp_notebook.html)
 - [Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html)
 - [Correcting for Scattered Light in WFC3/IR Exposures: Using `calwf3` to Mask Bad Reads](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html)
+- [Masking Persistence in WFC3/IR Images](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/persistence/wfc3_ir_persistence.html)
 
 Photometry:
 - [WFC3/UVIS Filter Transformations with `stsynphot`](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/filter_transformations/filter_transformations.html)
