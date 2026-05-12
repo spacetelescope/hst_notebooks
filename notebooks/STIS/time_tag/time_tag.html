@@ -1,0 +1,1735 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Introduction to TIME-TAG Data &#8212; HST Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/table.css?v=cd6c26fb" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-2XDY0S4S5Q"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-2XDY0S4S5Q');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-2XDY0S4S5Q');
+            </script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/STIS/time_tag/time_tag';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="WFC3 Notebooks" href="../../WFC3/README.html" />
+    <link rel="prev" title="STIS Coronagraphic Observation Feasibility" href="../contrast_sensitivity/STIS_Coronagraphic_Observation_Feasibility.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="HST Notebooks - Home"/>
+    <img src="../../../_static/stsci_logo2.png" class="logo__image only-dark pst-js-only" alt="HST Notebooks - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    STScI HST Notebook Repository HQ
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/README.html">ACS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_saturation_trails/acs_saturation_trails.html">ACS Linearity with Saturated Stars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_cte_forward_model/acs_cte_forward_model_example.html">Pixel-based ACS/WFC CTE Forward Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_pixel_area_maps/acs_pixel_area_maps.html">ACS Pixel Area Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html">Focus Diverse ePSFs for ACS/WFC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_exception_report/exception_report_checks.html">HST Exception Report - Investigate your ACS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/hst_orbits_ephem/hst_orbits_ephem.html">Getting HST Ephemeris and Related Data for an Observation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_etc_cte/acs_etc_cte.html">Planning WFC Imaging While Taking into Account CTE-related Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_grism_extraction_fullframe/slitlessutils_ACSWFC_fullframe_extraction.html"><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Cookbook: Spectral Extraction for ΑCS/WFC Full-Frame</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ACS/acs_grism_extraction_subarray/slitlessutils_ACSWFC_subarray_extraction.html"><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Cookbook: Spectral Extraction for ACS/WFC Subarrays</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../COS/ExceptionReport/ExceptionReport.html">What to do when you get an Exception Report for COS</a></li>
+
+
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/README.html">DrizzlePac Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/using_updated_astrometry_solutions/using_updated_astrometry_solutions.html">Improving Astrometry Using Alternate WCS Solutions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_to_catalogs/align_to_catalogs.html">Aligning HST images to an Absolute Reference Catalog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_sparse_fields/align_sparse_fields.html">Aligning Deep Exposures of Sparse Fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_multiple_visits/align_multiple_visits.html">Optimizing Image Alignment for Multiple HST Visits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/use_ds9_regions_in_tweakreg/use_ds9_regions_in_tweakreg.html">TWEAKREG Tips - Using DS9 Regions for Source Inclusion/Exclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/optimize_image_sampling/optimize_image_sampling.html">Optimizing the Image Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/align_mosaics/align_mosaics.html">Aligning HST Mosaics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/sky_matching/sky_matching.html">Sky Matching for HST Mosaics <a id="top"></a></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/mask_satellite/mask_satellite.html">Satellite Trail Masking Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DrizzlePac/drizzle_wfpc2/drizzle_wfpc2.html">Drizzling new WFPC2 FLT data products with chip-normalization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HASP</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/README.html">HASP Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/Setup/Setup.html">Installing the Hubble Advanced Spectral Products Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/CoaddTutorial/CoaddTutorial.html">Inputting User Data using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/FluxScaleTutorial/FluxScaleTutorial.html">Scaling Flux while using the Hubble Advanced Spectral Products Script</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/DataDiagnostic/DataDiagnostics.html">HASP Data Diagnostic Notebook</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../../HASP/WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">HSLA</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../HSLA/README.html">HSLA Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../HSLA/COSLifetimePositions/COSLifetimePositions.html">Combining COS Data from Multiple Lifetime Positions and Central Wavelengths</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HSLA/Intro/Intro.html">Introduction to the HSLA Data Products and Tools</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../HSLA/Setup/Setup.html">Installing the HASP/HSLA Spectral-Combination Script</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">STIS Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cross-correlation/cross-correlation.html">Correcting for Missing Wavecals with Cross-Correlation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../custom_ccd_darks/custom_ccd_darks.html">Custom CCD Darks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drizpac_notebook/STIS_DrizzlePac_Tutorial.html">STIS DrizzlePac Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CoronagraphyViz/STIS_Coronagraphy_Visualization_v2.html">STIS Coronagraphy Visualization Tool (v2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../calstis/calstis_2d_ccd.html">Calstis 2-D CCD Data Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../target_acquisition/target_acquisition.html">Evaluating STIS Target Acquisitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../view_data/view_data.html">Viewing STIS Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extraction/1D_Extraction.html">1D Spectra Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../low_count_uncertainties/Low_Count_Uncertainties.html">Low Count Uncertainties in STIS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contrast_sensitivity/STIS_Coronagraphic_Observation_Feasibility.html">STIS Coronagraphic Observation Feasibility</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Introduction to TIME-TAG Data</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">WFC3</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../WFC3/README.html">WFC3 Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/general_tools.html">General Tools</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/image_displayer_analyzer/wfc3_image_displayer_analyzer.html">WFC3 Image Displayer &amp; Analyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/exception_report/wfc3_exception_report.html">Exception Report Checklist - WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html">Processing WFC3/UVIS Data with <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> Using the v1.0 CTE-Correction</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/ir_tvb.html">WFC3/IR Time Variable Background (TVB)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html">WFC3/IR IMA Visualization Tools with An Example of Time Variable Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/calwf3_recalibration/calwf3_recal_tvb.html">Manual Recalibration with calwf3: Turning off the IR Linear Ramp Fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/tvb_flattenramp/TVB_flattenramp_notebook.html">Correcting for Helium Line Emission Background in IR Exposures using the “Flatten-Ramp” Technique</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_calwf3_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_Using_calwf3_to_Mask_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Using <code class="docutils literal notranslate"><span class="pre">calwf3</span></code> to Mask Bad Reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/ir_scattered_light_manual_corrections/Correcting_for_Scattered_Light_in_IR_Exposures_by_Manually_Subtracting_Bad_Reads.html">Correcting for Scattered Light in WFC3/IR Exposures: Manually Subtracting Bad Reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/persistence/wfc3_ir_persistence.html">Masking Persistence in WFC3/IR Images</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/photometry.html">Photometry</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/filter_transformations/filter_transformations.html">WFC3/UVIS Filter Transformations with stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/flux_conversion_tool/flux_conversion_tool.html">Flux Unit Conversions with synphot and stsynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/photometry_examples/phot_examples.html">Synthetic Photometry Examples for WFC3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_time_dependent_photometry/uvis_timedep_phot.html">WFC3/UVIS Time-dependent Photometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/zeropoints/zeropoints.html">Calculating WFC3 Zeropoints with STSynphot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_pam_corrections/WFC3_UVIS_Pixel_Area_Map_Corrections_for_Subarrays.html">WFC3/UVIS Pixel Area Map Corrections for Subarrays</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/point_spread_function.html">Point Spread Function (PSF)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/point_spread_function/hst_point_spread_function.html">HST WFC3 Point Spread Function Modeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/mast_api_psf/download_psf_cutouts.html">Downloading WFC3 and WFPC2 PSF Cutouts from MAST</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../WFC3/grism_spectroscopy.html">Grism Spectroscopy</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/uvis_g280_transit/G280_Exoplanet_Transits.html">Analyzing WFC3/UVIS G280 Exoplanet Transit Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/slitlessutils_IR_extraction/slitlessutils_IR_extraction.html"><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Cookbook: Spectral Extraction for WFC3/IR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/slitlessutils_UVIS_fullframe_extraction/slitlessutils_UVIS_fullframe_extraction.html"><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Cookbook: Spectral Extraction for WFC3/UVIS Full-Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../WFC3/slitlessutils_UVIS_subarray_extraction/slitlessutils_UVIS_subarray_extraction.html"><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Cookbook: Spectral Extraction for WFC3/UVIS Subarrays</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/STIS/time_tag/time_tag.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/STIS/time_tag/time_tag.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/STIS/time_tag/time_tag.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Introduction to TIME-TAG Data</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-packages">Import Packages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-data">Download Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exploring-time-tag-file-structure">Exploring TIME-TAG File Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-raw-data-as-time-series">Visualizing Raw Data as Time-Series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-raw-data-as-a-2d-histogram-i-e-create-an-image">Visualizing Raw Data as a 2D Histogram (i.e., Create an Image)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibrating-data-with-inttag">Calibrating Data with <code class="docutils literal notranslate"><span class="pre">inttag</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calibrating-full-tag-file">Calibrating Full Tag File</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-and-calibrating-sub-exposures">Creating and Calibrating Sub-Exposures</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exploring-special-cases">Exploring Special Cases</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extraction-position-drift-in-sub-exposures">Extraction Position Drift in Sub-exposures</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-light-curves">Creating Light Curves</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgements">Acknowledgements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p><a id=top></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="introduction-to-time-tag-data">
+<h1>Introduction to TIME-TAG Data<a class="headerlink" href="#introduction-to-time-tag-data" title="Link to this heading">#</a></h1>
+<section id="learning-goals">
+<h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Link to this heading">#</a></h2>
+<p>In this notebook you will learn how to navigate TIME-TAG file structures, display the raw data with several methods, calibrate the full exposure, and split data into sub-exposures.</p>
+<div id="toc_container">
+<p class="toc_title">Table of Contents</p>
+<ul class="toc_list">
+  <li><a href="#Introduction">0 Introduction</a></li>
+  <li><a href="#Import-Packages">1 Import Packages</a></li>
+  <li><a href="#Download-Data">2 Download Data</a></li>
+  <li><a href="#Exploring-TIME-TAG-File-Structure">3 Exploring TIME-TAG File Structure</a></li>
+  <li><a href="#Visualizing-Raw-Data-As-Time-Series">4 Visualizing Raw Data as Time-Series</a></li>
+  <li><a href="#Visualizing-Raw-Data-As-A-2D-Histogram">5 Visualizing Raw Data as a 2D Histogram</a></li>
+  <li><a href="#Calibrating-Data-With-Inttag">6 Calibrating Data with inttag</a>
+  <ul>
+    <li><a href="#Calibrating-Full-Tag-File">6.1 Calibrating Full Tag File</a></li>
+    <li><a href="#Creating-And-Calibrating-Sub-Exposures">6.2 Creating and Calibrating Sub-Exposures</a></li>
+  </ul>
+  </li>
+  <li><a href="#Exploring-Special-Cases">7 Exploring Special Cases</a></li>
+  <ul>
+    <li><a href="#Set-Extraction-Position">7.1 Extraction Position Drift in Sub-Exposures</a></li>
+    <li><a href="#Creating-Light-Curves">7.2 Creating Light Curves</a></li>
+  </ul>
+  </li>
+</ul>
+</div><p><a id=Introduction></a></p>
+</section>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>The STIS MAMA (Multi-Anode Microchannel Array) detectors can operate in two observing modes: ACCUM and TIME-TAG. ACCUM produces a time-integrated accumulated image. TIME-TAG records the position and detection time of every photon in an event list, with a time resolution of 125 microseconds. The TIME-TAG mode is used for high time resolution and imaging in the UV and is unique to the COS and STIS MAMA and MCP detectors. Observers are recommended to use the TIME-TAG mode when possible with observations below the count rate of 20,000 cts/s, as it offers several advantages and increases the legacy value of observations.</p>
+<p>For more information on STIS data structures, see <a class="reference external" href="https://hst-docs.stsci.edu/stisdhb/chapter-2-stis-data-structure">STIS Data Handbook Chapter 2</a>.</p>
+<p>For more information on the basic operating modes, see <a class="reference external" href="https://hst-docs.stsci.edu/stisihb/chapter-11-data-taking/11-1-basic-operating-modes">STIS Instrument Handbook Chapter 11.1</a>.</p>
+<p>For more information on TIME-TAG data, see <a class="reference external" href="https://hst-docs.stsci.edu/stisdhb/chapter-5-stis-data-analysis/5-6-working-with-time-tag-data">STIS Data Handbook Chapter 5.6</a></p>
+<p><a id=Import-Packages></a></p>
+</section>
+<section id="import-packages">
+<h2>Import Packages<a class="headerlink" href="#import-packages" title="Link to this heading">#</a></h2>
+<p>We will import the following packages:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">os</span></code> and <code class="docutils literal notranslate"><span class="pre">pathlib.Path</span></code> for managing system paths</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IPython.display</span></code> for clearing large outputs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astroquery.mast.Observations</span></code> for finding and downloading data from the <a class="reference external" href="https://mast.stsci.edu/search/ui/#/hst">MAST</a> archive</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy.io.fits</span></code> for accessing fits files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy.table.Table</span></code> for displaying fits data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> and <code class="docutils literal notranslate"><span class="pre">scipy</span></code> for handling array functions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> for plotting data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stistools</span></code> for operations on STIS data</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Managing system variables and paths</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Clearing large outputs for readability</span>
+<span class="c1"># (Not necessary)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_output</span>
+
+<span class="c1"># Downloading necessary files</span>
+<span class="c1"># (Not necessary if you choose to collect data from MAST directly)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.mast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observations</span>
+
+<span class="c1"># Reading fits files</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
+
+<span class="c1"># Calculations and data analysis</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
+
+<span class="c1"># Plotting</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Operations on STIS data</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">stistools</span>
+
+<span class="c1"># Set plots to colorblind friendly style</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;tableau-colorblind10&#39;</span><span class="p">)</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The following tasks in the stistools package can be run with TEAL:
+   basic2d      calstis     ocrreject     wavecal        x1d          x2d
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.12/site-packages/stsci/tools/nmpfit.py:8: UserWarning: NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.
+  warnings.warn(&quot;NMPFIT is deprecated - stsci.tools v 3.5 is the last version to contain it.&quot;)
+/home/runner/micromamba/envs/ci-env/lib/python3.12/site-packages/stsci/tools/gfit.py:18: UserWarning: GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.Use astropy.modeling instead.
+  warnings.warn(&quot;GFIT is deprecated - stsci.tools v 3.4.12 is the last version to contain it.&quot;
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id=Download-Data></a></p>
+</section>
+<section id="download-data">
+<h2>Download Data<a class="headerlink" href="#download-data" title="Link to this heading">#</a></h2>
+<p>Find and download necessary data from the <a class="reference external" href="https://mast.stsci.edu/search/ui/#/hst">MAST</a> archive using <a class="reference external" href="https://astroquery.readthedocs.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a>. Data can also be downloaded from MAST directly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make directory for downloading data</span>
+<span class="n">datadir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./data&#39;</span><span class="p">)</span>
+<span class="n">datadir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> --no-display
+
+<span class="c1"># Search target object by obs_id</span>
+<span class="n">targets</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;oevf02020&#39;</span><span class="p">,</span> <span class="s1">&#39;O61S03020&#39;</span><span class="p">,</span> <span class="s1">&#39;ofh317010&#39;</span><span class="p">])</span>
+<span class="c1"># Get a list of files associated with that target</span>
+<span class="n">target_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span>
+<span class="c1"># Filter to only TAG, WAV, and X1D fits files</span>
+<span class="n">filtered_list</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">filter_products</span><span class="p">(</span><span class="n">target_list</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;TAG&#39;</span><span class="p">,</span> <span class="s1">&#39;WAV&#39;</span><span class="p">,</span> <span class="s1">&#39;X1D&#39;</span><span class="p">])</span>
+<span class="c1"># Download files</span>
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">filtered_list</span><span class="p">,</span> <span class="n">download_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">datadir</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=9</i>
+<table id="table140072486835248" class="table-striped table-bordered table-condensed">
+<thead><tr><th>Local Path</th><th>Status</th><th>Message</th><th>URL</th></tr></thead>
+<thead><tr><th>str50</th><th>str8</th><th>object</th><th>object</th></tr></thead>
+<tr><td>data/mastDownload/HST/o61s03020/o61s03020_tag.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>data/mastDownload/HST/o61s03020/o61s03020_wav.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>data/mastDownload/HST/o61s03020/o61s03020_x1d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>data/mastDownload/HST/oevf02020/oevf02020_tag.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>data/mastDownload/HST/oevf02020/oevf02020_wav.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>data/mastDownload/HST/oevf02020/oevf02020_x1d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>data/mastDownload/HST/ofh317010/ofh317010_tag.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>data/mastDownload/HST/ofh317010/ofh317010_wav.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+<tr><td>data/mastDownload/HST/ofh317010/ofh317010_x1d.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
+</table></div></div></div>
+</div>
+<p><a id=Exploring-TIME-TAG-File-Structure></a></p>
+</section>
+<section id="exploring-time-tag-file-structure">
+<h2>Exploring TIME-TAG File Structure<a class="headerlink" href="#exploring-time-tag-file-structure" title="Link to this heading">#</a></h2>
+<p>TIME-TAG event data are stored in a binary table extension. The first extension contains the events table, in which each row corresponds to a single event in the data stream and the columns of the table contain scalar quantities that describe the event. Each event has an associated (<code class="docutils literal notranslate"><span class="pre">TIME</span></code>), X-position (<code class="docutils literal notranslate"><span class="pre">AXIS1</span></code>), Y-position (<code class="docutils literal notranslate"><span class="pre">AXIS2</span></code>), and detector X-position (<code class="docutils literal notranslate"><span class="pre">DETAXIS1</span></code>).</p>
+<p>For imaging, the <code class="docutils literal notranslate"><span class="pre">AXIS1</span></code> and <code class="docutils literal notranslate"><span class="pre">DETAXIS1</span></code> are identical. For spectroscopic ACCUM, a correction for Doppler shift is applied as the photons are counted, prior to their addressing in the STIS data buffer memory. For TIME-TAG, <code class="docutils literal notranslate"><span class="pre">AXIS1</span></code> is derived from <code class="docutils literal notranslate"><span class="pre">DETAXIS1</span></code> and processed by the ground system to remove HST’s orbital Doppler shift.</p>
+<p>The second extension contains the good time interval (GTI) information, where an uninterrupted period of time is considered a single good time interval. Expected buffer dumps are the usual cause for gaps in data, but interruptions due to memory overflow or corrupted fine times could also result in more than one GTI.</p>
+<p>TIME-TAG data are taken in a 2048x2048 high-resolution format but are frequently downsampled to a 1024x1024 low-resolution format later in processing to avoid uncalibrated sensitivity differences between the even and odd rows.</p>
+<p>Events Table Column Definitions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TIME</span></code> = elapsed time in seconds since the exposure start time</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AXIS1</span></code> = pixel coordinate along the spectral axis, with Doppler correction</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AXIS2</span></code> = pixel coordinate along the spatial axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DETAXIS1</span></code> = pixel coordinate along the spectral axis, prior to Doppler correction</p></li>
+</ul>
+<p>GTI Table Column Definitions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">START</span></code> = start of the good time interval in seconds</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STOP</span></code> = end of the good time interval in seconds</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First we get information about the extensions in the fits file</span>
+<span class="n">nuv_tag</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/oevf02020/oevf02020_tag.fits&#39;</span><span class="p">)</span>
+<span class="n">fits</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">nuv_tag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Filename: data/mastDownload/HST/oevf02020/oevf02020_tag.fits
+No.    Name      Ver    Type      Cards   Dimensions   Format
+  0  PRIMARY       1 PrimaryHDU     219   ()      
+  1  EVENTS        1 BinTableHDU    148   3457402R x 4C   [1J, 1I, 1I, 1I]   
+  2  GTI           1 BinTableHDU     22   1R x 2C   [1D, 1D]   
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get header of the EVENTS extension</span>
+<span class="c1"># Print only the TIMETAG EVENTS TABLE COLUMNS (lines 132-148)</span>
+<span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">nuv_tag</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">132</span><span class="p">:</span><span class="mi">148</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>              / TIMETAG EVENTS TABLE COLUMNS                                    
+                                                                                
+TTYPE1  = &#39;TIME    &#39;           / event clock time                               
+TFORM1  = &#39;1J      &#39;           / data format for TIME: 32-bit integer           
+TUNIT1  = &#39;seconds &#39;           / units for TIME: seconds                        
+TSCAL1  =             0.000125 / scale factor to convert s/c clock ticks to sec 
+TZERO1  =                  0.0 / TIME zero point: starting time of obs.         
+TTYPE2  = &#39;AXIS1   &#39;           / Doppler corrected axis 1 detector coordinate   
+TFORM2  = &#39;1I      &#39;           / data format for AXIS1: 16-bit integer          
+TUNIT2  = &#39;pixels  &#39;           / physical units for AXIS1: pixels               
+TTYPE3  = &#39;AXIS2   &#39;           / axis 2 detector coordinate                     
+TFORM3  = &#39;1I      &#39;           / data format for AXIS2: 16-bit integer          
+TUNIT3  = &#39;pixels  &#39;           / physical units for AXIS2: pixels               
+TTYPE4  = &#39;DETAXIS1&#39;           / raw 1 detector coordinate                      
+TFORM4  = &#39;1I      &#39;           / data format for DETAXIS1: 16-bit integer       
+TUNIT4  = &#39;pixels  &#39;           / physical units for DETAXIS1: pixels            
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get header of the GTI extension</span>
+<span class="c1"># Print only the TIMETAG GTI TABLE COLUMN DESCRIPTORS (lines 14-22)</span>
+<span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">nuv_tag</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">2</span><span class="p">)[</span><span class="mi">14</span><span class="p">:</span><span class="mi">22</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>              / TIMETAG GTI TABLE COLUMN DESCRIPTORS                            
+                                                                                
+TTYPE1  = &#39;START   &#39;           / start of good time interval                    
+TFORM1  = &#39;1D      &#39;           / data format for START: REAL*8                  
+TUNIT1  = &#39;seconds &#39;           / physical units for START                       
+TTYPE2  = &#39;STOP    &#39;           / end of good time interval                      
+TFORM2  = &#39;1D      &#39;           / data format for STOP: REAL*8                   
+TUNIT2  = &#39;seconds &#39;           / physical units for STOP                        
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id=Visualizing-Raw-Data-As-Time-Series></a></p>
+</section>
+<section id="visualizing-raw-data-as-time-series">
+<h2>Visualizing Raw Data as Time-Series<a class="headerlink" href="#visualizing-raw-data-as-time-series" title="Link to this heading">#</a></h2>
+<p>One way to visualize the TIME-TAG data is as a time-series with a histogram of the logged events. However, it is important to note that full tag files are treated as raw, meaning that they are uncalibrated and contain both uncorrected background signal (including “dark” counts) and the full variability of the exposure (changes in the source flux over time). Nevertheless, this view can be useful for diagnosing potential issues with the data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Histogram of counts over an exposure with a single GTI</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">nuv_tag</span><span class="p">)</span> <span class="k">as</span> <span class="n">tag</span><span class="p">:</span>
+    <span class="n">maxt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+    <span class="n">rootname</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">nuv_tag</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="s1">&#39;ROOTNAME&#39;</span><span class="p">]</span>
+    
+    <span class="n">labeled</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1"># 1 s bins:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span>
+        <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">],</span>
+        <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxt</span><span class="p">],</span>
+        <span class="n">bins</span><span class="o">=</span><span class="n">maxt</span><span class="p">,</span>
+        <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;1s bins&#39;</span><span class="p">)</span>
+        
+    <span class="c1"># 10 s bins:</span>
+    <span class="n">binsize</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span>
+        <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">],</span>
+        <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxt</span><span class="p">],</span>
+        <span class="n">bins</span><span class="o">=</span><span class="n">maxt</span><span class="o">//</span><span class="n">binsize</span><span class="p">,</span>
+        <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span>
+        <span class="n">weights</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mf">1.</span><span class="o">/</span><span class="n">binsize</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;10s bins&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">rootname</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Total Count Rate (counts/s)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Detector Time On (s)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/ba065039a8e5abf3f8023fdaa7464e2ef61b0fc69fcddce07fffaa7af777e48c.png" src="../../../_images/ba065039a8e5abf3f8023fdaa7464e2ef61b0fc69fcddce07fffaa7af777e48c.png" />
+</div>
+</div>
+<p>You can also create a time-series of a subsection of the detector.  Below, we will show only the counts from the central region of the detector:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Histogram of counts over an exposure with a single GTI</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">nuv_tag</span><span class="p">)</span> <span class="k">as</span> <span class="n">tag</span><span class="p">:</span>
+    <span class="n">maxt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+    <span class="n">rootname</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">nuv_tag</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="s1">&#39;ROOTNAME&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Define region in x and y</span>
+    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1536</span>
+    <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1536</span>
+
+    <span class="n">region</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;AXIS1&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;AXIS1&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">xmax</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;AXIS2&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">ymin</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;AXIS2&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">ymax</span><span class="p">)</span>
+    <span class="p">)</span>
+    
+    <span class="n">labeled</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1"># 1 s bins:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span>
+        <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">][</span><span class="n">region</span><span class="p">],</span> <span class="c1"># Create histogram only using selected region</span>
+        <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxt</span><span class="p">],</span>
+        <span class="n">bins</span><span class="o">=</span><span class="n">maxt</span><span class="p">,</span>
+        <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;1s bins&#39;</span><span class="p">)</span>
+        
+    <span class="c1"># 10 s bins:</span>
+    <span class="n">binsize</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span>
+        <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">][</span><span class="n">region</span><span class="p">],</span>
+        <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxt</span><span class="p">],</span>
+        <span class="n">bins</span><span class="o">=</span><span class="n">maxt</span><span class="o">//</span><span class="n">binsize</span><span class="p">,</span>
+        <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span>
+        <span class="n">weights</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">][</span><span class="n">region</span><span class="p">])</span> <span class="o">+</span> <span class="mf">1.</span><span class="o">/</span><span class="n">binsize</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;10s bins&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">rootname</span> <span class="o">+</span> <span class="s1">&#39; at x = [512:1536] y = [512:1536]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Total Count Rate (counts/s)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Detector Time On (s)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/d4176f745ff5edcf49f7c6e5fa5d1e5c2e6aacc8d043405102b199d301d91b76.png" src="../../../_images/d4176f745ff5edcf49f7c6e5fa5d1e5c2e6aacc8d043405102b199d301d91b76.png" />
+</div>
+</div>
+<p>Below is an example dataset that contains multiple buffer overflows, resulting in several GTI:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> --no-display
+<span class="n">buffer_tag</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/ofh317010/ofh317010_tag.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># Display start and stop times of the GTI table</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">buffer_tag</span><span class="p">,</span> <span class="n">hdu</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=17</i>
+<table id="table140072461263712" class="table-striped table-bordered table-condensed">
+<thead><tr><th>START</th><th>STOP</th></tr></thead>
+<thead><tr><th>seconds</th><th>seconds</th></tr></thead>
+<thead><tr><th>float64</th><th>float64</th></tr></thead>
+<tr><td>0.030375</td><td>303.259125</td></tr>
+<tr><td>311.584</td><td>409.95475</td></tr>
+<tr><td>429.632</td><td>527.78575</td></tr>
+<tr><td>547.552</td><td>644.727875</td></tr>
+<tr><td>665.504</td><td>761.682875</td></tr>
+<tr><td>783.552</td><td>880.32825</td></tr>
+<tr><td>901.504</td><td>997.3568750000001</td></tr>
+<tr><td>1019.488125</td><td>1116.987375</td></tr>
+<tr><td>1137.6000000000001</td><td>1234.389375</td></tr>
+<tr><td>1255.52025</td><td>1354.082375</td></tr>
+<tr><td>1373.632</td><td>1473.517625</td></tr>
+<tr><td>1491.5520000000001</td><td>1591.1367500000001</td></tr>
+<tr><td>1609.504125</td><td>1712.2953750000001</td></tr>
+<tr><td>1727.520125</td><td>1829.50775</td></tr>
+<tr><td>1845.536</td><td>1949.047375</td></tr>
+<tr><td>1963.5520000000001</td><td>2069.534</td></tr>
+<tr><td>2081.6</td><td>2171.2305</td></tr>
+</table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Histogram of counts over an exposure with multiple GTI</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">buffer_tag</span><span class="p">)</span> <span class="k">as</span> <span class="n">tag</span><span class="p">:</span>
+    <span class="n">maxt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+    <span class="n">rootname</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">buffer_tag</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="s1">&#39;ROOTNAME&#39;</span><span class="p">]</span>
+
+    <span class="c1"># 1 s bins:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span>
+        <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">],</span>
+        <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxt</span><span class="p">],</span>
+        <span class="n">bins</span><span class="o">=</span><span class="n">maxt</span><span class="p">,</span>
+        <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">rootname</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Total Count Rate (counts/s)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Detector Time On (s)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/a0ef774ca77b7e9a734d3173d032ce64e086b47d2e6e6138c67175e5bbc12798.png" src="../../../_images/a0ef774ca77b7e9a734d3173d032ce64e086b47d2e6e6138c67175e5bbc12798.png" />
+</div>
+</div>
+<p><a id=Visualizing-Raw-Data-As-A-2D-Histogram></a></p>
+</section>
+<section id="visualizing-raw-data-as-a-2d-histogram-i-e-create-an-image">
+<h2>Visualizing Raw Data as a 2D Histogram (i.e., Create an Image)<a class="headerlink" href="#visualizing-raw-data-as-a-2d-histogram-i-e-create-an-image" title="Link to this heading">#</a></h2>
+<p>Another way to visualize the raw TIME-TAG data is with a 2D histogram in the spatial dimensions. The native 2048 x 2048 high-resolution version of the data contains uncalibrated sensitivity differences between the even and odd rows, resulting in a fixed pattern noise (the boxes seen in the left plot) in our visualization. To mitigate this issue, we can down-sample to a 1024 x 1024 low-resolution format (as seen in the right plot).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">nuv_tag</span><span class="p">)</span> <span class="k">as</span> <span class="n">tag</span><span class="p">:</span>
+    <span class="n">rootname</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">nuv_tag</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="s1">&#39;ROOTNAME&#39;</span><span class="p">]</span>
+
+    <span class="c1"># 2048x2048</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span>
+        <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;AXIS1&#39;</span><span class="p">],</span> <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;AXIS2&#39;</span><span class="p">],</span>
+        <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">],</span>
+        <span class="nb">range</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2048</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2048</span><span class="p">]],</span>
+        <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+    
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;AXIS1&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;AXIS2&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Native 2048x2048 high-res format&#39;</span><span class="p">)</span>
+
+    <span class="c1"># 1024x1024</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span>
+        <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;AXIS1&#39;</span><span class="p">],</span> <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;AXIS2&#39;</span><span class="p">],</span>
+        <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">],</span>
+        <span class="nb">range</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2048</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2048</span><span class="p">]],</span>
+        <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+    
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;AXIS1&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;AXIS2&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Down-sampled 1024x1024 low-res format&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/73c00ed58ad457bc1a8079025483a9cd7f847bbf29778792ad5e247293ee6a5b.png" src="../../../_images/73c00ed58ad457bc1a8079025483a9cd7f847bbf29778792ad5e247293ee6a5b.png" />
+</div>
+</div>
+<p>You can also create a time-series of the 2D histogram. Below, we will split the full exposure into three parts for the time-series:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># split the raw TIME-TAG data into multiple 2D histograms</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">nuv_tag</span><span class="p">)</span> <span class="k">as</span> <span class="n">tag</span><span class="p">:</span>
+    <span class="n">maxt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+
+    <span class="n">step</span> <span class="o">=</span> <span class="mi">460</span> <span class="c1"># seconds</span>
+    <span class="n">starts</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxt</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+    <span class="n">stops</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">maxt</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">starts</span><span class="p">,</span> <span class="n">stops</span><span class="p">,</span> <span class="n">axes</span><span class="p">)):</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">start</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">stop</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;AXIS1&#39;</span><span class="p">][</span><span class="n">w</span><span class="p">],</span> <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;AXIS2&#39;</span><span class="p">][</span><span class="n">w</span><span class="p">],</span> 
+                  <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">],</span>
+                  <span class="nb">range</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2048</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2048</span><span class="p">]],</span>
+                  <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+        
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">start</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">stop</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;AXIS1&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;AXIS2&#39;</span><span class="p">)</span>
+        
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/9a36b6dbb981a9997c5c3a5fe3120c2dd5c4a84b30277be54fef63be44b21d4f.png" src="../../../_images/9a36b6dbb981a9997c5c3a5fe3120c2dd5c4a84b30277be54fef63be44b21d4f.png" />
+</div>
+</div>
+<p><a id=Calibrating-Data-With-Inttag></a></p>
+</section>
+<section id="calibrating-data-with-inttag">
+<h2>Calibrating Data with <code class="docutils literal notranslate"><span class="pre">inttag</span></code><a class="headerlink" href="#calibrating-data-with-inttag" title="Link to this heading">#</a></h2>
+<p>When calibrating TIME-TAG data, the STIS pipeline collapses a TIME-TAG event series into a single time integrated image and processes it as if it were an ACCUM mode image. This calibration is done automatically on any TIME-TAG data and the full exposure calibrated data can be retrieved from <a class="reference external" href="https://mast.stsci.edu/search/ui/#/hst">MAST</a>. If, for any reason, the full TIME-TAG exposure needs to be recalibrated you use the following steps:</p>
+<p>The first step makes use of the <a class="reference external" href="https://stistools.readthedocs.io/en/latest/index.html">stistools</a> package <a class="reference external" href="https://stistools.readthedocs.io/en/latest/inttag.html"><code class="docutils literal notranslate"><span class="pre">inttag</span></code></a> function, to convert the TIME-TAG data into an integrated ACCUM image. In the case of multiple GTI, <code class="docutils literal notranslate"><span class="pre">inttag</span></code> will only include events in the final image that are within the good time intervals.</p>
+<p>Next, <a class="reference external" href="https://stistools.readthedocs.io/en/latest/calstis.html">calstis</a> is called to process the raw data into three calibrated files: the fully calibrated 1-D extracted spectra (_x1d.fits), the calibrated 2-D spectral or geometrically corrected image (_x2d.fits), and the flat-fielded image (_flt.fits). We will be focusing on the x1d and flt files in this notebook.</p>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">inttag</span></code> and <code class="docutils literal notranslate"><span class="pre">calstis</span></code> will not overwrite files if run multiple times. To prevent this issue, we will delete any previously calibrated files in the directory. Alternatively, you may also create new filepaths each time the notebook is run.</p>
+<p><a id=Calibrating-Full-Tag-File></a></p>
+<section id="calibrating-full-tag-file">
+<h3>Calibrating Full Tag File<a class="headerlink" href="#calibrating-full-tag-file" title="Link to this heading">#</a></h3>
+<p>Here we will convert a full TIME-TAG exposure to ACCUM and plot the resulting calibrated spectra and flat-fielded image. These calibrated files will be equivalent to those that are downloadable directly from <a class="reference external" href="https://mast.stsci.edu/search/ui/#/hst">MAST</a>.</p>
+<p>We will also need to set up a few paths for <a class="reference external" href="https://hst-crds.stsci.edu/">CRDS</a> to get the necessary reference files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up CRDS</span>
+<span class="n">crds_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~/crds_cache&quot;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CRDS_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">crds_path</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CRDS_SERVER_URL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;https://hst-crds.stsci.edu&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;oref&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">crds_path</span><span class="p">,</span> <span class="s2">&quot;references/hst/oref/&quot;</span><span class="p">)</span>
+
+<span class="c1"># Sync reference files for o61s03020_tag.fits</span>
+<span class="o">!</span>crds<span class="w"> </span>bestrefs<span class="w"> </span>--update-bestrefs<span class="w"> </span>--sync-references<span class="o">=</span><span class="m">1</span><span class="w"> </span>--files<span class="w"> </span>./data/mastDownload/HST/o61s03020/o61s03020_tag.fits
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  No comparison context or source comparison requested.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  ===&gt; Processing ./data/mastDownload/HST/o61s03020/o61s03020_tag.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  0 errors
+CRDS - INFO -  0 warnings
+CRDS - INFO -  2 infos
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fuv_tag</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_tag.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># Set output raw ACCUM path and name</span>
+<span class="n">fuv_full_raw</span> <span class="o">=</span> <span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_full_raw.fits&#39;</span>
+
+<span class="c1"># Remove any previously created files if they exist</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fuv_full_raw</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fuv_full_raw</span><span class="p">)</span>
+
+<span class="c1"># Use default inttag settings to get 1 full raw exposure (default rcount=1)</span>
+<span class="n">stistools</span><span class="o">.</span><span class="n">inttag</span><span class="o">.</span><span class="n">inttag</span><span class="p">(</span><span class="n">fuv_tag</span><span class="p">,</span> <span class="n">fuv_full_raw</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>imset: 1, start: 0.03975, stop: 2700.222, exposure time: 2700.1822500000003
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fuv_wav</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_wav.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># Don&#39;t extract 2D image when we call calstis</span>
+<span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">fuv_full_raw</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;X2DCORR&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;OMIT&#39;</span><span class="p">)</span>
+
+<span class="c1"># Remove any previously created files if they exist</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_full_flt.fits&#39;</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_full_flt.fits&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_full_x1d.fits&#39;</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_full_x1d.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># Calibrate raw ACCUM and output x1d, and flt files</span>
+<span class="n">stistools</span><span class="o">.</span><span class="n">calstis</span><span class="o">.</span><span class="n">calstis</span><span class="p">(</span><span class="n">fuv_full_raw</span><span class="p">,</span> <span class="n">fuv_wav</span><span class="p">)</span>
+
+<span class="n">clear_output</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Below, we plot the calibrated spectra of the full exposure (which is identical to the full exposure calibrated data retrievable on <a class="reference external" href="https://mast.stsci.edu/search/ui/#/hst">MAST</a>):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fuv_full_x1d</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_full_x1d.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot full exposure, all spectral orders, flux vs wavelength</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fuv_full_x1d</span><span class="p">)</span> <span class="k">as</span> <span class="n">x1d</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x1d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">])):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">x1d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;FLUX&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;o61s03020 full exposure&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Wavelength ($\AA$)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Flux (erg s$^{-1}$ cm$^{-2}$ $\AA^{-1}$)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1e-12</span><span class="p">,</span> <span class="mf">2e-12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/0580250b12e40efbe7a4909d291f3a6872277b29645b901dc820c45a9c941585.png" src="../../../_images/0580250b12e40efbe7a4909d291f3a6872277b29645b901dc820c45a9c941585.png" />
+</div>
+</div>
+<p>Below, we plot the flat-fielded full exposure:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fuv_full_flt</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_full_flt.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot the flt image</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fuv_full_flt</span><span class="p">)</span> <span class="k">as</span> <span class="n">flt</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+        <span class="n">flt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+        <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
+        <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;o61s03020 full exposure flt&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/9e4d2640e47db4f8f7eaa23104a9150158f6f417560fa1df0e670c7495a53763.png" src="../../../_images/9e4d2640e47db4f8f7eaa23104a9150158f6f417560fa1df0e670c7495a53763.png" />
+</div>
+</div>
+<p><a id=Creating-And-Calibrating-Sub-Exposures></a></p>
+</section>
+<section id="creating-and-calibrating-sub-exposures">
+<h3>Creating and Calibrating Sub-Exposures<a class="headerlink" href="#creating-and-calibrating-sub-exposures" title="Link to this heading">#</a></h3>
+<p>Here we will divide the tag file into integrated sub-exposures and plot the resulting calibrated spectra and flat-fielded image.</p>
+<p>The desired number of sub-exposures can be set either by specifing <code class="docutils literal notranslate"><span class="pre">rcount</span></code> or by specifying <code class="docutils literal notranslate"><span class="pre">increment</span></code> (or both). A quick method of determining <code class="docutils literal notranslate"><span class="pre">rcount</span></code> is dividing GTI by the desired <code class="docutils literal notranslate"><span class="pre">increment</span></code>. The last sub-exposure can be incomplete if there’s not an even <code class="docutils literal notranslate"><span class="pre">increment</span></code> between sub-exposures, you may wish to double check your sub-exposure times to make sure they are consistent.</p>
+<p>When tag files are split, the associated files (raw, x1d, flt) will have an additional SCI extension for each sub-exposure.</p>
+<p>Here we will get just 4 sub-exposures:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find desired increment</span>
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fuv_tag</span><span class="p">)</span> <span class="k">as</span> <span class="n">tag</span><span class="p">:</span>
+    <span class="n">gti</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;STOP&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">tag</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;START&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">gti</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[675.0455625]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set output raw ACCUM path and name</span>
+<span class="n">fuv_sub_raw</span> <span class="o">=</span> <span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_sub_raw.fits&#39;</span>
+
+<span class="c1"># Remove any previously created files if they exist</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fuv_sub_raw</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fuv_sub_raw</span><span class="p">)</span>
+
+<span class="c1"># Use inttag to get exposures with desired increment and rcount</span>
+<span class="n">stistools</span><span class="o">.</span><span class="n">inttag</span><span class="o">.</span><span class="n">inttag</span><span class="p">(</span><span class="n">fuv_tag</span><span class="p">,</span> <span class="n">fuv_sub_raw</span><span class="p">,</span> <span class="n">increment</span><span class="o">=</span><span class="mi">675</span><span class="p">,</span> <span class="n">rcount</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>imset: 1, start: 0.03975, stop: 675.03975, exposure time: 675.0
+imset: 2, start: 675.03975, stop: 1350.03975, exposure time: 674.9999999999999
+imset: 3, start: 1350.03975, stop: 2025.03975, exposure time: 675.0
+imset: 4, start: 2025.03975, stop: 2700.03975, exposure time: 675.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Don&#39;t extract 2D image when we call calstis</span>
+<span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">fuv_sub_raw</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;X2DCORR&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;OMIT&#39;</span><span class="p">)</span>
+
+<span class="c1"># Remove any previously created files if they exist</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_sub_flt.fits&#39;</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_sub_flt.fits&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_sub_x1d.fits&#39;</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_sub_x1d.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># Use calstis to get x1d and flt with sub-exposures</span>
+<span class="n">stistools</span><span class="o">.</span><span class="n">calstis</span><span class="o">.</span><span class="n">calstis</span><span class="p">(</span><span class="n">fuv_sub_raw</span><span class="p">,</span> <span class="n">fuv_wav</span><span class="p">)</span>
+
+<span class="n">clear_output</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Below, we plot the calibrated spectra sub-exposures and specifically focus on the <span class="math notranslate nohighlight">\(\texttt{C}_{\texttt{IV}}\)</span> emission line doublet. With the y-axes set with the same limits, there is a clearly visible increase in flux in the third split:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fuv_sub_x1d</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_sub_x1d.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot each sub-exposure flux vs wavelength</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fuv_sub_x1d</span><span class="p">)</span> <span class="k">as</span> <span class="n">x1d</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x1d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">])):</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">axes</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1d</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">x1d</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;FLUX&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="p">)):</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.25e-12</span><span class="p">,</span> <span class="mf">2.25e-12</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1520</span><span class="p">,</span> <span class="mi">1580</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;split &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Wavelength ($\AA$)&quot;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Flux (erg s$^{-1}$ cm$^{-2}$ $\AA^{-1}$)&quot;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/7f7e98bc443b392ced6460173391f63f0304244039b8488e97938b4c3b2d3e41.png" src="../../../_images/7f7e98bc443b392ced6460173391f63f0304244039b8488e97938b4c3b2d3e41.png" />
+</div>
+</div>
+<p>Below, we plot the flat-fielded sub-exposures. With the colorbars set the same for each plot, the increase in flux across the continuum is clearly visible in the third split:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fuv_sub_flt</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_sub_flt.fits&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot the flt images</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fuv_sub_flt</span><span class="p">)</span> <span class="k">as</span> <span class="n">flt</span><span class="p">:</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">flt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> 
+                   <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> 
+                   <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.25</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">flt</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> 
+                   <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
+                   <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.25</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">flt</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> 
+                   <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
+                   <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.25</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">flt</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> 
+                   <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
+                   <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.25</span><span class="p">)</span>
+    
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;split 1&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;split 2&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;split 3&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;split 4&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/ecc4fe9cd0a8bfd1c4724e50acc6248174de6e49fa6016844e11d1d521c5555b.png" src="../../../_images/ecc4fe9cd0a8bfd1c4724e50acc6248174de6e49fa6016844e11d1d521c5555b.png" />
+</div>
+</div>
+<p><a id=Exploring-Special-Cases></a></p>
+</section>
+</section>
+<section id="exploring-special-cases">
+<h2>Exploring Special Cases<a class="headerlink" href="#exploring-special-cases" title="Link to this heading">#</a></h2>
+<p><a id=Set-Extraction-Position></a></p>
+<section id="extraction-position-drift-in-sub-exposures">
+<h3>Extraction Position Drift in Sub-exposures<a class="headerlink" href="#extraction-position-drift-in-sub-exposures" title="Link to this heading">#</a></h3>
+<p>When calibrating sub-exposures with small time increments or high background, the resulting low signal-to-noise (SNR) can introduce several sources of error (see also <a class="reference external" href="https://spacetelescope.github.io/hst_notebooks/notebooks/STIS/low_count_uncertainties/Low_Count_Uncertainties.html">Low Count Uncertainties in STIS</a> for a full discussion on appropriate error approximations to use for low-count STIS data).</p>
+<p><code class="docutils literal notranslate"><span class="pre">stistools.x1d.x1d</span></code> uses cross-correlation to find the extraction position for each sub-exposure. If the SNR is low enough, this can lead to the default calstis extraction position to move between each sub-exposure. Note that in some cases, the drift in extraction center may be tracking real motion on the detector, which may be determined by careful analysis of the jitter files (see <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/focus-and-pointing/pointing">Hubble’s Jitter Files and Orientation Overview</a> for more information). The STIS team maintains a <a class="reference external" href="https://www.stsci.edu/~STIS/monitors/jitter/">monitor</a> for quick visual inspection of jitter during an observation. For the dataset plotted below, no systematic drift was noted.</p>
+<p>The figure below shows the dynamic extraction positions from a dataset calibrated with a small time increment of 10 seconds, compared to the static extraction position determined by the calstis pipeline for a full exposure of the same dataset. Without defining the extraction position, the <code class="docutils literal notranslate"><span class="pre">A2CENTER</span></code> drifted by 0.18 pixels (~4.5 mas) over the sub-exposures.</p>
+<img alt="Plot of extraction positions in sub-exposures compared to static extraction position from full exposure." src="notebooks/STIS/time_tag/oemw01030_a2centers.png" />
+<p>To ensure data are calibrated consistently, we can set the extraction position for all sub-exposures to match the <code class="docutils literal notranslate"><span class="pre">A2CENTER</span></code> value provided by the calibrated full exposure. We will also need to force calstis to extract at the specified <code class="docutils literal notranslate"><span class="pre">A2CENTER</span></code> by setting <code class="docutils literal notranslate"><span class="pre">maxsrch</span></code> to zero.</p>
+<p>In the following example, we will re-calibrate the same data used in earlier in this notebook (oevf02020) with a shorter time increment and a fixed extraction position.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># path of full exposure x1d downloaded from MAST</span>
+<span class="n">nuv_full_x1d</span> <span class="o">=</span> <span class="s1">&#39;./data/mastDownload/HST/oevf02020/oevf02020_x1d.fits&#39;</span>
+
+<span class="c1"># path of wavelength file downloaded from MAST</span>
+<span class="n">nuv_wav</span> <span class="o">=</span> <span class="s1">&#39;./data/mastDownload/HST/oevf02020/oevf02020_wav.fits&#39;</span>
+
+<span class="c1"># new split sub-exposure file paths</span>
+<span class="n">nuv_split_raw</span> <span class="o">=</span> <span class="s1">&#39;./data/mastDownload/HST/oevf02020/oevf02020_split_raw.fits&#39;</span>
+<span class="n">nuv_split_flt</span> <span class="o">=</span> <span class="s1">&#39;./data/mastDownload/HST/oevf02020/oevf02020_split_flt.fits&#39;</span>
+<span class="n">nuv_split_x1d</span> <span class="o">=</span> <span class="s1">&#39;./data/mastDownload/HST/oevf02020/oevf02020_split_x1d.fits&#39;</span>
+
+<span class="c1"># Get extraction position from the full exposure x1d:</span>
+<span class="n">a2center_pos</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">nuv_full_x1d</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="s1">&#39;A2CENTER&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sync reference files for oevf02020_tag.fits</span>
+<span class="o">!</span>crds<span class="w"> </span>bestrefs<span class="w"> </span>--update-bestrefs<span class="w"> </span>--sync-references<span class="o">=</span><span class="m">1</span><span class="w"> </span>--files<span class="w"> </span>./data/mastDownload/HST/oevf02020/oevf02020_tag.fits
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  No comparison context or source comparison requested.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  ===&gt; Processing ./data/mastDownload/HST/oevf02020/oevf02020_tag.fits
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  0 errors
+CRDS - INFO -  0 warnings
+CRDS - INFO -  2 infos
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remove any previously created files if they exist:</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">nuv_split_raw</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">nuv_split_raw</span><span class="p">)</span>
+
+<span class="c1"># Use inttag to get exposures with desired increment and rcount:</span>
+<span class="n">stistools</span><span class="o">.</span><span class="n">inttag</span><span class="o">.</span><span class="n">inttag</span><span class="p">(</span><span class="n">nuv_tag</span><span class="p">,</span> <span class="n">nuv_split_raw</span><span class="p">,</span> <span class="n">increment</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">rcount</span><span class="o">=</span><span class="mi">23</span><span class="p">)</span>
+
+<span class="n">clear_output</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remove any previously created files if they exist:</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">nuv_split_flt</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">nuv_split_flt</span><span class="p">)</span>
+
+<span class="c1"># Don&#39;t extract 1D spectrum when we call calstis:</span>
+<span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">nuv_split_raw</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;X1DCORR&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;OMIT&#39;</span><span class="p">)</span>
+
+<span class="c1"># Call calstis and create FLT file:</span>
+<span class="n">stistools</span><span class="o">.</span><span class="n">calstis</span><span class="o">.</span><span class="n">calstis</span><span class="p">(</span><span class="n">nuv_split_raw</span><span class="p">,</span> <span class="n">nuv_wav</span><span class="p">)</span>
+
+<span class="n">clear_output</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remove any previously created files if they exist:</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">nuv_split_x1d</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">nuv_split_x1d</span><span class="p">)</span>
+
+<span class="c1"># Run 1D extraction on each sub-exposure, but specify the high-SNR-derived extraction</span>
+<span class="c1"># position from the full pipeline file explicitly:</span>
+<span class="n">stistools</span><span class="o">.</span><span class="n">x1d</span><span class="o">.</span><span class="n">x1d</span><span class="p">(</span>
+    <span class="n">nuv_split_flt</span><span class="p">,</span>
+    <span class="n">ctecorr</span><span class="o">=</span><span class="s1">&#39;omit&#39;</span><span class="p">,</span> <span class="c1"># CTE correction for CCD only</span>
+    <span class="n">a2center</span> <span class="o">=</span> <span class="n">a2center_pos</span><span class="p">,</span> <span class="c1"># provide extraction position</span>
+    <span class="n">maxsrch</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>      <span class="c1"># force extraction at the a2center position</span>
+    <span class="n">bk1size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>   <span class="c1"># adjust as necessary</span>
+    <span class="n">bk2size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>   <span class="c1"># adjust as necessary</span>
+    <span class="n">bk1offst</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># adjust as necessary</span>
+    <span class="n">bk2offst</span><span class="o">=</span><span class="kc">None</span>   <span class="c1"># adjust as necessary</span>
+    <span class="p">)</span>
+
+<span class="n">clear_output</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><a id=Creating-Light-Curves></a></p>
+</section>
+<section id="creating-light-curves">
+<h3>Creating Light Curves<a class="headerlink" href="#creating-light-curves" title="Link to this heading">#</a></h3>
+<p>Let’s create a light curve of the AD Leo flare seen in dataset o61s03020. Here we examine the <span class="math notranslate nohighlight">\(\texttt{C}_{\texttt{IV}}\)</span> emission line doublet, which can be found at 1548.202 and 1550.774 <span class="math notranslate nohighlight">\(\text{\AA}\)</span>. As the doublet straddles two spectral orders, we can choose either the 95th or 96th order (1548.476-1565.54 <span class="math notranslate nohighlight">\(\text{\AA}\)</span> and 1532.332-1549.216 <span class="math notranslate nohighlight">\(\text{\AA}\)</span>, respectively).</p>
+<p>For more information on how to select the spectral order for your combination of detector, optical element, and central wavelength see the spectral format plots on the <a class="reference external" href="https://www.stsci.edu/hst/instrumentation/stis/instrument-design/gratings--prism">STIS Spectroscopic Capabilities webpage</a>.</p>
+<p>First, we will split our FUV data into more sub-exposures and calibrate:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># new split sub-exposure file paths</span>
+<span class="n">fuv_split_raw</span> <span class="o">=</span> <span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_split_raw.fits&#39;</span>
+<span class="n">fuv_split_flt</span> <span class="o">=</span> <span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_split_flt.fits&#39;</span>
+<span class="n">fuv_split_x1d</span> <span class="o">=</span> <span class="s1">&#39;./data/mastDownload/HST/o61s03020/o61s03020_split_x1d.fits&#39;</span>
+
+<span class="c1"># Remove any previously created files if they exist:</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fuv_split_raw</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fuv_split_raw</span><span class="p">)</span>
+
+<span class="c1"># Use inttag to get exposures with desired increment and rcount:</span>
+<span class="n">stistools</span><span class="o">.</span><span class="n">inttag</span><span class="o">.</span><span class="n">inttag</span><span class="p">(</span><span class="n">fuv_tag</span><span class="p">,</span> <span class="n">fuv_split_raw</span><span class="p">,</span> <span class="n">increment</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">rcount</span><span class="o">=</span><span class="mi">54</span><span class="p">)</span>
+
+<span class="n">clear_output</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remove any previously created files if they exist:</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fuv_split_flt</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fuv_split_flt</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fuv_split_x1d</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fuv_split_x1d</span><span class="p">)</span>
+
+<span class="c1"># Don&#39;t extract 2D spectrum when we call calstis:</span>
+<span class="n">fits</span><span class="o">.</span><span class="n">setval</span><span class="p">(</span><span class="n">fuv_split_raw</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;X2DCORR&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s1">&#39;OMIT&#39;</span><span class="p">)</span>
+
+<span class="c1"># Call calstis and create FLT and X1D files:</span>
+<span class="n">stistools</span><span class="o">.</span><span class="n">calstis</span><span class="o">.</span><span class="n">calstis</span><span class="p">(</span><span class="n">fuv_split_raw</span><span class="p">,</span> <span class="n">fuv_wav</span><span class="p">)</span>
+
+<span class="n">clear_output</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here we use the 95th spectral order and integrate the flux in each sub-exposure over wavelength using <code class="docutils literal notranslate"><span class="pre">scipy.integrate.trapezoid</span></code>. The resulting light curve shows the flare in the <span class="math notranslate nohighlight">\(\texttt{C}_{\texttt{IV}}\)</span> line, allowing flare property measurements such as the flare duration.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fuv_split_x1d</span><span class="p">)</span> <span class="k">as</span> <span class="n">x1d</span><span class="p">:</span>
+    <span class="c1"># select spectral order 95 to get part of the C IV emission line doublet</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">x1d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;SPORDER&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">95</span><span class="p">))</span>
+
+    <span class="n">int_flux</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x1d</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span> <span class="c1"># number of extensions minus the primary header</span>
+        <span class="n">wav</span> <span class="o">=</span> <span class="p">(</span><span class="n">x1d</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">][</span><span class="n">order</span><span class="p">])</span> <span class="c1">#filter wavelength by spectral order</span>
+        <span class="n">flux</span> <span class="o">=</span> <span class="p">(</span><span class="n">x1d</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;FLUX&#39;</span><span class="p">][</span><span class="n">order</span><span class="p">])</span> <span class="c1"># filter flux by spectral order</span>
+        <span class="n">int_flux</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">integrate</span><span class="o">.</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">flux</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">wav</span><span class="p">))</span> <span class="c1"># integrate flux over wavelength</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">x1d</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">])</span> <span class="c1"># multiply extension number by exposure time</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">int_flux</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s) since Observation Start&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Integrated Flux (erg s$^{-1}$ cm$^{-2}$)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;AD Leo Flare at C IV Line&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/8f36776c8f746b043de8b2e23c231ea5b80eb5d7bb74ad21606e5724f05b4f3f.png" src="../../../_images/8f36776c8f746b043de8b2e23c231ea5b80eb5d7bb74ad21606e5724f05b4f3f.png" />
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="about-this-notebook">
+<h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
+<p><strong>Author:</strong> <a class="reference internal" href="#jbrown&#64;stsci.edu"><span class="xref myst">Jacqueline Brown</span></a></p>
+<p><strong>Updated On:</strong> 2026-05-04</p>
+<blockquote>
+<div><p><em>This tutorial was written to be in compliance with the <a class="reference external" href="https://github.com/spacetelescope/style-guides">STScI style guides</a>.</em></p>
+</div></blockquote>
+</section>
+<section id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Link to this heading">#</a></h2>
+<p>This notebook has been developed with support from Sean Lockwood.</p>
+</section>
+<section id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<p>I. Dashevsky, et al., “STIS Time-Tag Analysis Guide,” <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/stis/documentation/instrument-science-reports/_documents/200002.pdf">Instrument Science Report STIS 2000-02</a></p>
+<p>E. Rickman and J. Brown, et al., 2025, <a class="reference external" href="https://hst-docs.stsci.edu/stisihb">STIS Instrument Handbook</a>, Version 25.0,
+(Baltimore: STScI)</p>
+<p>E. Rickman and J. Brown, et al., 2024, <a class="reference external" href="https://hst-docs.stsci.edu/stisdhb">STIS Data Handbook</a>, Version 8.0, (Baltimore:
+STScI)</p>
+<p>J. Lothringer, et al., “Uncertainties in Low-Count STIS Spectra,” <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/stis/documentation/instrument-science-reports/_documents/STIS_ISR_2025-04.pdf">Instrument Science Report STIS 2025-04</a></p>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, or <code class="docutils literal notranslate"><span class="pre">scipy</span></code> for published research, please cite the
+authors. Follow these links for more information about citations:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://matplotlib.org/stable/users/project/citing.html">Citing <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></a></p></li>
+<li><p><a class="reference external" href="https://numpy.org/citing-numpy/">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Citing <code class="docutils literal notranslate"><span class="pre">astroquery</span></code></a></p></li>
+<li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
+<li><p><a class="reference external" href="https://scipy.org/citing-scipy/">Citing <code class="docutils literal notranslate"><span class="pre">scipy</span></code></a></p></li>
+</ul>
+<hr class="docutils" />
+<p><a class="reference internal" href="#top"><span class="xref myst">Top of Page</span></a>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/notebooks/master/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "spacetelescope/hst_notebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/STIS/time_tag"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../contrast_sensitivity/STIS_Coronagraphic_Observation_Feasibility.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">STIS Coronagraphic Observation Feasibility</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../WFC3/README.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">WFC3 Notebooks</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-packages">Import Packages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-data">Download Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exploring-time-tag-file-structure">Exploring TIME-TAG File Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-raw-data-as-time-series">Visualizing Raw Data as Time-Series</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-raw-data-as-a-2d-histogram-i-e-create-an-image">Visualizing Raw Data as a 2D Histogram (i.e., Create an Image)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibrating-data-with-inttag">Calibrating Data with <code class="docutils literal notranslate"><span class="pre">inttag</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calibrating-full-tag-file">Calibrating Full Tag File</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-and-calibrating-sub-exposures">Creating and Calibrating Sub-Exposures</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exploring-special-cases">Exploring Special Cases</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extraction-position-drift-in-sub-exposures">Extraction Position Drift in Sub-exposures</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-light-curves">Creating Light Curves</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgements">Acknowledgements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citations">Citations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By STScI
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022-2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
