@@ -15,6 +15,63 @@ c
 c This is release version 1.0  2022.07.05
 c
 c----------------------------------------------------------------------------
+c Near future plans: Set it up to work with 101x101 PSFs in fits format that
+c                    do not have the regular STDPSF headers.
+c----------------------------------------------------------------------------
+c 2026.03.24: Blank out SBC rows 600-605 as dead rows.
+c 2026.03.18: Set up to work with ACS/SBC data, both PSFs and GDCs
+c 2025.08.12: Set up the wfc3 reader to handle another "user-defined
+c             subarray" that is used by the
+c             phase-retrieval/focus-monitoring programs.
+c 2025.07.24: Set up the wfc3 reader to handle the "user defined subarrays"
+c             that are used by the phase-retrieval/focus-monitoring programs.
+c 2025.02.14: Fleshed out the "masking" functionality.  The documentaion
+c             describes the ability to turn on a "mask" flag that can
+c             prevent finding stars that could be related to PSF artifacts
+c             and diffaction spikes.  The bright stars in the image are
+c             found and a "mask" is generated around them.  This mask
+c             corresponds to the brightest possible artifacts that could
+c             be identified in the vicinity of bright stars.  It is
+c             conservative, so it doesn't really represent a PSF flux that
+c             could be subtracted.
+c
+c             I received a request to find a way to mask diffraction spikes
+c             so that drizzle can take a set of visits with multiple orients
+c             and know not do drizzle multiple versions of the spikes, but
+c             rather to suppress all bright-star spikes.  I will be writing
+c             an ISR that describes this, but in short:
+c             * run hst1pass on an _flt or _flc image (acswfc, wfc3uv, wfc3ir)
+c               - use a STDPSF PSF
+c               - add parameter DQ_MASK_SPIKE_LVL=2.5
+c               - add parameter DQ_MASK_SPIKE_DQ=4096
+c               - add optional parameter DQ_MASK_SPIKE_RMIN=15
+c               - add optional parameter DQ_MASK_SPIKE_RMAX=1000
+c               - add optional parameter SHOW_MASK+
+c             * with SHOW_MASK+ the routine will produce an image _msk.fits
+c               that shows the
+c               mask generated from the bright stars
+c             * the routine will make a copy of the flt/flc image with a
+c               name that has *q_flt.fits replaced with *m_flt.fits.  In the
+c               *m_flt.fits image, it will turn on the DQ_MASK_SPIKE_DQ flag
+c               specified in the DQ image for those pixels that have
+c               mask-pedicted interference greater than DQ_MASK_SPIKE_LVL
+c               (in electrons or e/s, per the flt/flc)
+c             * drizzle can then be run on the  *m_flt.fits images
+c----------------------------------------------------------------------------
+c 2024.05.29: Put in the option for a pixel-based correction for XCTE
+c             for WFC3/UVIS.  Option:  DOXCTE+ ; it will run the pixel-based
+c             correction on the flt/flc image after it's read in, then will
+c             do the finding on the adjusted image.  It doesn't check whether
+c             the correction has already been done, so make sure you don't
+c             do it twice (say, with a _rwx image, or an _ftx or _fcx image).
+c----------------------------------------------------------------------------
+c 2024.05.28: Fixed a bug (h/t Massimo Griggio) that prevented any finding
+c             with HMIN>9.  Now it works.
+c----------------------------------------------------------------------------
+c 2024.03.01: Put in a flag "MSKIRBLB" to turn on or off the flagging of
+c             the pixels in WFC3/IR images that the DQ array says are
+c             BLOB-impacted (as identified in the image headers).
+c----------------------------------------------------------------------------
 c 2023.11.07: Added some flexibility for the sky annulus to use;
 c             normally hst1pass uses an "optimized" annulus, finding how close
 c             it can place the sky annulus to the star without the subtraction
@@ -96,7 +153,9 @@ c----------------------------------------------------------------------------
 c 2022.07.11: fixed a small bug that was preventing saturated stars from being
 c             found (removed hardcoding of HIFLAG)
 c----------------------------------------------------------------------------
- 
+c 2022.07.11: fixed a small bug that was preventing saturated stars from being
+c             found (removed hardcoding of HIFLAG)
+c----------------------------------------------------------------------------
  
  
 #define _PI_    3.141592653589793238462643d0
@@ -152,6 +211,28 @@ c------------------------------------------------------------------------
       character SHOW_REF
       character SHOW_SUB
       character SHOW_MSK
+ 
+ 
+      real    MASK_RMIN, MASK_RMAX
+      real    MASK_SMIN, MASK_SMAX
+ 
+      common / MASK_RMIN_ / MASK_RMIN
+      common / MASK_RMAX_ / MASK_RMAX
+      common / MASK_SMIN_ / MASK_SMIN
+      common / MASK_SMAX_ / MASK_SMAX
+ 
+      data MASK_RMIN  /     0.0 /
+      data MASK_RMAX  /  1000.0 /
+      data MASK_SMIN  /    10.0 /
+      data MASK_SMAX  /  1000.0 /
+ 
+      real     DQ_MASK_SPIKE_LVL
+      data     DQ_MASK_SPIKE_LVL   / 0.000 /
+      common / DQ_MASK_SPIKE_LVL_  / DQ_MASK_SPIKE_LVL
+ 
+      integer  DQ_MASK_SPIKE_DQ
+      data     DQ_MASK_SPIKE_DQ   / 0.000 /
+      common / DQ_MASK_SPIKE_DQ_  / DQ_MASK_SPIKE_DQ
  
       character*200 STRING, TEMP
  
@@ -326,10 +407,17 @@ c
       character*3 PIXFIT
       data PIXFIT /'5x5'/
  
+      logical MASKIRBLOB
+      common / MASKIRBLOB_ / MASKIRBLOB
+ 
+      logical DOXCTE
+      common / DOXCTE_ / DOXCTE
+ 
 c
 c----------------------------------------------------------------
 c
  
+      DOXCTE = .false.
       GAIADB = 'SKIP'
       SKI = -1
       SKO = -1
@@ -399,7 +487,7 @@ c-----------------------------------------------------------------------
       PMAX = 99999999
  
       if (iargc().eq.0) then
-         write(*,'(100(a63,/))')
+         write(*,'(200(a63,/))')
      .'                                                               ',
      .'This routine takes several args (in any order, 5 required)     ',
      .'                                                               ',
@@ -435,21 +523,37 @@ c-----------------------------------------------------------------------
      .'    IMIN=500 IMAX=510                 (restrict col range?)    ',
      .'    JMIN=922 JMAX=932                 (restrict row range?)    ',
      .'    ART_UVW=FILE.UVW (xym,XYM,UVW)    (add art stars)          ',
+     .'    WCS=(5000,5000,201.7,-47.4,40)    (specify CRPIX/CRVAL/SCL)',
+     .'       =HDR{iabcdefgq_drz.fits}       (push into header)       ',
      .'    SHOW_USE-/+                       (output image searched)  ',
      .'    SHOW_FND-/+                       (output finding image)   ',
      .'    SHOW_REF-/+                       (output ref-frame img)   ',
      .'    SHOW_SUB-/+/~                     (make subtracted image;  ',
      .'                                       ~ means put into shell) ',
      .'    SHOW_ART-/+/~                     (art-star image)         ',
+     .'    SHOW_MSK-/+                       (show upper limit to PSF ',
+     .'                                       features for satd stars)',
      .'    PIXFIT=5x5                        (allows specification of ',
      .'                                       the fitting aperture    ',
      .'                                       options: 2x2, 3x3, 4x4, ',
      .'                                                5x5=default)   ',
+     .'    MSKIRBLB+/-                       (mask IR blob? def+)     ',
+     .'    DQ_MASK_SPIKE_LVL=5               (update the artifact DQ  ',
+     .'                                       flag in pixels that have',
+     .'                                       spikes likely to contrib',
+     .'                                       5 or more e- to pixel)  ',
+     .'    DQ_MASK_SPIKE_DQ=4096             (this is the flag that is',
+     .'                                       set in the DQ array for ',
+     .'                                       pixels with more e- than',
+     .'                                       the mask threshold)     ',
+     .'    DQ_MASK_SPIKE_RMIN=[  10]         (mask spks only bey r=10)',
+     .'    DQ_MASK_SPIKE_RMAX=[1000]         (mask spks out to r=1000)',
      .'                                                               ',
-     .'OUT= options for columns to output ; can output multiple files ',
-     .'     for the same finding list of stars                        ',
+     .'    OUTPUT options for columns to output;                      ',
+     .'           (you can output multiple files for the same         ',
+     .'            finding wave of stars with multiple OUT= entries)  ',
      .'                                                               ',
-     .'   ASTROMETRY ---                                              ',
+     .'    ASTROMETRY ---                                             ',
      .'     x,y = raw chip-dependent x y coord (no CTE corr)          ',
      .'     X,Y = raw chip-dependent x y coord (after CTE corr)       ',
      .'     u,v = distortion-corrected x, y coord                     ',
@@ -457,7 +561,7 @@ c-----------------------------------------------------------------------
      .'     r,d = RA, Dec (in degrees, from UV)                       ',
      .'     R,D = RA, Dec (GAIA DR3 corrected,future)                 ',
      .'                                                               ',
-     .'   PHOTOMETRY ---                                              ',
+     .'    PHOTOMETRY ---                                             ',
      .'     m   = instrumental mag (no CTE corr)                      ',
      .'     M   = instrumental mag (after CTE corr)                   ',
      .'     w   = instrumental mag, M + pix area correction)          ',
@@ -465,7 +569,7 @@ c-----------------------------------------------------------------------
      .'     z   = flux (no CTE corr; can be negative for forced)      ',
      .'     Z   = flux (CTE corr; can be negative for forced)         ',
      .'                                                               ',
-     .'   VARIIOUS ---                                                ',
+     .'    VARIIOUS ---                                               ',
      .'     s   = sky value                                           ',
      .'     S   = sky value (with postflash/dark electrons included)  ',
      .'                                                               ',
@@ -493,7 +597,7 @@ c-----------------------------------------------------------------------
      .'     t   = time of observation (fractional years, 2017.348)    ',
      .'     E   = effective radius of sky annulus                     ',
      .'                                                               ',
-     .'   PBAP photometry --- PSF-Based Aperture Photometry           ',
+     .'    PBAP photometry --- PSF-Based Aperture Photometry          ',
      .'     1   = 1x1-pixel PBAP photometry                           ',
      .'     2   = 2x2-pixel PBAP photometry                           ',
      .'     3   = 3x3-pixel PBAP photometry                           ',
@@ -603,6 +707,10 @@ c
             DOSATD = .false.
             goto 555
             endif
+         if (STRING200(1:7).eq.'DOXCTE+') then
+            DOXCTE = .true.
+            goto 555
+            endif
          if (STRING200(1:8).eq.'SHOW_USE') then
             SHOW_USE = STRING200(9:9)
             if (SHOW_USE.ne.'-'.and.SHOW_USE.ne.'+')
@@ -642,6 +750,29 @@ c
      .          stop 'SHOW_ART can only be - or + or ~'
             goto 555
             endif
+         if (STRING200(1:18).eq.'DQ_MASK_SPIKE_LVL=') then
+             read(STRING200(19:30),*) DQ_MASK_SPIKE_LVL
+             if (DQ_MASK_SPIKE_LVL.le.0) stop 'NEED NONZERO'
+             MASK_RMIN = 0
+             MASK_RMAX = 0
+             goto 555
+             endif
+         if (STRING200(1:17).eq.'DQ_MASK_SPIKE_DQ=') then
+             read(STRING200(18:30),*) DQ_MASK_SPIKE_DQ
+             if (DQ_MASK_SPIKE_DQ.eq.0) stop 'NEED NONZERO'
+             goto 555
+             endif
+         if (STRING200(1:19).eq.'DQ_MASK_SPIKE_RMIN=') then
+             read(STRING200(20:30),*) MASK_SMIN
+             goto 555
+             endif
+         if (STRING200(1:19).eq.'DQ_MASK_SPIKE_RMAX=') then
+             read(STRING200(20:30),*) MASK_SMAX
+             if (MASK_SMAX.eq.0) stop 'NEED NONZERO'
+             if (MASK_SMAX.gt.1000)
+     .           stop 'DQ_MASK_SPIKE_RMAX MUST BE <= 1000'
+             goto 555
+             endif
          if (STRING200(1:6).eq.'FOCUS=') then
             read(STRING200(7:80),*) FOCUS_LEVELi
             if (VERBOSE.ge.2)
@@ -715,6 +846,22 @@ c
             read(STRING200(6:80),*) JMAX
             goto 555
             endif
+         if (STRING200(1:9).eq.'MSKIRBLB+') then  ! can specify as 8-letter or 10-letter label
+            MASKIRBLOB = .true.
+            goto 555
+            endif
+         if (STRING200(1:9).eq.'MSKIRBLB-') then
+            MASKIRBLOB = .false.
+            goto 555
+            endif
+c        if (STRING200(1:11).eq.'MASKIRBLOB+') then
+c           MASKIRBLOB = .true.
+c           goto 555
+c           endif
+c        if (STRING200(1:11).eq.'MASKIRBLOB-') then
+c           MASKIRBLOB = .false.
+c           goto 555
+c           endif
          if (STRING200(1:7).eq.'PIXFIT=') then
             PIXFIT = STRING200(8:10)
             if (PIXFIT.ne.'2x2'.and.
@@ -747,10 +894,14 @@ c
             print*,'SKYFIX --- SKI: ',SKI,'  SKO: ',SKO
             goto 555
             endif
-         if (STRING200(1:4).eq.'OUT=') then
+         if (STRING200(1:4).eq.'OUT='.or.
+     .       STRING200(1:7).eq.'OUTPUT=') then
             NLISTs = NLISTs + 1
             if (NLISTs.gt.9) stop 'NLISTs.gt.9'
-            OUTLIST_NL(NLISTs) = STRING200(5:80)
+            if (STRING200(1:4).eq.'OUT='   ) OUTLIST_NL(NLISTs) =
+     .                                               STRING200(5:80)
+            if (STRING200(1:7).eq.'OUTPUT=') OUTLIST_NL(NLISTs) =
+     .                                               STRING200(8:80)
             NITEMSO_NL(NLISTs) = 0
             do i = 1, 80
                if (OUTLIST_NL(NLISTs)(i:i).ne.' ') NITEMSO_NL(NLISTs)=i
@@ -906,7 +1057,10 @@ c           endif
             do i = 1, 75
                if (STRING(i:i+4).eq.'.fits') iu = i+4
                enddo
-            if (iu.eq.0) stop 'FITSs FILENAME IN LIST MUST HAVE .fits'
+            if (iu.eq.0) then
+                print*,'NIMs: STRING: ',NIMs,STRING
+                stop 'FITSs FILENAME IN LIST MUST HAVE .fits'
+                endif
             NIMs = NIMs + 1
             NIMa = 1
             NIMb = NIMs
@@ -1378,6 +1532,7 @@ c
       integer NTOT
       integer n
       logical change
+      if (NTOT.le.1) return
  777  continue
       change = .false.
       do n = 1, NTOT-1
@@ -1402,6 +1557,7 @@ c
       integer n
       real*8 temp
       logical change
+      if (NTOT.le.1) return
  777  continue
       change = .false.
       do n = 1, NTOT-1
@@ -1770,9 +1926,56 @@ c        if (pixarr(ixh,iyh).ge.HIFLAG) goto 333
          enddo
          enddo
  
-      call rbarsigs(sklist,nsk,bar,sig,nuse,2.50)
+      call rbarsigs_msky(sklist,nsk,bar,sig,nuse,2.50)
  
       mbar_sky_NAXIS = bar
+ 
+      return
+      end
+ 
+ 
+ 
+ 
+      subroutine rbarsigs_msky(xlist,NTOT,bar,sig,NUSE,SIGCLIP)
+      implicit none
+ 
+      integer NTOT
+      real xlist(NTOT)
+      real bar
+      real sig
+      integer NUSE
+      real SIGCLIP
+ 
+      integer n
+      real*8    bsum, ssum
+      integer nsum, nsumo
+      integer NIT
+ 
+ 
+      nsum = 0
+      bar = 0.e0
+      sig = 9e9
+      do NIT = 1, 20
+         nsumo = nsum
+         bsum = 0.
+         ssum = 0.
+         nsum = 0.
+         do n = 1, NTOT
+            if (abs(xlist(n)-bar).le.SIGCLIP*sig) then
+               bsum = bsum + xlist(n)
+               ssum = ssum + abs(xlist(n)-bar)
+               nsum = nsum + 1
+               endif
+            enddo
+         if (nsum.gt.0) bar = SNGL(bsum / nsum)
+         if (nsum.gt.1) sig = SNGL(ssum/(nsum-1))
+         if (sig.lt.1)  sig = 1.00
+         if (nsum.lt.0.35*NTOT.and.NIT.ge.4) goto 1
+         if (nsum.eq.nsumo.and.NIT.ge.4) goto 1
+         enddo
+  1   continue
+      NUSE = nsum
+      if (nsum.le.1) sig = 0.999
  
       return
       end
@@ -3726,7 +3929,7 @@ c
       common/HDR/HDR
  
       integer nonspace
- 
+      logical notblank70
  
       HDR(05) = "' pixel    '"
       HDR(06) = "' pixel    '"
@@ -3752,12 +3955,11 @@ c
      .     err=900,recl=2880,form='UNFORMATTED',
      .     access='DIRECT')
  
-      do k = 00, 34
+      do k = 00, 35
          write(buffc(k*80+1:k*80+80),'(80x)')
          enddo
  
       write(10,rec=i,iostat=ios) buffc
- 
  
       write(buffc( 0*80+1: 1*80),'(''SIMPLE  =                    T'')')
       write(buffc( 1*80+1: 2*80),'(''BITPIX  =                  -32'')')
@@ -3768,31 +3970,56 @@ c
      .                          " 'REAL*4' "
       write(buffc(07*80+1:08*80),'(''COMMENT   '',a05)') '     '
       write(buffc(08*80+1:09*80),'(''COMMENT   '',a05)') '     '
-      write(buffc(09*80+1:10*80),'(''CRPIX1  = '',a70)') HDR(01)
-      write(buffc(10*80+1:11*80),'(''CRPIX2  = '',a70)') HDR(02)
-      write(buffc(11*80+1:12*80),'(''CRVAL1  = '',a70)') HDR(03)
-      write(buffc(12*80+1:13*80),'(''CRVAL2  = '',a70)') HDR(04)
-      write(buffc(13*80+1:14*80),'(''CTYPE1  = '',a70)') HDR(05)
-      write(buffc(14*80+1:15*80),'(''CTYPE2  = '',a70)') HDR(06)
-      write(buffc(15*80+1:16*80),'(''CD1_1   = '',a70)') HDR(07)
-      write(buffc(16*80+1:17*80),'(''CD1_2   = '',a70)') HDR(08)
-      write(buffc(17*80+1:18*80),'(''CD2_1   = '',a70)') HDR(09)
-      write(buffc(18*80+1:19*80),'(''CD2_2   = '',a70)') HDR(10)
-      write(buffc(19*80+1:20*80),'(''ORIENTAT= '',a70)') HDR(11)
-      write(buffc(20*80+1:21*80),'(''PA_APER = '',a70)') HDR(12)
-      write(buffc(21*80+1:22*80),'(''PA_V3   = '',a70)') HDR(13)
-      write(buffc(22*80+1:23*80),'(''DATE-OBS= '',a70)') HDR(14)
-      write(buffc(23*80+1:24*80),'(''TIME-OBS= '',a70)') HDR(15)
-      write(buffc(24*80+1:25*80),'(''EXPTIME = '',a70)') HDR(16)
-      write(buffc(25*80+1:26*80),'(''ROOTNAME= '',a70)') HDR(17)
-      write(buffc(26*80+1:27*80),'(''TARGNAME= '',a70)') HDR(18)
-      write(buffc(27*80+1:28*80),'(''RA_TARG = '',a70)') HDR(19)
-      write(buffc(28*80+1:29*80),'(''DEC_TARG= '',a70)') HDR(20)
-      write(buffc(29*80+1:30*80),'(''PROPOSID= '',a70)') HDR(21)
-      write(buffc(30*80+1:31*80),'(''FILTER1 = '',a70)') HDR(22)
-      write(buffc(31*80+1:32*80),'(''FILTER2 = '',a70)') HDR(23)
-      write(buffc(33*80+1:34*80),'(''VAFACTOR= '',a70)') HDR(24)
-      write(buffc(32*80+1:33*80),'(''CCDGAIN = '',a70)') HDR(25)
+      if (notblank70(HDR(01)))
+     .write(buffc(09*80+1:10*80),'(''CRPIX1  = '',a70)') HDR(01)
+      if (notblank70(HDR(02)))
+     .write(buffc(10*80+1:11*80),'(''CRPIX2  = '',a70)') HDR(02)
+      if (notblank70(HDR(03)))
+     .write(buffc(11*80+1:12*80),'(''CRVAL1  = '',a70)') HDR(03)
+      if (notblank70(HDR(04)))
+     .write(buffc(12*80+1:13*80),'(''CRVAL2  = '',a70)') HDR(04)
+      if (notblank70(HDR(05)))
+     .write(buffc(13*80+1:14*80),'(''CTYPE1  = '',a70)') HDR(05)
+      if (notblank70(HDR(06)))
+     .write(buffc(14*80+1:15*80),'(''CTYPE2  = '',a70)') HDR(06)
+      if (notblank70(HDR(07)))
+     .write(buffc(15*80+1:16*80),'(''CD1_1   = '',a70)') HDR(07)
+      if (notblank70(HDR(08)))
+     .write(buffc(16*80+1:17*80),'(''CD1_2   = '',a70)') HDR(08)
+      if (notblank70(HDR(09)))
+     .write(buffc(17*80+1:18*80),'(''CD2_1   = '',a70)') HDR(09)
+      if (notblank70(HDR(10)))
+     .write(buffc(18*80+1:19*80),'(''CD2_2   = '',a70)') HDR(10)
+      if (notblank70(HDR(11)))
+     .write(buffc(19*80+1:20*80),'(''ORIENTAT= '',a70)') HDR(11)
+      if (notblank70(HDR(12)))
+     .write(buffc(20*80+1:21*80),'(''PA_APER = '',a70)') HDR(12)
+      if (notblank70(HDR(13)))
+     .write(buffc(21*80+1:22*80),'(''PA_V3   = '',a70)') HDR(13)
+      if (notblank70(HDR(14)))
+     .write(buffc(22*80+1:23*80),'(''DATE-OBS= '',a70)') HDR(14)
+      if (notblank70(HDR(15)))
+     .write(buffc(23*80+1:24*80),'(''TIME-OBS= '',a70)') HDR(15)
+      if (notblank70(HDR(16)))
+     .write(buffc(24*80+1:25*80),'(''EXPTIME = '',a70)') HDR(16)
+      if (notblank70(HDR(17)))
+     .write(buffc(25*80+1:26*80),'(''ROOTNAME= '',a70)') HDR(17)
+      if (notblank70(HDR(18)))
+     .write(buffc(26*80+1:27*80),'(''TARGNAME= '',a70)') HDR(18)
+      if (notblank70(HDR(19)))
+     .write(buffc(27*80+1:28*80),'(''RA_TARG = '',a70)') HDR(19)
+      if (notblank70(HDR(20)))
+     .write(buffc(28*80+1:29*80),'(''DEC_TARG= '',a70)') HDR(20)
+      if (notblank70(HDR(21)))
+     .write(buffc(29*80+1:30*80),'(''PROPOSID= '',a70)') HDR(21)
+      if (notblank70(HDR(22)))
+     .write(buffc(30*80+1:31*80),'(''FILTER1 = '',a70)') HDR(22)
+      if (notblank70(HDR(23)))
+     .write(buffc(31*80+1:32*80),'(''FILTER2 = '',a70)') HDR(23)
+      if (notblank70(HDR(24)))
+     .write(buffc(33*80+1:34*80),'(''VAFACTOR= '',a70)') HDR(24)
+      if (notblank70(HDR(25)))
+     .write(buffc(32*80+1:33*80),'(''CCDGAIN = '',a70)') HDR(25)
       write(buffc(33*80+1:34*80),'(''COMMENT   '',a05)') '     '
       write(buffc(34*80+1:35*80),'(''COMMENT   '',a05)') '     '
       write(buffc(35*80+1:36*80),'(''END       '')')
@@ -3841,6 +4068,32 @@ c
       print*,'   FILEU: ',FILEU
       stop
  
+      end
+ 
+ 
+ 
+c-------------------------------------------
+c
+c
+c
+      logical function notblank70_(string70)
+      implicit none
+ 
+      character*70 string70
+ 
+      integer i
+ 
+      notblank70_ = .false.
+      do i = 1, 70
+         if (string70(i:i).ge.'a'.and.
+     .       string70(i:i).le.'z') notblank70_ = .true.
+         if (string70(i:i).ge.'A'.and.
+     .       string70(i:i).le.'Z') notblank70_ = .true.
+         if (string70(i:i).ge.'0'.and.
+     .       string70(i:i).le.'9') notblank70_ = .true.
+         enddo
+ 
+      return
       end
  
  
@@ -4479,6 +4732,38 @@ c      write(*,'(''ENTER readfits_i2: '',80a)') FILEU
       return
       end
  
+ 
+ 
+                                              
+c*********************************************
+c****                                         
+c**** #include "/user/jayander/FORTRAN/FITSIO/GEN/notblank70.f"
+c****                                         
+c*********************************************
+                                              
+ 
+c----------------------------------------------
+c
+c
+      logical function notblank70(string70)
+      implicit none
+ 
+      character*70 string70
+ 
+      integer i
+ 
+      notblank70 = .false.
+      do i = 1, 70
+         if (string70(i:i).ge.'a'.and.
+     .       string70(i:i).le.'z') notblank70 = .true.
+         if (string70(i:i).ge.'A'.and.
+     .       string70(i:i).le.'Z') notblank70 = .true.
+         if (string70(i:i).ge.'0'.and.
+     .       string70(i:i).le.'9') notblank70 = .true.
+         enddo
+ 
+      return
+      end
  
  
  
@@ -6580,7 +6865,7 @@ c
  
       subroutine find_psfpert(pixc,HMB,HIFLAG,NAXIS1,NAXIS2,
      .                        psfpert,NPERTs,
-     .                        PSFFILE_USE,VERBOSE)
+     .                        PSFFILE_USE,NPu,VERBOSE)
       implicit none
  
       real         pixc(NAXIS1,NAXIS2)
@@ -6590,6 +6875,7 @@ c
       real         psfpert(101,101,_NPRTMX_,_NPRTMX_)
       integer      NPERTs
       character*80 PSFFILE_USE
+      integer      NPu
       integer      VERBOSE
  
       integer i, ii, iii
@@ -6634,6 +6920,8 @@ c     real    dpsf(99999)
       integer ipsf,jpsf
  
       FMIN = HIFLAG
+ 
+      NPu = 0
  
       if (VERBOSE.ge.2) then
           print*,'                                               '
@@ -6772,6 +7060,7 @@ c        ql(Ls) = SNGL(qr)
           print*,'FMIN: ',FMIN
           endif
  
+ 
       histpert_min = 9e9
       do i = 1, NPERTs
       do j = 1, NPERTs
@@ -6818,6 +7107,7 @@ c        ql(Ls) = SNGL(qr)
                    enddo
                 enddo
                 enddo
+            if (.true.) return
             write(*,'(1x,''                            '')')
             write(*,'(1x,''NOT ENOUGH BRIGHT STARS     '')')
             write(*,'(1x,''    AVAILABLE WITHIN EACH   '')')
@@ -6838,6 +7128,8 @@ c        ql(Ls) = SNGL(qr)
           print*,'call ras2pertpsf...',Ls,NPERTs
           print*,' '
           endif
+ 
+      NPu = Ls
  
       call ras2pertpsf(pixl,psfl,il,jl,xl,yl,ul,Ls,
      .                 rxl,ryl,psfpertu,psfpertv,NPERTs,VERBOSE)
@@ -6897,6 +7189,8 @@ c*********************************************
  
       NDIMx = 57*NPERTs*NXs
       NDIMy = 57*NPERTs*NYs
+ 
+      if (NIMs.gt.250) return
  
       if (VERBOSE.ge.2) then
           print*,'ENTER output_psfperts...'
@@ -7675,8 +7969,15 @@ c     print*,' '
               print*,'    FILE: ',FILEU
               stop
               endif
-         if (NXPSFs.eq.0) stop 'infofits_stdpsf: HEADER NEEDs NXPSFs'
-         if (NYPSFs.eq.0) stop 'infofits_stdpsf: HEADER NEEDs NXPSFs'
+         if (NXPSFs.eq.0.or.
+     .       NXPSFs.eq.0) then
+             NXPSFs = 1
+             NYPSFs = 1
+             ilist(1) = -9999
+             jlist(1) = -9999
+             ilist(2) = 99999
+             jlist(2) = 99999
+             endif
          enddo
  
  
@@ -8186,7 +8487,7 @@ c
      .                           COMMENT1,COMMENT2,COMMENT3)
       implicit none
  
-      character*80 FILE
+      character*200 FILE
       integer NXPSFs
       integer NYPSFs
       real*4  pix(*)
@@ -8232,6 +8533,9 @@ c     integer c1, c2, c3
       equivalence(r,b)
  
       integer q, npu, nbu
+ 
+      logical islinux
+ 
  
  
       FILEU = FILE
@@ -8325,13 +8629,13 @@ c 10 24 17
             npu = np1+q-1
             nbu = (q-1)*4
             if (npu.ge.1.and.npu.le.npt) r = pix(npu)
-            if (.not.(_LINUX_)) then
+            if (.not.islinux()) then
                buffb(nbu+1) = b(1)
                buffb(nbu+2) = b(2)
                buffb(nbu+3) = b(3)
                buffb(nbu+4) = b(4)
                endif
-            if ((_LINUX_)) then
+            if (islinux()) then
                buffb(nbu+1) = b(4)
                buffb(nbu+2) = b(3)
                buffb(nbu+3) = b(2)
@@ -9810,6 +10114,10 @@ c    2) spike    profile --- sgen(C,NRAD)
 c    3) spike    width   --- wgen(C,NRAD)
 c
 c
+c 2025/02/12:  Jay modified to allow more flexible masking
+c              for ACSWFC, WFC3IR, and WFC3UV
+c
+ 
       subroutine pix2mask(pixm,KKK,
      .                    BBs,iref_bb,jref_bb,zref_bb,
      .                    NAXIS1,NAXIS2)
@@ -9944,8 +10252,8 @@ c     real    xr_uv, yr_uv
          print*,'                 '
          endif
  
-      if (NAXIS1.ne.4096.or.
-     .    NAXIS2.ne.4096) stop 'mask NAXIS hardcode probs'
+c     if (NAXIS1.ne.4096.or.
+c    .    NAXIS2.ne.4096) stop 'mask NAXIS hardcode probs'
  
       do i = 001, 4096
       do j = 001, 4096
@@ -9976,9 +10284,9 @@ c     real    xr_uv, yr_uv
             fx = SNGL(xraw/4096.0)
             fy = SNGL(yraw/4096.0)
             endif
-         if (KKK.eq.8) then ! WFC3/UVIS
-            fx = SNGL(xraw/4096.0)
-            fy = SNGL(yraw/4096.0)
+         if (KKK.eq.9) then ! WFC3/IR
+            fx = SNGL(xraw/1014.0)
+            fy = SNGL(yraw/1014.0)
             endif
          if (fx.lt.0.00) fx = 0.0
          if (fy.lt.0.00) fy = 0.0
@@ -10116,8 +10424,8 @@ c        if (ju-jref_bb(BB).gt.4096) goto 333
   333    continue
          enddo
  
-      do i = 0001, 4096
-      do j = 0001, 4096
+      do i = 0001, min(NAXIS1,4096)
+      do j = 0001, min(NAXIS2,4096)
          pixm(i,j) = sqrt(pixm_sum(i,j))
          enddo
          enddo
@@ -10153,6 +10461,11 @@ c
       integer kk
       real    ff
  
+      real     MASK_RMIN
+      real     MASK_RMAX
+      common / MASK_RMIN_ / MASK_RMIN
+      common / MASK_RMAX_ / MASK_RMAX
+ 
       if (first_rprof) then
          do i = 0001, 1001
             iiu = 0
@@ -10172,6 +10485,8 @@ c
  
       rprof_ik = 0.
       if (ir.lt.0001.or.ir.gt.1001) return
+      if (ir.lt.MASK_RMIN) return
+      if (ir.gt.MASK_RMAX) return
       rprof_ik = rprof_arr(ir,k)
  
       return
@@ -10204,6 +10519,11 @@ c
       integer kk
       real    ff
  
+      real     MASK_SMIN
+      real     MASK_SMAX
+      common / MASK_SMIN_ / MASK_SMIN
+      common / MASK_SMAX_ / MASK_SMAX
+ 
       if (first_sprof) then
          do i = 0001, 1001
             iiu = 0
@@ -10223,6 +10543,8 @@ c
  
       sprof_ik = 0.
       if (ir.lt.0001.or.ir.gt.1001) return
+      if (ir.lt.MASK_SMIN) return
+      if (ir.gt.MASK_SMAX) return
       sprof_ik = sprof_arr(ir,k)
  
       return
@@ -11625,7 +11947,7 @@ c*********************************************
                                               
 c*********************************************
 c****                                         
-c**** #include "/user/jayander/FORTRAN/GDC/STDGDCs/extract_stdgc.f"
+c**** #include "/user/jayander/FORTRAN/GDC/STDGDCs/extract_stdgdc.f"
 c****                                         
 c*********************************************
                                               
@@ -11634,12 +11956,12 @@ c------------------------------------------------------
 c
 c
 c
-      subroutine extract_stdgc(xr,yr,xc,yc,mc,FILE_STDGC,SENSE)
+      subroutine extract_stdgdc(xr,yr,xc,yc,mc,FILE_STDGC,SENSE)
       implicit none
  
       real*8 xr, yr
       real*8 xc, yc, mc
-      character*200 FILE_STDGC
+      character*(*) FILE_STDGC
       integer SENSE
  
       save
@@ -11848,6 +12170,8 @@ c
  
       integer ipix, jpix
  
+      logical islinux
+ 
       ifirst = i+1
       i1 = i
       i2 = i
@@ -11873,13 +12197,13 @@ c
             jpix =   1 + (npu-1)/NDIMX
             if (ipix.ge.1.and.ipix.le.NDIMX.and.
      .          jpix.ge.1.and.jpix.le.NDIMY) then
-                if (.not.(_LINUX_)) then
+                if (.not.(islinux())) then
                    b(1) = buffb(nbu+1)
                    b(2) = buffb(nbu+2)
                    b(3) = buffb(nbu+3)
                    b(4) = buffb(nbu+4)
                    endif
-                if ((_LINUX_)) then
+                if ((islinux())) then
                    b(4) = buffb(nbu+1)
                    b(3) = buffb(nbu+2)
                    b(2) = buffb(nbu+3)
@@ -11926,6 +12250,7 @@ c
       equivalence(ii,b)
  
       integer ipix, jpix
+      logical islinux
  
       ifirst = i+1
       i1 = i
@@ -11952,11 +12277,11 @@ c
             jpix =   1 + (npu-1)/NDIMX
             if (ipix.ge.1.and.ipix.le.NDIMX.and.
      .          jpix.ge.1.and.jpix.le.NDIMY) then
-                if (.not.(_LINUX_)) then
+                if (.not.(islinux())) then
                    b(1) = buffb(nbu+1)
                    b(2) = buffb(nbu+2)
                    endif
-                if ((_LINUX_)) then
+                if ((islinux())) then
                    b(2) = buffb(nbu+1)
                    b(1) = buffb(nbu+2)
                    endif
@@ -11973,7 +12298,7 @@ c
                                               
 c*********************************************
 c****                                         
-c**** #include "/user/jayander/FORTRAN/GDC/STDGDCs/xryr2mc_stdgc.f"
+c**** #include "/user/jayander/FORTRAN/GDC/STDGDCs/xryr2mc_stdgdc.f"
 c****                                         
 c*********************************************
                                               
@@ -11983,7 +12308,7 @@ c
 c mc should be the pixel area correction
 c
 c
-      subroutine xryr2mc_stdgc(xr,yr,mc,FILE_STDGC)
+      subroutine xryr2mc_stdgdc(xr,yr,mc,FILE_STDGC)
       implicit none
  
       real*8 xr, yr
@@ -11991,7 +12316,7 @@ c
       character*(*) FILE_STDGC
       real*8 xc, yc
  
-      call extract_stdgc(xr,yr,xc,yc,mc,FILE_STDGC,0)  ! 0 = pix area correction
+      call extract_stdgdc(xr,yr,xc,yc,mc,FILE_STDGC,0)  ! 0 = pix area correction
  
       return
       end
@@ -12000,14 +12325,14 @@ c
                                               
 c*********************************************
 c****                                         
-c**** #include "/user/jayander/FORTRAN/GDC/STDGDCs/xryr2xcyc_stdgc.f"
+c**** #include "/user/jayander/FORTRAN/GDC/STDGDCs/xryr2xcyc_stdgdc.f"
 c****                                         
 c*********************************************
                                               
  
 c------------------------------------------------------
 c
-      subroutine xryr2xcyc_stdgc(xr,yr,xc,yc,FILE_STDGC)
+      subroutine xryr2xcyc_stdgdc(xr,yr,xc,yc,FILE_STDGC)
       implicit none
  
       real*8 xr, yr
@@ -12015,7 +12340,7 @@ c
       character*(*) FILE_STDGC
       real*8 mc
  
-      call extract_stdgc(xr,yr,xc,yc,mc,FILE_STDGC,1)  ! 1 = forward
+      call extract_stdgdc(xr,yr,xc,yc,mc,FILE_STDGC,1)  ! 1 = forward
  
       return
       end
@@ -12024,14 +12349,14 @@ c
                                               
 c*********************************************
 c****                                         
-c**** #include "/user/jayander/FORTRAN/GDC/STDGDCs/xcyc2xryr_stdgc.f"
+c**** #include "/user/jayander/FORTRAN/GDC/STDGDCs/xcyc2xryr_stdgdc.f"
 c****                                         
 c*********************************************
                                               
  
 c------------------------------------------------------
 c
-      subroutine xcyc2xryr_stdgc(xc,yc,xr,yr,FILE_STDGC)
+      subroutine xcyc2xryr_stdgdc(xc,yc,xr,yr,FILE_STDGC)
       implicit none
  
       real*8 xc, yc
@@ -12039,7 +12364,7 @@ c
       character*(*) FILE_STDGC
       real*8 mc
  
-      call extract_stdgc(xr,yr,xc,yc,mc,FILE_STDGC,-1)  ! -1 = reverse
+      call extract_stdgdc(xr,yr,xc,yc,mc,FILE_STDGC,-1)  ! -1 = reverse
  
       return
       end
@@ -12073,13 +12398,18 @@ c*********************************************
       equivalence (buffb,buffc)
  
       integer ifirst, i1, i2
- 
+      integer j, k
       integer np1, np2, npt
  
       character*70 HDR(25)
       common/HDR/HDR
  
       character*80 FILEU
+ 
+      integer nonspace
+      logical notblank70
+ 
+ 
  
       FILEU = FILE
       do i = 75,2,-1
@@ -12096,6 +12426,10 @@ c*********************************************
      .     access='DIRECT')
  
  
+      do k = 00, 35
+         write(buffc(k*80+1:k*80+80),'(80x)')
+         enddo
+ 
       i = 1
       write(buffc( 0*80+1: 1*80),'(''SIMPLE  = T    '')')
       write(buffc( 1*80+1: 2*80),'(''BITPIX  =  16  '')')
@@ -12108,33 +12442,72 @@ c*********************************************
      .                          ' ''28/01/00'''
       write(buffc( 7*80+1: 8*80),'(''BSCALE  = '',i12)') 00001
       write(buffc( 8*80+1: 9*80),'(''BZERO   = '',i12)') 00000
-      write(buffc(09*80+1:10*80),'(''CRPIX1  = '',a20)') HDR(01)
-      write(buffc(10*80+1:11*80),'(''CRPIX2  = '',a20)') HDR(02)
-      write(buffc(11*80+1:12*80),'(''CRVAL1  = '',a20)') HDR(03)
-      write(buffc(12*80+1:13*80),'(''CRVAL2  = '',a20)') HDR(04)
-      write(buffc(13*80+1:14*80),'(''CTYPE1  = '',a20)') HDR(05)
-      write(buffc(14*80+1:15*80),'(''CTYPE2  = '',a20)') HDR(06)
-      write(buffc(15*80+1:16*80),'(''CD1_1   = '',a20)') HDR(07)
-      write(buffc(16*80+1:17*80),'(''CD1_2   = '',a20)') HDR(08)
-      write(buffc(17*80+1:18*80),'(''CD2_1   = '',a20)') HDR(09)
-      write(buffc(18*80+1:19*80),'(''CD2_2   = '',a20)') HDR(10)
-      write(buffc(19*80+1:20*80),'(''ORIENTAT= '',a20)') HDR(11)
-      write(buffc(20*80+1:21*80),'(''PA_APER = '',a20)') HDR(12)
-      write(buffc(21*80+1:22*80),'(''PA_V3   = '',a20)') HDR(13)
-      write(buffc(22*80+1:23*80),'(''DATE-OBS= '',a20)') HDR(14)
-      write(buffc(23*80+1:24*80),'(''TIME-OBS= '',a20)') HDR(15)
-      write(buffc(24*80+1:25*80),'(''EXPTIME = '',a20)') HDR(16)
-      write(buffc(25*80+1:26*80),'(''ROOTNAME= '',a20)') HDR(17)
-      write(buffc(26*80+1:27*80),'(''TARGNAME= '',a20)') HDR(18)
-      write(buffc(27*80+1:28*80),'(''RA_TARG = '',a20)') HDR(19)
-      write(buffc(28*80+1:29*80),'(''DEC_TARG= '',a20)') HDR(20)
-      write(buffc(29*80+1:30*80),'(''PROPOSID= '',a20)') HDR(21)
-      write(buffc(30*80+1:31*80),'(''FILTER1 = '',a20)') HDR(22)
-      write(buffc(31*80+1:32*80),'(''FILTER2 = '',a20)') HDR(23)
-      write(buffc(32*80+1:33*80),'(''VAFACTOR= '',a20)') HDR(24)
-      write(buffc(33*80+1:34*80),'(''COMMENT   '')')
-      write(buffc(34*80+1:35*80),'(''COMMENT   '')')
+      if (notblank70(HDR(01)))
+     .write(buffc(09*80+1:10*80),'(''CRPIX1  = '',a70)') HDR(01)
+      if (notblank70(HDR(02)))
+     .write(buffc(10*80+1:11*80),'(''CRPIX2  = '',a70)') HDR(02)
+      if (notblank70(HDR(03)))
+     .write(buffc(11*80+1:12*80),'(''CRVAL1  = '',a70)') HDR(03)
+      if (notblank70(HDR(04)))
+     .write(buffc(12*80+1:13*80),'(''CRVAL2  = '',a70)') HDR(04)
+      if (notblank70(HDR(05)))
+     .write(buffc(13*80+1:14*80),'(''CTYPE1  = '',a70)') HDR(05)
+      if (notblank70(HDR(06)))
+     .write(buffc(14*80+1:15*80),'(''CTYPE2  = '',a70)') HDR(06)
+      if (notblank70(HDR(07)))
+     .write(buffc(15*80+1:16*80),'(''CD1_1   = '',a70)') HDR(07)
+      if (notblank70(HDR(08)))
+     .write(buffc(16*80+1:17*80),'(''CD1_2   = '',a70)') HDR(08)
+      if (notblank70(HDR(09)))
+     .write(buffc(17*80+1:18*80),'(''CD2_1   = '',a70)') HDR(09)
+      if (notblank70(HDR(10)))
+     .write(buffc(18*80+1:19*80),'(''CD2_2   = '',a70)') HDR(10)
+      if (notblank70(HDR(11)))
+     .write(buffc(19*80+1:20*80),'(''ORIENTAT= '',a70)') HDR(11)
+      if (notblank70(HDR(12)))
+     .write(buffc(20*80+1:21*80),'(''PA_APER = '',a70)') HDR(12)
+      if (notblank70(HDR(13)))
+     .write(buffc(21*80+1:22*80),'(''PA_V3   = '',a70)') HDR(13)
+      if (notblank70(HDR(14)))
+     .write(buffc(22*80+1:23*80),'(''DATE-OBS= '',a70)') HDR(14)
+      if (notblank70(HDR(15)))
+     .write(buffc(23*80+1:24*80),'(''TIME-OBS= '',a70)') HDR(15)
+      if (notblank70(HDR(16)))
+     .write(buffc(24*80+1:25*80),'(''EXPTIME = '',a70)') HDR(16)
+      if (notblank70(HDR(17)))
+     .write(buffc(25*80+1:26*80),'(''ROOTNAME= '',a70)') HDR(17)
+      if (notblank70(HDR(18)))
+     .write(buffc(26*80+1:27*80),'(''TARGNAME= '',a70)') HDR(18)
+      if (notblank70(HDR(19)))
+     .write(buffc(27*80+1:28*80),'(''RA_TARG = '',a70)') HDR(19)
+      if (notblank70(HDR(20)))
+     .write(buffc(28*80+1:29*80),'(''DEC_TARG= '',a70)') HDR(20)
+      if (notblank70(HDR(21)))
+     .write(buffc(29*80+1:30*80),'(''PROPOSID= '',a70)') HDR(21)
+      if (notblank70(HDR(22)))
+     .write(buffc(30*80+1:31*80),'(''FILTER1 = '',a70)') HDR(22)
+      if (notblank70(HDR(23)))
+     .write(buffc(31*80+1:32*80),'(''FILTER2 = '',a70)') HDR(23)
+      if (notblank70(HDR(24)))
+     .write(buffc(33*80+1:34*80),'(''VAFACTOR= '',a70)') HDR(24)
+      if (notblank70(HDR(25)))
+     .write(buffc(32*80+1:33*80),'(''CCDGAIN = '',a70)') HDR(25)
+      write(buffc(33*80+1:34*80),'(''COMMENT   '',a05)') '     '
+      write(buffc(34*80+1:35*80),'(''COMMENT   '',a05)') '     '
       write(buffc(35*80+1:36*80),'(''END       '')')
+ 
+      do k = 00, 34
+         nonspace = 0
+         do j = 10, 80
+            if (buffc(k*80+j:k*80+j).ne.' '.and.
+     .          iachar(buffc(k*80+j:k*80+j)).ne.0) nonspace = nonspace+1
+            enddo
+         if (nonspace.eq.0) then
+             do j = 1, 80
+                buffc(k*80+j:k*80+j) = ' '
+                enddo
+             endif
+         enddo
  
       write(10,rec=i,iostat=ios) buffc
  
@@ -12647,6 +13020,8 @@ c     integer*1 bu
  
       real apphot_NAXIS
  
+      real*4,    dimension(:,:),   allocatable :: pixz
+ 
       real*4,    dimension(:,:),   allocatable :: pixo
       real*4,    dimension(:,:),   allocatable :: pixp
       real*4,    dimension(:,:),   allocatable :: pixx
@@ -12723,6 +13098,7 @@ c
  
  
       real psfpert(101,101,_NPRTMX_,_NPRTMX_,_NIMMXP_)
+      integer NPu
  
  
 c     character*8  FIELD
@@ -12867,6 +13243,12 @@ c     real*4  r4_query_hdre
       character*20 STRING20_FLASHSTA
       character*20 STRING20_SHUTRPOS
       character*20 STRING20_DARKTIME
+ 
+      character*20 STRING20_POSTARG1
+      character*20 STRING20_POSTARG2
+      character*20 STRING20_RA_TARG
+      character*20 STRING20_DEC_TARG
+ 
  
       real r4_darktime
       real r4_darkest
@@ -13078,6 +13460,27 @@ c
       real*8  tp, pu
       integer tn, ts
  
+      logical MASKIRBLOB
+      common /MASKIRBLOB_/MASKIRBLOB
+ 
+      logical DOXCTE
+      common / DOXCTE_ / DOXCTE
+ 
+      real     MASK_SMIN
+      real     MASK_SMAX
+      common / MASK_SMIN_ / MASK_SMIN
+      common / MASK_SMAX_ / MASK_SMAX
+ 
+      real     DQ_MASK_SPIKE_LVL
+      common / DQ_MASK_SPIKE_LVL_  / DQ_MASK_SPIKE_LVL
+ 
+      integer  DQ_MASK_SPIKE_DQ
+      common / DQ_MASK_SPIKE_DQ_  / DQ_MASK_SPIKE_DQ
+ 
+      real*8         CD1_1_TMP,  CD1_2_TMP
+      real*8         CD2_1_TMP,  CD2_2_TMP
+      real*8 SINU, COSU
+ 
 c
 c------------------------------------------
 c
@@ -13214,6 +13617,11 @@ c
           write(*,'(13x,''SHOW_SUB: '',a1)') SHOW_SUB
           write(*,'(13x,''SHOW_ART: '',a1)') SHOW_ART
           write(*,'(13x,''SHOW_MSK: '',a1)') SHOW_MSK
+          write(*,'(13x,''DQ_MASK---'')')
+          write(*,'(13x,''    SMIN: '',f9.2)') MASK_SMIN
+          write(*,'(13x,''    SMAX: '',f9.2)') MASK_SMAX
+          write(*,'(13x,''     LVL: '',f9.2)') DQ_MASK_SPIKE_LVL
+          write(*,'(13x,''    FLAG: '',i6  )') DQ_MASK_SPIKE_DQ
           endif
  
  
@@ -13246,7 +13654,12 @@ c
           write(*,'(12x,''  SHOW_SUB: '',a1)') SHOW_SUB
           write(*,'(12x,''  SHOW_ART: '',a1)') SHOW_ART
           write(*,'(12x,''  SHOW_MSK: '',a1)') SHOW_MSK
-          write(*,'(12x,''    NPERTs: '',i7)')  NPERTs
+          write(*,'(13x,''  DQ_MASK---'')')
+          write(*,'(13x,''      SMIN: '',f9.2)') MASK_SMIN
+          write(*,'(13x,''      SMAX: '',f9.2)') MASK_SMAX
+          write(*,'(13x,''       LVL: '',f9.2)') DQ_MASK_SPIKE_LVL
+          write(*,'(13x,''      FLAG: '',i6  )') DQ_MASK_SPIKE_DQ
+          write(*,'(12x,''      NPERTs: '',i7)')  NPERTs
           write(*,'(12x,''FOCUS_LEVi: '',f9.1)')  FOCUS_LEVELi
           write(*,'(12x,''      KSEL: '',i7)')  KSEL
           write(*,'(12x,''      QMAX: '',f11.3)')  QMAX
@@ -13488,7 +13901,7 @@ c
              if (pixc(i,j).gt.HIFLAG_INST) pixq(i,j) = 1
              enddo
              enddo
-          call xryr2xcyc_stdgc(CRPIX1_INST,CRPIX2_INST,
+          call xryr2xcyc_stdgdc(CRPIX1_INST,CRPIX2_INST,
      .                         xgc0,ygc0,GDCFILE_USE)
           CRPIX1_INST = xgc0
           CRPIX2_INST = ygc0
@@ -13528,7 +13941,7 @@ c
           if (VERBOSE.ge.2) then
               print*,' RET read_acshrc_flt_full '
               endif
-          call xryr2xcyc_stdgc(CRPIX1_INST,CRPIX2_INST,
+          call xryr2xcyc_stdgdc(CRPIX1_INST,CRPIX2_INST,
      .                         xgc0,ygc0,GDCFILE_USE)
           do i = 0001, NAXIS1
           do j = 0001, NAXIS2
@@ -13541,6 +13954,89 @@ c
           CRPIX2_INST = ygc0
           goto 3  ! don't need to think about reading in anything else
           endif
+ 
+      if (STRING20_INSTRUME(2:4).eq.'ACS'.and.
+     .    STRING20_DETECTOR(2:4).eq.'SBC') then
+          if (VERBOSE.ge.2) then
+              print*,' '
+              print*,'CALL read_acssbc_flt_full '
+              print*,'     ---> PSFFILE_USE: ',PSFFILE_USE(1:40)
+              print*,'     ---> GDCFILE_INP: ',GDCFILE_INP(1:40)
+              endif
+ 
+          Ks = 1
+          INSTu = 7
+          NAXIS1 = 1024
+          NAXIS2 = 1024
+          PMAX_PERT = 65000
+          allocate(pixn(NAXIS1,NAXIS2))
+          allocate(pixo(NAXIS1,NAXIS2))
+          allocate(pixc(NAXIS1,NAXIS2))
+          allocate(pixp(NAXIS1,NAXIS2))
+          allocate(pixx(NAXIS1,NAXIS2))
+          allocate(pixq(NAXIS1,NAXIS2))
+          call read_acssbc_flt_full(FILENAMu,pixc,
+     .                              CRPIX1_INST, CRPIX2_INST,
+     .                              CRVAL1_INST, CRVAL2_INST,
+     .                              CD1_1_INST,  CD1_2_INST,
+     .                              CD2_1_INST,  CD2_2_INST,
+     .                              LOFLAG_INST, HIFLAG_INST,
+     .                              BDRY_XR,  BDRY_YR,
+     .                              FILT_INST,EXPT_INST,
+     .                              RDAT_INST,PROP_INST)
+          if (VERBOSE.ge.2) then
+              print*,'HIFLAG_INST: ',HIFLAG_INST
+              print*,'LOFLAG_INST: ',LOFLAG_INST
+              print*,' RET read_acshrc_flt_full '
+              endif
+          call xryr2xcyc_stdgdc(CRPIX1_INST,CRPIX2_INST,
+     .                          xgc0,ygc0,GDCFILE_USE)
+          do i = 0001, NAXIS1
+          do j = 0001, NAXIS2
+             pixo(i,j) = pixc(i,j)
+             pixq(i,j) = 0
+             if (pixc(i,j).gt.HIFLAG_INST) pixq(i,j) = 1
+             enddo
+             enddo
+ 
+          CD1_1_INST = CD1_1_INST/1.063193014
+          CD1_2_INST = CD1_2_INST/1.063193014
+          CD2_1_INST = CD2_1_INST/1.063193014
+          CD2_2_INST = CD2_2_INST/1.063193014
+ 
+          CD1_1_TMP = CD1_1_INST
+          CD1_2_TMP = CD1_2_INST
+          CD2_1_TMP = CD2_1_INST
+          CD2_2_TMP = CD2_2_INST
+ 
+          COSU = cosd(0.91864+0.01) ! empirical rotation found
+          SINU = sind(0.91864+0.01) ! for early data
+ 
+          if (RDAT_INST.gt.2002.80) then
+              COSU = cosd(0.91864-0.09) ! empirical rotation found
+              SINU = sind(0.91864-0.09) ! for data between 2002.8 and 2005.0
+              endif
+ 
+          if (RDAT_INST.gt.2005.00) then
+              COSU = cosd(0.91864-1) ! empirical rotation found
+              SINU = sind(0.91864-1) ! for 2005+ data
+              CD1_1_TMP = CD1_1_TMP*1.0002
+              CD1_2_TMP = CD1_2_TMP*1.0002
+              CD2_1_TMP = CD2_1_TMP*1.0002
+              CD2_2_TMP = CD2_2_TMP*1.0002
+              endif
+ 
+          CD1_1_INST =  COSU*CD1_1_TMP + SINU*CD1_2_TMP
+          CD1_2_INST = -SINU*CD1_1_TMP + COSU*CD1_2_TMP
+          CD2_1_INST =  COSU*CD2_1_TMP + SINU*CD2_2_TMP
+          CD2_2_INST = -SINU*CD2_1_TMP + COSU*CD2_2_TMP
+ 
+          CRPIX1_INST = xgc0
+          CRPIX2_INST = ygc0
+          goto 3  ! don't need to think about reading in anything else
+          endif
+ 
+ 
  
  
       if (STRING20_INSTRUME(2:4).eq.'ACS'.and.      ! ACSWFC
@@ -13581,7 +14077,7 @@ c
               print*,'     ---> GDCFILE_INP: ',GDCFILE_INP(1:40)
               print*,'     --->      HIFLAG: ',HIFLAG
               endif
-          call xryr2xcyc_stdgc(CRPIX1_INST,CRPIX2_INST,
+          call xryr2xcyc_stdgdc(CRPIX1_INST,CRPIX2_INST,
      .                         xgc0,ygc0,GDCFILE_INP)
           if (VERBOSE.ge.2) print*,'    xgc0: ',xgc0
           if (VERBOSE.ge.2) print*,'    ygc0: ',ygc0
@@ -13616,6 +14112,11 @@ c         call query_hdre(FILENAMu,'FLASHLVL',STRING20_FLASHLVL,-1)
           call query_hdre(FILENAMu,'FLASHSTA',STRING20_FLASHSTA,-1)
           call query_hdre(FILENAMu,'SHUTRPOS',STRING20_SHUTRPOS,-1)
           call query_hdre(FILENAMu,'DARKTIME',STRING20_DARKTIME,-1)
+ 
+          call query_hdre(FILENAMu,'POSTARG1',STRING20_POSTARG1,-1)
+          call query_hdre(FILENAMu,'POSTARG2',STRING20_POSTARG2,-1)
+          call query_hdre(FILENAMu,'RA_TARG ',STRING20_RA_TARG ,-1)
+          call query_hdre(FILENAMu,'DEC_TARG',STRING20_DEC_TARG,-1)
  
  
           read(STRING20_FLASHDUR,*) r4_flashdur
@@ -13653,8 +14154,14 @@ c         read(STRING20_FLASHLVL,*) r4_flashlvl
      .                     STRING20_DARKTIME, r4_darktime
           write(HH(HHs+012),'(''# DARKEST : '',20x,11x,2f8.2)')
      .                                        r4_darkest,rDATuu
-          write(HH(HHs+013),'(''#                                 '')')
-          HHs = HHs + 13
+          write(HH(HHs+013),'(''#================================='')')
+          write(HH(HHs+014),'(''# POSTARG1: '',a20)') STRING20_POSTARG1
+          write(HH(HHs+015),'(''# POSTARG2: '',a20)') STRING20_POSTARG2
+          write(HH(HHs+016),'(''# RA_TARG : '',a20)') STRING20_RA_TARG
+          write(HH(HHs+017),'(''# DEC_TARG: '',a20)') STRING20_DEC_TARG
+          write(HH(HHs+018),'(''#================================='')')
+          write(HH(HHs+019),'(''#                                 '')')
+          HHs = HHs + 19
  
           if (VERBOSE.ge.1) then
               write(*,*)
@@ -13710,7 +14217,7 @@ c         read(STRING20_FLASHLVL,*) r4_flashlvl
               print*,'     ---> GDCFILE_USE: ',GDCFILE_USE(1:40)
               print*,'     --->      HIFLAG: ',HIFLAG,HIFLAG_INST
               endif
-          call xryr2xcyc_stdgc(CRPIX1_INST,CRPIX2_INST,
+          call xryr2xcyc_stdgdc(CRPIX1_INST,CRPIX2_INST,
      .                         xgc0,ygc0,GDCFILE_USE)
           do i = 0001, NAXIS1
           do j = 0001, NAXIS2
@@ -13824,7 +14331,9 @@ c         read(STRING20_FLASHLVL,*) r4_flashlvl
           write(HH(HHs+011),'(''# SAMPNUM : '',a20)') STR_SAMPNUM
           write(HH(HHs+012),'(''# SAMPTIME: '',a20)') STR_SAMPTIME
           write(HH(HHs+013),'(''# ASN_ID  : '',a20)') STR_ASN_ID
-          HHs = HHs + 13
+          write(HH(HHs+014),'(''# MSKIRBLB: '',l20)') MASKIRBLOB
+          write(HH(HHs+015),'(''#           '')')
+          HHs = HHs + 15
  
           if (VERBOSE.ge.2) then
               print*,' '
@@ -13849,23 +14358,15 @@ c         read(STRING20_FLASHLVL,*) r4_flashlvl
      .                              BDRY_XR,  BDRY_YR,
      .                              FILT_INST,EXPT_INST,
      .                              RDAT_INST,PROP_INST)
- 
+          if (HIFLAG.gt.0) HIFLAG_INST = HIFLAG
           if (VERBOSE.ge.2) then
               print*,' '
               print*,' RET read_wfc3ir_flt_full'
               endif
           FMINu = FMIN/EXPT_INST
           PMAX_PERT = int(65000./EXPT_INST)
-          call xryr2xcyc_stdgc(CRPIX1_INST,CRPIX2_INST,
+          call xryr2xcyc_stdgdc(CRPIX1_INST,CRPIX2_INST,
      .                         xgc0,ygc0,GDCFILE_USE)
-c         if (.true.) then
-c             HIFLAG_INST = 80000*EXPT_INST
-c             do i = 0001, NAXIS1
-c             do j = 0001, NAXIS2
-c                pixc(i,j) = pixc(i,j)*EXPT_INST
-c                enddo
-c                enddo
-c             endif
           do i = 0001, NAXIS1
           do j = 0001, NAXIS2
              pixq(i,j) = 0
@@ -13943,6 +14444,28 @@ c#include "../ROUTINES/sub_hst2xym_info_plug_JWST.f"
  
  
     3 continue
+ 
+      if (DOXCTE) then
+          if (INSTu.ne.8) then
+              print*,' '
+              print*,'DOXCTE = ',DOXCTE
+              print*,' INSTu = ',INSTu
+              print*,' '
+              print*,'At the moment, an on-the-fly pixel-based'
+              print*,'serial-CTE correction is possible only for'
+              print*,'WFC3UV.'
+              print*,' '
+              stop
+              endif
+          allocate(pixz(8412,2070))
+          print*,'---> pixj2pixz... '
+          call sub_pixj2pixz_wfc3uv(pixc,pixz)
+          print*,'---> raz2rzx.. '
+          call sub_raz2rzx_wfc3uv(pixz,pixz,rDAT)
+          print*,'---> pizj2pixj... '
+          call sub_pixz2pixj_wfc3uv(pixz,pixc)
+          deallocate(pixz)
+          endif
  
       HIFLAG_COMMON = HIFLAG_INST
       LOFLAG_COMMON = LOFLAG_INST
@@ -14087,49 +14610,64 @@ c-------------------------------------------
 c
 c should we generate and apply a mask?
 c
-      if (SHOW_MSK.ne.'-') then
-         allocate(pixm(NAXIS1,NAXIS2))
-         do i = 001, NAXIS1
-         do j = 001, NAXIS2
-            pixm(i,j) = 0.
-            enddo
-            enddo
-         call pix2mask(pixm,INSTu,                           ! this routine will generate a mask in the
-     .                 NSATs,isat,jsat,zsat,                 !    image frame related to where the bright
-     .                 NAXIS1,NAXIS2)                        !    saturated star PSFs affect other stars
-         if (SHOW_MSK.eq.'+') then
-            IMMSKu = PREFIX(1:9) // '_msk.fits'
-            call writfits_r4(IMMSKu,pixm,NAXIS1,NAXIS2)      ! output mask image, if desired
-            endif
-         if (SHOW_MSK.eq.'~') then
-            iii = 1
-            do i = 1, 200
-               if (FILENAMu(i:i).eq.'/') iii = i + 1
-               enddo
-            IMSUBu = FILENAMu(iii:200)
-            print*,'FILENAMu: ',FILENAMu
-            print*,'  IMSUBu: ',  IMSUBu
-            print*,'     iii: ',iii
-            if (IMSUBu(10:10).ne.'_') stop 'problem with filename'
-            IMSUBu(9:9) = 'm'
-            if (INSTu.ne.5.and.INSTu.ne.8.and.INSTu.ne.9) then
-                print*,'                                          '
-                 print*,' IF YOU WANT TO OUTPUT A MASKED IMAGE   '
-                 print*,' IN A SHELL, THEN FOR NOW, THE IMAGE MUST '
-                 print*,' BE ONE OF:  ACSWFC, WFC3UV, or WFC3IR.   '
-                 print*,'                                          '
-                 print*,' YOU CAN OUTPUT IT NORMALLY w/ SHOW_MSK+  '
-                 print*,'                                          '
+      if (SHOW_MSK.ne.'-'.or.
+     .    DQ_MASK_SPIKE_LVL.gt.0.0) then
+          allocate(pixm(NAXIS1,NAXIS2))
+          do i = 001, NAXIS1
+          do j = 001, NAXIS2
+             pixm(i,j) = 0.
+             enddo
+             enddo
+          call pix2mask(pixm,INSTu,                           ! this routine will generate a mask in the
+     .                  NSATs,isat,jsat,zsat,                 !    image frame related to where the bright
+     .                  NAXIS1,NAXIS2)                        !    saturated star PSFs affect other stars
+          if (SHOW_MSK.eq.'+') then
+             IMMSKu = PREFIX(1:9) // '_msk.fits'
+             call writfits_r4(IMMSKu,pixm,NAXIS1,NAXIS2)      ! output mask image, if desired
+             endif
+          if (DQ_MASK_SPIKE_LVL.gt.0.0) then
+             iii = 1
+             do i = 1, 200
+                if (FILENAMu(i:i).eq.'/') iii = i + 1
+                enddo
+             IMSUBu = FILENAMu(iii:200)
+             print*,'FILENAMu: ',FILENAMu
+             print*,'  IMSUBu: ',  IMSUBu
+             print*,'     iii: ',iii
+             if (IMSUBu(10:10).ne.'_') stop 'problem with filename'
+             IMSUBu(9:9) = 'm'
+             if (INSTu.ne.5.and.INSTu.ne.8.and.INSTu.ne.9) then
+                 print*,'                                        '
+                 print*,' SHELL OUTPUT MUST BE ACSWFC, WFC3UV,   '
+                 print*,' OR WFC3IR                              '
+                 print*,'                                        '
+                 print*,' YOU CAN OUTPUT IT NORMALLY w/ SHOW_MSK+'
+                 print*,'                                        '
                  stop
                  endif
-            if (INSTu.eq.5)
-     .          call cpyNrepl_acswfc(FILENAMu,IMSUBu,pixm,'MSK')
-            if (INSTu.eq.8)
-     .          call cpyNrepl_wfc3uv(FILENAMu,IMSUBu,pixm,'MSK')
-            if (INSTu.eq.9)
-     .          call cpyNrepl_wfc3ir(FILENAMu,IMSUBu,pixm,'MSK')
-            endif
-         endif
+             if (INSTu.eq.5) then
+                 print*,'call  cpyNrepl_acswfc_dq...'
+                 call cpyNrepl_acswfc_dq(FILENAMu,IMSUBu,
+     .                                   pixm,DQ_MASK_SPIKE_LVL,
+     .                                        DQ_MASK_SPIKE_DQ)
+                 print*,'calld cpyNrepl_acswfc_dq...'
+                 endif
+             if (INSTu.eq.8) then
+                 print*,'call  cpyNrepl_wfc3uv_dq...'
+                 call cpyNrepl_wfc3uv_dq(FILENAMu,IMSUBu,
+     .                                   pixm,DQ_MASK_SPIKE_LVL,
+     .                                        DQ_MASK_SPIKE_DQ)
+                 print*,'calld cpyNrepl_wfc3uv_dq...'
+                 endif
+             if (INSTu.eq.9) then
+                 print*,'call  cpyNrepl_wfc3ir_dq...'
+                 call cpyNrepl_wfc3ir_dq(FILENAMu,IMSUBu,
+     .                                   pixm,DQ_MASK_SPIKE_LVL,
+     .                                        DQ_MASK_SPIKE_DQ)
+                 print*,'calld cpyNrepl_wfc3ir_dq...'
+                 endif
+             endif
+          endif
  
  
 c-------------------------------------------
@@ -14298,7 +14836,7 @@ c
      .                     NAXIS1,NAXIS2,                             !    finds the perturbation that matches the
      .                     psfpert(1,1,1,1,NIMu),NPERTs,              !    PSF to the stars in the image
      .                     PSFFILE_USE,
-     .                     VERBOSE)
+     .                     NPu,VERBOSE)
          if (VERBOSE.ge.2) print*,'call output_psfperts...'
          call output_psfperts(psfpert,NPERTs,STEMs_N,NIMs,VERBOSE)    ! output an image showing all the perts
          if (VERBOSE.ge.2) then
@@ -14440,8 +14978,13 @@ c
                 HHs = HHs + 1
                 do j = NPERTs, 1, -1
                    HHs = HHs + 1
-                   write(HH(HHs),'(''# '',4x,1x,i2.2,1x,10f8.4)')
+                   if (NPERTs.gt.1)
+     .             write(HH(HHs),'(''# '',4x,1x,i2.2,1x,10f8.4)')
      .                   j,(psfpert(51,51,i,j,NIMu),i=1,NPERTs)
+                   if (NPERTs.eq.1)
+     .             write(HH(HHs),
+     .                   '(''# '',4x,1x,i2.2,1x,f8.5,1x,i4,1x,f9.4)')
+     .                   j,psfpert(51,51,1,1,NIMu),NPu,rDATuu
                    enddo
                 HHs = HHs + 1
                 write(HH(HHs),'(''# '')')
@@ -14783,8 +15326,8 @@ c
                   vr = y2o_mat + CG_mat*(uur-x1o_mat)
      .                         + DG_mat*(vvr-y1o_mat)
                   wr = wwr + ZP_mat
-                 call xcyc2xryr_stdgc(ur,vr,xxr,yyr,GDCFILE_USE)
-                 call xryr2mc_stdgc(xxr,yyr,dmc,    GDCFILE_USE)
+                 call xcyc2xryr_stdgdc(ur,vr,xxr,yyr,GDCFILE_USE)
+                 call xryr2mc_stdgdc(xxr,yyr,dmc,    GDCFILE_USE)
                  mmr = wr - dmc
                  endif
              if (ASTYPE.eq.'XYM') then
@@ -15148,7 +15691,7 @@ c
              vvr = yinp_b(B_)
               ur = x2o_mat + AG_mat*(uur-x1o_mat) + BG_mat*(vvr-y1o_mat)
               vr = y2o_mat + CG_mat*(uur-x1o_mat) + DG_mat*(vvr-y1o_mat)
-             call xcyc2xryr_stdgc(ur,vr,xxr,yyr,GDCFILE_USE)
+             call xcyc2xryr_stdgdc(ur,vr,xxr,yyr,GDCFILE_USE)
              ii0 = int(xxr+0.5)
              jj0 = int(yyr+0.5)
              uur = x1o_mat + GA_mat*(ur-x2o_mat)
@@ -15190,13 +15733,15 @@ c
          hu = 2
          do i = ii-1,ii+1
          do j = jj-1,jj+1
-            if (pixc(i,j).gt.pixc(ii,jj)) goto 444
+           if (i.ne.ii.or.j.ne.jj) then
+                if (pixc(i,j).gt.pixc(ii,jj)) goto 444
+                endif
             enddo
             enddo
  
-         if (pixc(i,j).eq.pixc(i-1,j  )) goto 444
-         if (pixc(i,j).eq.pixc(i-1,j-1)) goto 444
-         if (pixc(i,j).eq.pixc(i  ,j-1)) goto 444
+         if (pixc(ii,jj).eq.pixc(ii-1,jj  )) goto 444
+         if (pixc(ii,jj).eq.pixc(ii-1,jj-1)) goto 444
+         if (pixc(ii,jj).eq.pixc(ii  ,jj-1)) goto 444
  
  
  
@@ -15210,11 +15755,12 @@ c
              do i = -HMIN, HMIN
              do j = -HMIN, HMIN
                 if (i**2+j**2.le.(HMIN+0.5)**2) then
-                    if (ii+i.lt.  0001) goto 444
-                    if (jj+j.lt.  0001) goto 444
-                    if (ii+i.gt.NAXIS1) goto 444
-                    if (jj+j.gt.NAXIS2) goto 444
-                    if (pixc(i+ii,j+jj).gt.pixc(i,j)) goto 444
+                    if (ii+i.ge.000001.and.
+     .                  ii+i.le.NAXIS1.and.
+     .                  jj+j.ge.000001.and.
+     .                  jj+j.le.NAXIS2) then
+                        if (pixc(i+ii,j+jj).gt.pixc(i,j)) goto 444
+                        endif
                     endif
                  enddo
                  enddo
@@ -15566,7 +16112,7 @@ c
          if (.not.(fr.gt.1.00)) fr = 1.0
          if (.not.(fr.lt.1e19)) fr = 1.0
          mr = -2.5*log10(fr)
-         call xryr2mc_stdgc(xr,yr,dmc,GDCFILE_USE)
+         call xryr2mc_stdgdc(xr,yr,dmc,GDCFILE_USE)
          Ns = Ns + 1
          Nx = Nx + 1
          if (B_.ne.0) then
@@ -15650,6 +16196,14 @@ c
      .             *find_postflash_wfc3uv(xr,yr,c1_flashcur,   ! put back postflash
      .                                          c1_shutrpos)
             ssr = sr + pbar
+c           print*,'    sr: ', sr
+c           print*,'  pbar: ',pbar
+c           print*,'   ssr: ',ssr
+c           print*,'    r4: ',r4_flashlvl,c1_flashcur, c1_shutrpos
+c           print*,'     x: ',xr,yr
+c           print*,'     f: ',find_postflash_wfc3uv(
+c    .                             xr,yr,c1_flashcur,
+c    .                             c1_shutrpos)
             call find_tabctecorr_wfc3uv(mr,yr,ssr,rDATuu,+1,
      .                                  dm_cte,dy_cte)
             if (ISFLT) then
@@ -15681,7 +16235,7 @@ c
 c
 c find the distortion-corrected positions in the STDGDC frame
 c
-         call xryr2xcyc_stdgc(xxr,yyr,xgc,ygc,GDCFILE_USE)
+         call xryr2xcyc_stdgdc(xxr,yyr,xgc,ygc,GDCFILE_USE)
          dRA = (xgc-xgc0)*CD1_1_INST + (ygc-ygc0)*CD1_2_INST
          dDE = (xgc-xgc0)*CD2_1_INST + (ygc-ygc0)*CD2_2_INST
          RA = xy2r(dRA,dDE,CRVAL1_INST,CRVAL2_INST)
@@ -16034,7 +16588,7 @@ c
             DE = 0.
             xr = BDRY_XR(P,K)
             yr = BDRY_YR(P,K)
-            call xryr2xcyc_stdgc(xr,yr,xgc,ygc,GDCFILE_USE)
+            call xryr2xcyc_stdgdc(xr,yr,xgc,ygc,GDCFILE_USE)
             dRA = (xgc-xgc0)*CD1_1_INST + (ygc-ygc0)*CD1_2_INST
             dDE = (xgc-xgc0)*CD2_1_INST + (ygc-ygc0)*CD2_2_INST
             RA = xy2r(dRA,dDE,CRVAL1_INST,CRVAL2_INST)
@@ -16095,7 +16649,7 @@ c
          write(HH(HHs+1),443)'xy',K,(BDRY_XR(P,K),BDRY_YR(P,K),P=1,4)
          write(HH(HHs+2),443)'uv',K,(BDRY_XC(P,K),BDRY_YC(P,K),P=1,4)
          write(HH(HHs+3),443)'rd',K,(BDRY_RA(P,K),BDRY_DE(P,K),P=1,4)
-         write(HH(HHs+4),443)'UV',K,(BDRY_UG(P,K),BDRY_VG(P,K),P=1,4)
+         write(HH(HHs+4),443)'UV',K,(BDRY_UU(P,K),BDRY_VV(P,K),P=1,4)
          HHs = HHs + 4
          write(HH(HHs+1),441)
          HHs = HHs + 1
@@ -16185,7 +16739,7 @@ c
                dDE = rd2y(RA,DE,CRVAL1_INST,CRVAL2_INST)
                xgc = xgc0 + RCD1_1_INST*dRA + RCD1_2_INST*dDE
                ygc = ygc0 + RCD2_1_INST*dRA + RCD2_2_INST*dDE
-               call xcyc2xryr_stdgc(xgc,ygc,xr,yr,GDCFILE_USE)
+               call xcyc2xryr_stdgdc(xgc,ygc,xr,yr,GDCFILE_USE)
                ii = int(xr+0.5)
                jj = int(yr+0.5)
                if (ii.ge.0001.and.ii.le.NAXIS1.and.
@@ -16760,7 +17314,7 @@ c--------------------------------------------------------------
      .             0.054, 0.052, 0.050, 0.048, 0.046, 0.044/  ! -13.5  27
  
  
-      real dm_sm(6,27)                                        !            This is the improved one at the end of the IS
+      real dm_sm(6,27)                                        !            This is the improved one at the end of the ISR
       data dm_sm / 2.250, 1.790, 1.660, 1.128, 0.931, 0.513,  ! -00.5   1
      .             2.250, 1.790, 1.660, 1.128, 0.931, 0.513,  ! -01.0   2
      .             2.250, 1.790, 1.660, 1.128, 0.931, 0.513,  ! -01.5   3
@@ -18120,7 +18674,7 @@ c         endif
  
       find_postflash_wfc3uv = 0.0
  
-      if (c1_flashcur.ne.'L') return
+c     if (c1_flashcur.ne.'L') return
  
       if (c1_shutrpos.eq.'A') then
           find_postflash_wfc3uv = (1-fi)*(1-fj)*frat_a(ii  ,jj  )
@@ -19448,7 +20002,7 @@ c
       subroutine readfits_i4e(FILEI,pix,NDIMX,NDIMY,NEXTENU)
       implicit none
  
-      character*200 FILEI
+      character*(*) FILEI
       integer       NDIMX,NDIMY
       integer       NEXTENU
       integer*4     pix(NDIMX,NDIMY)
@@ -19494,6 +20048,12 @@ c
       integer ii
  
       FILEU = FILEI
+ 
+      if (DIAG) then
+         print*,'enter readfits_i2e...'
+         write(*,'(''FILEI: '',200a)') FILEI
+         endif
+ 
       do i = 195,2,-1
          if (FILEI(i:i+4).eq.'.fits') then
             FILEU = FILEI(1:i+4)
@@ -19509,6 +20069,7 @@ c
          write(*,'(''FILEU: '',200a)') FILEU
          endif
  
+      if (DIAG) print*,'...open..',FILEU
       open(10,file=FILEU,status='old',
      .     err=900,recl=2880,form='UNFORMATTED',
      .     access='DIRECT')
@@ -20009,7 +20570,7 @@ c*********************************************
       implicit none
  
       integer i
-      character filename*200
+      character filename*(*)
 c     integer NCHAR
  
 c     integer iEXPT
@@ -20257,6 +20818,10 @@ c     integer*2 i2
       real*8  PA_V3
       real*8  COSPA, SINPA
  
+      logical MASKIRBLOB
+      data    MASKIRBLOB /.true./
+      common /MASKIRBLOB_/MASKIRBLOB
+ 
 c
 c--------------------------------------------------
 c
@@ -20420,6 +20985,7 @@ c     print*,'PROP: ',PROP
       do i = 0001, 1014
       do j = 0001, 1014
          pixi2_l = pixi2(i,j)
+ 
          if (iand(pixi2_l,00001).ne.0) continue             ! Reed-Solomon decoding error
          if (iand(pixi2_l,00002).ne.0) continue             ! data missing/replaced by fill
          if (iand(pixi2_l,00004).ne.0) pixi(i,j) = -500     ! bad detector pixel
@@ -20427,13 +20993,13 @@ c     print*,'PROP: ',PROP
          if (iand(pixi2_l,00016).ne.0) continue             ! hot pixel
          if (iand(pixi2_l,00032).ne.0) continue             ! unstable response
          if (iand(pixi2_l,00256).ne.0) continue             ! full-well saturation
-         if (iand(pixi2_l,00512).ne.0) pixi(i,j) = -500     ! bad/uncertain value (blob)
+         if (MASKIRBLOB.and.
+     .       iand(pixi2_l,00512).ne.0) pixi(i,j) = -500     ! bad/uncertain value (blob)
          if (iand(pixi2_l,01024).ne.0) continue             ! (reserved)
          if (iand(pixi2_l,02048).ne.0) continue             ! signal in zero-read
          if (iand(pixi2_l,04096).ne.0) continue             ! CR detected by MDriz
          if (iand(pixi2_l,08192).ne.0) continue             ! CR detected during up-the-ramp
          if (iand(pixi2_l,16384).ne.0) continue             ! pixel affected by ghost/crosstalk
- 
  
          pixr(i,j) = pixi(i,j)
          if (pixi2_l.eq.00256) pixr(i,j) = HIFLAG+1 ! full-well saturation ; only if there are no other flags
@@ -21149,7 +21715,7 @@ c
           goto 444
           endif
  
-c P000003 L21 E00 APERTURE= 'WFC1B-2K        '   / aperture name                                   00001 jehr02leq_flt.f
+c P000003 L21 E00 APERTURE= 'WFC1B-2K        '   / aperture name                                   00001 jehr02leq_flt.fits
  
       if (APERTURE(2:9).eq.'WFC1B-2K') then
           call readfits_r4e(FILENAME,pix2k2k,2048,2048,1)
@@ -21188,8 +21754,9 @@ c P000003 L21 E00 APERTURE= 'WFC1B-2K        '   / aperture name                
           call readfits_i2e(FILENAME,pxd(0001,0001),4096,2048,3)
           do i = 0001, 4096
           do j = 0001, 4096
-             if (iand(pxd(i,j),int( 256,2)).gt.0) pxq(i,j) = 1  ! physical saturation
-             if (iand(pxd(i,j),int(2048,2)).gt.0) pxq(i,j) = 1  ! a2d saturation
+             if (iand(pxd(i,j),int( 256,2)).gt.0) pxq(i,j) = 1    ! physical saturation
+             if (iand(pxd(i,j),int(2048,2)).gt.0) pxq(i,j) = 1    ! a2d saturation
+             if (iand(pxd(i,j),int(0004,2)).gt.0) pix(i,j) = -750
              enddo
              enddo
           deallocate(pxd)
@@ -23236,6 +23803,369 @@ c
                                               
 c*********************************************
 c****                                         
+c**** #include "/user/jayander/FORTRAN/FITSIO/ACSSBC/read_acssbc_flt_full.f"
+c****                                         
+c*********************************************
+                                              
+ 
+      subroutine read_acssbc_flt_smpl(FILENAME,pix)
+      implicit none
+ 
+      character*200 FILENAME
+      real      pix(1024,1024)
+ 
+      real*8    CRPIX1, CRPIX2
+      real*8    CRVAL1, CRVAL2
+      real*8    CD1_1,  CD1_2
+      real*8    CD2_1,  CD2_2
+ 
+      integer   LOFLAG, HIFLAG
+      real*8    BDRY_XR(4,4)
+      real*8    BDRY_YR(4,4)
+ 
+      character*05 FILT
+      real*4       EXPT
+      real*4       RDAT
+      integer      PROP
+ 
+      call read_acssbc_flt_full(FILENAME,pix,
+     .                          CRPIX1, CRPIX2,
+     .                          CRVAL1, CRVAL2,
+     .                          CD1_1,  CD1_2,
+     .                          CD2_1,  CD2_2,
+     .                          LOFLAG, HIFLAG,
+     .                          BDRY_XR,  BDRY_YR,
+     .                          FILT,EXPT,
+     .                          RDAT,PROP)
+ 
+      return
+      end
+ 
+ 
+ 
+      subroutine read_acssbc_flt_full(FILENAME,pix,
+     .                                CRPIX1, CRPIX2,
+     .                                CRVAL1, CRVAL2,
+     .                                CD1_1,  CD1_2,
+     .                                CD2_1,  CD2_2,
+     .                                LOFLAG, HIFLAG,
+     .                                BDRY_XR,  BDRY_YR,
+     .                                FILT,EXPT,
+     .                                RDAT,PROP)
+      implicit none
+ 
+ 
+ 
+ 
+      character*200 FILENAME
+      real      pix(1024,1024)
+ 
+      real*8    CRPIX1, CRPIX2
+      real*8    CRVAL1, CRVAL2
+      real*8    CD1_1,  CD1_2
+      real*8    CD2_1,  CD2_2
+ 
+      integer   LOFLAG, HIFLAG
+      real*8    BDRY_XR(4,4)
+      real*8    BDRY_YR(4,4)
+ 
+      character*05 FILT
+      real*4       EXPT
+      real*4       RDAT
+      integer      PROP
+ 
+      integer NAXIS1
+      integer NAXIS2
+ 
+      real*8 COSPA, SINPA
+      real*8 PA_APER
+      real*8 PA_V3
+ 
+      character*200 FILTU
+      character*80 FILT1, FILT2, FILT3, FILT4
+      real*8  r8_query_hdre
+      real*4  r4_query_hdre
+      integer i4_query_hdre
+      real*8  rdate_header
+ 
+      integer i, j
+ 
+      print*,'   '
+      print*,'ENTER: subroutine read_wfcacs_flt_full '
+      print*,'---> FILENAME: ',FILENAME
+      print*,'   '
+ 
+      NAXIS1 = INT(r8_query_hdre(FILENAME,'NAXIS1  ',-1))
+      NAXIS2 = INT(r8_query_hdre(FILENAME,'NAXIS2  ',-1))
+ 
+      if (NAXIS1.ne.1024.and.NAXIS2.ne.1024)
+     .    stop 'only FLT ACS/SBC full frame (for now)'
+ 
+      CRPIX1 = r8_query_hdre(FILENAME,'CRPIX1  ',-1)
+      CRPIX2 = r8_query_hdre(FILENAME,'CRPIX2  ',-1)
+      CRVAL1 = r8_query_hdre(FILENAME,'CRVAL1  ',-1)
+      CRVAL2 = r8_query_hdre(FILENAME,'CRVAL2  ',-1)
+ 
+      PA_APER = r8_query_hdre(FILENAME,'PA_APER ',-1)
+      PA_V3   = PA_APER - 0.001
+ 
+      COSPA = cos(PA_V3*3.14159/180.0)
+      SINPA = sin(PA_V3*3.14159/180.0)
+ 
+      CD1_1 = -COSPA*0.03200/60/60 ! this is for the SBC
+      CD1_2 =  SINPA*0.03200/60/60
+      CD2_1 =  SINPA*0.03200/60/60
+      CD2_2 =  COSPA*0.03200/60/60
+ 
+      PROP = i4_query_hdre(FILENAME,'PROPOSID',-1)
+      EXPT = r4_query_hdre(FILENAME,'EXPTIME ',-1)
+      RDAT = SNGL(rdate_header(FILENAME))
+ 
+      call query_hdre(FILENAME,'FILTER  ',FILTU,-1)
+      call query_hdre(FILENAME,'FILTER1 ',FILT1,-1)
+      call query_hdre(FILENAME,'FILTER2 ',FILT2,-1)
+      call query_hdre(FILENAME,'FILTNAM1',FILT3,-1)
+      call query_hdre(FILENAME,'FILTNAM2',FILT4,-1)
+ 
+      FILT = FILTU(1:5)
+      if (FILT1(1:1).eq.'F')  FILT = FILT1(1:5)
+      if (FILT2(1:1).eq.'F')  FILT = FILT2(1:5)
+      if (FILT3(1:1).eq.'F')  FILT = FILT3(1:5)
+      if (FILT4(1:1).eq.'F')  FILT = FILT4(1:5)
+      if (FILT1(2:2).eq.'F')  FILT = FILT1(2:6)
+      if (FILT2(2:2).eq.'F')  FILT = FILT2(2:6)
+      if (FILT3(2:2).eq.'F')  FILT = FILT3(2:6)
+      if (FILT4(2:2).eq.'F')  FILT = FILT4(2:6)
+ 
+      LOFLAG =    -50
+      HIFLAG = 125000
+ 
+      do i = 1, 4
+      do j = 1, 4
+         BDRY_XR(i,j) = 0.
+         BDRY_YR(i,j) = 0.
+         enddo
+         enddo
+ 
+      BDRY_XR(1,1) = 0002
+      BDRY_YR(1,1) = 0002
+      BDRY_XR(2,1) = 1023
+      BDRY_YR(2,1) = 0002
+      BDRY_XR(3,1) = 1023
+      BDRY_YR(3,1) = 1023
+      BDRY_XR(4,1) = 0002
+      BDRY_YR(4,1) = 1023
+ 
+ 
+      call readfits_SBC(FILENAME,pix,1)
+ 
+      do i = 0001, 1024
+      do j = 0601, 0605
+         pix(i,j) = -100
+         enddo
+         enddo
+ 
+      return
+      end
+ 
+ 
+ 
+ 
+ 
+      subroutine readfits_SBC(FILE,pix,nimg)
+      implicit none
+ 
+      character*(*) FILE
+      real pix(1024,1024)
+ 
+      character*70 INFO(10)
+      common / fitsinfo / INFO
+ 
+      integer nimg
+      integer naxes
+      integer laxis(3)
+ 
+      character*8  field
+      character*20 stream
+ 
+      integer nbyte0
+      integer nbyteE
+      integer nbyte1
+      integer nbyte2
+      integer nbper
+      integer i,ios, k
+ 
+      character*2880 buffc
+      byte buffb(2880)
+      equivalence (buffc,buffb)
+ 
+      integer ifirst, i1, i2
+ 
+      integer np1, np2, npt
+      integer nextend
+      integer nread
+      real bscale, bzero
+      integer bitpix
+ 
+ 
+      logical LINUX
+      data LINUX/.true./
+ 
+      logical first_header
+ 
+      integer NH_RECs
+      character*2880 HEADER_STRING(99)
+      common /HEADER_STRING_INFO/NH_RECs,HEADER_STRING
+ 
+      open(10,file=FILE,status='old',
+     .     err=900,recl=2880,form='UNFORMATTED',
+     .     access='DIRECT')
+ 
+      bscale = 1.0
+      bzero  = 0.0
+ 
+      naxes = -1
+      laxis(1) = 1
+      laxis(2) = 1
+      laxis(3) = 1
+      nextend = 0
+ 
+ 
+      NH_RECs = 0
+      first_header = .true.
+      i = 0
+      nread = 0
+ 100  continue
+      i = i + 1
+      read(10,rec=i,iostat=ios) buffc
+      if (first_header) then
+         NH_RECs = NH_RECs + 1
+         HEADER_STRING(NH_RECs) = buffc
+         endif
+      do k = 0, 35, 1
+         field  = buffc(k*80+01:k*80+08)
+         stream = buffc(k*80+11:k*80+31)
+         if (field.eq.'NAXIS   ') read(stream,*) naxes
+         if (field.eq.'NAXIS1  ') read(stream,*) laxis(1)
+         if (field.eq.'NAXIS2  ') read(stream,*) laxis(2)
+         if (field.eq.'NAXIS3  ') read(stream,*) laxis(3)
+         if (field.eq.'NEXTEND ') read(stream,*) nextend
+         if (field.eq.'BITPIX  ') read(stream,*) bitpix
+         if (field.eq.'BSCALE  ') read(stream,*) bscale
+         if (field.eq.'BZERO   ') read(stream,*) bzero
+ 
+         if (field.eq.'END     ') then
+            first_header = .false.
+            goto 101
+            endif
+         enddo
+      goto 100
+ 101  continue
+ 
+ 
+      nread = nread + 1
+ 
+      ifirst = i+1
+      i1 = i
+      i2 = i
+ 
+      if (naxes.eq.0) then    ! maybe multiple images stored as extensions
+         if (nextend.eq.0) then
+            print*,'THIS IS A NULL IMAGE: '
+            print*,'NAXES: ',NAXES
+            print*,'NEXND: ',NEXTEND
+            stop
+            endif
+         endif
+ 
+      if (nread.ne.nimg+1) then
+         nbper  = abs(BITPIX/8)*laxis(1)*laxis(2)
+         if (NAXES.eq.0) nbper = 0
+         i = int(i + 1.0*nbper/2880 + 0.9999)
+         goto 100
+         endif
+ 
+      if (laxis(1).ne.1024.or.
+     .    laxis(2).ne.1024) then
+          print*,'  laxis1: ',laxis(1)
+          print*,'  laxis2: ',laxis(2)
+          print*,'    1024: ',1024
+          print*,'    1024: ',1024
+          stop
+          endif
+ 
+      if (naxes.eq.2) then   ! nimg is irrelevant; ignore
+         nbper  = 4*laxis(1)*laxis(2)
+         npt    = laxis(1)*laxis(2)
+         nbyte1 = 1
+         nbyte2 = nbper
+         i1 = i+1 + nbyte1/2880
+         i2 = i+1 + nbyte2/2880
+         endif
+ 
+      if (naxes.eq.3) then
+         nbper  = 4*laxis(1)*laxis(2)
+         nbyte1 = 1 + nbper*(nimg-1)
+         nbyte2 =     nbper*(nimg  )
+         i1 = i+1 + nbyte1/2880
+         i2 = i+1 + nbyte2/2880
+         npt = laxis(1)*laxis(2)
+         endif
+ 
+      do i = i1, i2, 1
+         read(10,rec=i,iostat=ios) buffc
+         nbyte0 = (i-ifirst)*2880+   1
+         nbyteE = (i-ifirst)*2880+2880
+         np1 = (nbyte0-nbyte1)/4 + 1
+         np2 = (nbyteE-nbyte1)/4 + 1
+         call buff2pix_r4_sbc(buffb,pix,np1,npt)
+         enddo
+ 
+      return
+ 
+ 900  continue
+      print*,'readfits_WFC: READFITS ERROR'
+      stop
+ 
+      end
+ 
+ 
+      subroutine buff2pix_r4_sbc(buff,pix,n1,nt)
+      implicit none
+      byte buff(2880)
+      real pix(*)
+      integer n1,nt
+ 
+      byte b(4)
+      real r
+      equivalence(r,b)
+ 
+      integer i, npu, nbu
+ 
+      do i = 1, 720
+         npu = n1+i-1
+         nbu = (i-1)*4
+         if (.not.(_LINUX_)) then
+            b(1) = buff(nbu+1)
+            b(2) = buff(nbu+2)
+            b(3) = buff(nbu+3)
+            b(4) = buff(nbu+4)
+            endif
+         if ((_LINUX_)) then
+            b(4) = buff(nbu+1)
+            b(3) = buff(nbu+2)
+            b(2) = buff(nbu+3)
+            b(1) = buff(nbu+4)
+            endif
+         if (npu.ge.1.and.npu.le.nt) pix(npu) = r
+         enddo
+ 
+      return
+      end
+ 
+                                              
+c*********************************************
+c****                                         
 c**** #include "/user/jayander/FORTRAN/FITSIO/WFC3UV/read_wfc3uv_flt_full.f"
 c****                                         
 c*********************************************
@@ -23648,10 +24578,49 @@ c    .            NAMEAP,ISSUBARRAY,FILE
      .    NAMEAP(01:15).eq.'UVIS2-C512C-CTE'.or.
      .    NAMEAP(01:13).eq.'UVIS-QUAD-FIX') then
           if (ISSUBARRAY) then
-             print*,' '
-             print*,'IMAGE:                    '
-             print*,' '
-             print*,FILE
+              print*,' '
+              print*,'IMAGE:                    '
+              print*,' '
+              print*,FILE
+              print*,' '
+              print*,' CENTERA1: ',CENTERA1,2073
+              print*,' CENTERA2: ',CENTERA2,1027
+              print*,' SIZAXIS1: ',SIZAXIS1,2048
+              print*,' SIZAXIS2: ',SIZAXIS2,2048
+              if (NAMEAP(01:06).eq.'UVIS1 '.and.
+     .            CENTERA1.eq.2073.and.
+     .            CENTERA2.eq.1027.and.
+     .            SIZAXIS1.eq.2048.and.
+     .            SIZAXIS2.eq.2048) then ! Dressel focus user-defined subarray
+                  call readfits_r4e(FILE,pix2048 ,2048,2048,1)
+                  call readfits_i2e(FILE,pix2048i,2048,2048,3)
+                  do i = 0001, 2048
+                  do j = 0001, 2046
+                     pix(i+1023,j+2050) = pix2048(i,j)
+                     pxq(i+1023,j+2050) = pix2048i(i,j)
+                     enddo
+                     enddo
+                  print*,'DRESSEL SUBARRAY UVIS1!'
+                  return
+                  endif
+              if (NAMEAP(01:06).eq.'UVIS2 '.and.
+     .            CENTERA1.eq.2073.and.
+     .            CENTERA2.eq.1027.and.
+     .            SIZAXIS1.eq.2048.and.
+     .            SIZAXIS2.eq.2048) then ! Dressel focus user-defined subarray
+                  call readfits_r4e(FILE,pix2048 ,2048,2048,1)
+                  call readfits_i2e(FILE,pix2048i,2048,2048,3)
+                  do i = 0001, 2048
+                  do j = 0001, 2048
+                     pix(i+1023,j+0000) = pix2048(i,j)
+                     pxq(i+1023,j+0000) = pix2048i(i,j)
+                     enddo
+                     enddo
+                  print*,'DRESSEL SUBARRAY UVIS12'
+                  return
+                  endif
+ 
+ 
              print*,' '
              print*,'HAS A FULL-FRAME APERTURE '
              print*,'BUT IT HAS THE SUBARRAY   '
@@ -26725,6 +27694,427 @@ c
                                               
 c*********************************************
 c****                                         
+c**** #include "/user/jayander/FORTRAN/FITSIO/CPYNREPL/cpyNrepl_acswfc_dq.f"
+c****                                         
+c*********************************************
+                                              
+ 
+      subroutine cpyNrepl_acswfc_dq(FILEI,FILEO,
+     .                              pixp,DQ_MASK_SPIKE,DQVAL)
+      implicit none
+ 
+      character*200 FILEI
+      character*200 FILEO
+      real          pixp(4096,4096)
+      real          DQ_MASK_SPIKE
+      integer       DQVAL
+ 
+      integer i, ii, j
+      integer k, kk
+      integer NENDs
+ 
+      byte    b2880(2880)
+      integer ios
+      character*2880 c2880
+      equivalence (b2880,c2880)
+ 
+      real    MASK_SMIN, MASK_SMAX
+ 
+      common / MASK_SMIN_ / MASK_SMIN
+      common / MASK_SMAX_ / MASK_SMAX
+ 
+      integer*2 pxd(4096,4096)
+      integer*2 DQVALu
+ 
+ 
+c----------------------
+c
+c copy FILEI into FILEO
+c
+      open(11,file=FILEI,
+     .        status='old',
+     .        iostat=ios,
+     .        err=900,
+     .        recl=2880,
+     .        form='UNFORMATTED',
+     .        access='DIRECT')
+      open(12,file=FILEO,status='unknown',
+     .     err=901,recl=2880,form='UNFORMATTED',
+     .     access='DIRECT')
+ 
+c     print*,'cpyNrepl_acswfc_dq (i): ',FILEI(1:40)
+c     print*,'cpyNrepl_acswfc_dq (o): ',FILEO(1:40)
+ 
+      NENDs = 0
+ 
+      i  = 0
+      ii = 0
+    1 i  = i  + 1
+      ii = ii + 1
+      read(11,rec=i,iostat=ios) b2880
+      if (NENDs.eq.0) then
+          do k = 0, 35
+             kk = k
+             if (c2880(k*80+01:k*80+08).eq.'END     ') then
+                 if (k.ge.29) then                                            ! not enough room in this block;
+                     write(c2880(k*80+01:k*80+80),'(80x)')                    !     end this block and go on to
+                     write(12,rec=ii,iostat=ios) b2880                        !     the next one
+                     ii = ii + 1
+                     do kk = 0, 35
+                        write(c2880(k*80+01:k*80+80),'(80x)')
+                        enddo
+                     kk = 0
+                     endif
+                 write(c2880((kk  )*80+01:(kk  )*80+80),770)
+                 write(c2880((kk+1)*80+01:(kk+1)*80+80),771)
+                 write(c2880((kk+2)*80+01:(kk+2)*80+80),772)
+     .                                                   DQ_MASK_SPIKE
+                 write(c2880((kk+3)*80+01:(kk+3)*80+80),773) MASK_SMIN
+                 write(c2880((kk+4)*80+01:(kk+4)*80+80),774) MASK_SMAX
+                 write(c2880((kk+5)*80+01:(kk+5)*80+80),775) DQVAL
+                 write(c2880((kk+6)*80+01:(kk+6)*80+80),770)
+                 write(c2880((kk+7)*80+01:(kk+7)*80+80),776)
+  770            format('HISTORY  ',70x)
+  771            format('HISTORY HST1PASS masked spikes in DQ ---',40x)
+  772            format('HISTORY          DQ_MASK_SPIKE: ',f11.2,
+     .                  '  (value above which spike is masked)')
+  773            format('HISTORY              MASK_SMIN: ',f11.2,
+     .                  '  (spike not masked within this dist)')
+  774            format('HISTORY              MASK_SMAX: ',f11.2,
+     .                  '  (spike not masked beyond this dist)')
+  775            format('HISTORY                  DQVAL: ',i8,3x,
+     .                  '  (DQVAL flagged for this mask)      ')
+  776            format('END',77x)
+                 goto 777
+                 endif
+             enddo
+          endif
+  777 continue
+      if (ios.eq.5002) goto 2 ! end of file
+      if (ios.ne.0) then
+          print*,'iostat: ',ios,i
+          goto 2
+          endif
+      write(12,rec=ii,iostat=ios) b2880
+      goto 1
+    2 continue
+      close(11)
+      close(12)
+ 
+      print*,'   i: ',i
+      print*,'  ii: ',ii
+ 
+ 
+      call readfits_i2e(FILEI,pxd(0001,2049),4096,2048,6)
+      call readfits_i2e(FILEI,pxd(0001,0001),4096,2048,3)
+ 
+      DQVALu = DQVAL
+      do i = 0001, 4096
+      do j = 0001, 4096
+         if (pixp(i,j).ge.DQ_MASK_SPIKE) then
+             pxd(i,j) = ior(pxd(i,j),DQVALu)
+             endif
+         enddo
+         enddo
+ 
+      call replfits_i2e(FILEO,pxd(0001,2049),4096,2048,6)
+      call replfits_i2e(FILEO,pxd(0001,0001),4096,2048,3)
+ 
+      return
+ 
+  900 continue
+      print*,'  ios: ',ios
+      stop '900'
+ 
+  901 continue
+      stop '901'
+      end
+ 
+                                              
+c*********************************************
+c****                                         
+c**** #include "/user/jayander/FORTRAN/FITSIO/CPYNREPL/cpyNrepl_wfc3uv_dq.f"
+c****                                         
+c*********************************************
+                                              
+ 
+      subroutine cpyNrepl_wfc3uv_dq(FILEI,FILEO,
+     .                              pixp,DQ_MASK_SPIKE,DQVAL)
+      implicit none
+ 
+      character*200 FILEI
+      character*200 FILEO
+      real          pixp(4096,4096)
+      real          DQ_MASK_SPIKE
+      integer       DQVAL
+ 
+      integer i, ii, j
+      integer k, kk
+      integer NENDs
+ 
+      byte    b2880(2880)
+      integer ios
+      character*2880 c2880
+      equivalence (b2880,c2880)
+ 
+      real    MASK_SMIN, MASK_SMAX
+ 
+      common / MASK_SMIN_ / MASK_SMIN
+      common / MASK_SMAX_ / MASK_SMAX
+ 
+      integer*2 pixq(4096,2051)
+      integer*2 DQVALu
+ 
+c----------------------
+c
+c copy FILEI into FILEO
+c
+      open(11,file=FILEI,
+     .        status='old',
+     .        iostat=ios,
+     .        err=900,
+     .        recl=2880,
+     .        form='UNFORMATTED',
+     .        access='DIRECT')
+      open(12,file=FILEO,status='unknown',
+     .     err=901,recl=2880,form='UNFORMATTED',
+     .     access='DIRECT')
+ 
+c     print*,'cpyNrepl_acswfc_dq (i): ',FILEI(1:40)
+c     print*,'cpyNrepl_acswfc_dq (o): ',FILEO(1:40)
+ 
+      NENDs = 0
+ 
+      i  = 0
+      ii = 0
+    1 i  = i  + 1
+      ii = ii + 1
+      read(11,rec=i,iostat=ios) b2880
+      if (NENDs.eq.0) then
+          do k = 0, 35
+             kk = k
+             if (c2880(k*80+01:k*80+08).eq.'END     ') then
+                 if (k.ge.29) then                                            ! not enough room in this block;
+                     write(c2880(k*80+01:k*80+80),'(80x)')                    !     end this block and go on to
+                     write(12,rec=ii,iostat=ios) b2880                        !     the next one
+                     ii = ii + 1
+                     do kk = 0, 35
+                        write(c2880(k*80+01:k*80+80),'(80x)')
+                        enddo
+                     kk = 0
+                     endif
+                 write(c2880((kk  )*80+01:(kk  )*80+80),770)
+                 write(c2880((kk+1)*80+01:(kk+1)*80+80),771)
+                 write(c2880((kk+2)*80+01:(kk+2)*80+80),772)
+     .                                                   DQ_MASK_SPIKE
+                 write(c2880((kk+3)*80+01:(kk+3)*80+80),773) MASK_SMIN
+                 write(c2880((kk+4)*80+01:(kk+4)*80+80),774) MASK_SMAX
+                 write(c2880((kk+5)*80+01:(kk+5)*80+80),775) DQVAL
+                 write(c2880((kk+6)*80+01:(kk+6)*80+80),770)
+                 write(c2880((kk+7)*80+01:(kk+7)*80+80),776)
+  770            format('HISTORY  ',70x)
+  771            format('HISTORY HST1PASS masked spikes in DQ ---',40x)
+  772            format('HISTORY          DQ_MASK_SPIKE: ',f11.2,
+     .                  '  (value above which spike is masked)')
+  773            format('HISTORY              MASK_SMIN: ',f11.2,
+     .                  '  (spike not masked within this dist)')
+  774            format('HISTORY              MASK_SMAX: ',f11.2,
+     .                  '  (spike not masked beyond this dist)')
+  775            format('HISTORY                  DQVAL: ',i8,3x,
+     .                  '  (DQVAL flagged for this mask)      ')
+  776            format('END',77x)
+                 goto 777
+                 endif
+             enddo
+          endif
+  777 continue
+      if (ios.eq.5002) goto 2 ! end of file
+      if (ios.ne.0) then
+          print*,'iostat: ',ios,i
+          goto 2
+          endif
+      write(12,rec=ii,iostat=ios) b2880
+      goto 1
+    2 continue
+      close(11)
+      close(12)
+ 
+      print*,'   i: ',i
+      print*,'  ii: ',ii
+ 
+      DQVALu = DQVAL
+      call readfits_i2e(FILEI,pixq,4096,2051,3)
+      do i = 0001, 4096
+      do j = 0001, 2048
+         if (pixp(i,j).ge.DQ_MASK_SPIKE) then
+             pixq(i,j) = ior(pixq(i,j),DQVALu)
+             endif
+         enddo
+         enddo
+      call replfits_i2e(FILEO,pixq,4096,2051,3)
+ 
+      call readfits_i2e(FILEI,pixq,4096,2051,6)
+      do i = 0001, 4096
+      do j = 0001, 2048
+         if (pixp(i,j+2048).ge.DQ_MASK_SPIKE) then
+             pixq(i,j) = ior(pixq(i,j),DQVALu)
+             endif
+         enddo
+         enddo
+      call replfits_i2e(FILEO,pixq,4096,2051,6)
+ 
+ 
+      return
+ 
+  900 continue
+      print*,'  ios: ',ios
+      stop '900'
+ 
+  901 continue
+      stop '901'
+      end
+ 
+                                              
+c*********************************************
+c****                                         
+c**** #include "/user/jayander/FORTRAN/FITSIO/CPYNREPL/cpyNrepl_wfc3ir_dq.f"
+c****                                         
+c*********************************************
+                                              
+ 
+      subroutine cpyNrepl_wfc3ir_dq(FILEI,FILEO,
+     .                              pixp,
+     .                              DQ_MASK_SPIKE,
+     .                              DQVAL)
+      implicit none
+ 
+      character*200 FILEI
+      character*200 FILEO
+      real          pixp(1014,1014)
+      real          DQ_MASK_SPIKE
+      integer       DQVAL
+ 
+      integer i, ii, j
+      integer k, kk
+      integer NENDs
+ 
+      byte    b2880(2880)
+      integer ios
+      character*2880 c2880
+      equivalence (b2880,c2880)
+ 
+      real    MASK_SMIN, MASK_SMAX
+ 
+      common / MASK_SMIN_ / MASK_SMIN
+      common / MASK_SMAX_ / MASK_SMAX
+ 
+      integer*2 pxd(1014,1014)
+      integer*2 DQVALu
+ 
+ 
+c----------------------
+c
+c copy FILEI into FILEO
+c
+      print*,'ENTER cpyNrepl_wfc3ir_dq '
+      open(11,file=FILEI,
+     .        status='old',
+     .        iostat=ios,
+     .        err=900,
+     .        recl=2880,
+     .        form='UNFORMATTED',
+     .        access='DIRECT')
+      open(12,file=FILEO,status='unknown',
+     .     err=901,recl=2880,form='UNFORMATTED',
+     .     access='DIRECT')
+ 
+      print*,'cpyNrepl_acswfc_dq (i): ',FILEI(1:40)
+      print*,'cpyNrepl_acswfc_dq (o): ',FILEO(1:40)
+ 
+      NENDs = 0
+ 
+      i  = 0
+      ii = 0
+    1 i  = i  + 1
+      ii = ii + 1
+      read(11,rec=i,iostat=ios) b2880
+      if (NENDs.eq.0) then
+          do k = 0, 35
+             kk = k
+             if (c2880(k*80+01:k*80+08).eq.'END     ') then
+                 if (k.ge.29) then                                            ! not enough room in this block;
+                     write(c2880(k*80+01:k*80+80),'(80x)')                    !     end this block and go on to
+                     write(12,rec=ii,iostat=ios) b2880                        !     the next one
+                     ii = ii + 1
+                     do kk = 0, 35
+                        write(c2880(k*80+01:k*80+80),'(80x)')
+                        enddo
+                     kk = 0
+                     endif
+                 write(c2880((kk  )*80+01:(kk  )*80+80),770)
+                 write(c2880((kk+1)*80+01:(kk+1)*80+80),771)
+                 write(c2880((kk+2)*80+01:(kk+2)*80+80),772)
+     .                                                   DQ_MASK_SPIKE
+                 write(c2880((kk+3)*80+01:(kk+3)*80+80),773) MASK_SMIN
+                 write(c2880((kk+4)*80+01:(kk+4)*80+80),774) MASK_SMAX
+                 write(c2880((kk+5)*80+01:(kk+5)*80+80),775) DQVAL
+                 write(c2880((kk+6)*80+01:(kk+6)*80+80),770)
+                 write(c2880((kk+7)*80+01:(kk+7)*80+80),776)
+  770            format('HISTORY  ',70x)
+  771            format('HISTORY HST1PASS masked spikes in DQ ---',40x)
+  772            format('HISTORY          DQ_MASK_SPIKE: ',f11.2,
+     .                  '  (value above which spike is masked)')
+  773            format('HISTORY              MASK_SMIN: ',f11.2,
+     .                  '  (spike not masked within this dist)')
+  774            format('HISTORY              MASK_SMAX: ',f11.2,
+     .                  '  (spike not masked beyond this dist)')
+  775            format('HISTORY                  DQVAL: ',i8,3x,
+     .                  '  (DQVAL flagged for this mask)      ')
+  776            format('END',77x)
+                 goto 777
+                 endif
+             enddo
+          endif
+  777 continue
+      if (ios.eq.5002) goto 2 ! end of file
+      if (ios.ne.0) then
+          print*,'iostat: ',ios,i
+          goto 2
+          endif
+      write(12,rec=ii,iostat=ios) b2880
+      goto 1
+    2 continue
+      close(11)
+      close(12)
+ 
+      call readfits_i2e(FILEI,pxd,1014,1014,3)
+ 
+      DQVALu = DQVAL
+      do i = 0001, 1014
+      do j = 0001, 1014
+         if (pixp(i,j).ge.DQ_MASK_SPIKE) then
+             pxd(i,j) = ior(pxd(i,j),DQVALu)
+             endif
+         enddo
+         enddo
+ 
+      print*,'replfits_i2e...'
+      call replfits_i2e(FILEO,pxd,1014,1014,3)
+ 
+      print*,'return!'
+      return
+ 
+  900 continue
+      print*,'  ios: ',ios
+      stop '900'
+ 
+  901 continue
+      stop '901'
+      end
+ 
+                                              
+c*********************************************
+c****                                         
 c**** #include "/user/jayander/FORTRAN/FITSIO/CPYNREPL/replfits_r4e.f"
 c****                                         
 c*********************************************
@@ -27043,6 +28433,30 @@ c     print*,'STREAM_INST: ',STREAM_INST
               endif
  
  
+          if (STREAM_APER(02:03).eq.'IR'.or.
+     .        STREAM_APER(02:10).eq.'GRISM1024') then
+              print*,'replfits_r4e:  '
+              print*,'        APER:  ',STREAM_APER(2:20)
+              if (NEXTENU.eq.4) return
+              NDIMXu = laxis1
+              NDIMYu = laxis2
+              deallocate(pixtemp)
+              allocate(pixtemp(NDIMXu,NDIMYu))
+              print*,'      NDIMXu: ',NDIMXu
+              print*,'      NDIMYu: ',NDIMYu
+              do ii = 1, NDIMXu
+              do jj = 1, NDIMYu
+                 iiu = ii
+                 jju = jj
+                 if (iiu.ge.0001.and.iiu.le.1014.and.
+     .               jju.ge.0001.and.jju.le.1014)
+     .               pixtemp(ii,jj) = pix(iiu,jju)
+                 enddo
+                 enddo
+              goto 444
+              endif
+ 
+ 
           if (STREAM_APER(02:09).eq.'IRSUB512') then
               print*,'replfits_r4e:  '
               print*,'        APER:  ',STREAM_APER(2:20)
@@ -27236,6 +28650,8 @@ c
       integer npu, nbu
       integer NX, NY
  
+      logical islinux
+ 
       byte b(4)
       real r
       equivalence(r,b)
@@ -27253,13 +28669,13 @@ c 199    format(5i8,1x,f10.3,1x,4i4)
 c           write(*,199) i, npu, nbu, NX, NY
             if (NX.le.NXP.and.NY.le.NYP) then
                 r = pix(NX,NY)
-                if (.not.(_LINUX_)) then
+                if (.not.islinux()) then
                    buff(nbu+1) = b(1)
                    buff(nbu+2) = b(2)
                    buff(nbu+3) = b(3)
                    buff(nbu+4) = b(4)
                    endif
-                if ((_LINUX_)) then
+                if (islinux()) then
                    buff(nbu+1) = b(4)
                    buff(nbu+2) = b(3)
                    buff(nbu+3) = b(2)
@@ -27274,6 +28690,249 @@ c    .                   buff(nbu+1), buff(nbu+1)
  
       return
       end
+ 
+ 
+                                              
+c*********************************************
+c****                                         
+c**** #include "/user/jayander/FORTRAN/FITSIO/CPYNREPL/replfits_i2e.f"
+c****                                         
+c*********************************************
+                                              
+ 
+ 
+c-----------------------------------------------------------------
+c
+c takes an existing fits image with extensions and replaces
+c one real*4 extension
+c
+      subroutine replfits_i2e(FILEo,pix,NDIMX,NDIMY,NEXTENU)
+      implicit none
+ 
+      character*(*) FILEo
+      integer   NDIMX,NDIMY
+      integer*2 pix(NDIMX,NDIMY)
+      integer   NEXTENU
+ 
+      character*199 FILEUo
+      character*70 INFO(10)
+      common / fitsinfo / INFO
+ 
+      integer naxes
+      integer laxis(3)
+      common/laxis3_/laxis
+      integer laxis1
+      integer laxis2
+      integer laxis3
+ 
+      integer NXF
+      integer NYF
+ 
+      character*8  field
+      character*40 stream
+ 
+      integer nbyte0
+      integer nbyteE
+      integer nbyte1
+      integer nbyte2
+      integer nbper
+      integer i,ios, k
+c     integer j
+ 
+      character*2880 buffc
+      byte buffb(2880)
+      equivalence (buffc,buffb)
+ 
+      integer ifirst, i1, i2
+      integer ii, jj
+      integer iiu,jju
+ 
+      integer np1, np2, npt
+      integer nextend
+      integer nread
+      real bscale, bzero
+      integer bitpix
+ 
+      character*70 HDR(25)
+      common/HDR/HDR
+ 
+      logical DIAG
+      data DIAG /.false./
+      integer NEND
+      integer iend
+ 
+      character*20 STREAM_APER
+      character*20 STREAM_INST
+ 
+      FILEUo = FILEo
+      iend = 0
+      do i = 196,1,-1
+         if (FILEo(i:i+4).eq.'.fits') iend = i+4
+         enddo
+      if (iend.eq.0) stop 'NO .fits in FILEo'
+      FILEUo = FILEo(1:iend)
+ 
+      if (DIAG) then
+         print*,'purge...'
+         print*,'FILEUo: ',FILEUo
+         endif
+ 
+      open(10,file=FILEUo,status='old',
+     .     err=900,recl=2880,form='UNFORMATTED',
+     .     access='DIRECT')
+ 
+      naxes = -1
+      laxis1 = 1
+      laxis2 = 1
+      laxis3 = 1
+      nextend = 0
+ 
+      BSCALE = 1.0
+      BZERO  = 0.0
+ 
+      NEND = 0
+      i = 0
+      nread = 0
+ 100  continue
+      i = i + 1
+      if (DIAG) print*,'READREC: ',i
+      read(10,rec=i,iostat=ios) buffc
+      do k = 0, 35, 1
+         if (DIAG) write(*,'(i4,1x,i4,1x,a80)')
+     .                   i,k,buffc(k*80+1:k*80+80)
+         field  = buffc(k*80+01:k*80+08)
+         stream = buffc(k*80+11:k*80+51)
+         if (field.eq.'NAXIS   ') read(stream,*) naxes
+         if (field.eq.'NAXIS1  ') read(stream,*) laxis1
+         if (field.eq.'NAXIS2  ') read(stream,*) laxis2
+         if (field.eq.'NEXTEND ') read(stream,*) nextend
+         if (field.eq.'BITPIX  ') read(stream,*) bitpix
+         if (field.eq.'BSCALE  ') read(stream,*) bscale
+         if (field.eq.'BZERO   ') read(stream,*) bzero
+         if (field.eq.'APERTURE') STREAM_APER = stream
+         if (field.eq.'INSTRUME') STREAM_INST = stream
+         if (field.eq.'END     ') then
+            print*,' ---> NEND: ',NEND,NEXTENU
+            if (NEND.eq.NEXTENU) goto 101
+            NEND = NEND + 1
+            endif
+         enddo
+      goto 100
+ 101  continue
+ 
+      nread = nread + 1
+ 
+      if (laxis1.ne.NDIMX.or.
+     .    laxis2.ne.NDIMY) then
+          print*,'                              '
+          print*,'ERROR in replfits_i2e ...'
+          print*,'                              '
+          print*,'        FILE: ',FILEo
+          print*,'        APER: ',STREAM_APER
+          print*,'   EXTENSION: ',NEXTENU
+          print*,'  SIZE ISSUE: '
+          print*,'         IN : ',NDIMX ,' x ',NDIMY
+          print*,'         OUT: ',laxis1,' x ',laxis2
+          print*,'                              '
+          print*,'   Perhaps the routine is not '
+          print*,'   properly set up for this   '
+          print*,'   subarray.                  '
+          print*,'                              '
+          print*,'   Send a request to help@stsci.edu '
+          print*,'   to see if this aperture can be added.'
+          print*,'                              '
+          stop
+          endif
+ 
+      ifirst = i+1
+      i1 = i
+      i2 = i
+ 
+      NXF = laxis1
+      NYF = laxis2
+ 
+      nbper  = 2*laxis1*laxis2
+      npt    =   laxis1*laxis2
+      nbyte1 = 1
+      nbyte2 = nbper
+      i1 = i+1 + nbyte1/2880
+      i2 = i+1 + nbyte2/2880
+ 
+      if (BITPIX.ne.16) then
+         print*,'readfits_i2e...'
+         print*,'BITPIX: ',BITPIX
+         print*,'prob'
+         stop
+         endif
+ 
+      do i = i1, i2, 1
+         nbyte0 = (i-ifirst)*2880+   1
+         nbyteE = (i-ifirst)*2880+2880
+         np1 = (nbyte0-nbyte1)/2 + 1
+         np2 = (nbyteE-nbyte1)/2 + 1
+         call pix2buff_i2e_CPRP(pix,buffb,np1,npt,
+     .                          laxis1,laxis2)
+         write(10,rec=i,iostat=ios) buffc
+         enddo
+ 
+      close(10)
+      if (DIAG) print*,'...closed ',FILEUo
+      return
+ 
+ 900  continue
+      print*,'READFITS ERROR'
+      stop
+ 
+      end
+ 
+ 
+c------------------------------------------------------
+c
+c
+      subroutine pix2buff_i2e_cprp(pix,buff,n1,nt,
+     .                             NXF,NYF)
+      implicit none
+      integer*2 pix(NXF,NYF)
+      byte      buff(2880)
+      integer n1,nt
+      integer NXF,NYF
+ 
+      integer i
+      integer npu, nbu
+      integer NX, NY
+ 
+      logical islinux
+ 
+      byte      b(2)
+      integer*2 i2
+      equivalence(i2,b)
+ 
+      if (NYF.eq.0) continue
+ 
+      do i = 1, 1440
+         npu = n1+i-1
+         nbu = (i-1)*2
+         if (npu.ge.1.and.npu.le.nt) then
+            NX = npu - (npu-1)/NXF*NXF
+            NY = 1 + (npu-1)/NXF
+            if (NX.le.NXF.and.NY.le.NYF) then
+                i2 = pix(NX,NY)
+                if (.not.islinux()) then
+                   buff(nbu+1) = b(1)
+                   buff(nbu+2) = b(2)
+                   endif
+                if (islinux()) then
+                   buff(nbu+1) = b(2)
+                   buff(nbu+2) = b(1)
+                   endif
+               endif
+            endif
+         enddo
+ 
+      return
+      end
+ 
+ 
  
  
  
@@ -27319,7 +28978,6 @@ c---------------------------------------------------------------------
       integer nmax
       real    drms, drmsX
  
-      if (Ns.gt.99999) stop 'Ns.gt.99999'
  
       drms = 0.
  
@@ -27547,5 +29205,3176 @@ c*********************************************
       end
  
  
+                                              
+c*********************************************
+c****                                         
+c**** #include "/user/jayander/FORTRAN/FITSIO/WFC3UV/RZX/sub_pixj2pixz_wfc3uv.f"
+c****                                         
+c*********************************************
+                                              
+ 
+      subroutine sub_pixj2pixz_wfc3uv(pixj,pixz)
+      implicit none
+ 
+      real pixj(4096,4096)
+      real pixz(8412,2070)
+ 
+      integer i, j
+ 
+      do j = 0001, 2070
+      do i = 0001, 8412
+         pixz(i,j) = 0.
+         enddo
+         enddo
+ 
+ 
+      do i = 0001, 2048
+      do j = 0001, 2048
+         pixz(i+0*2103+25,0000+j) = pixj(0000+i,0000+j)
+         pixz(i+1*2103+25,0000+j) = pixj(4097-i,0000+j)
+         pixz(i+2*2103+25,0000+j) = pixj(0000+i,4097-j)
+         pixz(i+3*2103+25,0000+j) = pixj(4097-i,4097-j)
+         enddo
+         enddo
+ 
+      return
+      end
+ 
+                                              
+c*********************************************
+c****                                         
+c**** #include "/user/jayander/FORTRAN/FITSIO/WFC3UV/RZX/sub_pixz2pixj_wfc3uv.f"
+c****                                         
+c*********************************************
+                                              
+ 
+      subroutine sub_pixz2pixj_wfc3uv(pixz,pixj)
+      implicit none
+ 
+      real pixz(8412,2070)
+      real pixj(4096,4096)
+ 
+      integer i, j
+ 
+      do i = 0001, 2048
+      do j = 0001, 2048
+         pixj(0000+i,0000+j) = pixz(i+0*2103+25,0000+j)
+         pixj(4097-i,0000+j) = pixz(i+1*2103+25,0000+j)
+         pixj(0000+i,4097-j) = pixz(i+2*2103+25,0000+j)
+         pixj(4097-i,4097-j) = pixz(i+3*2103+25,0000+j)
+         enddo
+         enddo
+ 
+      return
+      end
+ 
+                                              
+c*********************************************
+c****                                         
+c**** #include "/user/jayander/FORTRAN/FITSIO/WFC3UV/RZX/sub_raz2rzx_wfc3uv.f"
+c****                                         
+c*********************************************
+                                              
+ 
+ 
+c--------------------------------------------------------
+c
+c this subroutine performs the pixel-based correction for
+c serial CTE for wfc; it takes as input a raz image, and
+c outputs another raz image; the rDAT must be supplied
+c as well; the change is scaled by
+c
+c             rDAT  -9.359
+c      fscl = ------------
+c             23.500-9.359
+c
+c
+c this version uses the block data statements
+c
+c this routine has been modified to have gentler behavior at
+C the faint end; it has an array of partial traps to make
+c things less jumpy
+c
+      subroutine sub_raz2rzx_wfc3uv(pixz_i,pixz_o,rDAT)
+      implicit none
+ 
+      real*4   pixz_i(8412,2070)
+      real*4   pixz_o(8412,2070)
+      real*4   rDAT
+ 
+      integer   T, Ts
+      integer  trail_t(2103)
+ 
+      real*8       e_t(2103)
+      real*8       c_t(2103)
+      real*8       f_t(2103)
+      real*8       r_t(2103)
+ 
+      real*8     esc_t(2103) ! scaled with first pixel = 1
+      real*8     csc_t(2103) ! scaled with first pixel = 1
+      real*8     fsc_t(2103) ! scaled with first pixel = 1
+      real*8     rsc_t(2103) ! scaled with first pixel = 1
+ 
+      integer   N, Ns
+      integer   K, Ks
+      integer   trap_n(610)
+      real*8   elev_nk(610,4)
+ 
+      integer  i, j
+      real*4   pixk(2103,2070,4)
+ 
+      real*4   pixki(2103,2070,4)
+      real*4   pixko(2103,2070,4)
+      real*4   pixkd(2103,2070,4)
+ 
+      real*4   pixzi(8412,2070)
+      real*4   pixzo(8412,2070)
+      real*4   pixzd(8412,2070)
+ 
+      integer  iz, jz
+ 
+      common /elev_nk_/elev_nk
+ 
+      common /esc_t_/esc_t
+      common /csc_t_/csc_t
+      common /rsc_t_/rsc_t
+ 
+      real*8 reg(4206), regi(4206), rego(4206)
+ 
+      real fscl
+ 
+      character AMP_K(4)
+      data AMP_K / 'A', 'B', 'C', 'D' /
+      common /AMP_K_/AMP_K
+ 
+c------------------------------------------
+c
+      real*8 trailout_dat(4,2103)
+      common /trailout_dat_/trailout_dat
+ 
+      integer abcd(4,610)
+      common /abcd_/ abcd
+c
+c------------------------------------------
+ 
+      if (rDAT.gt.50.0.or.rdat.lt.9) then
+          print*,' '
+          print*,'sub_raz2rzx_wfc3uv --- '
+          print*,' '
+          print*,'    rDAT out of range: ',rDAT
+          print*,' '
+          stop
+          endif
+ 
+      fscl = (rDAT  -9.359) /
+     .       (23.500-9.359)
+ 
+      Ts = 2103 ! (T)rail length
+      Ns =  610 ! (N)umber of traps
+      Ks =    4 ! (K) chips
+ 
+      do T = 1, Ts
+         e_t(T) = trailout_dat(1,T)
+         c_t(T) = trailout_dat(2,T)
+         f_t(T) = trailout_dat(3,T)
+         r_t(T) = trailout_dat(4,T)
+         esc_t(T) = e_t(T)/e_t(1)
+         csc_t(T) = c_t(T)/e_t(1)
+         fsc_t(T) = f_t(T)/f_t(1)
+         rsc_t(T) = r_t(T)/f_t(1)
+         enddo
+ 
+      do N = 1, Ns
+         trap_n(N) = N
+         elev_nk(N,1) = abcd(3,N)
+         elev_nk(N,2) = abcd(4,N)
+         elev_nk(N,3) = abcd(1,N)
+         elev_nk(N,4) = abcd(2,N)
+         enddo
+ 
+      do k = 1, 4
+         do j = 0001, 2070
+         do i = 0001, 2103
+            iz = i+(k-1)*2103
+            jz = j
+            pixk(i,j,k) = pixz_i(iz,jz)
+            enddo
+            enddo
+         enddo
+ 
+      do k = 1, 4
+c        write(*,'(''   sub_raz2rzx_wfc3uv -- k='',i1,'' AMP='',a1)')
+c    .                  k,AMP_K(K)
+         call ampcopy_k(pixk(1,1,k),pixki(1,1,k))
+         call zero_reg(reg)
+         do j = 0001, 2070
+            call copy_reg(reg,regi)             ! make a copy of the current register state
+            call push_reg(reg,pixki(1,j,k))     ! parallel shift image row down into the register
+            call read_reg(reg,pixko(1,j,k),     ! do a serial read of the register; leave reg in a state
+     .                    elev_nk(1,k),
+     .                    esc_t, csc_t, rsc_t)
+            call copy_reg(reg,rego)             ! make a copy of the current register state
+            enddo
+         call ampcopy_k(pixko,pixk(1,1,k))
+         do j = 0001, 2070
+         do i = 0001, 2103
+            pixkd(i,j,k) = pixko(i,j,k) - pixki(i,j,k)
+            enddo
+            enddo
+         enddo!k
+ 
+      do k = 1, 4
+         do j = 0001, 2070
+         do i = 0001, 2103
+            iz = i+(k-1)*2103
+            jz = j
+            pixz_o(iz,jz) = pixz_i(iz,jz) - pixkd(i,j,k)*fscl
+            enddo
+            enddo
+         enddo
+ 
+      return
+      end
+ 
+ 
+ 
+c------------------------------------------
+c
+      subroutine copy_reg(regi,rego)           ! make a copy of the current register state
+      implicit none
+ 
+      real*8 regi(4206)
+      real*8 rego(4206)
+ 
+      integer i
+ 
+      do i = 1, 4206
+         rego(i) = regi(i)
+         enddo
+ 
+      return
+      end
+ 
+ 
+ 
+c------------------------------------------
+c
+      subroutine ampcopy_k(pixki,pixko) ! copy the image for one amp
+      implicit none
+ 
+      real pixki(2103,2070)
+      real pixko(2103,2070)
+ 
+      integer i, j
+ 
+      do j = 0001, 2070
+      do i = 0001, 2103
+         pixko(i,j) = pixki(i,j)
+         enddo
+         enddo
+ 
+      return
+      end
+ 
+ 
+ 
+c------------------------------------------
+c
+c clear the register (for starting readout)
+c
+      subroutine zero_reg(reg)
+      implicit none
+ 
+      real*8 reg(4206)
+ 
+      integer i
+ 
+      do i = 1, 4206
+         reg(i) = 0.0d0
+         enddo
+ 
+      return
+      end
+ 
+ 
+ 
+c------------------------------------------
+c
+c parallel shift image row down into register
+c * reg is modified in place
+c * row is not modified
+c
+      subroutine push_reg(reg,row)
+      implicit none
+ 
+      real*8 reg(4206)
+      real*4 row(2103)
+ 
+      integer i
+ 
+      do i = 1, 2103
+         reg(i) = reg(i) + row(i)
+         enddo
+ 
+      return
+      end
+ 
+ 
+ 
+c------------------------------------------
+c
+c serial read register
+c * reg is modified in place
+c * row is populated
+c * reg is left in a state (with electrons)
+c   for the next parallel shift to populat it
+c
+      subroutine read_reg(reg,row,
+     .                    elev_n,
+     .                    esc_t, csc_t, rsc_t)
+      implicit none
+ 
+      real*8  reg(4206)
+      real*4  row(2103)
+      real*8  elev_n(610)
+      real*8  esc_t(2103)
+      real*8  csc_t(2103)
+      real*8  rsc_t(2103)
+ 
+      integer N, Ns
+      integer T, Ts
+ 
+      real*8 reg0(4206)
+      real*8 regu(4206)
+      real*8 rgi1(4206) ! (+) holds the regular trail flux into trap
+      real*8 rgi2(4206) ! (+) holds the dump out of trail flux into trap
+      real*8 rego(4206) ! (-) holds the filling of the trap by this pixel
+ 
+      integer i
+      real    pmax
+      integer nmax
+ 
+      real f
+ 
+      Ns =  610
+      Ts = 2103
+ 
+c
+c set up the register variables
+c
+      pmax = 0
+      do i = 1, 4206
+         reg0(i) = reg(i)
+         regu(i) = reg(i)
+         rgi1(i) = 0
+         rgi2(i) = 0
+         rego(i) = 0
+         if (reg(i).gt.pmax) pmax = reg(i)
+         enddo
+ 
+c
+c see how many traps this particular row will
+c need to occupy itself with
+c
+      nmax = 1
+      do N = 1, 610
+         if (pmax.gt.elev_n(N)) nmax = N
+         enddo
+ 
+      f = 0
+      t = 0
+      do n = nmax, 1, -1
+         do i = 1, 4206
+            t = t + 1
+            if (t.le.2103) rgi1(i) = rgi1(i) + f*esc_t(t)
+            regu(i) = reg0(i) + rgi1(i)
+            if (regu(i).gt.elev_n(n)) then                     ! pix cloud big enough to fill trap
+                if (t.le.2103) rgi2(i) = rgi2(i) + f*rsc_t(t)  ! flush the trap into this pixel
+                t = 0                                          ! reset the trap
+                f = i/2025.0                                   ! how much charge in trap?
+                if (n.le.11) f = f/11.00                       ! the first 11 traps count as one
+                rego(i) = rego(i) - f*csc_t(2103)              ! remove charge that went into the trap
+                endif
+            regu(i) = regu(i) + rgi2(i) + rego(i)
+            enddo
+         enddo
+ 
+      do i = 0001, 2103
+         row(0000+i) = regu(0000+i)
+         reg(0000+i) = regu(2103+i)
+         enddo
+ 
+      return
+      end
+ 
+ 
+c #include "bd_trailout_necfr.f"
+ 
+c
+c #==> trailout.necfr <==
+c #   n        e          c            f              r
+c #
+c     1  486.000    486.000   0.44152718   0.55847282
+c     2   31.000    517.000   0.02816326   0.53030957
+c     3    9.500    526.500   0.00863068   0.52167889
+c     4    6.100    532.600   0.00554180   0.51613709
+c     5    5.300    537.900   0.00481501   0.51132208
+c     6    4.600    542.500   0.00417906   0.50714302
+c     7    4.200    546.700   0.00381567   0.50332735
+c     8    3.800    550.500   0.00345227   0.49987508
+c  2103
+c
+ 
+      block data bd trailout_dat
+      real*8 trailout_dat(4,2103)
+      common /trailout_dat_/trailout_dat
+      data trailout_dat/
+c
+c        e          c        f             r
+c
+     .486.000d0, 486.000d0, 0.44152718d0, 0.55847282d0,
+     . 31.000d0, 517.000d0, 0.02816326d0, 0.53030957d0,
+     .  9.500d0, 526.500d0, 0.00863068d0, 0.52167889d0,
+     .  6.100d0, 532.600d0, 0.00554180d0, 0.51613709d0,
+     .  5.300d0, 537.900d0, 0.00481501d0, 0.51132208d0,
+     .  4.600d0, 542.500d0, 0.00417906d0, 0.50714302d0,
+     .  4.200d0, 546.700d0, 0.00381567d0, 0.50332735d0,
+     .  3.800d0, 550.500d0, 0.00345227d0, 0.49987508d0,
+     .  3.550d0, 554.050d0, 0.00322515d0, 0.49664994d0,
+     .  3.300d0, 557.350d0, 0.00299802d0, 0.49365191d0,
+     .  3.140d0, 560.490d0, 0.00285267d0, 0.49079925d0,
+     .  2.980d0, 563.470d0, 0.00270731d0, 0.48809194d0,
+     .  2.820d0, 566.290d0, 0.00256195d0, 0.48552999d0,
+     .  2.660d0, 568.950d0, 0.00241659d0, 0.48311340d0,
+     .  2.500d0, 571.450d0, 0.00227123d0, 0.48084217d0,
+     .  2.400d0, 573.850d0, 0.00218038d0, 0.47866179d0,
+     .  2.300d0, 576.150d0, 0.00208953d0, 0.47657226d0,
+     .  2.200d0, 578.350d0, 0.00199868d0, 0.47457358d0,
+     .  2.100d0, 580.450d0, 0.00190783d0, 0.47266574d0,
+     .  2.000d0, 582.450d0, 0.00181698d0, 0.47084876d0,
+     .  1.975d0, 584.425d0, 0.00179427d0, 0.46905449d0,
+     .  1.950d0, 586.375d0, 0.00177156d0, 0.46728293d0,
+     .  1.925d0, 588.300d0, 0.00174885d0, 0.46553408d0,
+     .  1.900d0, 590.200d0, 0.00172614d0, 0.46380794d0,
+     .  1.875d0, 592.075d0, 0.00170342d0, 0.46210452d0,
+     .  1.850d0, 593.925d0, 0.00168071d0, 0.46042381d0,
+     .  1.825d0, 595.750d0, 0.00165800d0, 0.45876581d0,
+     .  1.800d0, 597.550d0, 0.00163529d0, 0.45713053d0,
+     .  1.775d0, 599.325d0, 0.00161257d0, 0.45551795d0,
+     .  1.750d0, 601.075d0, 0.00158986d0, 0.45392809d0,
+     .  1.725d0, 602.800d0, 0.00156715d0, 0.45236094d0,
+     .  1.700d0, 604.500d0, 0.00154444d0, 0.45081651d0,
+     .  1.675d0, 606.175d0, 0.00152172d0, 0.44929478d0,
+     .  1.650d0, 607.825d0, 0.00149901d0, 0.44779577d0,
+     .  1.625d0, 609.450d0, 0.00147630d0, 0.44631947d0,
+     .  1.600d0, 611.050d0, 0.00145359d0, 0.44486588d0,
+     .  1.575d0, 612.625d0, 0.00143088d0, 0.44343501d0,
+     .  1.550d0, 614.175d0, 0.00140816d0, 0.44202685d0,
+     .  1.525d0, 615.700d0, 0.00138545d0, 0.44064140d0,
+     .  1.500d0, 617.200d0, 0.00136274d0, 0.43927866d0,
+     .  1.470d0, 618.670d0, 0.00133548d0, 0.43794317d0,
+     .  1.440d0, 620.110d0, 0.00130823d0, 0.43663495d0,
+     .  1.410d0, 621.520d0, 0.00128097d0, 0.43535397d0,
+     .  1.380d0, 622.900d0, 0.00125372d0, 0.43410025d0,
+     .  1.350d0, 624.250d0, 0.00122646d0, 0.43287379d0,
+     .  1.320d0, 625.570d0, 0.00119921d0, 0.43167458d0,
+     .  1.290d0, 626.860d0, 0.00117195d0, 0.43050262d0,
+     .  1.260d0, 628.120d0, 0.00114470d0, 0.42935792d0,
+     .  1.230d0, 629.350d0, 0.00111745d0, 0.42824048d0,
+     .  1.200d0, 630.550d0, 0.00109019d0, 0.42715029d0,
+     .  1.190d0, 631.740d0, 0.00108111d0, 0.42606918d0,
+     .  1.180d0, 632.920d0, 0.00107202d0, 0.42499716d0,
+     .  1.170d0, 634.090d0, 0.00106294d0, 0.42393423d0,
+     .  1.160d0, 635.250d0, 0.00105385d0, 0.42288037d0,
+     .  1.150d0, 636.400d0, 0.00104477d0, 0.42183561d0,
+     .  1.140d0, 637.540d0, 0.00103568d0, 0.42079993d0,
+     .  1.130d0, 638.670d0, 0.00102660d0, 0.41977333d0,
+     .  1.120d0, 639.790d0, 0.00101751d0, 0.41875582d0,
+     .  1.110d0, 640.900d0, 0.00100843d0, 0.41774739d0,
+     .  1.100d0, 642.000d0, 0.00099934d0, 0.41674805d0,
+     .  1.090d0, 643.090d0, 0.00099026d0, 0.41575780d0,
+     .  1.080d0, 644.170d0, 0.00098117d0, 0.41477662d0,
+     .  1.070d0, 645.240d0, 0.00097209d0, 0.41380454d0,
+     .  1.060d0, 646.300d0, 0.00096300d0, 0.41284154d0,
+     .  1.050d0, 647.350d0, 0.00095392d0, 0.41188762d0,
+     .  1.040d0, 648.390d0, 0.00094483d0, 0.41094279d0,
+     .  1.030d0, 649.420d0, 0.00093575d0, 0.41000704d0,
+     .  1.020d0, 650.440d0, 0.00092666d0, 0.40908038d0,
+     .  1.010d0, 651.450d0, 0.00091758d0, 0.40816280d0,
+     .  1.000d0, 652.450d0, 0.00090849d0, 0.40725431d0,
+     .  0.990d0, 653.440d0, 0.00089941d0, 0.40635490d0,
+     .  0.980d0, 654.420d0, 0.00089032d0, 0.40546458d0,
+     .  0.970d0, 655.390d0, 0.00088124d0, 0.40458334d0,
+     .  0.960d0, 656.350d0, 0.00087215d0, 0.40371119d0,
+     .  0.950d0, 657.300d0, 0.00086307d0, 0.40284812d0,
+     .  0.944d0, 658.244d0, 0.00085762d0, 0.40199051d0,
+     .  0.938d0, 659.182d0, 0.00085217d0, 0.40113834d0,
+     .  0.932d0, 660.114d0, 0.00084671d0, 0.40029163d0,
+     .  0.926d0, 661.040d0, 0.00084126d0, 0.39945036d0,
+     .  0.920d0, 661.960d0, 0.00083581d0, 0.39861455d0,
+     .  0.914d0, 662.874d0, 0.00083036d0, 0.39778419d0,
+     .  0.908d0, 663.782d0, 0.00082491d0, 0.39695928d0,
+     .  0.902d0, 664.684d0, 0.00081946d0, 0.39613982d0,
+     .  0.896d0, 665.580d0, 0.00081401d0, 0.39532581d0,
+     .  0.890d0, 666.470d0, 0.00080856d0, 0.39451725d0,
+     .  0.884d0, 667.354d0, 0.00080311d0, 0.39371414d0,
+     .  0.878d0, 668.232d0, 0.00079766d0, 0.39291649d0,
+     .  0.872d0, 669.104d0, 0.00079221d0, 0.39212428d0,
+     .  0.866d0, 669.970d0, 0.00078675d0, 0.39133753d0,
+     .  0.860d0, 670.830d0, 0.00078130d0, 0.39055622d0,
+     .  0.854d0, 671.684d0, 0.00077585d0, 0.38978037d0,
+     .  0.848d0, 672.532d0, 0.00077040d0, 0.38900997d0,
+     .  0.842d0, 673.374d0, 0.00076495d0, 0.38824502d0,
+     .  0.836d0, 674.210d0, 0.00075950d0, 0.38748552d0,
+     .  0.830d0, 675.040d0, 0.00075405d0, 0.38673147d0,
+     .  0.824d0, 675.864d0, 0.00074860d0, 0.38598287d0,
+     .  0.818d0, 676.682d0, 0.00074315d0, 0.38523973d0,
+     .  0.812d0, 677.494d0, 0.00073770d0, 0.38450203d0,
+     .  0.806d0, 678.300d0, 0.00073224d0, 0.38376979d0,
+     .  0.800d0, 679.100d0, 0.00072679d0, 0.38304299d0,
+     .  0.796d0, 679.896d0, 0.00072316d0, 0.38231983d0,
+     .  0.792d0, 680.688d0, 0.00071953d0, 0.38160031d0,
+     .  0.788d0, 681.476d0, 0.00071589d0, 0.38088442d0,
+     .  0.784d0, 682.260d0, 0.00071226d0, 0.38017216d0,
+     .  0.780d0, 683.040d0, 0.00070862d0, 0.37946354d0,
+     .  0.776d0, 683.816d0, 0.00070499d0, 0.37875855d0,
+     .  0.772d0, 684.588d0, 0.00070136d0, 0.37805719d0,
+     .  0.768d0, 685.356d0, 0.00069772d0, 0.37735947d0,
+     .  0.764d0, 686.120d0, 0.00069409d0, 0.37666538d0,
+     .  0.760d0, 686.880d0, 0.00069045d0, 0.37597493d0,
+     .  0.756d0, 687.636d0, 0.00068682d0, 0.37528811d0,
+     .  0.752d0, 688.388d0, 0.00068319d0, 0.37460492d0,
+     .  0.748d0, 689.136d0, 0.00067955d0, 0.37392537d0,
+     .  0.744d0, 689.880d0, 0.00067592d0, 0.37324945d0,
+     .  0.740d0, 690.620d0, 0.00067228d0, 0.37257717d0,
+     .  0.736d0, 691.356d0, 0.00066865d0, 0.37190851d0,
+     .  0.732d0, 692.088d0, 0.00066502d0, 0.37124350d0,
+     .  0.728d0, 692.816d0, 0.00066138d0, 0.37058212d0,
+     .  0.724d0, 693.540d0, 0.00065775d0, 0.36992437d0,
+     .  0.720d0, 694.260d0, 0.00065411d0, 0.36927025d0,
+     .  0.716d0, 694.976d0, 0.00065048d0, 0.36861977d0,
+     .  0.712d0, 695.688d0, 0.00064685d0, 0.36797293d0,
+     .  0.708d0, 696.396d0, 0.00064321d0, 0.36732971d0,
+     .  0.704d0, 697.100d0, 0.00063958d0, 0.36669014d0,
+     .  0.700d0, 697.800d0, 0.00063594d0, 0.36605419d0,
+     .  0.696d0, 698.496d0, 0.00063231d0, 0.36542188d0,
+     .  0.692d0, 699.188d0, 0.00062868d0, 0.36479320d0,
+     .  0.688d0, 699.876d0, 0.00062504d0, 0.36416816d0,
+     .  0.684d0, 700.560d0, 0.00062141d0, 0.36354675d0,
+     .  0.680d0, 701.240d0, 0.00061777d0, 0.36292898d0,
+     .  0.676d0, 701.916d0, 0.00061414d0, 0.36231484d0,
+     .  0.672d0, 702.588d0, 0.00061051d0, 0.36170433d0,
+     .  0.668d0, 703.256d0, 0.00060687d0, 0.36109746d0,
+     .  0.664d0, 703.920d0, 0.00060324d0, 0.36049422d0,
+     .  0.660d0, 704.580d0, 0.00059960d0, 0.35989461d0,
+     .  0.656d0, 705.236d0, 0.00059597d0, 0.35929864d0,
+     .  0.652d0, 705.888d0, 0.00059234d0, 0.35870631d0,
+     .  0.648d0, 706.536d0, 0.00058870d0, 0.35811760d0,
+     .  0.644d0, 707.180d0, 0.00058507d0, 0.35753254d0,
+     .  0.640d0, 707.820d0, 0.00058143d0, 0.35695110d0,
+     .  0.636d0, 708.456d0, 0.00057780d0, 0.35637330d0,
+     .  0.632d0, 709.088d0, 0.00057417d0, 0.35579913d0,
+     .  0.628d0, 709.716d0, 0.00057053d0, 0.35522860d0,
+     .  0.624d0, 710.340d0, 0.00056690d0, 0.35466170d0,
+     .  0.620d0, 710.960d0, 0.00056327d0, 0.35409844d0,
+     .  0.616d0, 711.576d0, 0.00055963d0, 0.35353880d0,
+     .  0.612d0, 712.188d0, 0.00055600d0, 0.35298281d0,
+     .  0.608d0, 712.796d0, 0.00055236d0, 0.35243044d0,
+     .  0.604d0, 713.400d0, 0.00054873d0, 0.35188171d0,
+     .  0.600d0, 714.000d0, 0.00054510d0, 0.35133662d0,
+     .  0.598d0, 714.598d0, 0.00054328d0, 0.35079334d0,
+     .  0.596d0, 715.194d0, 0.00054146d0, 0.35025188d0,
+     .  0.594d0, 715.788d0, 0.00053964d0, 0.34971224d0,
+     .  0.592d0, 716.380d0, 0.00053783d0, 0.34917441d0,
+     .  0.590d0, 716.970d0, 0.00053601d0, 0.34863840d0,
+     .  0.588d0, 717.558d0, 0.00053419d0, 0.34810420d0,
+     .  0.586d0, 718.144d0, 0.00053238d0, 0.34757183d0,
+     .  0.584d0, 718.728d0, 0.00053056d0, 0.34704127d0,
+     .  0.582d0, 719.310d0, 0.00052874d0, 0.34651253d0,
+     .  0.580d0, 719.890d0, 0.00052693d0, 0.34598560d0,
+     .  0.578d0, 720.468d0, 0.00052511d0, 0.34546049d0,
+     .  0.576d0, 721.044d0, 0.00052329d0, 0.34493720d0,
+     .  0.574d0, 721.618d0, 0.00052147d0, 0.34441573d0,
+     .  0.572d0, 722.190d0, 0.00051966d0, 0.34389607d0,
+     .  0.570d0, 722.760d0, 0.00051784d0, 0.34337823d0,
+     .  0.568d0, 723.328d0, 0.00051602d0, 0.34286220d0,
+     .  0.566d0, 723.894d0, 0.00051421d0, 0.34234800d0,
+     .  0.564d0, 724.458d0, 0.00051239d0, 0.34183561d0,
+     .  0.562d0, 725.020d0, 0.00051057d0, 0.34132504d0,
+     .  0.560d0, 725.580d0, 0.00050876d0, 0.34081628d0,
+     .  0.558d0, 726.138d0, 0.00050694d0, 0.34030934d0,
+     .  0.556d0, 726.694d0, 0.00050512d0, 0.33980422d0,
+     .  0.554d0, 727.248d0, 0.00050330d0, 0.33930092d0,
+     .  0.552d0, 727.800d0, 0.00050149d0, 0.33879943d0,
+     .  0.550d0, 728.350d0, 0.00049967d0, 0.33829976d0,
+     .  0.548d0, 728.898d0, 0.00049785d0, 0.33780190d0,
+     .  0.546d0, 729.444d0, 0.00049604d0, 0.33730587d0,
+     .  0.544d0, 729.988d0, 0.00049422d0, 0.33681165d0,
+     .  0.542d0, 730.530d0, 0.00049240d0, 0.33631924d0,
+     .  0.540d0, 731.070d0, 0.00049059d0, 0.33582866d0,
+     .  0.538d0, 731.608d0, 0.00048877d0, 0.33533989d0,
+     .  0.536d0, 732.144d0, 0.00048695d0, 0.33485294d0,
+     .  0.534d0, 732.678d0, 0.00048513d0, 0.33436780d0,
+     .  0.532d0, 733.210d0, 0.00048332d0, 0.33388449d0,
+     .  0.530d0, 733.740d0, 0.00048150d0, 0.33340298d0,
+     .  0.528d0, 734.268d0, 0.00047968d0, 0.33292330d0,
+     .  0.526d0, 734.794d0, 0.00047787d0, 0.33244543d0,
+     .  0.524d0, 735.318d0, 0.00047605d0, 0.33196938d0,
+     .  0.522d0, 735.840d0, 0.00047423d0, 0.33149515d0,
+     .  0.520d0, 736.360d0, 0.00047242d0, 0.33102274d0,
+     .  0.518d0, 736.878d0, 0.00047060d0, 0.33055214d0,
+     .  0.516d0, 737.394d0, 0.00046878d0, 0.33008335d0,
+     .  0.514d0, 737.908d0, 0.00046696d0, 0.32961639d0,
+     .  0.512d0, 738.420d0, 0.00046515d0, 0.32915124d0,
+     .  0.510d0, 738.930d0, 0.00046333d0, 0.32868791d0,
+     .  0.508d0, 739.438d0, 0.00046151d0, 0.32822640d0,
+     .  0.506d0, 739.944d0, 0.00045970d0, 0.32776670d0,
+     .  0.504d0, 740.448d0, 0.00045788d0, 0.32730882d0,
+     .  0.502d0, 740.950d0, 0.00045606d0, 0.32685276d0,
+     .  0.500d0, 741.450d0, 0.00045425d0, 0.32639851d0,
+     .  0.499d0, 741.949d0, 0.00045334d0, 0.32594517d0,
+     .  0.498d0, 742.447d0, 0.00045243d0, 0.32549274d0,
+     .  0.497d0, 742.944d0, 0.00045152d0, 0.32504122d0,
+     .  0.496d0, 743.440d0, 0.00045061d0, 0.32459061d0,
+     .  0.495d0, 743.935d0, 0.00044970d0, 0.32414091d0,
+     .  0.494d0, 744.429d0, 0.00044880d0, 0.32369211d0,
+     .  0.493d0, 744.922d0, 0.00044789d0, 0.32324423d0,
+     .  0.492d0, 745.414d0, 0.00044698d0, 0.32279725d0,
+     .  0.491d0, 745.905d0, 0.00044607d0, 0.32235118d0,
+     .  0.490d0, 746.395d0, 0.00044516d0, 0.32190602d0,
+     .  0.489d0, 746.884d0, 0.00044425d0, 0.32146176d0,
+     .  0.488d0, 747.372d0, 0.00044334d0, 0.32101842d0,
+     .  0.487d0, 747.859d0, 0.00044244d0, 0.32057598d0,
+     .  0.486d0, 748.345d0, 0.00044153d0, 0.32013446d0,
+     .  0.485d0, 748.830d0, 0.00044062d0, 0.31969384d0,
+     .  0.484d0, 749.314d0, 0.00043971d0, 0.31925413d0,
+     .  0.483d0, 749.797d0, 0.00043880d0, 0.31881533d0,
+     .  0.482d0, 750.279d0, 0.00043789d0, 0.31837743d0,
+     .  0.481d0, 750.760d0, 0.00043698d0, 0.31794045d0,
+     .  0.480d0, 751.240d0, 0.00043608d0, 0.31750437d0,
+     .  0.479d0, 751.719d0, 0.00043517d0, 0.31706920d0,
+     .  0.478d0, 752.197d0, 0.00043426d0, 0.31663495d0,
+     .  0.477d0, 752.674d0, 0.00043335d0, 0.31620159d0,
+     .  0.476d0, 753.150d0, 0.00043244d0, 0.31576915d0,
+     .  0.475d0, 753.625d0, 0.00043153d0, 0.31533762d0,
+     .  0.474d0, 754.099d0, 0.00043063d0, 0.31490699d0,
+     .  0.473d0, 754.572d0, 0.00042972d0, 0.31447728d0,
+     .  0.472d0, 755.044d0, 0.00042881d0, 0.31404847d0,
+     .  0.471d0, 755.515d0, 0.00042790d0, 0.31362057d0,
+     .  0.470d0, 755.985d0, 0.00042699d0, 0.31319358d0,
+     .  0.469d0, 756.454d0, 0.00042608d0, 0.31276749d0,
+     .  0.468d0, 756.922d0, 0.00042517d0, 0.31234232d0,
+     .  0.467d0, 757.389d0, 0.00042427d0, 0.31191805d0,
+     .  0.466d0, 757.855d0, 0.00042336d0, 0.31149470d0,
+     .  0.465d0, 758.320d0, 0.00042245d0, 0.31107225d0,
+     .  0.464d0, 758.784d0, 0.00042154d0, 0.31065071d0,
+     .  0.463d0, 759.247d0, 0.00042063d0, 0.31023008d0,
+     .  0.462d0, 759.709d0, 0.00041972d0, 0.30981035d0,
+     .  0.461d0, 760.170d0, 0.00041881d0, 0.30939154d0,
+     .  0.460d0, 760.630d0, 0.00041791d0, 0.30897363d0,
+     .  0.459d0, 761.089d0, 0.00041700d0, 0.30855663d0,
+     .  0.458d0, 761.547d0, 0.00041609d0, 0.30814054d0,
+     .  0.457d0, 762.004d0, 0.00041518d0, 0.30772536d0,
+     .  0.456d0, 762.460d0, 0.00041427d0, 0.30731109d0,
+     .  0.455d0, 762.915d0, 0.00041336d0, 0.30689773d0,
+     .  0.454d0, 763.369d0, 0.00041246d0, 0.30648527d0,
+     .  0.453d0, 763.822d0, 0.00041155d0, 0.30607372d0,
+     .  0.452d0, 764.274d0, 0.00041064d0, 0.30566309d0,
+     .  0.451d0, 764.725d0, 0.00040973d0, 0.30525336d0,
+     .  0.450d0, 765.175d0, 0.00040882d0, 0.30484453d0,
+     .  0.449d0, 765.624d0, 0.00040791d0, 0.30443662d0,
+     .  0.448d0, 766.072d0, 0.00040700d0, 0.30402962d0,
+     .  0.447d0, 766.519d0, 0.00040610d0, 0.30362352d0,
+     .  0.446d0, 766.965d0, 0.00040519d0, 0.30321833d0,
+     .  0.445d0, 767.410d0, 0.00040428d0, 0.30281405d0,
+     .  0.444d0, 767.854d0, 0.00040337d0, 0.30241068d0,
+     .  0.443d0, 768.297d0, 0.00040246d0, 0.30200822d0,
+     .  0.442d0, 768.739d0, 0.00040155d0, 0.30160667d0,
+     .  0.441d0, 769.180d0, 0.00040065d0, 0.30120602d0,
+     .  0.440d0, 769.620d0, 0.00039974d0, 0.30080629d0,
+     .  0.439d0, 770.059d0, 0.00039883d0, 0.30040746d0,
+     .  0.438d0, 770.497d0, 0.00039792d0, 0.30000954d0,
+     .  0.437d0, 770.934d0, 0.00039701d0, 0.29961253d0,
+     .  0.436d0, 771.370d0, 0.00039610d0, 0.29921643d0,
+     .  0.435d0, 771.805d0, 0.00039519d0, 0.29882123d0,
+     .  0.434d0, 772.239d0, 0.00039429d0, 0.29842695d0,
+     .  0.433d0, 772.672d0, 0.00039338d0, 0.29803357d0,
+     .  0.432d0, 773.104d0, 0.00039247d0, 0.29764110d0,
+     .  0.431d0, 773.535d0, 0.00039156d0, 0.29724954d0,
+     .  0.430d0, 773.965d0, 0.00039065d0, 0.29685889d0,
+     .  0.429d0, 774.394d0, 0.00038974d0, 0.29646915d0,
+     .  0.428d0, 774.822d0, 0.00038883d0, 0.29608031d0,
+     .  0.427d0, 775.249d0, 0.00038793d0, 0.29569238d0,
+     .  0.426d0, 775.675d0, 0.00038702d0, 0.29530537d0,
+     .  0.425d0, 776.100d0, 0.00038611d0, 0.29491926d0,
+     .  0.424d0, 776.524d0, 0.00038520d0, 0.29453406d0,
+     .  0.423d0, 776.947d0, 0.00038429d0, 0.29414976d0,
+     .  0.422d0, 777.369d0, 0.00038338d0, 0.29376638d0,
+     .  0.421d0, 777.790d0, 0.00038248d0, 0.29338391d0,
+     .  0.420d0, 778.210d0, 0.00038157d0, 0.29300234d0,
+     .  0.419d0, 778.629d0, 0.00038066d0, 0.29262168d0,
+     .  0.418d0, 779.047d0, 0.00037975d0, 0.29224193d0,
+     .  0.417d0, 779.464d0, 0.00037884d0, 0.29186309d0,
+     .  0.416d0, 779.880d0, 0.00037793d0, 0.29148516d0,
+     .  0.415d0, 780.295d0, 0.00037702d0, 0.29110813d0,
+     .  0.414d0, 780.709d0, 0.00037612d0, 0.29073202d0,
+     .  0.413d0, 781.122d0, 0.00037521d0, 0.29035681d0,
+     .  0.412d0, 781.534d0, 0.00037430d0, 0.28998251d0,
+     .  0.411d0, 781.945d0, 0.00037339d0, 0.28960912d0,
+     .  0.410d0, 782.355d0, 0.00037248d0, 0.28923664d0,
+     .  0.409d0, 782.764d0, 0.00037157d0, 0.28886507d0,
+     .  0.408d0, 783.172d0, 0.00037066d0, 0.28849440d0,
+     .  0.407d0, 783.579d0, 0.00036976d0, 0.28812465d0,
+     .  0.406d0, 783.985d0, 0.00036885d0, 0.28775580d0,
+     .  0.405d0, 784.390d0, 0.00036794d0, 0.28738786d0,
+     .  0.404d0, 784.794d0, 0.00036703d0, 0.28702083d0,
+     .  0.403d0, 785.197d0, 0.00036612d0, 0.28665470d0,
+     .  0.402d0, 785.599d0, 0.00036521d0, 0.28628949d0,
+     .  0.401d0, 786.000d0, 0.00036431d0, 0.28592519d0,
+     .  0.400d0, 786.400d0, 0.00036340d0, 0.28556179d0,
+     .  0.399d0, 786.799d0, 0.00036249d0, 0.28519930d0,
+     .  0.398d0, 787.197d0, 0.00036158d0, 0.28483772d0,
+     .  0.397d0, 787.594d0, 0.00036067d0, 0.28447705d0,
+     .  0.396d0, 787.990d0, 0.00035976d0, 0.28411729d0,
+     .  0.395d0, 788.385d0, 0.00035885d0, 0.28375843d0,
+     .  0.394d0, 788.779d0, 0.00035795d0, 0.28340049d0,
+     .  0.393d0, 789.172d0, 0.00035704d0, 0.28304345d0,
+     .  0.392d0, 789.564d0, 0.00035613d0, 0.28268732d0,
+     .  0.391d0, 789.955d0, 0.00035522d0, 0.28233210d0,
+     .  0.390d0, 790.345d0, 0.00035431d0, 0.28197779d0,
+     .  0.389d0, 790.734d0, 0.00035340d0, 0.28162438d0,
+     .  0.388d0, 791.122d0, 0.00035249d0, 0.28127189d0,
+     .  0.387d0, 791.509d0, 0.00035159d0, 0.28092030d0,
+     .  0.386d0, 791.895d0, 0.00035068d0, 0.28056962d0,
+     .  0.385d0, 792.280d0, 0.00034977d0, 0.28021986d0,
+     .  0.384d0, 792.664d0, 0.00034886d0, 0.27987099d0,
+     .  0.383d0, 793.047d0, 0.00034795d0, 0.27952304d0,
+     .  0.382d0, 793.429d0, 0.00034704d0, 0.27917600d0,
+     .  0.381d0, 793.810d0, 0.00034614d0, 0.27882986d0,
+     .  0.380d0, 794.190d0, 0.00034523d0, 0.27848464d0,
+     .  0.379d0, 794.569d0, 0.00034432d0, 0.27814032d0,
+     .  0.378d0, 794.947d0, 0.00034341d0, 0.27779691d0,
+     .  0.377d0, 795.324d0, 0.00034250d0, 0.27745441d0,
+     .  0.376d0, 795.700d0, 0.00034159d0, 0.27711281d0,
+     .  0.375d0, 796.075d0, 0.00034068d0, 0.27677213d0,
+     .  0.374d0, 796.449d0, 0.00033978d0, 0.27643235d0,
+     .  0.373d0, 796.822d0, 0.00033887d0, 0.27609348d0,
+     .  0.372d0, 797.194d0, 0.00033796d0, 0.27575552d0,
+     .  0.371d0, 797.565d0, 0.00033705d0, 0.27541847d0,
+     .  0.370d0, 797.935d0, 0.00033614d0, 0.27508233d0,
+     .  0.369d0, 798.304d0, 0.00033523d0, 0.27474710d0,
+     .  0.368d0, 798.672d0, 0.00033433d0, 0.27441277d0,
+     .  0.367d0, 799.039d0, 0.00033342d0, 0.27407936d0,
+     .  0.366d0, 799.405d0, 0.00033251d0, 0.27374685d0,
+     .  0.365d0, 799.770d0, 0.00033160d0, 0.27341525d0,
+     .  0.364d0, 800.134d0, 0.00033069d0, 0.27308456d0,
+     .  0.363d0, 800.497d0, 0.00032978d0, 0.27275478d0,
+     .  0.362d0, 800.859d0, 0.00032887d0, 0.27242590d0,
+     .  0.361d0, 801.220d0, 0.00032797d0, 0.27209794d0,
+     .  0.360d0, 801.580d0, 0.00032706d0, 0.27177088d0,
+     .  0.359d0, 801.939d0, 0.00032615d0, 0.27144473d0,
+     .  0.358d0, 802.297d0, 0.00032524d0, 0.27111949d0,
+     .  0.357d0, 802.654d0, 0.00032433d0, 0.27079516d0,
+     .  0.356d0, 803.010d0, 0.00032342d0, 0.27047173d0,
+     .  0.355d0, 803.365d0, 0.00032251d0, 0.27014922d0,
+     .  0.354d0, 803.719d0, 0.00032161d0, 0.26982761d0,
+     .  0.353d0, 804.072d0, 0.00032070d0, 0.26950692d0,
+     .  0.352d0, 804.424d0, 0.00031979d0, 0.26918713d0,
+     .  0.351d0, 804.775d0, 0.00031888d0, 0.26886825d0,
+     .  0.350d0, 805.125d0, 0.00031797d0, 0.26855027d0,
+     .  0.349d0, 805.474d0, 0.00031706d0, 0.26823321d0,
+     .  0.348d0, 805.822d0, 0.00031616d0, 0.26791705d0,
+     .  0.347d0, 806.169d0, 0.00031525d0, 0.26760181d0,
+     .  0.346d0, 806.515d0, 0.00031434d0, 0.26728747d0,
+     .  0.345d0, 806.860d0, 0.00031343d0, 0.26697404d0,
+     .  0.344d0, 807.204d0, 0.00031252d0, 0.26666152d0,
+     .  0.343d0, 807.547d0, 0.00031161d0, 0.26634991d0,
+     .  0.342d0, 807.889d0, 0.00031070d0, 0.26603920d0,
+     .  0.341d0, 808.230d0, 0.00030980d0, 0.26572941d0,
+     .  0.340d0, 808.570d0, 0.00030889d0, 0.26542052d0,
+     .  0.339d0, 808.909d0, 0.00030798d0, 0.26511254d0,
+     .  0.338d0, 809.247d0, 0.00030707d0, 0.26480547d0,
+     .  0.337d0, 809.584d0, 0.00030616d0, 0.26449931d0,
+     .  0.336d0, 809.920d0, 0.00030525d0, 0.26419405d0,
+     .  0.335d0, 810.255d0, 0.00030434d0, 0.26388971d0,
+     .  0.334d0, 810.589d0, 0.00030344d0, 0.26358627d0,
+     .  0.333d0, 810.922d0, 0.00030253d0, 0.26328374d0,
+     .  0.332d0, 811.254d0, 0.00030162d0, 0.26298213d0,
+     .  0.331d0, 811.585d0, 0.00030071d0, 0.26268141d0,
+     .  0.330d0, 811.915d0, 0.00029980d0, 0.26238161d0,
+     .  0.329d0, 812.244d0, 0.00029889d0, 0.26208272d0,
+     .  0.328d0, 812.572d0, 0.00029799d0, 0.26178473d0,
+     .  0.327d0, 812.899d0, 0.00029708d0, 0.26148766d0,
+     .  0.326d0, 813.225d0, 0.00029617d0, 0.26119149d0,
+     .  0.325d0, 813.550d0, 0.00029526d0, 0.26089623d0,
+     .  0.324d0, 813.874d0, 0.00029435d0, 0.26060188d0,
+     .  0.323d0, 814.197d0, 0.00029344d0, 0.26030843d0,
+     .  0.322d0, 814.519d0, 0.00029253d0, 0.26001590d0,
+     .  0.321d0, 814.840d0, 0.00029163d0, 0.25972427d0,
+     .  0.320d0, 815.160d0, 0.00029072d0, 0.25943356d0,
+     .  0.319d0, 815.479d0, 0.00028981d0, 0.25914375d0,
+     .  0.318d0, 815.797d0, 0.00028890d0, 0.25885485d0,
+     .  0.317d0, 816.114d0, 0.00028799d0, 0.25856685d0,
+     .  0.316d0, 816.430d0, 0.00028708d0, 0.25827977d0,
+     .  0.315d0, 816.745d0, 0.00028618d0, 0.25799360d0,
+     .  0.314d0, 817.059d0, 0.00028527d0, 0.25770833d0,
+     .  0.313d0, 817.372d0, 0.00028436d0, 0.25742397d0,
+     .  0.312d0, 817.684d0, 0.00028345d0, 0.25714052d0,
+     .  0.311d0, 817.995d0, 0.00028254d0, 0.25685798d0,
+     .  0.310d0, 818.305d0, 0.00028163d0, 0.25657635d0,
+     .  0.309d0, 818.614d0, 0.00028072d0, 0.25629562d0,
+     .  0.308d0, 818.922d0, 0.00027982d0, 0.25601581d0,
+     .  0.307d0, 819.229d0, 0.00027891d0, 0.25573690d0,
+     .  0.306d0, 819.535d0, 0.00027800d0, 0.25545890d0,
+     .  0.305d0, 819.840d0, 0.00027709d0, 0.25518181d0,
+     .  0.304d0, 820.144d0, 0.00027618d0, 0.25490563d0,
+     .  0.303d0, 820.447d0, 0.00027527d0, 0.25463036d0,
+     .  0.302d0, 820.749d0, 0.00027436d0, 0.25435599d0,
+     .  0.301d0, 821.050d0, 0.00027346d0, 0.25408254d0,
+     .  0.300d0, 821.350d0, 0.00027255d0, 0.25380999d0,
+     .  0.300d0, 821.649d0, 0.00027209d0, 0.25353790d0,
+     .  0.299d0, 821.948d0, 0.00027164d0, 0.25326626d0,
+     .  0.299d0, 822.247d0, 0.00027118d0, 0.25299507d0,
+     .  0.298d0, 822.545d0, 0.00027073d0, 0.25272434d0,
+     .  0.298d0, 822.842d0, 0.00027028d0, 0.25245406d0,
+     .  0.297d0, 823.139d0, 0.00026982d0, 0.25218424d0,
+     .  0.297d0, 823.436d0, 0.00026937d0, 0.25191487d0,
+     .  0.296d0, 823.732d0, 0.00026891d0, 0.25164596d0,
+     .  0.296d0, 824.027d0, 0.00026846d0, 0.25137750d0,
+     .  0.295d0, 824.322d0, 0.00026801d0, 0.25110950d0,
+     .  0.295d0, 824.617d0, 0.00026755d0, 0.25084195d0,
+     .  0.294d0, 824.911d0, 0.00026710d0, 0.25057485d0,
+     .  0.294d0, 825.204d0, 0.00026664d0, 0.25030821d0,
+     .  0.293d0, 825.497d0, 0.00026619d0, 0.25004202d0,
+     .  0.293d0, 825.790d0, 0.00026573d0, 0.24977628d0,
+     .  0.292d0, 826.082d0, 0.00026528d0, 0.24951100d0,
+     .  0.292d0, 826.373d0, 0.00026483d0, 0.24924618d0,
+     .  0.291d0, 826.664d0, 0.00026437d0, 0.24898181d0,
+     .  0.291d0, 826.955d0, 0.00026392d0, 0.24871789d0,
+     .  0.290d0, 827.245d0, 0.00026346d0, 0.24845443d0,
+     .  0.290d0, 827.534d0, 0.00026301d0, 0.24819142d0,
+     .  0.289d0, 827.823d0, 0.00026255d0, 0.24792887d0,
+     .  0.289d0, 828.112d0, 0.00026210d0, 0.24766677d0,
+     .  0.288d0, 828.400d0, 0.00026165d0, 0.24740512d0,
+     .  0.288d0, 828.688d0, 0.00026119d0, 0.24714393d0,
+     .  0.287d0, 828.974d0, 0.00026074d0, 0.24688319d0,
+     .  0.287d0, 829.261d0, 0.00026028d0, 0.24662291d0,
+     .  0.286d0, 829.547d0, 0.00025983d0, 0.24636308d0,
+     .  0.286d0, 829.832d0, 0.00025937d0, 0.24610370d0,
+     .  0.285d0, 830.118d0, 0.00025892d0, 0.24584478d0,
+     .  0.285d0, 830.402d0, 0.00025847d0, 0.24558632d0,
+     .  0.284d0, 830.686d0, 0.00025801d0, 0.24532831d0,
+     .  0.284d0, 830.970d0, 0.00025756d0, 0.24507075d0,
+     .  0.283d0, 831.253d0, 0.00025710d0, 0.24481365d0,
+     .  0.283d0, 831.535d0, 0.00025665d0, 0.24455700d0,
+     .  0.282d0, 831.817d0, 0.00025619d0, 0.24430080d0,
+     .  0.282d0, 832.098d0, 0.00025574d0, 0.24404506d0,
+     .  0.281d0, 832.379d0, 0.00025529d0, 0.24378977d0,
+     .  0.281d0, 832.660d0, 0.00025483d0, 0.24353494d0,
+     .  0.280d0, 832.940d0, 0.00025438d0, 0.24328057d0,
+     .  0.280d0, 833.219d0, 0.00025392d0, 0.24302664d0,
+     .  0.279d0, 833.498d0, 0.00025347d0, 0.24277317d0,
+     .  0.279d0, 833.777d0, 0.00025302d0, 0.24252016d0,
+     .  0.278d0, 834.055d0, 0.00025256d0, 0.24226760d0,
+     .  0.278d0, 834.332d0, 0.00025211d0, 0.24201549d0,
+     .  0.277d0, 834.609d0, 0.00025165d0, 0.24176384d0,
+     .  0.277d0, 834.886d0, 0.00025120d0, 0.24151264d0,
+     .  0.276d0, 835.162d0, 0.00025074d0, 0.24126190d0,
+     .  0.276d0, 835.437d0, 0.00025029d0, 0.24101161d0,
+     .  0.275d0, 835.712d0, 0.00024984d0, 0.24076177d0,
+     .  0.275d0, 835.987d0, 0.00024938d0, 0.24051239d0,
+     .  0.274d0, 836.261d0, 0.00024893d0, 0.24026346d0,
+     .  0.274d0, 836.534d0, 0.00024847d0, 0.24001499d0,
+     .  0.273d0, 836.808d0, 0.00024802d0, 0.23976697d0,
+     .  0.273d0, 837.080d0, 0.00024756d0, 0.23951941d0,
+     .  0.272d0, 837.352d0, 0.00024711d0, 0.23927230d0,
+     .  0.272d0, 837.623d0, 0.00024666d0, 0.23902564d0,
+     .  0.271d0, 837.894d0, 0.00024620d0, 0.23877944d0,
+     .  0.271d0, 838.165d0, 0.00024575d0, 0.23853369d0,
+     .  0.270d0, 838.435d0, 0.00024529d0, 0.23828840d0,
+     .  0.270d0, 838.704d0, 0.00024484d0, 0.23804356d0,
+     .  0.269d0, 838.973d0, 0.00024438d0, 0.23779918d0,
+     .  0.269d0, 839.242d0, 0.00024393d0, 0.23755525d0,
+     .  0.268d0, 839.510d0, 0.00024348d0, 0.23731177d0,
+     .  0.268d0, 839.777d0, 0.00024302d0, 0.23706875d0,
+     .  0.267d0, 840.044d0, 0.00024257d0, 0.23682618d0,
+     .  0.267d0, 840.311d0, 0.00024211d0, 0.23658407d0,
+     .  0.266d0, 840.577d0, 0.00024166d0, 0.23634241d0,
+     .  0.266d0, 840.842d0, 0.00024120d0, 0.23610121d0,
+     .  0.265d0, 841.107d0, 0.00024075d0, 0.23586046d0,
+     .  0.265d0, 841.372d0, 0.00024030d0, 0.23562016d0,
+     .  0.264d0, 841.636d0, 0.00023984d0, 0.23538032d0,
+     .  0.264d0, 841.899d0, 0.00023939d0, 0.23514093d0,
+     .  0.263d0, 842.162d0, 0.00023893d0, 0.23490200d0,
+     .  0.263d0, 842.425d0, 0.00023848d0, 0.23466352d0,
+     .  0.262d0, 842.687d0, 0.00023802d0, 0.23442549d0,
+     .  0.262d0, 842.948d0, 0.00023757d0, 0.23418792d0,
+     .  0.261d0, 843.209d0, 0.00023712d0, 0.23395081d0,
+     .  0.261d0, 843.470d0, 0.00023666d0, 0.23371414d0,
+     .  0.260d0, 843.730d0, 0.00023621d0, 0.23347793d0,
+     .  0.260d0, 843.989d0, 0.00023575d0, 0.23324218d0,
+     .  0.259d0, 844.248d0, 0.00023530d0, 0.23300688d0,
+     .  0.259d0, 844.507d0, 0.00023485d0, 0.23277204d0,
+     .  0.258d0, 844.765d0, 0.00023439d0, 0.23253765d0,
+     .  0.258d0, 845.022d0, 0.00023394d0, 0.23230371d0,
+     .  0.257d0, 845.279d0, 0.00023348d0, 0.23207023d0,
+     .  0.257d0, 845.536d0, 0.00023303d0, 0.23183720d0,
+     .  0.256d0, 845.792d0, 0.00023257d0, 0.23160462d0,
+     .  0.256d0, 846.047d0, 0.00023212d0, 0.23137250d0,
+     .  0.255d0, 846.302d0, 0.00023167d0, 0.23114084d0,
+     .  0.255d0, 846.557d0, 0.00023121d0, 0.23090963d0,
+     .  0.254d0, 846.811d0, 0.00023076d0, 0.23067887d0,
+     .  0.254d0, 847.064d0, 0.00023030d0, 0.23044857d0,
+     .  0.253d0, 847.317d0, 0.00022985d0, 0.23021872d0,
+     .  0.253d0, 847.570d0, 0.00022939d0, 0.22998933d0,
+     .  0.252d0, 847.822d0, 0.00022894d0, 0.22976039d0,
+     .  0.252d0, 848.073d0, 0.00022849d0, 0.22953190d0,
+     .  0.251d0, 848.324d0, 0.00022803d0, 0.22930387d0,
+     .  0.251d0, 848.575d0, 0.00022758d0, 0.22907629d0,
+     .  0.250d0, 848.825d0, 0.00022712d0, 0.22884917d0,
+     .  0.250d0, 849.075d0, 0.00022694d0, 0.22862223d0,
+     .  0.250d0, 849.324d0, 0.00022676d0, 0.22839547d0,
+     .  0.249d0, 849.574d0, 0.00022658d0, 0.22816889d0,
+     .  0.249d0, 849.823d0, 0.00022640d0, 0.22794249d0,
+     .  0.249d0, 850.072d0, 0.00022621d0, 0.22771628d0,
+     .  0.249d0, 850.321d0, 0.00022603d0, 0.22749025d0,
+     .  0.249d0, 850.569d0, 0.00022585d0, 0.22726439d0,
+     .  0.248d0, 850.818d0, 0.00022567d0, 0.22703872d0,
+     .  0.248d0, 851.066d0, 0.00022549d0, 0.22681324d0,
+     .  0.248d0, 851.314d0, 0.00022531d0, 0.22658793d0,
+     .  0.248d0, 851.562d0, 0.00022512d0, 0.22636281d0,
+     .  0.248d0, 851.809d0, 0.00022494d0, 0.22613786d0,
+     .  0.247d0, 852.057d0, 0.00022476d0, 0.22591310d0,
+     .  0.247d0, 852.304d0, 0.00022458d0, 0.22568852d0,
+     .  0.247d0, 852.551d0, 0.00022440d0, 0.22546413d0,
+     .  0.247d0, 852.798d0, 0.00022422d0, 0.22523991d0,
+     .  0.247d0, 853.044d0, 0.00022403d0, 0.22501588d0,
+     .  0.246d0, 853.291d0, 0.00022385d0, 0.22479202d0,
+     .  0.246d0, 853.537d0, 0.00022367d0, 0.22456835d0,
+     .  0.246d0, 853.783d0, 0.00022349d0, 0.22434486d0,
+     .  0.246d0, 854.029d0, 0.00022331d0, 0.22412156d0,
+     .  0.246d0, 854.274d0, 0.00022313d0, 0.22389843d0,
+     .  0.245d0, 854.520d0, 0.00022294d0, 0.22367549d0,
+     .  0.245d0, 854.765d0, 0.00022276d0, 0.22345272d0,
+     .  0.245d0, 855.010d0, 0.00022258d0, 0.22323014d0,
+     .  0.245d0, 855.255d0, 0.00022240d0, 0.22300774d0,
+     .  0.245d0, 855.499d0, 0.00022222d0, 0.22278553d0,
+     .  0.244d0, 855.744d0, 0.00022204d0, 0.22256349d0,
+     .  0.244d0, 855.988d0, 0.00022185d0, 0.22234164d0,
+     .  0.244d0, 856.232d0, 0.00022167d0, 0.22211997d0,
+     .  0.244d0, 856.476d0, 0.00022149d0, 0.22189848d0,
+     .  0.244d0, 856.719d0, 0.00022131d0, 0.22167717d0,
+     .  0.243d0, 856.963d0, 0.00022113d0, 0.22145604d0,
+     .  0.243d0, 857.206d0, 0.00022095d0, 0.22123510d0,
+     .  0.243d0, 857.449d0, 0.00022076d0, 0.22101433d0,
+     .  0.243d0, 857.692d0, 0.00022058d0, 0.22079375d0,
+     .  0.243d0, 857.934d0, 0.00022040d0, 0.22057335d0,
+     .  0.242d0, 858.177d0, 0.00022022d0, 0.22035313d0,
+     .  0.242d0, 858.419d0, 0.00022004d0, 0.22013309d0,
+     .  0.242d0, 858.661d0, 0.00021986d0, 0.21991324d0,
+     .  0.242d0, 858.903d0, 0.00021967d0, 0.21969357d0,
+     .  0.242d0, 859.144d0, 0.00021949d0, 0.21947407d0,
+     .  0.241d0, 859.386d0, 0.00021931d0, 0.21925476d0,
+     .  0.241d0, 859.627d0, 0.00021913d0, 0.21903564d0,
+     .  0.241d0, 859.868d0, 0.00021895d0, 0.21881669d0,
+     .  0.241d0, 860.109d0, 0.00021876d0, 0.21859792d0,
+     .  0.241d0, 860.349d0, 0.00021858d0, 0.21837934d0,
+     .  0.240d0, 860.590d0, 0.00021840d0, 0.21816094d0,
+     .  0.240d0, 860.830d0, 0.00021822d0, 0.21794272d0,
+     .  0.240d0, 861.070d0, 0.00021804d0, 0.21772468d0,
+     .  0.240d0, 861.310d0, 0.00021786d0, 0.21750683d0,
+     .  0.240d0, 861.549d0, 0.00021767d0, 0.21728915d0,
+     .  0.239d0, 861.789d0, 0.00021749d0, 0.21707166d0,
+     .  0.239d0, 862.028d0, 0.00021731d0, 0.21685435d0,
+     .  0.239d0, 862.267d0, 0.00021713d0, 0.21663722d0,
+     .  0.239d0, 862.506d0, 0.00021695d0, 0.21642027d0,
+     .  0.239d0, 862.744d0, 0.00021677d0, 0.21620350d0,
+     .  0.238d0, 862.983d0, 0.00021658d0, 0.21598692d0,
+     .  0.238d0, 863.221d0, 0.00021640d0, 0.21577051d0,
+     .  0.238d0, 863.459d0, 0.00021622d0, 0.21555429d0,
+     .  0.238d0, 863.697d0, 0.00021604d0, 0.21533825d0,
+     .  0.238d0, 863.934d0, 0.00021586d0, 0.21512240d0,
+     .  0.237d0, 864.172d0, 0.00021568d0, 0.21490672d0,
+     .  0.237d0, 864.409d0, 0.00021549d0, 0.21469123d0,
+     .  0.237d0, 864.646d0, 0.00021531d0, 0.21447591d0,
+     .  0.237d0, 864.883d0, 0.00021513d0, 0.21426078d0,
+     .  0.237d0, 865.119d0, 0.00021495d0, 0.21404583d0,
+     .  0.236d0, 865.356d0, 0.00021477d0, 0.21383107d0,
+     .  0.236d0, 865.592d0, 0.00021459d0, 0.21361648d0,
+     .  0.236d0, 865.828d0, 0.00021440d0, 0.21340208d0,
+     .  0.236d0, 866.064d0, 0.00021422d0, 0.21318785d0,
+     .  0.236d0, 866.299d0, 0.00021404d0, 0.21297381d0,
+     .  0.235d0, 866.535d0, 0.00021386d0, 0.21275995d0,
+     .  0.235d0, 866.770d0, 0.00021368d0, 0.21254628d0,
+     .  0.235d0, 867.005d0, 0.00021350d0, 0.21233278d0,
+     .  0.235d0, 867.240d0, 0.00021331d0, 0.21211947d0,
+     .  0.235d0, 867.474d0, 0.00021313d0, 0.21190633d0,
+     .  0.234d0, 867.709d0, 0.00021295d0, 0.21169338d0,
+     .  0.234d0, 867.943d0, 0.00021277d0, 0.21148062d0,
+     .  0.234d0, 868.177d0, 0.00021259d0, 0.21126803d0,
+     .  0.234d0, 868.411d0, 0.00021241d0, 0.21105562d0,
+     .  0.234d0, 868.644d0, 0.00021222d0, 0.21084340d0,
+     .  0.233d0, 868.878d0, 0.00021204d0, 0.21063136d0,
+     .  0.233d0, 869.111d0, 0.00021186d0, 0.21041950d0,
+     .  0.233d0, 869.344d0, 0.00021168d0, 0.21020782d0,
+     .  0.233d0, 869.577d0, 0.00021150d0, 0.20999632d0,
+     .  0.233d0, 869.809d0, 0.00021132d0, 0.20978501d0,
+     .  0.232d0, 870.042d0, 0.00021113d0, 0.20957387d0,
+     .  0.232d0, 870.274d0, 0.00021095d0, 0.20936292d0,
+     .  0.232d0, 870.506d0, 0.00021077d0, 0.20915215d0,
+     .  0.232d0, 870.738d0, 0.00021059d0, 0.20894156d0,
+     .  0.232d0, 870.969d0, 0.00021041d0, 0.20873115d0,
+     .  0.231d0, 871.201d0, 0.00021023d0, 0.20852093d0,
+     .  0.231d0, 871.432d0, 0.00021004d0, 0.20831089d0,
+     .  0.231d0, 871.663d0, 0.00020986d0, 0.20810102d0,
+     .  0.231d0, 871.894d0, 0.00020968d0, 0.20789134d0,
+     .  0.231d0, 872.124d0, 0.00020950d0, 0.20768185d0,
+     .  0.230d0, 872.355d0, 0.00020932d0, 0.20747253d0,
+     .  0.230d0, 872.585d0, 0.00020913d0, 0.20726339d0,
+     .  0.230d0, 872.815d0, 0.00020895d0, 0.20705444d0,
+     .  0.230d0, 873.045d0, 0.00020877d0, 0.20684567d0,
+     .  0.230d0, 873.274d0, 0.00020859d0, 0.20663708d0,
+     .  0.229d0, 873.504d0, 0.00020841d0, 0.20642867d0,
+     .  0.229d0, 873.733d0, 0.00020823d0, 0.20622045d0,
+     .  0.229d0, 873.962d0, 0.00020804d0, 0.20601240d0,
+     .  0.229d0, 874.191d0, 0.00020786d0, 0.20580454d0,
+     .  0.229d0, 874.419d0, 0.00020768d0, 0.20559686d0,
+     .  0.228d0, 874.648d0, 0.00020750d0, 0.20538936d0,
+     .  0.228d0, 874.876d0, 0.00020732d0, 0.20518204d0,
+     .  0.228d0, 875.104d0, 0.00020714d0, 0.20497490d0,
+     .  0.228d0, 875.332d0, 0.00020695d0, 0.20476795d0,
+     .  0.228d0, 875.559d0, 0.00020677d0, 0.20456118d0,
+     .  0.227d0, 875.787d0, 0.00020659d0, 0.20435458d0,
+     .  0.227d0, 876.014d0, 0.00020641d0, 0.20414818d0,
+     .  0.227d0, 876.241d0, 0.00020623d0, 0.20394195d0,
+     .  0.227d0, 876.468d0, 0.00020605d0, 0.20373590d0,
+     .  0.227d0, 876.694d0, 0.00020586d0, 0.20353004d0,
+     .  0.226d0, 876.921d0, 0.00020568d0, 0.20332435d0,
+     .  0.226d0, 877.147d0, 0.00020550d0, 0.20311885d0,
+     .  0.226d0, 877.373d0, 0.00020532d0, 0.20291353d0,
+     .  0.226d0, 877.599d0, 0.00020514d0, 0.20270840d0,
+     .  0.226d0, 877.824d0, 0.00020496d0, 0.20250344d0,
+     .  0.225d0, 878.050d0, 0.00020477d0, 0.20229867d0,
+     .  0.225d0, 878.275d0, 0.00020459d0, 0.20209407d0,
+     .  0.225d0, 878.500d0, 0.00020441d0, 0.20188966d0,
+     .  0.225d0, 878.725d0, 0.00020423d0, 0.20168543d0,
+     .  0.225d0, 878.949d0, 0.00020405d0, 0.20148139d0,
+     .  0.224d0, 879.174d0, 0.00020387d0, 0.20127752d0,
+     .  0.224d0, 879.398d0, 0.00020368d0, 0.20107384d0,
+     .  0.224d0, 879.622d0, 0.00020350d0, 0.20087034d0,
+     .  0.224d0, 879.846d0, 0.00020332d0, 0.20066701d0,
+     .  0.224d0, 880.069d0, 0.00020314d0, 0.20046388d0,
+     .  0.223d0, 880.293d0, 0.00020296d0, 0.20026092d0,
+     .  0.223d0, 880.516d0, 0.00020278d0, 0.20005814d0,
+     .  0.223d0, 880.739d0, 0.00020259d0, 0.19985555d0,
+     .  0.223d0, 880.962d0, 0.00020241d0, 0.19965314d0,
+     .  0.223d0, 881.184d0, 0.00020223d0, 0.19945091d0,
+     .  0.222d0, 881.407d0, 0.00020205d0, 0.19924886d0,
+     .  0.222d0, 881.629d0, 0.00020187d0, 0.19904699d0,
+     .  0.222d0, 881.851d0, 0.00020169d0, 0.19884531d0,
+     .  0.222d0, 882.073d0, 0.00020150d0, 0.19864380d0,
+     .  0.222d0, 882.294d0, 0.00020132d0, 0.19844248d0,
+     .  0.221d0, 882.516d0, 0.00020114d0, 0.19824134d0,
+     .  0.221d0, 882.737d0, 0.00020096d0, 0.19804038d0,
+     .  0.221d0, 882.958d0, 0.00020078d0, 0.19783961d0,
+     .  0.221d0, 883.179d0, 0.00020060d0, 0.19763901d0,
+     .  0.221d0, 883.399d0, 0.00020041d0, 0.19743860d0,
+     .  0.220d0, 883.620d0, 0.00020023d0, 0.19723837d0,
+     .  0.220d0, 883.840d0, 0.00020005d0, 0.19703832d0,
+     .  0.220d0, 884.060d0, 0.00019987d0, 0.19683845d0,
+     .  0.220d0, 884.280d0, 0.00019969d0, 0.19663876d0,
+     .  0.220d0, 884.499d0, 0.00019950d0, 0.19643926d0,
+     .  0.219d0, 884.719d0, 0.00019932d0, 0.19623993d0,
+     .  0.219d0, 884.938d0, 0.00019914d0, 0.19604079d0,
+     .  0.219d0, 885.157d0, 0.00019896d0, 0.19584183d0,
+     .  0.219d0, 885.376d0, 0.00019878d0, 0.19564305d0,
+     .  0.219d0, 885.594d0, 0.00019860d0, 0.19544446d0,
+     .  0.218d0, 885.813d0, 0.00019841d0, 0.19524604d0,
+     .  0.218d0, 886.031d0, 0.00019823d0, 0.19504781d0,
+     .  0.218d0, 886.249d0, 0.00019805d0, 0.19484976d0,
+     .  0.218d0, 886.467d0, 0.00019787d0, 0.19465189d0,
+     .  0.218d0, 886.684d0, 0.00019769d0, 0.19445420d0,
+     .  0.217d0, 886.902d0, 0.00019751d0, 0.19425669d0,
+     .  0.217d0, 887.119d0, 0.00019732d0, 0.19405937d0,
+     .  0.217d0, 887.336d0, 0.00019714d0, 0.19386223d0,
+     .  0.217d0, 887.553d0, 0.00019696d0, 0.19366527d0,
+     .  0.217d0, 887.769d0, 0.00019678d0, 0.19346849d0,
+     .  0.216d0, 887.986d0, 0.00019660d0, 0.19327189d0,
+     .  0.216d0, 888.202d0, 0.00019642d0, 0.19307547d0,
+     .  0.216d0, 888.418d0, 0.00019623d0, 0.19287924d0,
+     .  0.216d0, 888.634d0, 0.00019605d0, 0.19268319d0,
+     .  0.216d0, 888.849d0, 0.00019587d0, 0.19248732d0,
+     .  0.215d0, 889.065d0, 0.00019569d0, 0.19229163d0,
+     .  0.215d0, 889.280d0, 0.00019551d0, 0.19209612d0,
+     .  0.215d0, 889.495d0, 0.00019533d0, 0.19190079d0,
+     .  0.215d0, 889.710d0, 0.00019514d0, 0.19170565d0,
+     .  0.215d0, 889.924d0, 0.00019496d0, 0.19151069d0,
+     .  0.214d0, 890.139d0, 0.00019478d0, 0.19131591d0,
+     .  0.214d0, 890.353d0, 0.00019460d0, 0.19112131d0,
+     .  0.214d0, 890.567d0, 0.00019442d0, 0.19092689d0,
+     .  0.214d0, 890.781d0, 0.00019424d0, 0.19073265d0,
+     .  0.214d0, 890.994d0, 0.00019405d0, 0.19053860d0,
+     .  0.213d0, 891.208d0, 0.00019387d0, 0.19034473d0,
+     .  0.213d0, 891.421d0, 0.00019369d0, 0.19015104d0,
+     .  0.213d0, 891.634d0, 0.00019351d0, 0.18995753d0,
+     .  0.213d0, 891.847d0, 0.00019333d0, 0.18976420d0,
+     .  0.213d0, 892.059d0, 0.00019315d0, 0.18957106d0,
+     .  0.212d0, 892.272d0, 0.00019296d0, 0.18937809d0,
+     .  0.212d0, 892.484d0, 0.00019278d0, 0.18918531d0,
+     .  0.212d0, 892.696d0, 0.00019260d0, 0.18899271d0,
+     .  0.212d0, 892.908d0, 0.00019242d0, 0.18880029d0,
+     .  0.212d0, 893.119d0, 0.00019224d0, 0.18860805d0,
+     .  0.211d0, 893.331d0, 0.00019206d0, 0.18841600d0,
+     .  0.211d0, 893.542d0, 0.00019187d0, 0.18822413d0,
+     .  0.211d0, 893.753d0, 0.00019169d0, 0.18803243d0,
+     .  0.211d0, 893.964d0, 0.00019151d0, 0.18784092d0,
+     .  0.211d0, 894.174d0, 0.00019133d0, 0.18764959d0,
+     .  0.210d0, 894.385d0, 0.00019115d0, 0.18745845d0,
+     .  0.210d0, 894.595d0, 0.00019097d0, 0.18726748d0,
+     .  0.210d0, 894.805d0, 0.00019078d0, 0.18707670d0,
+     .  0.210d0, 895.015d0, 0.00019060d0, 0.18688610d0,
+     .  0.210d0, 895.224d0, 0.00019042d0, 0.18669568d0,
+     .  0.209d0, 895.434d0, 0.00019024d0, 0.18650544d0,
+     .  0.209d0, 895.643d0, 0.00019006d0, 0.18631538d0,
+     .  0.209d0, 895.852d0, 0.00018987d0, 0.18612551d0,
+     .  0.209d0, 896.061d0, 0.00018969d0, 0.18593582d0,
+     .  0.209d0, 896.269d0, 0.00018951d0, 0.18574630d0,
+     .  0.208d0, 896.478d0, 0.00018933d0, 0.18555697d0,
+     .  0.208d0, 896.686d0, 0.00018915d0, 0.18536783d0,
+     .  0.208d0, 896.894d0, 0.00018897d0, 0.18517886d0,
+     .  0.208d0, 897.102d0, 0.00018878d0, 0.18499007d0,
+     .  0.208d0, 897.309d0, 0.00018860d0, 0.18480147d0,
+     .  0.207d0, 897.517d0, 0.00018842d0, 0.18461305d0,
+     .  0.207d0, 897.724d0, 0.00018824d0, 0.18442481d0,
+     .  0.207d0, 897.931d0, 0.00018806d0, 0.18423675d0,
+     .  0.207d0, 898.138d0, 0.00018788d0, 0.18404888d0,
+     .  0.207d0, 898.344d0, 0.00018769d0, 0.18386118d0,
+     .  0.206d0, 898.551d0, 0.00018751d0, 0.18367367d0,
+     .  0.206d0, 898.757d0, 0.00018733d0, 0.18348634d0,
+     .  0.206d0, 898.963d0, 0.00018715d0, 0.18329919d0,
+     .  0.206d0, 899.169d0, 0.00018697d0, 0.18311222d0,
+     .  0.206d0, 899.374d0, 0.00018679d0, 0.18292544d0,
+     .  0.205d0, 899.580d0, 0.00018660d0, 0.18273883d0,
+     .  0.205d0, 899.785d0, 0.00018642d0, 0.18255241d0,
+     .  0.205d0, 899.990d0, 0.00018624d0, 0.18236617d0,
+     .  0.205d0, 900.195d0, 0.00018606d0, 0.18218011d0,
+     .  0.205d0, 900.399d0, 0.00018588d0, 0.18199423d0,
+     .  0.204d0, 900.604d0, 0.00018570d0, 0.18180854d0,
+     .  0.204d0, 900.808d0, 0.00018551d0, 0.18162302d0,
+     .  0.204d0, 901.012d0, 0.00018533d0, 0.18143769d0,
+     .  0.204d0, 901.216d0, 0.00018515d0, 0.18125254d0,
+     .  0.204d0, 901.419d0, 0.00018497d0, 0.18106757d0,
+     .  0.203d0, 901.623d0, 0.00018479d0, 0.18088278d0,
+     .  0.203d0, 901.826d0, 0.00018461d0, 0.18069818d0,
+     .  0.203d0, 902.029d0, 0.00018442d0, 0.18051375d0,
+     .  0.203d0, 902.232d0, 0.00018424d0, 0.18032951d0,
+     .  0.203d0, 902.434d0, 0.00018406d0, 0.18014545d0,
+     .  0.202d0, 902.637d0, 0.00018388d0, 0.17996157d0,
+     .  0.202d0, 902.839d0, 0.00018370d0, 0.17977787d0,
+     .  0.202d0, 903.041d0, 0.00018352d0, 0.17959436d0,
+     .  0.202d0, 903.243d0, 0.00018333d0, 0.17941102d0,
+     .  0.202d0, 903.444d0, 0.00018315d0, 0.17922787d0,
+     .  0.201d0, 903.646d0, 0.00018297d0, 0.17904490d0,
+     .  0.201d0, 903.847d0, 0.00018279d0, 0.17886211d0,
+     .  0.201d0, 904.048d0, 0.00018261d0, 0.17867951d0,
+     .  0.201d0, 904.249d0, 0.00018243d0, 0.17849708d0,
+     .  0.201d0, 904.449d0, 0.00018224d0, 0.17831484d0,
+     .  0.200d0, 904.650d0, 0.00018206d0, 0.17813278d0,
+     .  0.200d0, 904.850d0, 0.00018188d0, 0.17795090d0,
+     .  0.200d0, 905.050d0, 0.00018170d0, 0.17776920d0,
+     .  0.200d0, 905.250d0, 0.00018161d0, 0.17758759d0,
+     .  0.200d0, 905.450d0, 0.00018152d0, 0.17740607d0,
+     .  0.200d0, 905.649d0, 0.00018143d0, 0.17722465d0,
+     .  0.200d0, 905.849d0, 0.00018134d0, 0.17704331d0,
+     .  0.200d0, 906.048d0, 0.00018124d0, 0.17686207d0,
+     .  0.199d0, 906.248d0, 0.00018115d0, 0.17668091d0,
+     .  0.199d0, 906.447d0, 0.00018106d0, 0.17649985d0,
+     .  0.199d0, 906.646d0, 0.00018097d0, 0.17631888d0,
+     .  0.199d0, 906.846d0, 0.00018088d0, 0.17613800d0,
+     .  0.199d0, 907.044d0, 0.00018079d0, 0.17595721d0,
+     .  0.199d0, 907.243d0, 0.00018070d0, 0.17577651d0,
+     .  0.199d0, 907.442d0, 0.00018061d0, 0.17559590d0,
+     .  0.199d0, 907.641d0, 0.00018052d0, 0.17541539d0,
+     .  0.199d0, 907.839d0, 0.00018043d0, 0.17523496d0,
+     .  0.199d0, 908.038d0, 0.00018034d0, 0.17505462d0,
+     .  0.198d0, 908.236d0, 0.00018024d0, 0.17487438d0,
+     .  0.198d0, 908.435d0, 0.00018015d0, 0.17469422d0,
+     .  0.198d0, 908.633d0, 0.00018006d0, 0.17451416d0,
+     .  0.198d0, 908.831d0, 0.00017997d0, 0.17433419d0,
+     .  0.198d0, 909.029d0, 0.00017988d0, 0.17415431d0,
+     .  0.198d0, 909.227d0, 0.00017979d0, 0.17397452d0,
+     .  0.198d0, 909.425d0, 0.00017970d0, 0.17379482d0,
+     .  0.198d0, 909.622d0, 0.00017961d0, 0.17361521d0,
+     .  0.198d0, 909.820d0, 0.00017952d0, 0.17343569d0,
+     .  0.198d0, 910.018d0, 0.00017943d0, 0.17325626d0,
+     .  0.197d0, 910.215d0, 0.00017934d0, 0.17307693d0,
+     .  0.197d0, 910.412d0, 0.00017925d0, 0.17289768d0,
+     .  0.197d0, 910.609d0, 0.00017915d0, 0.17271853d0,
+     .  0.197d0, 910.807d0, 0.00017906d0, 0.17253946d0,
+     .  0.197d0, 911.004d0, 0.00017897d0, 0.17236049d0,
+     .  0.197d0, 911.200d0, 0.00017888d0, 0.17218161d0,
+     .  0.197d0, 911.397d0, 0.00017879d0, 0.17200282d0,
+     .  0.197d0, 911.594d0, 0.00017870d0, 0.17182412d0,
+     .  0.197d0, 911.791d0, 0.00017861d0, 0.17164551d0,
+     .  0.197d0, 911.987d0, 0.00017852d0, 0.17146699d0,
+     .  0.196d0, 912.183d0, 0.00017843d0, 0.17128856d0,
+     .  0.196d0, 912.380d0, 0.00017834d0, 0.17111022d0,
+     .  0.196d0, 912.576d0, 0.00017825d0, 0.17093198d0,
+     .  0.196d0, 912.772d0, 0.00017816d0, 0.17075382d0,
+     .  0.196d0, 912.968d0, 0.00017806d0, 0.17057576d0,
+     .  0.196d0, 913.164d0, 0.00017797d0, 0.17039778d0,
+     .  0.196d0, 913.360d0, 0.00017788d0, 0.17021990d0,
+     .  0.196d0, 913.555d0, 0.00017779d0, 0.17004211d0,
+     .  0.196d0, 913.751d0, 0.00017770d0, 0.16986441d0,
+     .  0.196d0, 913.947d0, 0.00017761d0, 0.16968680d0,
+     .  0.195d0, 914.142d0, 0.00017752d0, 0.16950928d0,
+     .  0.195d0, 914.337d0, 0.00017743d0, 0.16933185d0,
+     .  0.195d0, 914.532d0, 0.00017734d0, 0.16915451d0,
+     .  0.195d0, 914.727d0, 0.00017725d0, 0.16897726d0,
+     .  0.195d0, 914.923d0, 0.00017716d0, 0.16880011d0,
+     .  0.195d0, 915.117d0, 0.00017707d0, 0.16862304d0,
+     .  0.195d0, 915.312d0, 0.00017697d0, 0.16844607d0,
+     .  0.195d0, 915.507d0, 0.00017688d0, 0.16826919d0,
+     .  0.195d0, 915.701d0, 0.00017679d0, 0.16809239d0,
+     .  0.195d0, 915.896d0, 0.00017670d0, 0.16791569d0,
+     .  0.194d0, 916.090d0, 0.00017661d0, 0.16773908d0,
+     .  0.194d0, 916.285d0, 0.00017652d0, 0.16756256d0,
+     .  0.194d0, 916.479d0, 0.00017643d0, 0.16738613d0,
+     .  0.194d0, 916.673d0, 0.00017634d0, 0.16720979d0,
+     .  0.194d0, 916.867d0, 0.00017625d0, 0.16703355d0,
+     .  0.194d0, 917.061d0, 0.00017616d0, 0.16685739d0,
+     .  0.194d0, 917.255d0, 0.00017607d0, 0.16668132d0,
+     .  0.194d0, 917.448d0, 0.00017597d0, 0.16650535d0,
+     .  0.194d0, 917.642d0, 0.00017588d0, 0.16632946d0,
+     .  0.194d0, 917.835d0, 0.00017579d0, 0.16615367d0,
+     .  0.193d0, 918.029d0, 0.00017570d0, 0.16597797d0,
+     .  0.193d0, 918.222d0, 0.00017561d0, 0.16580236d0,
+     .  0.193d0, 918.415d0, 0.00017552d0, 0.16562684d0,
+     .  0.193d0, 918.608d0, 0.00017543d0, 0.16545141d0,
+     .  0.193d0, 918.801d0, 0.00017534d0, 0.16527607d0,
+     .  0.193d0, 918.994d0, 0.00017525d0, 0.16510082d0,
+     .  0.193d0, 919.187d0, 0.00017516d0, 0.16492566d0,
+     .  0.193d0, 919.380d0, 0.00017507d0, 0.16475060d0,
+     .  0.193d0, 919.572d0, 0.00017498d0, 0.16457562d0,
+     .  0.193d0, 919.765d0, 0.00017488d0, 0.16440074d0,
+     .  0.192d0, 919.957d0, 0.00017479d0, 0.16422594d0,
+     .  0.192d0, 920.150d0, 0.00017470d0, 0.16405124d0,
+     .  0.192d0, 920.342d0, 0.00017461d0, 0.16387663d0,
+     .  0.192d0, 920.534d0, 0.00017452d0, 0.16370211d0,
+     .  0.192d0, 920.726d0, 0.00017443d0, 0.16352767d0,
+     .  0.192d0, 920.918d0, 0.00017434d0, 0.16335334d0,
+     .  0.192d0, 921.110d0, 0.00017425d0, 0.16317909d0,
+     .  0.192d0, 921.301d0, 0.00017416d0, 0.16300493d0,
+     .  0.192d0, 921.493d0, 0.00017407d0, 0.16283086d0,
+     .  0.192d0, 921.684d0, 0.00017398d0, 0.16265689d0,
+     .  0.191d0, 921.876d0, 0.00017389d0, 0.16248300d0,
+     .  0.191d0, 922.067d0, 0.00017379d0, 0.16230921d0,
+     .  0.191d0, 922.258d0, 0.00017370d0, 0.16213550d0,
+     .  0.191d0, 922.450d0, 0.00017361d0, 0.16196189d0,
+     .  0.191d0, 922.640d0, 0.00017352d0, 0.16178837d0,
+     .  0.191d0, 922.831d0, 0.00017343d0, 0.16161494d0,
+     .  0.191d0, 923.022d0, 0.00017334d0, 0.16144160d0,
+     .  0.191d0, 923.213d0, 0.00017325d0, 0.16126835d0,
+     .  0.191d0, 923.404d0, 0.00017316d0, 0.16109519d0,
+     .  0.191d0, 923.594d0, 0.00017307d0, 0.16092212d0,
+     .  0.190d0, 923.784d0, 0.00017298d0, 0.16074914d0,
+     .  0.190d0, 923.975d0, 0.00017289d0, 0.16057626d0,
+     .  0.190d0, 924.165d0, 0.00017280d0, 0.16040346d0,
+     .  0.190d0, 924.355d0, 0.00017270d0, 0.16023076d0,
+     .  0.190d0, 924.545d0, 0.00017261d0, 0.16005814d0,
+     .  0.190d0, 924.735d0, 0.00017252d0, 0.15988562d0,
+     .  0.190d0, 924.925d0, 0.00017243d0, 0.15971319d0,
+     .  0.190d0, 925.114d0, 0.00017234d0, 0.15954085d0,
+     .  0.190d0, 925.304d0, 0.00017225d0, 0.15936860d0,
+     .  0.190d0, 925.494d0, 0.00017216d0, 0.15919644d0,
+     .  0.189d0, 925.683d0, 0.00017207d0, 0.15902437d0,
+     .  0.189d0, 925.872d0, 0.00017198d0, 0.15885239d0,
+     .  0.189d0, 926.061d0, 0.00017189d0, 0.15868051d0,
+     .  0.189d0, 926.250d0, 0.00017180d0, 0.15850871d0,
+     .  0.189d0, 926.440d0, 0.00017171d0, 0.15833701d0,
+     .  0.189d0, 926.628d0, 0.00017161d0, 0.15816539d0,
+     .  0.189d0, 926.817d0, 0.00017152d0, 0.15799387d0,
+     .  0.189d0, 927.006d0, 0.00017143d0, 0.15782244d0,
+     .  0.189d0, 927.194d0, 0.00017134d0, 0.15765109d0,
+     .  0.189d0, 927.383d0, 0.00017125d0, 0.15747984d0,
+     .  0.188d0, 927.571d0, 0.00017116d0, 0.15730868d0,
+     .  0.188d0, 927.760d0, 0.00017107d0, 0.15713761d0,
+     .  0.188d0, 927.948d0, 0.00017098d0, 0.15696664d0,
+     .  0.188d0, 928.136d0, 0.00017089d0, 0.15679575d0,
+     .  0.188d0, 928.324d0, 0.00017080d0, 0.15662495d0,
+     .  0.188d0, 928.512d0, 0.00017071d0, 0.15645425d0,
+     .  0.188d0, 928.700d0, 0.00017061d0, 0.15628363d0,
+     .  0.188d0, 928.887d0, 0.00017052d0, 0.15611311d0,
+     .  0.188d0, 929.075d0, 0.00017043d0, 0.15594267d0,
+     .  0.188d0, 929.262d0, 0.00017034d0, 0.15577233d0,
+     .  0.187d0, 929.450d0, 0.00017025d0, 0.15560208d0,
+     .  0.187d0, 929.637d0, 0.00017016d0, 0.15543192d0,
+     .  0.187d0, 929.824d0, 0.00017007d0, 0.15526185d0,
+     .  0.187d0, 930.011d0, 0.00016998d0, 0.15509187d0,
+     .  0.187d0, 930.198d0, 0.00016989d0, 0.15492198d0,
+     .  0.187d0, 930.385d0, 0.00016980d0, 0.15475219d0,
+     .  0.187d0, 930.572d0, 0.00016971d0, 0.15458248d0,
+     .  0.187d0, 930.759d0, 0.00016962d0, 0.15441286d0,
+     .  0.187d0, 930.945d0, 0.00016952d0, 0.15424334d0,
+     .  0.187d0, 931.132d0, 0.00016943d0, 0.15407391d0,
+     .  0.186d0, 931.318d0, 0.00016934d0, 0.15390456d0,
+     .  0.186d0, 931.505d0, 0.00016925d0, 0.15373531d0,
+     .  0.186d0, 931.691d0, 0.00016916d0, 0.15356615d0,
+     .  0.186d0, 931.877d0, 0.00016907d0, 0.15339708d0,
+     .  0.186d0, 932.063d0, 0.00016898d0, 0.15322810d0,
+     .  0.186d0, 932.249d0, 0.00016889d0, 0.15305921d0,
+     .  0.186d0, 932.435d0, 0.00016880d0, 0.15289041d0,
+     .  0.186d0, 932.620d0, 0.00016871d0, 0.15272171d0,
+     .  0.186d0, 932.806d0, 0.00016862d0, 0.15255309d0,
+     .  0.186d0, 932.991d0, 0.00016853d0, 0.15238456d0,
+     .  0.185d0, 933.177d0, 0.00016843d0, 0.15221613d0,
+     .  0.185d0, 933.362d0, 0.00016834d0, 0.15204779d0,
+     .  0.185d0, 933.547d0, 0.00016825d0, 0.15187953d0,
+     .  0.185d0, 933.732d0, 0.00016816d0, 0.15171137d0,
+     .  0.185d0, 933.917d0, 0.00016807d0, 0.15154330d0,
+     .  0.185d0, 934.102d0, 0.00016798d0, 0.15137532d0,
+     .  0.185d0, 934.287d0, 0.00016789d0, 0.15120743d0,
+     .  0.185d0, 934.472d0, 0.00016780d0, 0.15103963d0,
+     .  0.185d0, 934.656d0, 0.00016771d0, 0.15087193d0,
+     .  0.185d0, 934.841d0, 0.00016762d0, 0.15070431d0,
+     .  0.184d0, 935.025d0, 0.00016753d0, 0.15053678d0,
+     .  0.184d0, 935.210d0, 0.00016744d0, 0.15036935d0,
+     .  0.184d0, 935.394d0, 0.00016734d0, 0.15020200d0,
+     .  0.184d0, 935.578d0, 0.00016725d0, 0.15003475d0,
+     .  0.184d0, 935.762d0, 0.00016716d0, 0.14986759d0,
+     .  0.184d0, 935.946d0, 0.00016707d0, 0.14970052d0,
+     .  0.184d0, 936.130d0, 0.00016698d0, 0.14953353d0,
+     .  0.184d0, 936.313d0, 0.00016689d0, 0.14936664d0,
+     .  0.184d0, 936.497d0, 0.00016680d0, 0.14919985d0,
+     .  0.184d0, 936.680d0, 0.00016671d0, 0.14903314d0,
+     .  0.183d0, 936.864d0, 0.00016662d0, 0.14886652d0,
+     .  0.183d0, 937.047d0, 0.00016653d0, 0.14869999d0,
+     .  0.183d0, 937.230d0, 0.00016644d0, 0.14853356d0,
+     .  0.183d0, 937.413d0, 0.00016634d0, 0.14836721d0,
+     .  0.183d0, 937.596d0, 0.00016625d0, 0.14820096d0,
+     .  0.183d0, 937.779d0, 0.00016616d0, 0.14803480d0,
+     .  0.183d0, 937.962d0, 0.00016607d0, 0.14786872d0,
+     .  0.183d0, 938.145d0, 0.00016598d0, 0.14770274d0,
+     .  0.183d0, 938.327d0, 0.00016589d0, 0.14753685d0,
+     .  0.183d0, 938.510d0, 0.00016580d0, 0.14737105d0,
+     .  0.182d0, 938.692d0, 0.00016571d0, 0.14720534d0,
+     .  0.182d0, 938.875d0, 0.00016562d0, 0.14703972d0,
+     .  0.182d0, 939.057d0, 0.00016553d0, 0.14687420d0,
+     .  0.182d0, 939.239d0, 0.00016544d0, 0.14670876d0,
+     .  0.182d0, 939.421d0, 0.00016535d0, 0.14654341d0,
+     .  0.182d0, 939.603d0, 0.00016525d0, 0.14637816d0,
+     .  0.182d0, 939.785d0, 0.00016516d0, 0.14621300d0,
+     .  0.182d0, 939.966d0, 0.00016507d0, 0.14604792d0,
+     .  0.182d0, 940.148d0, 0.00016498d0, 0.14588294d0,
+     .  0.182d0, 940.329d0, 0.00016489d0, 0.14571805d0,
+     .  0.181d0, 940.511d0, 0.00016480d0, 0.14555325d0,
+     .  0.181d0, 940.692d0, 0.00016471d0, 0.14538854d0,
+     .  0.181d0, 940.873d0, 0.00016462d0, 0.14522392d0,
+     .  0.181d0, 941.054d0, 0.00016453d0, 0.14505939d0,
+     .  0.181d0, 941.235d0, 0.00016444d0, 0.14489496d0,
+     .  0.181d0, 941.416d0, 0.00016435d0, 0.14473061d0,
+     .  0.181d0, 941.597d0, 0.00016426d0, 0.14456635d0,
+     .  0.181d0, 941.778d0, 0.00016416d0, 0.14440219d0,
+     .  0.181d0, 941.958d0, 0.00016407d0, 0.14423812d0,
+     .  0.181d0, 942.139d0, 0.00016398d0, 0.14407413d0,
+     .  0.180d0, 942.319d0, 0.00016389d0, 0.14391024d0,
+     .  0.180d0, 942.500d0, 0.00016380d0, 0.14374644d0,
+     .  0.180d0, 942.680d0, 0.00016371d0, 0.14358273d0,
+     .  0.180d0, 942.860d0, 0.00016362d0, 0.14341911d0,
+     .  0.180d0, 943.040d0, 0.00016353d0, 0.14325558d0,
+     .  0.180d0, 943.220d0, 0.00016344d0, 0.14309214d0,
+     .  0.180d0, 943.400d0, 0.00016335d0, 0.14292880d0,
+     .  0.180d0, 943.579d0, 0.00016326d0, 0.14276554d0,
+     .  0.180d0, 943.759d0, 0.00016317d0, 0.14260238d0,
+     .  0.180d0, 943.938d0, 0.00016307d0, 0.14243930d0,
+     .  0.179d0, 944.118d0, 0.00016298d0, 0.14227632d0,
+     .  0.179d0, 944.297d0, 0.00016289d0, 0.14211343d0,
+     .  0.179d0, 944.476d0, 0.00016280d0, 0.14195062d0,
+     .  0.179d0, 944.655d0, 0.00016271d0, 0.14178791d0,
+     .  0.179d0, 944.834d0, 0.00016262d0, 0.14162529d0,
+     .  0.179d0, 945.013d0, 0.00016253d0, 0.14146276d0,
+     .  0.179d0, 945.192d0, 0.00016244d0, 0.14130032d0,
+     .  0.179d0, 945.371d0, 0.00016235d0, 0.14113798d0,
+     .  0.179d0, 945.549d0, 0.00016226d0, 0.14097572d0,
+     .  0.179d0, 945.728d0, 0.00016217d0, 0.14081355d0,
+     .  0.178d0, 945.906d0, 0.00016207d0, 0.14065148d0,
+     .  0.178d0, 946.085d0, 0.00016198d0, 0.14048950d0,
+     .  0.178d0, 946.263d0, 0.00016189d0, 0.14032760d0,
+     .  0.178d0, 946.441d0, 0.00016180d0, 0.14016580d0,
+     .  0.178d0, 946.619d0, 0.00016171d0, 0.14000409d0,
+     .  0.178d0, 946.797d0, 0.00016162d0, 0.13984247d0,
+     .  0.178d0, 946.975d0, 0.00016153d0, 0.13968094d0,
+     .  0.178d0, 947.152d0, 0.00016144d0, 0.13951950d0,
+     .  0.178d0, 947.330d0, 0.00016135d0, 0.13935815d0,
+     .  0.178d0, 947.507d0, 0.00016126d0, 0.13919689d0,
+     .  0.177d0, 947.685d0, 0.00016117d0, 0.13903573d0,
+     .  0.177d0, 947.862d0, 0.00016108d0, 0.13887465d0,
+     .  0.177d0, 948.039d0, 0.00016098d0, 0.13871367d0,
+     .  0.177d0, 948.216d0, 0.00016089d0, 0.13855277d0,
+     .  0.177d0, 948.394d0, 0.00016080d0, 0.13839197d0,
+     .  0.177d0, 948.570d0, 0.00016071d0, 0.13823126d0,
+     .  0.177d0, 948.747d0, 0.00016062d0, 0.13807064d0,
+     .  0.177d0, 948.924d0, 0.00016053d0, 0.13791010d0,
+     .  0.177d0, 949.101d0, 0.00016044d0, 0.13774966d0,
+     .  0.177d0, 949.277d0, 0.00016035d0, 0.13758932d0,
+     .  0.176d0, 949.453d0, 0.00016026d0, 0.13742906d0,
+     .  0.176d0, 949.630d0, 0.00016017d0, 0.13726889d0,
+     .  0.176d0, 949.806d0, 0.00016008d0, 0.13710881d0,
+     .  0.176d0, 949.982d0, 0.00015999d0, 0.13694883d0,
+     .  0.176d0, 950.158d0, 0.00015989d0, 0.13678893d0,
+     .  0.176d0, 950.334d0, 0.00015980d0, 0.13662913d0,
+     .  0.176d0, 950.510d0, 0.00015971d0, 0.13646942d0,
+     .  0.176d0, 950.685d0, 0.00015962d0, 0.13630980d0,
+     .  0.176d0, 950.861d0, 0.00015953d0, 0.13615026d0,
+     .  0.176d0, 951.036d0, 0.00015944d0, 0.13599082d0,
+     .  0.175d0, 951.212d0, 0.00015935d0, 0.13583147d0,
+     .  0.175d0, 951.387d0, 0.00015926d0, 0.13567222d0,
+     .  0.175d0, 951.562d0, 0.00015917d0, 0.13551305d0,
+     .  0.175d0, 951.737d0, 0.00015908d0, 0.13535397d0,
+     .  0.175d0, 951.912d0, 0.00015899d0, 0.13519499d0,
+     .  0.175d0, 952.087d0, 0.00015894d0, 0.13503604d0,
+     .  0.175d0, 952.262d0, 0.00015890d0, 0.13487715d0,
+     .  0.175d0, 952.437d0, 0.00015885d0, 0.13471830d0,
+     .  0.175d0, 952.612d0, 0.00015880d0, 0.13455949d0,
+     .  0.175d0, 952.787d0, 0.00015876d0, 0.13440074d0,
+     .  0.175d0, 952.961d0, 0.00015871d0, 0.13424202d0,
+     .  0.175d0, 953.136d0, 0.00015867d0, 0.13408335d0,
+     .  0.175d0, 953.311d0, 0.00015862d0, 0.13392473d0,
+     .  0.175d0, 953.485d0, 0.00015858d0, 0.13376615d0,
+     .  0.175d0, 953.660d0, 0.00015853d0, 0.13360762d0,
+     .  0.174d0, 953.834d0, 0.00015849d0, 0.13344914d0,
+     .  0.174d0, 954.009d0, 0.00015844d0, 0.13329069d0,
+     .  0.174d0, 954.183d0, 0.00015840d0, 0.13313230d0,
+     .  0.174d0, 954.357d0, 0.00015835d0, 0.13297395d0,
+     .  0.174d0, 954.531d0, 0.00015830d0, 0.13281564d0,
+     .  0.174d0, 954.706d0, 0.00015826d0, 0.13265738d0,
+     .  0.174d0, 954.880d0, 0.00015821d0, 0.13249917d0,
+     .  0.174d0, 955.054d0, 0.00015817d0, 0.13234100d0,
+     .  0.174d0, 955.228d0, 0.00015812d0, 0.13218288d0,
+     .  0.174d0, 955.402d0, 0.00015808d0, 0.13202480d0,
+     .  0.174d0, 955.576d0, 0.00015803d0, 0.13186677d0,
+     .  0.174d0, 955.750d0, 0.00015799d0, 0.13170878d0,
+     .  0.174d0, 955.924d0, 0.00015794d0, 0.13155084d0,
+     .  0.174d0, 956.097d0, 0.00015790d0, 0.13139295d0,
+     .  0.174d0, 956.271d0, 0.00015785d0, 0.13123510d0,
+     .  0.174d0, 956.445d0, 0.00015781d0, 0.13107729d0,
+     .  0.174d0, 956.619d0, 0.00015776d0, 0.13091953d0,
+     .  0.174d0, 956.792d0, 0.00015771d0, 0.13076182d0,
+     .  0.174d0, 956.966d0, 0.00015767d0, 0.13060415d0,
+     .  0.174d0, 957.139d0, 0.00015762d0, 0.13044652d0,
+     .  0.173d0, 957.313d0, 0.00015758d0, 0.13028895d0,
+     .  0.173d0, 957.486d0, 0.00015753d0, 0.13013141d0,
+     .  0.173d0, 957.659d0, 0.00015749d0, 0.12997393d0,
+     .  0.173d0, 957.833d0, 0.00015744d0, 0.12981648d0,
+     .  0.173d0, 958.006d0, 0.00015740d0, 0.12965909d0,
+     .  0.173d0, 958.179d0, 0.00015735d0, 0.12950174d0,
+     .  0.173d0, 958.352d0, 0.00015731d0, 0.12934443d0,
+     .  0.173d0, 958.525d0, 0.00015726d0, 0.12918717d0,
+     .  0.173d0, 958.698d0, 0.00015721d0, 0.12902996d0,
+     .  0.173d0, 958.871d0, 0.00015717d0, 0.12887279d0,
+     .  0.173d0, 959.044d0, 0.00015712d0, 0.12871566d0,
+     .  0.173d0, 959.217d0, 0.00015708d0, 0.12855859d0,
+     .  0.173d0, 959.390d0, 0.00015703d0, 0.12840155d0,
+     .  0.173d0, 959.563d0, 0.00015699d0, 0.12824457d0,
+     .  0.173d0, 959.736d0, 0.00015694d0, 0.12808762d0,
+     .  0.173d0, 959.908d0, 0.00015690d0, 0.12793073d0,
+     .  0.173d0, 960.081d0, 0.00015685d0, 0.12777388d0,
+     .  0.173d0, 960.254d0, 0.00015681d0, 0.12761707d0,
+     .  0.173d0, 960.426d0, 0.00015676d0, 0.12746031d0,
+     .  0.173d0, 960.599d0, 0.00015671d0, 0.12730360d0,
+     .  0.172d0, 960.771d0, 0.00015667d0, 0.12714693d0,
+     .  0.172d0, 960.944d0, 0.00015662d0, 0.12699030d0,
+     .  0.172d0, 961.116d0, 0.00015658d0, 0.12683372d0,
+     .  0.172d0, 961.288d0, 0.00015653d0, 0.12667719d0,
+     .  0.172d0, 961.460d0, 0.00015649d0, 0.12652070d0,
+     .  0.172d0, 961.633d0, 0.00015644d0, 0.12636426d0,
+     .  0.172d0, 961.805d0, 0.00015640d0, 0.12620786d0,
+     .  0.172d0, 961.977d0, 0.00015635d0, 0.12605151d0,
+     .  0.172d0, 962.149d0, 0.00015631d0, 0.12589521d0,
+     .  0.172d0, 962.321d0, 0.00015626d0, 0.12573894d0,
+     .  0.172d0, 962.493d0, 0.00015622d0, 0.12558273d0,
+     .  0.172d0, 962.665d0, 0.00015617d0, 0.12542656d0,
+     .  0.172d0, 962.837d0, 0.00015612d0, 0.12527044d0,
+     .  0.172d0, 963.009d0, 0.00015608d0, 0.12511436d0,
+     .  0.172d0, 963.180d0, 0.00015603d0, 0.12495832d0,
+     .  0.172d0, 963.352d0, 0.00015599d0, 0.12480233d0,
+     .  0.172d0, 963.524d0, 0.00015594d0, 0.12464639d0,
+     .  0.172d0, 963.695d0, 0.00015590d0, 0.12449049d0,
+     .  0.172d0, 963.867d0, 0.00015585d0, 0.12433464d0,
+     .  0.172d0, 964.038d0, 0.00015581d0, 0.12417884d0,
+     .  0.171d0, 964.210d0, 0.00015576d0, 0.12402308d0,
+     .  0.171d0, 964.381d0, 0.00015572d0, 0.12386736d0,
+     .  0.171d0, 964.552d0, 0.00015567d0, 0.12371169d0,
+     .  0.171d0, 964.724d0, 0.00015562d0, 0.12355607d0,
+     .  0.171d0, 964.895d0, 0.00015558d0, 0.12340049d0,
+     .  0.171d0, 965.066d0, 0.00015553d0, 0.12324495d0,
+     .  0.171d0, 965.237d0, 0.00015549d0, 0.12308946d0,
+     .  0.171d0, 965.408d0, 0.00015544d0, 0.12293402d0,
+     .  0.171d0, 965.579d0, 0.00015540d0, 0.12277862d0,
+     .  0.171d0, 965.750d0, 0.00015535d0, 0.12262327d0,
+     .  0.171d0, 965.921d0, 0.00015531d0, 0.12246796d0,
+     .  0.171d0, 966.092d0, 0.00015526d0, 0.12231270d0,
+     .  0.171d0, 966.263d0, 0.00015522d0, 0.12215749d0,
+     .  0.171d0, 966.434d0, 0.00015517d0, 0.12200232d0,
+     .  0.171d0, 966.605d0, 0.00015513d0, 0.12184719d0,
+     .  0.171d0, 966.775d0, 0.00015508d0, 0.12169211d0,
+     .  0.171d0, 966.946d0, 0.00015503d0, 0.12153708d0,
+     .  0.171d0, 967.117d0, 0.00015499d0, 0.12138209d0,
+     .  0.171d0, 967.287d0, 0.00015494d0, 0.12122715d0,
+     .  0.171d0, 967.458d0, 0.00015490d0, 0.12107225d0,
+     .  0.170d0, 967.628d0, 0.00015485d0, 0.12091740d0,
+     .  0.170d0, 967.799d0, 0.00015481d0, 0.12076259d0,
+     .  0.170d0, 967.969d0, 0.00015476d0, 0.12060783d0,
+     .  0.170d0, 968.139d0, 0.00015472d0, 0.12045311d0,
+     .  0.170d0, 968.309d0, 0.00015467d0, 0.12029844d0,
+     .  0.170d0, 968.480d0, 0.00015463d0, 0.12014381d0,
+     .  0.170d0, 968.650d0, 0.00015458d0, 0.11998923d0,
+     .  0.170d0, 968.820d0, 0.00015453d0, 0.11983470d0,
+     .  0.170d0, 968.990d0, 0.00015449d0, 0.11968021d0,
+     .  0.170d0, 969.160d0, 0.00015444d0, 0.11952577d0,
+     .  0.170d0, 969.330d0, 0.00015440d0, 0.11937137d0,
+     .  0.170d0, 969.500d0, 0.00015435d0, 0.11921702d0,
+     .  0.170d0, 969.670d0, 0.00015431d0, 0.11906271d0,
+     .  0.170d0, 969.839d0, 0.00015426d0, 0.11890845d0,
+     .  0.170d0, 970.009d0, 0.00015422d0, 0.11875423d0,
+     .  0.170d0, 970.179d0, 0.00015417d0, 0.11860006d0,
+     .  0.170d0, 970.349d0, 0.00015413d0, 0.11844593d0,
+     .  0.170d0, 970.518d0, 0.00015408d0, 0.11829185d0,
+     .  0.170d0, 970.688d0, 0.00015403d0, 0.11813782d0,
+     .  0.170d0, 970.857d0, 0.00015399d0, 0.11798383d0,
+     .  0.169d0, 971.027d0, 0.00015394d0, 0.11782988d0,
+     .  0.169d0, 971.196d0, 0.00015390d0, 0.11767599d0,
+     .  0.169d0, 971.365d0, 0.00015385d0, 0.11752213d0,
+     .  0.169d0, 971.535d0, 0.00015381d0, 0.11736833d0,
+     .  0.169d0, 971.704d0, 0.00015376d0, 0.11721456d0,
+     .  0.169d0, 971.873d0, 0.00015372d0, 0.11706085d0,
+     .  0.169d0, 972.042d0, 0.00015367d0, 0.11690717d0,
+     .  0.169d0, 972.211d0, 0.00015363d0, 0.11675355d0,
+     .  0.169d0, 972.380d0, 0.00015358d0, 0.11659997d0,
+     .  0.169d0, 972.549d0, 0.00015354d0, 0.11644643d0,
+     .  0.169d0, 972.718d0, 0.00015349d0, 0.11629294d0,
+     .  0.169d0, 972.887d0, 0.00015344d0, 0.11613950d0,
+     .  0.169d0, 973.056d0, 0.00015340d0, 0.11598610d0,
+     .  0.169d0, 973.225d0, 0.00015335d0, 0.11583275d0,
+     .  0.169d0, 973.394d0, 0.00015331d0, 0.11567944d0,
+     .  0.169d0, 973.562d0, 0.00015326d0, 0.11552618d0,
+     .  0.169d0, 973.731d0, 0.00015322d0, 0.11537296d0,
+     .  0.169d0, 973.900d0, 0.00015317d0, 0.11521979d0,
+     .  0.169d0, 974.068d0, 0.00015313d0, 0.11506666d0,
+     .  0.169d0, 974.237d0, 0.00015308d0, 0.11491358d0,
+     .  0.168d0, 974.405d0, 0.00015304d0, 0.11476054d0,
+     .  0.168d0, 974.574d0, 0.00015299d0, 0.11460755d0,
+     .  0.168d0, 974.742d0, 0.00015294d0, 0.11445461d0,
+     .  0.168d0, 974.910d0, 0.00015290d0, 0.11430171d0,
+     .  0.168d0, 975.078d0, 0.00015285d0, 0.11414886d0,
+     .  0.168d0, 975.247d0, 0.00015281d0, 0.11399605d0,
+     .  0.168d0, 975.415d0, 0.00015276d0, 0.11384329d0,
+     .  0.168d0, 975.583d0, 0.00015272d0, 0.11369057d0,
+     .  0.168d0, 975.751d0, 0.00015267d0, 0.11353790d0,
+     .  0.168d0, 975.919d0, 0.00015263d0, 0.11338527d0,
+     .  0.168d0, 976.087d0, 0.00015258d0, 0.11323269d0,
+     .  0.168d0, 976.255d0, 0.00015254d0, 0.11308015d0,
+     .  0.168d0, 976.423d0, 0.00015249d0, 0.11292766d0,
+     .  0.168d0, 976.590d0, 0.00015244d0, 0.11277522d0,
+     .  0.168d0, 976.758d0, 0.00015240d0, 0.11262282d0,
+     .  0.168d0, 976.926d0, 0.00015235d0, 0.11247046d0,
+     .  0.168d0, 977.094d0, 0.00015231d0, 0.11231815d0,
+     .  0.168d0, 977.261d0, 0.00015226d0, 0.11216589d0,
+     .  0.168d0, 977.429d0, 0.00015222d0, 0.11201367d0,
+     .  0.168d0, 977.596d0, 0.00015217d0, 0.11186150d0,
+     .  0.167d0, 977.764d0, 0.00015213d0, 0.11170937d0,
+     .  0.167d0, 977.931d0, 0.00015208d0, 0.11155729d0,
+     .  0.167d0, 978.098d0, 0.00015204d0, 0.11140526d0,
+     .  0.167d0, 978.266d0, 0.00015199d0, 0.11125326d0,
+     .  0.167d0, 978.433d0, 0.00015195d0, 0.11110132d0,
+     .  0.167d0, 978.600d0, 0.00015190d0, 0.11094942d0,
+     .  0.167d0, 978.767d0, 0.00015185d0, 0.11079757d0,
+     .  0.167d0, 978.934d0, 0.00015181d0, 0.11064576d0,
+     .  0.167d0, 979.101d0, 0.00015176d0, 0.11049399d0,
+     .  0.167d0, 979.268d0, 0.00015172d0, 0.11034227d0,
+     .  0.167d0, 979.435d0, 0.00015167d0, 0.11019060d0,
+     .  0.167d0, 979.602d0, 0.00015163d0, 0.11003897d0,
+     .  0.167d0, 979.769d0, 0.00015158d0, 0.10988739d0,
+     .  0.167d0, 979.936d0, 0.00015154d0, 0.10973586d0,
+     .  0.167d0, 980.103d0, 0.00015149d0, 0.10958436d0,
+     .  0.167d0, 980.269d0, 0.00015145d0, 0.10943292d0,
+     .  0.167d0, 980.436d0, 0.00015140d0, 0.10928152d0,
+     .  0.167d0, 980.603d0, 0.00015135d0, 0.10913016d0,
+     .  0.167d0, 980.769d0, 0.00015131d0, 0.10897885d0,
+     .  0.167d0, 980.936d0, 0.00015126d0, 0.10882759d0,
+     .  0.166d0, 981.102d0, 0.00015122d0, 0.10867637d0,
+     .  0.166d0, 981.269d0, 0.00015117d0, 0.10852520d0,
+     .  0.166d0, 981.435d0, 0.00015113d0, 0.10837407d0,
+     .  0.166d0, 981.601d0, 0.00015108d0, 0.10822299d0,
+     .  0.166d0, 981.768d0, 0.00015104d0, 0.10807195d0,
+     .  0.166d0, 981.934d0, 0.00015099d0, 0.10792096d0,
+     .  0.166d0, 982.100d0, 0.00015095d0, 0.10777002d0,
+     .  0.166d0, 982.266d0, 0.00015090d0, 0.10761911d0,
+     .  0.166d0, 982.432d0, 0.00015086d0, 0.10746826d0,
+     .  0.166d0, 982.598d0, 0.00015081d0, 0.10731745d0,
+     .  0.166d0, 982.764d0, 0.00015076d0, 0.10716669d0,
+     .  0.166d0, 982.930d0, 0.00015072d0, 0.10701597d0,
+     .  0.166d0, 983.096d0, 0.00015067d0, 0.10686529d0,
+     .  0.166d0, 983.262d0, 0.00015063d0, 0.10671467d0,
+     .  0.166d0, 983.427d0, 0.00015058d0, 0.10656408d0,
+     .  0.166d0, 983.593d0, 0.00015054d0, 0.10641355d0,
+     .  0.166d0, 983.759d0, 0.00015049d0, 0.10626305d0,
+     .  0.166d0, 983.924d0, 0.00015045d0, 0.10611261d0,
+     .  0.166d0, 984.090d0, 0.00015040d0, 0.10596221d0,
+     .  0.166d0, 984.255d0, 0.00015036d0, 0.10581185d0,
+     .  0.165d0, 984.421d0, 0.00015031d0, 0.10566154d0,
+     .  0.165d0, 984.586d0, 0.00015026d0, 0.10551128d0,
+     .  0.165d0, 984.751d0, 0.00015022d0, 0.10536106d0,
+     .  0.165d0, 984.917d0, 0.00015017d0, 0.10521088d0,
+     .  0.165d0, 985.082d0, 0.00015013d0, 0.10506076d0,
+     .  0.165d0, 985.247d0, 0.00015008d0, 0.10491067d0,
+     .  0.165d0, 985.412d0, 0.00015004d0, 0.10476064d0,
+     .  0.165d0, 985.577d0, 0.00014999d0, 0.10461064d0,
+     .  0.165d0, 985.743d0, 0.00014995d0, 0.10446070d0,
+     .  0.165d0, 985.908d0, 0.00014990d0, 0.10431080d0,
+     .  0.165d0, 986.072d0, 0.00014986d0, 0.10416094d0,
+     .  0.165d0, 986.237d0, 0.00014981d0, 0.10401113d0,
+     .  0.165d0, 986.402d0, 0.00014976d0, 0.10386136d0,
+     .  0.165d0, 986.567d0, 0.00014972d0, 0.10371164d0,
+     .  0.165d0, 986.732d0, 0.00014967d0, 0.10356197d0,
+     .  0.165d0, 986.896d0, 0.00014963d0, 0.10341234d0,
+     .  0.165d0, 987.061d0, 0.00014958d0, 0.10326276d0,
+     .  0.165d0, 987.226d0, 0.00014954d0, 0.10311322d0,
+     .  0.165d0, 987.390d0, 0.00014949d0, 0.10296373d0,
+     .  0.165d0, 987.555d0, 0.00014945d0, 0.10281428d0,
+     .  0.164d0, 987.719d0, 0.00014940d0, 0.10266488d0,
+     .  0.164d0, 987.884d0, 0.00014936d0, 0.10251552d0,
+     .  0.164d0, 988.048d0, 0.00014931d0, 0.10236621d0,
+     .  0.164d0, 988.212d0, 0.00014927d0, 0.10221695d0,
+     .  0.164d0, 988.376d0, 0.00014922d0, 0.10206773d0,
+     .  0.164d0, 988.541d0, 0.00014917d0, 0.10191855d0,
+     .  0.164d0, 988.705d0, 0.00014913d0, 0.10176942d0,
+     .  0.164d0, 988.869d0, 0.00014908d0, 0.10162034d0,
+     .  0.164d0, 989.033d0, 0.00014904d0, 0.10147130d0,
+     .  0.164d0, 989.197d0, 0.00014899d0, 0.10132231d0,
+     .  0.164d0, 989.361d0, 0.00014895d0, 0.10117336d0,
+     .  0.164d0, 989.525d0, 0.00014890d0, 0.10102446d0,
+     .  0.164d0, 989.689d0, 0.00014886d0, 0.10087560d0,
+     .  0.164d0, 989.852d0, 0.00014881d0, 0.10072679d0,
+     .  0.164d0, 990.016d0, 0.00014877d0, 0.10057803d0,
+     .  0.164d0, 990.180d0, 0.00014872d0, 0.10042931d0,
+     .  0.164d0, 990.344d0, 0.00014867d0, 0.10028063d0,
+     .  0.164d0, 990.507d0, 0.00014863d0, 0.10013200d0,
+     .  0.164d0, 990.671d0, 0.00014858d0, 0.09998342d0,
+     .  0.164d0, 990.834d0, 0.00014854d0, 0.09983488d0,
+     .  0.163d0, 990.998d0, 0.00014849d0, 0.09968639d0,
+     .  0.163d0, 991.161d0, 0.00014845d0, 0.09953794d0,
+     .  0.163d0, 991.324d0, 0.00014840d0, 0.09938954d0,
+     .  0.163d0, 991.488d0, 0.00014836d0, 0.09924118d0,
+     .  0.163d0, 991.651d0, 0.00014831d0, 0.09909287d0,
+     .  0.163d0, 991.814d0, 0.00014827d0, 0.09894460d0,
+     .  0.163d0, 991.977d0, 0.00014822d0, 0.09879638d0,
+     .  0.163d0, 992.140d0, 0.00014818d0, 0.09864821d0,
+     .  0.163d0, 992.303d0, 0.00014813d0, 0.09850008d0,
+     .  0.163d0, 992.466d0, 0.00014808d0, 0.09835200d0,
+     .  0.163d0, 992.629d0, 0.00014804d0, 0.09820396d0,
+     .  0.163d0, 992.792d0, 0.00014799d0, 0.09805596d0,
+     .  0.163d0, 992.955d0, 0.00014795d0, 0.09790802d0,
+     .  0.163d0, 993.118d0, 0.00014790d0, 0.09776011d0,
+     .  0.163d0, 993.281d0, 0.00014786d0, 0.09761226d0,
+     .  0.163d0, 993.443d0, 0.00014781d0, 0.09746444d0,
+     .  0.163d0, 993.606d0, 0.00014777d0, 0.09731668d0,
+     .  0.163d0, 993.769d0, 0.00014772d0, 0.09716896d0,
+     .  0.163d0, 993.931d0, 0.00014768d0, 0.09702128d0,
+     .  0.163d0, 994.094d0, 0.00014763d0, 0.09687365d0,
+     .  0.162d0, 994.256d0, 0.00014758d0, 0.09672607d0,
+     .  0.162d0, 994.419d0, 0.00014754d0, 0.09657853d0,
+     .  0.162d0, 994.581d0, 0.00014749d0, 0.09643103d0,
+     .  0.162d0, 994.743d0, 0.00014745d0, 0.09628359d0,
+     .  0.162d0, 994.905d0, 0.00014740d0, 0.09613618d0,
+     .  0.162d0, 995.068d0, 0.00014736d0, 0.09598883d0,
+     .  0.162d0, 995.230d0, 0.00014731d0, 0.09584151d0,
+     .  0.162d0, 995.392d0, 0.00014727d0, 0.09569425d0,
+     .  0.162d0, 995.554d0, 0.00014722d0, 0.09554703d0,
+     .  0.162d0, 995.716d0, 0.00014718d0, 0.09539985d0,
+     .  0.162d0, 995.878d0, 0.00014713d0, 0.09525272d0,
+     .  0.162d0, 996.040d0, 0.00014708d0, 0.09510563d0,
+     .  0.162d0, 996.202d0, 0.00014704d0, 0.09495860d0,
+     .  0.162d0, 996.364d0, 0.00014699d0, 0.09481160d0,
+     .  0.162d0, 996.525d0, 0.00014695d0, 0.09466465d0,
+     .  0.162d0, 996.687d0, 0.00014690d0, 0.09451775d0,
+     .  0.162d0, 996.849d0, 0.00014686d0, 0.09437089d0,
+     .  0.162d0, 997.010d0, 0.00014681d0, 0.09422408d0,
+     .  0.162d0, 997.172d0, 0.00014677d0, 0.09407731d0,
+     .  0.162d0, 997.333d0, 0.00014672d0, 0.09393059d0,
+     .  0.161d0, 997.495d0, 0.00014668d0, 0.09378392d0,
+     .  0.161d0, 997.656d0, 0.00014663d0, 0.09363728d0,
+     .  0.161d0, 997.817d0, 0.00014659d0, 0.09349070d0,
+     .  0.161d0, 997.979d0, 0.00014654d0, 0.09334416d0,
+     .  0.161d0, 998.140d0, 0.00014649d0, 0.09319767d0,
+     .  0.161d0, 998.301d0, 0.00014645d0, 0.09305122d0,
+     .  0.161d0, 998.462d0, 0.00014640d0, 0.09290481d0,
+     .  0.161d0, 998.623d0, 0.00014636d0, 0.09275845d0,
+     .  0.161d0, 998.784d0, 0.00014631d0, 0.09261214d0,
+     .  0.161d0, 998.946d0, 0.00014627d0, 0.09246587d0,
+     .  0.161d0, 999.106d0, 0.00014622d0, 0.09231965d0,
+     .  0.161d0, 999.267d0, 0.00014618d0, 0.09217348d0,
+     .  0.161d0, 999.428d0, 0.00014613d0, 0.09202735d0,
+     .  0.161d0, 999.589d0, 0.00014609d0, 0.09188126d0,
+     .  0.161d0, 999.750d0, 0.00014604d0, 0.09173522d0,
+     .  0.161d0, 999.910d0, 0.00014599d0, 0.09158923d0,
+     .  0.161d0, 1000.071d0, 0.00014595d0, 0.09144328d0,
+     .  0.161d0, 1000.232d0, 0.00014590d0, 0.09129737d0,
+     .  0.161d0, 1000.392d0, 0.00014586d0, 0.09115151d0,
+     .  0.161d0, 1000.553d0, 0.00014581d0, 0.09100570d0,
+     .  0.160d0, 1000.713d0, 0.00014577d0, 0.09085993d0,
+     .  0.160d0, 1000.874d0, 0.00014572d0, 0.09071421d0,
+     .  0.160d0, 1001.034d0, 0.00014568d0, 0.09056853d0,
+     .  0.160d0, 1001.194d0, 0.00014563d0, 0.09042290d0,
+     .  0.160d0, 1001.355d0, 0.00014559d0, 0.09027732d0,
+     .  0.160d0, 1001.515d0, 0.00014554d0, 0.09013178d0,
+     .  0.160d0, 1001.675d0, 0.00014550d0, 0.08998628d0,
+     .  0.160d0, 1001.835d0, 0.00014545d0, 0.08984083d0,
+     .  0.160d0, 1001.995d0, 0.00014540d0, 0.08969543d0,
+     .  0.160d0, 1002.155d0, 0.00014536d0, 0.08955007d0,
+     .  0.160d0, 1002.315d0, 0.00014531d0, 0.08940476d0,
+     .  0.160d0, 1002.475d0, 0.00014527d0, 0.08925949d0,
+     .  0.160d0, 1002.635d0, 0.00014522d0, 0.08911427d0,
+     .  0.160d0, 1002.794d0, 0.00014518d0, 0.08896909d0,
+     .  0.160d0, 1002.954d0, 0.00014513d0, 0.08882396d0,
+     .  0.160d0, 1003.114d0, 0.00014509d0, 0.08867887d0,
+     .  0.160d0, 1003.274d0, 0.00014504d0, 0.08853383d0,
+     .  0.160d0, 1003.433d0, 0.00014500d0, 0.08838883d0,
+     .  0.160d0, 1003.593d0, 0.00014495d0, 0.08824388d0,
+     .  0.160d0, 1003.752d0, 0.00014490d0, 0.08809898d0,
+     .  0.159d0, 1003.912d0, 0.00014486d0, 0.08795412d0,
+     .  0.159d0, 1004.071d0, 0.00014481d0, 0.08780931d0,
+     .  0.159d0, 1004.230d0, 0.00014477d0, 0.08766454d0,
+     .  0.159d0, 1004.390d0, 0.00014472d0, 0.08751982d0,
+     .  0.159d0, 1004.549d0, 0.00014468d0, 0.08737514d0,
+     .  0.159d0, 1004.708d0, 0.00014463d0, 0.08723051d0,
+     .  0.159d0, 1004.867d0, 0.00014459d0, 0.08708592d0,
+     .  0.159d0, 1005.026d0, 0.00014454d0, 0.08694138d0,
+     .  0.159d0, 1005.185d0, 0.00014450d0, 0.08679688d0,
+     .  0.159d0, 1005.344d0, 0.00014445d0, 0.08665243d0,
+     .  0.159d0, 1005.503d0, 0.00014440d0, 0.08650803d0,
+     .  0.159d0, 1005.662d0, 0.00014436d0, 0.08636367d0,
+     .  0.159d0, 1005.821d0, 0.00014431d0, 0.08621936d0,
+     .  0.159d0, 1005.980d0, 0.00014427d0, 0.08607509d0,
+     .  0.159d0, 1006.139d0, 0.00014422d0, 0.08593086d0,
+     .  0.159d0, 1006.297d0, 0.00014418d0, 0.08578669d0,
+     .  0.159d0, 1006.456d0, 0.00014413d0, 0.08564255d0,
+     .  0.159d0, 1006.615d0, 0.00014409d0, 0.08549847d0,
+     .  0.159d0, 1006.773d0, 0.00014404d0, 0.08535443d0,
+     .  0.159d0, 1006.932d0, 0.00014400d0, 0.08521043d0,
+     .  0.158d0, 1007.090d0, 0.00014395d0, 0.08506648d0,
+     .  0.158d0, 1007.249d0, 0.00014391d0, 0.08492257d0,
+     .  0.158d0, 1007.407d0, 0.00014386d0, 0.08477871d0,
+     .  0.158d0, 1007.565d0, 0.00014381d0, 0.08463490d0,
+     .  0.158d0, 1007.724d0, 0.00014377d0, 0.08449113d0,
+     .  0.158d0, 1007.882d0, 0.00014372d0, 0.08434741d0,
+     .  0.158d0, 1008.040d0, 0.00014368d0, 0.08420373d0,
+     .  0.158d0, 1008.198d0, 0.00014363d0, 0.08406010d0,
+     .  0.158d0, 1008.356d0, 0.00014359d0, 0.08391651d0,
+     .  0.158d0, 1008.514d0, 0.00014354d0, 0.08377297d0,
+     .  0.158d0, 1008.672d0, 0.00014350d0, 0.08362947d0,
+     .  0.158d0, 1008.830d0, 0.00014345d0, 0.08348602d0,
+     .  0.158d0, 1008.988d0, 0.00014341d0, 0.08334262d0,
+     .  0.158d0, 1009.145d0, 0.00014336d0, 0.08319926d0,
+     .  0.158d0, 1009.303d0, 0.00014331d0, 0.08305594d0,
+     .  0.158d0, 1009.461d0, 0.00014327d0, 0.08291267d0,
+     .  0.158d0, 1009.619d0, 0.00014322d0, 0.08276945d0,
+     .  0.158d0, 1009.776d0, 0.00014318d0, 0.08262627d0,
+     .  0.158d0, 1009.934d0, 0.00014313d0, 0.08248314d0,
+     .  0.158d0, 1010.091d0, 0.00014309d0, 0.08234005d0,
+     .  0.157d0, 1010.249d0, 0.00014304d0, 0.08219701d0,
+     .  0.157d0, 1010.406d0, 0.00014300d0, 0.08205401d0,
+     .  0.157d0, 1010.563d0, 0.00014295d0, 0.08191106d0,
+     .  0.157d0, 1010.721d0, 0.00014291d0, 0.08176815d0,
+     .  0.157d0, 1010.878d0, 0.00014286d0, 0.08162529d0,
+     .  0.157d0, 1011.035d0, 0.00014281d0, 0.08148248d0,
+     .  0.157d0, 1011.192d0, 0.00014277d0, 0.08133971d0,
+     .  0.157d0, 1011.349d0, 0.00014272d0, 0.08119698d0,
+     .  0.157d0, 1011.506d0, 0.00014268d0, 0.08105431d0,
+     .  0.157d0, 1011.663d0, 0.00014263d0, 0.08091167d0,
+     .  0.157d0, 1011.820d0, 0.00014259d0, 0.08076908d0,
+     .  0.157d0, 1011.977d0, 0.00014254d0, 0.08062654d0,
+     .  0.157d0, 1012.134d0, 0.00014250d0, 0.08048404d0,
+     .  0.157d0, 1012.291d0, 0.00014245d0, 0.08034159d0,
+     .  0.157d0, 1012.448d0, 0.00014241d0, 0.08019919d0,
+     .  0.157d0, 1012.604d0, 0.00014236d0, 0.08005683d0,
+     .  0.157d0, 1012.761d0, 0.00014232d0, 0.07991451d0,
+     .  0.157d0, 1012.918d0, 0.00014227d0, 0.07977224d0,
+     .  0.157d0, 1013.074d0, 0.00014222d0, 0.07963002d0,
+     .  0.157d0, 1013.231d0, 0.00014218d0, 0.07948784d0,
+     .  0.156d0, 1013.387d0, 0.00014213d0, 0.07934570d0,
+     .  0.156d0, 1013.544d0, 0.00014209d0, 0.07920362d0,
+     .  0.156d0, 1013.700d0, 0.00014204d0, 0.07906157d0,
+     .  0.156d0, 1013.856d0, 0.00014200d0, 0.07891958d0,
+     .  0.156d0, 1014.012d0, 0.00014195d0, 0.07877762d0,
+     .  0.156d0, 1014.169d0, 0.00014191d0, 0.07863572d0,
+     .  0.156d0, 1014.325d0, 0.00014186d0, 0.07849386d0,
+     .  0.156d0, 1014.481d0, 0.00014182d0, 0.07835204d0,
+     .  0.156d0, 1014.637d0, 0.00014177d0, 0.07821027d0,
+     .  0.156d0, 1014.793d0, 0.00014172d0, 0.07806855d0,
+     .  0.156d0, 1014.949d0, 0.00014168d0, 0.07792687d0,
+     .  0.156d0, 1015.105d0, 0.00014163d0, 0.07778523d0,
+     .  0.156d0, 1015.261d0, 0.00014159d0, 0.07764364d0,
+     .  0.156d0, 1015.416d0, 0.00014154d0, 0.07750210d0,
+     .  0.156d0, 1015.572d0, 0.00014150d0, 0.07736060d0,
+     .  0.156d0, 1015.728d0, 0.00014145d0, 0.07721915d0,
+     .  0.156d0, 1015.884d0, 0.00014141d0, 0.07707774d0,
+     .  0.156d0, 1016.039d0, 0.00014136d0, 0.07693638d0,
+     .  0.156d0, 1016.195d0, 0.00014132d0, 0.07679507d0,
+     .  0.156d0, 1016.350d0, 0.00014127d0, 0.07665380d0,
+     .  0.155d0, 1016.506d0, 0.00014123d0, 0.07651257d0,
+     .  0.155d0, 1016.661d0, 0.00014118d0, 0.07637139d0,
+     .  0.155d0, 1016.816d0, 0.00014113d0, 0.07623026d0,
+     .  0.155d0, 1016.972d0, 0.00014109d0, 0.07608917d0,
+     .  0.155d0, 1017.127d0, 0.00014104d0, 0.07594813d0,
+     .  0.155d0, 1017.282d0, 0.00014100d0, 0.07580713d0,
+     .  0.155d0, 1017.437d0, 0.00014095d0, 0.07566617d0,
+     .  0.155d0, 1017.592d0, 0.00014091d0, 0.07552527d0,
+     .  0.155d0, 1017.747d0, 0.00014086d0, 0.07538441d0,
+     .  0.155d0, 1017.902d0, 0.00014082d0, 0.07524359d0,
+     .  0.155d0, 1018.057d0, 0.00014077d0, 0.07510282d0,
+     .  0.155d0, 1018.212d0, 0.00014073d0, 0.07496209d0,
+     .  0.155d0, 1018.367d0, 0.00014068d0, 0.07482141d0,
+     .  0.155d0, 1018.522d0, 0.00014063d0, 0.07468078d0,
+     .  0.155d0, 1018.677d0, 0.00014059d0, 0.07454019d0,
+     .  0.155d0, 1018.831d0, 0.00014054d0, 0.07439965d0,
+     .  0.155d0, 1018.986d0, 0.00014050d0, 0.07425915d0,
+     .  0.155d0, 1019.141d0, 0.00014045d0, 0.07411869d0,
+     .  0.155d0, 1019.295d0, 0.00014041d0, 0.07397829d0,
+     .  0.155d0, 1019.450d0, 0.00014036d0, 0.07383793d0,
+     .  0.154d0, 1019.604d0, 0.00014032d0, 0.07369761d0,
+     .  0.154d0, 1019.759d0, 0.00014027d0, 0.07355734d0,
+     .  0.154d0, 1019.913d0, 0.00014023d0, 0.07341711d0,
+     .  0.154d0, 1020.067d0, 0.00014018d0, 0.07327693d0,
+     .  0.154d0, 1020.221d0, 0.00014013d0, 0.07313680d0,
+     .  0.154d0, 1020.376d0, 0.00014009d0, 0.07299671d0,
+     .  0.154d0, 1020.530d0, 0.00014004d0, 0.07285666d0,
+     .  0.154d0, 1020.684d0, 0.00014000d0, 0.07271666d0,
+     .  0.154d0, 1020.838d0, 0.00013995d0, 0.07257671d0,
+     .  0.154d0, 1020.992d0, 0.00013991d0, 0.07243680d0,
+     .  0.154d0, 1021.146d0, 0.00013986d0, 0.07229694d0,
+     .  0.154d0, 1021.300d0, 0.00013982d0, 0.07215712d0,
+     .  0.154d0, 1021.454d0, 0.00013977d0, 0.07201735d0,
+     .  0.154d0, 1021.607d0, 0.00013973d0, 0.07187763d0,
+     .  0.154d0, 1021.761d0, 0.00013968d0, 0.07173795d0,
+     .  0.154d0, 1021.915d0, 0.00013964d0, 0.07159831d0,
+     .  0.154d0, 1022.069d0, 0.00013959d0, 0.07145872d0,
+     .  0.154d0, 1022.222d0, 0.00013954d0, 0.07131918d0,
+     .  0.154d0, 1022.376d0, 0.00013950d0, 0.07117968d0,
+     .  0.154d0, 1022.529d0, 0.00013945d0, 0.07104022d0,
+     .  0.153d0, 1022.683d0, 0.00013941d0, 0.07090082d0,
+     .  0.153d0, 1022.836d0, 0.00013936d0, 0.07076145d0,
+     .  0.153d0, 1022.989d0, 0.00013932d0, 0.07062214d0,
+     .  0.153d0, 1023.143d0, 0.00013927d0, 0.07048286d0,
+     .  0.153d0, 1023.296d0, 0.00013923d0, 0.07034364d0,
+     .  0.153d0, 1023.449d0, 0.00013918d0, 0.07020446d0,
+     .  0.153d0, 1023.602d0, 0.00013914d0, 0.07006532d0,
+     .  0.153d0, 1023.755d0, 0.00013909d0, 0.06992623d0,
+     .  0.153d0, 1023.908d0, 0.00013904d0, 0.06978719d0,
+     .  0.153d0, 1024.061d0, 0.00013900d0, 0.06964819d0,
+     .  0.153d0, 1024.214d0, 0.00013895d0, 0.06950923d0,
+     .  0.153d0, 1024.367d0, 0.00013891d0, 0.06937032d0,
+     .  0.153d0, 1024.520d0, 0.00013886d0, 0.06923146d0,
+     .  0.153d0, 1024.673d0, 0.00013882d0, 0.06909264d0,
+     .  0.153d0, 1024.826d0, 0.00013877d0, 0.06895387d0,
+     .  0.153d0, 1024.978d0, 0.00013873d0, 0.06881514d0,
+     .  0.153d0, 1025.131d0, 0.00013868d0, 0.06867646d0,
+     .  0.153d0, 1025.284d0, 0.00013864d0, 0.06853783d0,
+     .  0.153d0, 1025.436d0, 0.00013859d0, 0.06839924d0,
+     .  0.153d0, 1025.589d0, 0.00013855d0, 0.06826069d0,
+     .  0.152d0, 1025.741d0, 0.00013850d0, 0.06812219d0,
+     .  0.152d0, 1025.894d0, 0.00013845d0, 0.06798374d0,
+     .  0.152d0, 1026.046d0, 0.00013841d0, 0.06784533d0,
+     .  0.152d0, 1026.198d0, 0.00013836d0, 0.06770697d0,
+     .  0.152d0, 1026.351d0, 0.00013832d0, 0.06756865d0,
+     .  0.152d0, 1026.503d0, 0.00013827d0, 0.06743038d0,
+     .  0.152d0, 1026.655d0, 0.00013823d0, 0.06729215d0,
+     .  0.152d0, 1026.807d0, 0.00013818d0, 0.06715397d0,
+     .  0.152d0, 1026.959d0, 0.00013814d0, 0.06701583d0,
+     .  0.152d0, 1027.111d0, 0.00013809d0, 0.06687774d0,
+     .  0.152d0, 1027.263d0, 0.00013805d0, 0.06673969d0,
+     .  0.152d0, 1027.415d0, 0.00013800d0, 0.06660169d0,
+     .  0.152d0, 1027.567d0, 0.00013795d0, 0.06646374d0,
+     .  0.152d0, 1027.719d0, 0.00013791d0, 0.06632583d0,
+     .  0.152d0, 1027.870d0, 0.00013786d0, 0.06618797d0,
+     .  0.152d0, 1028.022d0, 0.00013782d0, 0.06605015d0,
+     .  0.152d0, 1028.174d0, 0.00013777d0, 0.06591238d0,
+     .  0.152d0, 1028.325d0, 0.00013773d0, 0.06577465d0,
+     .  0.152d0, 1028.477d0, 0.00013768d0, 0.06563697d0,
+     .  0.152d0, 1028.628d0, 0.00013764d0, 0.06549933d0,
+     .  0.151d0, 1028.780d0, 0.00013759d0, 0.06536174d0,
+     .  0.151d0, 1028.931d0, 0.00013755d0, 0.06522419d0,
+     .  0.151d0, 1029.082d0, 0.00013750d0, 0.06508669d0,
+     .  0.151d0, 1029.234d0, 0.00013745d0, 0.06494924d0,
+     .  0.151d0, 1029.385d0, 0.00013741d0, 0.06481183d0,
+     .  0.151d0, 1029.536d0, 0.00013736d0, 0.06467446d0,
+     .  0.151d0, 1029.687d0, 0.00013732d0, 0.06453715d0,
+     .  0.151d0, 1029.838d0, 0.00013727d0, 0.06439987d0,
+     .  0.151d0, 1029.989d0, 0.00013723d0, 0.06426265d0,
+     .  0.151d0, 1030.140d0, 0.00013718d0, 0.06412546d0,
+     .  0.151d0, 1030.291d0, 0.00013714d0, 0.06398833d0,
+     .  0.151d0, 1030.442d0, 0.00013709d0, 0.06385123d0,
+     .  0.151d0, 1030.593d0, 0.00013705d0, 0.06371419d0,
+     .  0.151d0, 1030.744d0, 0.00013700d0, 0.06357719d0,
+     .  0.151d0, 1030.895d0, 0.00013696d0, 0.06344023d0,
+     .  0.151d0, 1031.045d0, 0.00013691d0, 0.06330332d0,
+     .  0.151d0, 1031.196d0, 0.00013686d0, 0.06316646d0,
+     .  0.151d0, 1031.347d0, 0.00013682d0, 0.06302964d0,
+     .  0.151d0, 1031.497d0, 0.00013677d0, 0.06289287d0,
+     .  0.151d0, 1031.648d0, 0.00013673d0, 0.06275614d0,
+     .  0.150d0, 1031.798d0, 0.00013668d0, 0.06261946d0,
+     .  0.150d0, 1031.949d0, 0.00013664d0, 0.06248282d0,
+     .  0.150d0, 1032.099d0, 0.00013659d0, 0.06234623d0,
+     .  0.150d0, 1032.249d0, 0.00013655d0, 0.06220968d0,
+     .  0.150d0, 1032.399d0, 0.00013650d0, 0.06207318d0,
+     .  0.150d0, 1032.550d0, 0.00013646d0, 0.06193672d0,
+     .  0.150d0, 1032.700d0, 0.00013641d0, 0.06180031d0,
+     .  0.150d0, 1032.850d0, 0.00013636d0, 0.06166395d0,
+     .  0.150d0, 1033.000d0, 0.00013632d0, 0.06152763d0,
+     .  0.150d0, 1033.150d0, 0.00013627d0, 0.06139136d0,
+     .  0.150d0, 1033.300d0, 0.00013618d0, 0.06125517d0,
+     .  0.150d0, 1033.450d0, 0.00013609d0, 0.06111908d0,
+     .  0.150d0, 1033.599d0, 0.00013600d0, 0.06098308d0,
+     .  0.150d0, 1033.749d0, 0.00013591d0, 0.06084717d0,
+     .  0.150d0, 1033.899d0, 0.00013582d0, 0.06071135d0,
+     .  0.149d0, 1034.048d0, 0.00013573d0, 0.06057562d0,
+     .  0.149d0, 1034.197d0, 0.00013564d0, 0.06043998d0,
+     .  0.149d0, 1034.346d0, 0.00013555d0, 0.06030444d0,
+     .  0.149d0, 1034.496d0, 0.00013546d0, 0.06016898d0,
+     .  0.149d0, 1034.645d0, 0.00013537d0, 0.06003361d0,
+     .  0.149d0, 1034.793d0, 0.00013527d0, 0.05989834d0,
+     .  0.149d0, 1034.942d0, 0.00013518d0, 0.05976316d0,
+     .  0.149d0, 1035.091d0, 0.00013509d0, 0.05962806d0,
+     .  0.149d0, 1035.239d0, 0.00013500d0, 0.05949306d0,
+     .  0.149d0, 1035.388d0, 0.00013491d0, 0.05935815d0,
+     .  0.148d0, 1035.536d0, 0.00013482d0, 0.05922333d0,
+     .  0.148d0, 1035.685d0, 0.00013473d0, 0.05908860d0,
+     .  0.148d0, 1035.833d0, 0.00013464d0, 0.05895396d0,
+     .  0.148d0, 1035.981d0, 0.00013455d0, 0.05881941d0,
+     .  0.148d0, 1036.129d0, 0.00013446d0, 0.05868496d0,
+     .  0.148d0, 1036.277d0, 0.00013437d0, 0.05855059d0,
+     .  0.148d0, 1036.425d0, 0.00013428d0, 0.05841632d0,
+     .  0.148d0, 1036.572d0, 0.00013418d0, 0.05828213d0,
+     .  0.148d0, 1036.720d0, 0.00013409d0, 0.05814804d0,
+     .  0.148d0, 1036.867d0, 0.00013400d0, 0.05801404d0,
+     .  0.147d0, 1037.015d0, 0.00013391d0, 0.05788012d0,
+     .  0.147d0, 1037.162d0, 0.00013382d0, 0.05774630d0,
+     .  0.147d0, 1037.309d0, 0.00013373d0, 0.05761257d0,
+     .  0.147d0, 1037.456d0, 0.00013364d0, 0.05747893d0,
+     .  0.147d0, 1037.603d0, 0.00013355d0, 0.05734539d0,
+     .  0.147d0, 1037.750d0, 0.00013346d0, 0.05721193d0,
+     .  0.147d0, 1037.897d0, 0.00013337d0, 0.05707856d0,
+     .  0.147d0, 1038.044d0, 0.00013328d0, 0.05694529d0,
+     .  0.147d0, 1038.190d0, 0.00013318d0, 0.05681210d0,
+     .  0.147d0, 1038.337d0, 0.00013309d0, 0.05667901d0,
+     .  0.146d0, 1038.483d0, 0.00013300d0, 0.05654600d0,
+     .  0.146d0, 1038.630d0, 0.00013291d0, 0.05641309d0,
+     .  0.146d0, 1038.776d0, 0.00013282d0, 0.05628027d0,
+     .  0.146d0, 1038.922d0, 0.00013273d0, 0.05614754d0,
+     .  0.146d0, 1039.068d0, 0.00013264d0, 0.05601490d0,
+     .  0.146d0, 1039.214d0, 0.00013255d0, 0.05588235d0,
+     .  0.146d0, 1039.360d0, 0.00013246d0, 0.05574989d0,
+     .  0.146d0, 1039.505d0, 0.00013237d0, 0.05561752d0,
+     .  0.146d0, 1039.651d0, 0.00013228d0, 0.05548525d0,
+     .  0.146d0, 1039.797d0, 0.00013219d0, 0.05535306d0,
+     .  0.145d0, 1039.942d0, 0.00013209d0, 0.05522097d0,
+     .  0.145d0, 1040.087d0, 0.00013200d0, 0.05508896d0,
+     .  0.145d0, 1040.232d0, 0.00013191d0, 0.05495705d0,
+     .  0.145d0, 1040.378d0, 0.00013182d0, 0.05482523d0,
+     .  0.145d0, 1040.523d0, 0.00013173d0, 0.05469350d0,
+     .  0.145d0, 1040.667d0, 0.00013164d0, 0.05456186d0,
+     .  0.145d0, 1040.812d0, 0.00013155d0, 0.05443031d0,
+     .  0.145d0, 1040.957d0, 0.00013146d0, 0.05429885d0,
+     .  0.145d0, 1041.101d0, 0.00013137d0, 0.05416748d0,
+     .  0.145d0, 1041.246d0, 0.00013128d0, 0.05403620d0,
+     .  0.144d0, 1041.390d0, 0.00013119d0, 0.05390502d0,
+     .  0.144d0, 1041.535d0, 0.00013110d0, 0.05377392d0,
+     .  0.144d0, 1041.679d0, 0.00013100d0, 0.05364292d0,
+     .  0.144d0, 1041.823d0, 0.00013091d0, 0.05351200d0,
+     .  0.144d0, 1041.967d0, 0.00013082d0, 0.05338118d0,
+     .  0.144d0, 1042.111d0, 0.00013073d0, 0.05325045d0,
+     .  0.144d0, 1042.255d0, 0.00013064d0, 0.05311981d0,
+     .  0.144d0, 1042.398d0, 0.00013055d0, 0.05298926d0,
+     .  0.144d0, 1042.542d0, 0.00013046d0, 0.05285880d0,
+     .  0.144d0, 1042.685d0, 0.00013037d0, 0.05272843d0,
+     .  0.143d0, 1042.829d0, 0.00013028d0, 0.05259815d0,
+     .  0.143d0, 1042.972d0, 0.00013019d0, 0.05246796d0,
+     .  0.143d0, 1043.115d0, 0.00013010d0, 0.05233787d0,
+     .  0.143d0, 1043.258d0, 0.00013001d0, 0.05220786d0,
+     .  0.143d0, 1043.401d0, 0.00012991d0, 0.05207795d0,
+     .  0.143d0, 1043.544d0, 0.00012982d0, 0.05194813d0,
+     .  0.143d0, 1043.687d0, 0.00012973d0, 0.05181839d0,
+     .  0.143d0, 1043.830d0, 0.00012964d0, 0.05168875d0,
+     .  0.143d0, 1043.972d0, 0.00012955d0, 0.05155920d0,
+     .  0.143d0, 1044.115d0, 0.00012946d0, 0.05142974d0,
+     .  0.142d0, 1044.257d0, 0.00012937d0, 0.05130037d0,
+     .  0.142d0, 1044.400d0, 0.00012928d0, 0.05117109d0,
+     .  0.142d0, 1044.542d0, 0.00012919d0, 0.05104190d0,
+     .  0.142d0, 1044.684d0, 0.00012910d0, 0.05091281d0,
+     .  0.142d0, 1044.826d0, 0.00012901d0, 0.05078380d0,
+     .  0.142d0, 1044.968d0, 0.00012892d0, 0.05065489d0,
+     .  0.142d0, 1045.110d0, 0.00012882d0, 0.05052606d0,
+     .  0.142d0, 1045.251d0, 0.00012873d0, 0.05039733d0,
+     .  0.142d0, 1045.393d0, 0.00012864d0, 0.05026869d0,
+     .  0.142d0, 1045.534d0, 0.00012855d0, 0.05014013d0,
+     .  0.141d0, 1045.676d0, 0.00012846d0, 0.05001167d0,
+     .  0.141d0, 1045.817d0, 0.00012837d0, 0.04988330d0,
+     .  0.141d0, 1045.958d0, 0.00012828d0, 0.04975503d0,
+     .  0.141d0, 1046.099d0, 0.00012819d0, 0.04962684d0,
+     .  0.141d0, 1046.240d0, 0.00012810d0, 0.04949874d0,
+     .  0.141d0, 1046.381d0, 0.00012801d0, 0.04937073d0,
+     .  0.141d0, 1046.522d0, 0.00012792d0, 0.04924282d0,
+     .  0.141d0, 1046.663d0, 0.00012782d0, 0.04911499d0,
+     .  0.141d0, 1046.803d0, 0.00012773d0, 0.04898726d0,
+     .  0.141d0, 1046.944d0, 0.00012764d0, 0.04885962d0,
+     .  0.140d0, 1047.084d0, 0.00012755d0, 0.04873206d0,
+     .  0.140d0, 1047.225d0, 0.00012746d0, 0.04860460d0,
+     .  0.140d0, 1047.365d0, 0.00012737d0, 0.04847723d0,
+     .  0.140d0, 1047.505d0, 0.00012728d0, 0.04834995d0,
+     .  0.140d0, 1047.645d0, 0.00012719d0, 0.04822276d0,
+     .  0.140d0, 1047.785d0, 0.00012710d0, 0.04809566d0,
+     .  0.140d0, 1047.925d0, 0.00012701d0, 0.04796866d0,
+     .  0.140d0, 1048.064d0, 0.00012692d0, 0.04784174d0,
+     .  0.140d0, 1048.204d0, 0.00012683d0, 0.04771492d0,
+     .  0.140d0, 1048.343d0, 0.00012673d0, 0.04758818d0,
+     .  0.139d0, 1048.483d0, 0.00012664d0, 0.04746154d0,
+     .  0.139d0, 1048.622d0, 0.00012655d0, 0.04733498d0,
+     .  0.139d0, 1048.761d0, 0.00012646d0, 0.04720852d0,
+     .  0.139d0, 1048.900d0, 0.00012637d0, 0.04708215d0,
+     .  0.139d0, 1049.039d0, 0.00012628d0, 0.04695587d0,
+     .  0.139d0, 1049.178d0, 0.00012619d0, 0.04682968d0,
+     .  0.139d0, 1049.317d0, 0.00012610d0, 0.04670358d0,
+     .  0.139d0, 1049.456d0, 0.00012601d0, 0.04657757d0,
+     .  0.139d0, 1049.594d0, 0.00012592d0, 0.04645166d0,
+     .  0.139d0, 1049.733d0, 0.00012583d0, 0.04632583d0,
+     .  0.138d0, 1049.871d0, 0.00012574d0, 0.04620010d0,
+     .  0.138d0, 1050.010d0, 0.00012564d0, 0.04607445d0,
+     .  0.138d0, 1050.148d0, 0.00012555d0, 0.04594890d0,
+     .  0.138d0, 1050.286d0, 0.00012546d0, 0.04582343d0,
+     .  0.138d0, 1050.424d0, 0.00012537d0, 0.04569806d0,
+     .  0.138d0, 1050.562d0, 0.00012528d0, 0.04557278d0,
+     .  0.138d0, 1050.700d0, 0.00012519d0, 0.04544759d0,
+     .  0.138d0, 1050.837d0, 0.00012510d0, 0.04532249d0,
+     .  0.138d0, 1050.975d0, 0.00012501d0, 0.04519748d0,
+     .  0.138d0, 1051.112d0, 0.00012492d0, 0.04507257d0,
+     .  0.137d0, 1051.250d0, 0.00012483d0, 0.04494774d0,
+     .  0.137d0, 1051.387d0, 0.00012474d0, 0.04482300d0,
+     .  0.137d0, 1051.524d0, 0.00012465d0, 0.04469836d0,
+     .  0.137d0, 1051.661d0, 0.00012455d0, 0.04457380d0,
+     .  0.137d0, 1051.798d0, 0.00012446d0, 0.04444934d0,
+     .  0.137d0, 1051.935d0, 0.00012437d0, 0.04432497d0,
+     .  0.137d0, 1052.072d0, 0.00012428d0, 0.04420069d0,
+     .  0.137d0, 1052.209d0, 0.00012419d0, 0.04407650d0,
+     .  0.137d0, 1052.345d0, 0.00012410d0, 0.04395240d0,
+     .  0.137d0, 1052.482d0, 0.00012401d0, 0.04382839d0,
+     .  0.136d0, 1052.618d0, 0.00012392d0, 0.04370447d0,
+     .  0.136d0, 1052.755d0, 0.00012383d0, 0.04358064d0,
+     .  0.136d0, 1052.891d0, 0.00012374d0, 0.04345690d0,
+     .  0.136d0, 1053.027d0, 0.00012365d0, 0.04333326d0,
+     .  0.136d0, 1053.163d0, 0.00012355d0, 0.04320970d0,
+     .  0.136d0, 1053.299d0, 0.00012346d0, 0.04308624d0,
+     .  0.136d0, 1053.435d0, 0.00012337d0, 0.04296287d0,
+     .  0.136d0, 1053.570d0, 0.00012328d0, 0.04283958d0,
+     .  0.136d0, 1053.706d0, 0.00012319d0, 0.04271639d0,
+     .  0.136d0, 1053.841d0, 0.00012310d0, 0.04259329d0,
+     .  0.135d0, 1053.977d0, 0.00012301d0, 0.04247028d0,
+     .  0.135d0, 1054.112d0, 0.00012292d0, 0.04234736d0,
+     .  0.135d0, 1054.247d0, 0.00012283d0, 0.04222453d0,
+     .  0.135d0, 1054.382d0, 0.00012274d0, 0.04210180d0,
+     .  0.135d0, 1054.517d0, 0.00012265d0, 0.04197915d0,
+     .  0.135d0, 1054.652d0, 0.00012256d0, 0.04185659d0,
+     .  0.135d0, 1054.787d0, 0.00012246d0, 0.04173413d0,
+     .  0.135d0, 1054.922d0, 0.00012237d0, 0.04161176d0,
+     .  0.135d0, 1055.056d0, 0.00012228d0, 0.04148947d0,
+     .  0.135d0, 1055.191d0, 0.00012219d0, 0.04136728d0,
+     .  0.134d0, 1055.325d0, 0.00012210d0, 0.04124518d0,
+     .  0.134d0, 1055.460d0, 0.00012201d0, 0.04112317d0,
+     .  0.134d0, 1055.594d0, 0.00012192d0, 0.04100125d0,
+     .  0.134d0, 1055.728d0, 0.00012183d0, 0.04087942d0,
+     .  0.134d0, 1055.862d0, 0.00012174d0, 0.04075768d0,
+     .  0.134d0, 1055.996d0, 0.00012165d0, 0.04063604d0,
+     .  0.134d0, 1056.130d0, 0.00012156d0, 0.04051448d0,
+     .  0.134d0, 1056.263d0, 0.00012147d0, 0.04039301d0,
+     .  0.134d0, 1056.397d0, 0.00012137d0, 0.04027164d0,
+     .  0.134d0, 1056.530d0, 0.00012128d0, 0.04015036d0,
+     .  0.133d0, 1056.664d0, 0.00012119d0, 0.04002916d0,
+     .  0.133d0, 1056.797d0, 0.00012110d0, 0.03990806d0,
+     .  0.133d0, 1056.930d0, 0.00012101d0, 0.03978705d0,
+     .  0.133d0, 1057.063d0, 0.00012092d0, 0.03966613d0,
+     .  0.133d0, 1057.196d0, 0.00012083d0, 0.03954530d0,
+     .  0.133d0, 1057.329d0, 0.00012074d0, 0.03942456d0,
+     .  0.133d0, 1057.462d0, 0.00012065d0, 0.03930391d0,
+     .  0.133d0, 1057.595d0, 0.00012056d0, 0.03918336d0,
+     .  0.133d0, 1057.727d0, 0.00012047d0, 0.03906289d0,
+     .  0.133d0, 1057.860d0, 0.00012038d0, 0.03894252d0,
+     .  0.132d0, 1057.992d0, 0.00012028d0, 0.03882223d0,
+     .  0.132d0, 1058.125d0, 0.00012019d0, 0.03870204d0,
+     .  0.132d0, 1058.257d0, 0.00012010d0, 0.03858193d0,
+     .  0.132d0, 1058.389d0, 0.00012001d0, 0.03846192d0,
+     .  0.132d0, 1058.521d0, 0.00011992d0, 0.03834200d0,
+     .  0.132d0, 1058.653d0, 0.00011983d0, 0.03822217d0,
+     .  0.132d0, 1058.785d0, 0.00011974d0, 0.03810243d0,
+     .  0.132d0, 1058.916d0, 0.00011965d0, 0.03798278d0,
+     .  0.132d0, 1059.048d0, 0.00011956d0, 0.03786323d0,
+     .  0.132d0, 1059.179d0, 0.00011947d0, 0.03774376d0,
+     .  0.131d0, 1059.311d0, 0.00011938d0, 0.03762438d0,
+     .  0.131d0, 1059.442d0, 0.00011929d0, 0.03750510d0,
+     .  0.131d0, 1059.573d0, 0.00011919d0, 0.03738590d0,
+     .  0.131d0, 1059.705d0, 0.00011910d0, 0.03726680d0,
+     .  0.131d0, 1059.835d0, 0.00011901d0, 0.03714779d0,
+     .  0.131d0, 1059.966d0, 0.00011892d0, 0.03702887d0,
+     .  0.131d0, 1060.097d0, 0.00011883d0, 0.03691004d0,
+     .  0.131d0, 1060.228d0, 0.00011874d0, 0.03679130d0,
+     .  0.131d0, 1060.358d0, 0.00011865d0, 0.03667265d0,
+     .  0.131d0, 1060.489d0, 0.00011856d0, 0.03655409d0,
+     .  0.130d0, 1060.619d0, 0.00011847d0, 0.03643562d0,
+     .  0.130d0, 1060.750d0, 0.00011838d0, 0.03631725d0,
+     .  0.130d0, 1060.880d0, 0.00011829d0, 0.03619896d0,
+     .  0.130d0, 1061.010d0, 0.00011819d0, 0.03608076d0,
+     .  0.130d0, 1061.140d0, 0.00011810d0, 0.03596266d0,
+     .  0.130d0, 1061.270d0, 0.00011801d0, 0.03584465d0,
+     .  0.130d0, 1061.400d0, 0.00011792d0, 0.03572673d0,
+     .  0.130d0, 1061.529d0, 0.00011783d0, 0.03560889d0,
+     .  0.130d0, 1061.659d0, 0.00011774d0, 0.03549115d0,
+     .  0.130d0, 1061.789d0, 0.00011765d0, 0.03537350d0,
+     .  0.129d0, 1061.918d0, 0.00011756d0, 0.03525594d0,
+     .  0.129d0, 1062.047d0, 0.00011747d0, 0.03513848d0,
+     .  0.129d0, 1062.176d0, 0.00011738d0, 0.03502110d0,
+     .  0.129d0, 1062.306d0, 0.00011729d0, 0.03490381d0,
+     .  0.129d0, 1062.435d0, 0.00011720d0, 0.03478662d0,
+     .  0.129d0, 1062.563d0, 0.00011710d0, 0.03466951d0,
+     .  0.129d0, 1062.692d0, 0.00011701d0, 0.03455250d0,
+     .  0.129d0, 1062.821d0, 0.00011692d0, 0.03443558d0,
+     .  0.129d0, 1062.949d0, 0.00011683d0, 0.03431874d0,
+     .  0.129d0, 1063.078d0, 0.00011674d0, 0.03420200d0,
+     .  0.128d0, 1063.206d0, 0.00011665d0, 0.03408535d0,
+     .  0.128d0, 1063.335d0, 0.00011656d0, 0.03396879d0,
+     .  0.128d0, 1063.463d0, 0.00011647d0, 0.03385232d0,
+     .  0.128d0, 1063.591d0, 0.00011638d0, 0.03373595d0,
+     .  0.128d0, 1063.719d0, 0.00011629d0, 0.03361966d0,
+     .  0.128d0, 1063.847d0, 0.00011620d0, 0.03350346d0,
+     .  0.128d0, 1063.975d0, 0.00011611d0, 0.03338736d0,
+     .  0.128d0, 1064.102d0, 0.00011601d0, 0.03327134d0,
+     .  0.128d0, 1064.230d0, 0.00011592d0, 0.03315542d0,
+     .  0.128d0, 1064.358d0, 0.00011583d0, 0.03303959d0,
+     .  0.127d0, 1064.485d0, 0.00011574d0, 0.03292385d0,
+     .  0.127d0, 1064.612d0, 0.00011565d0, 0.03280819d0,
+     .  0.127d0, 1064.739d0, 0.00011556d0, 0.03269263d0,
+     .  0.127d0, 1064.866d0, 0.00011547d0, 0.03257717d0,
+     .  0.127d0, 1064.994d0, 0.00011538d0, 0.03246179d0,
+     .  0.127d0, 1065.120d0, 0.00011529d0, 0.03234650d0,
+     .  0.127d0, 1065.247d0, 0.00011520d0, 0.03223130d0,
+     .  0.127d0, 1065.374d0, 0.00011511d0, 0.03211620d0,
+     .  0.127d0, 1065.501d0, 0.00011502d0, 0.03200118d0,
+     .  0.127d0, 1065.627d0, 0.00011492d0, 0.03188626d0,
+     .  0.126d0, 1065.753d0, 0.00011483d0, 0.03177142d0,
+     .  0.126d0, 1065.880d0, 0.00011474d0, 0.03165668d0,
+     .  0.126d0, 1066.006d0, 0.00011465d0, 0.03154203d0,
+     .  0.126d0, 1066.132d0, 0.00011456d0, 0.03142747d0,
+     .  0.126d0, 1066.258d0, 0.00011447d0, 0.03131300d0,
+     .  0.126d0, 1066.384d0, 0.00011438d0, 0.03119862d0,
+     .  0.126d0, 1066.510d0, 0.00011429d0, 0.03108433d0,
+     .  0.126d0, 1066.635d0, 0.00011420d0, 0.03097013d0,
+     .  0.126d0, 1066.761d0, 0.00011411d0, 0.03085603d0,
+     .  0.126d0, 1066.887d0, 0.00011402d0, 0.03074201d0,
+     .  0.125d0, 1067.012d0, 0.00011392d0, 0.03062809d0,
+     .  0.125d0, 1067.137d0, 0.00011383d0, 0.03051425d0,
+     .  0.125d0, 1067.262d0, 0.00011374d0, 0.03040051d0,
+     .  0.125d0, 1067.388d0, 0.00011365d0, 0.03028686d0,
+     .  0.125d0, 1067.513d0, 0.00011356d0, 0.03017329d0,
+     .  0.125d0, 1067.637d0, 0.00011347d0, 0.03005982d0,
+     .  0.125d0, 1067.762d0, 0.00011338d0, 0.02994644d0,
+     .  0.125d0, 1067.887d0, 0.00011329d0, 0.02983316d0,
+     .  0.125d0, 1068.011d0, 0.00011320d0, 0.02971996d0,
+     .  0.125d0, 1068.136d0, 0.00011311d0, 0.02960685d0,
+     .  0.124d0, 1068.260d0, 0.00011302d0, 0.02949383d0,
+     .  0.124d0, 1068.385d0, 0.00011293d0, 0.02938091d0,
+     .  0.124d0, 1068.509d0, 0.00011283d0, 0.02926807d0,
+     .  0.124d0, 1068.633d0, 0.00011274d0, 0.02915533d0,
+     .  0.124d0, 1068.757d0, 0.00011265d0, 0.02904268d0,
+     .  0.124d0, 1068.881d0, 0.00011256d0, 0.02893011d0,
+     .  0.124d0, 1069.005d0, 0.00011247d0, 0.02881764d0,
+     .  0.124d0, 1069.128d0, 0.00011238d0, 0.02870526d0,
+     .  0.124d0, 1069.252d0, 0.00011229d0, 0.02859297d0,
+     .  0.124d0, 1069.375d0, 0.00011220d0, 0.02848077d0,
+     .  0.123d0, 1069.499d0, 0.00011211d0, 0.02836867d0,
+     .  0.123d0, 1069.622d0, 0.00011202d0, 0.02825665d0,
+     .  0.123d0, 1069.745d0, 0.00011193d0, 0.02814472d0,
+     .  0.123d0, 1069.868d0, 0.00011184d0, 0.02803289d0,
+     .  0.123d0, 1069.991d0, 0.00011174d0, 0.02792114d0,
+     .  0.123d0, 1070.114d0, 0.00011165d0, 0.02780949d0,
+     .  0.123d0, 1070.237d0, 0.00011156d0, 0.02769793d0,
+     .  0.123d0, 1070.360d0, 0.00011147d0, 0.02758645d0,
+     .  0.123d0, 1070.482d0, 0.00011138d0, 0.02747507d0,
+     .  0.123d0, 1070.605d0, 0.00011129d0, 0.02736378d0,
+     .  0.122d0, 1070.727d0, 0.00011120d0, 0.02725258d0,
+     .  0.122d0, 1070.850d0, 0.00011111d0, 0.02714147d0,
+     .  0.122d0, 1070.972d0, 0.00011102d0, 0.02703046d0,
+     .  0.122d0, 1071.094d0, 0.00011093d0, 0.02691953d0,
+     .  0.122d0, 1071.216d0, 0.00011084d0, 0.02680869d0,
+     .  0.122d0, 1071.338d0, 0.00011075d0, 0.02669795d0,
+     .  0.122d0, 1071.460d0, 0.00011065d0, 0.02658729d0,
+     .  0.122d0, 1071.581d0, 0.00011056d0, 0.02647673d0,
+     .  0.122d0, 1071.703d0, 0.00011047d0, 0.02636626d0,
+     .  0.122d0, 1071.824d0, 0.00011038d0, 0.02625588d0,
+     .  0.121d0, 1071.946d0, 0.00011029d0, 0.02614559d0,
+     .  0.121d0, 1072.067d0, 0.00011020d0, 0.02603539d0,
+     .  0.121d0, 1072.188d0, 0.00011011d0, 0.02592528d0,
+     .  0.121d0, 1072.310d0, 0.00011002d0, 0.02581526d0,
+     .  0.121d0, 1072.430d0, 0.00010993d0, 0.02570533d0,
+     .  0.121d0, 1072.551d0, 0.00010984d0, 0.02559549d0,
+     .  0.121d0, 1072.672d0, 0.00010975d0, 0.02548575d0,
+     .  0.121d0, 1072.793d0, 0.00010966d0, 0.02537609d0,
+     .  0.121d0, 1072.913d0, 0.00010956d0, 0.02526653d0,
+     .  0.121d0, 1073.034d0, 0.00010947d0, 0.02515706d0,
+     .  0.120d0, 1073.154d0, 0.00010938d0, 0.02504767d0,
+     .  0.120d0, 1073.275d0, 0.00010929d0, 0.02493838d0,
+     .  0.120d0, 1073.395d0, 0.00010920d0, 0.02482918d0,
+     .  0.120d0, 1073.515d0, 0.00010911d0, 0.02472007d0,
+     .  0.120d0, 1073.635d0, 0.00010902d0, 0.02461105d0,
+     .  0.120d0, 1073.755d0, 0.00010893d0, 0.02450212d0,
+     .  0.120d0, 1073.875d0, 0.00010884d0, 0.02439329d0,
+     .  0.120d0, 1073.994d0, 0.00010875d0, 0.02428454d0,
+     .  0.120d0, 1074.114d0, 0.00010866d0, 0.02417588d0,
+     .  0.120d0, 1074.234d0, 0.00010856d0, 0.02406732d0,
+     .  0.119d0, 1074.353d0, 0.00010847d0, 0.02395885d0,
+     .  0.119d0, 1074.472d0, 0.00010838d0, 0.02385046d0,
+     .  0.119d0, 1074.591d0, 0.00010829d0, 0.02374217d0,
+     .  0.119d0, 1074.710d0, 0.00010820d0, 0.02363397d0,
+     .  0.119d0, 1074.830d0, 0.00010811d0, 0.02352586d0,
+     .  0.119d0, 1074.948d0, 0.00010802d0, 0.02341784d0,
+     .  0.119d0, 1075.067d0, 0.00010793d0, 0.02330991d0,
+     .  0.119d0, 1075.186d0, 0.00010784d0, 0.02320207d0,
+     .  0.119d0, 1075.304d0, 0.00010775d0, 0.02309432d0,
+     .  0.119d0, 1075.423d0, 0.00010766d0, 0.02298667d0,
+     .  0.118d0, 1075.541d0, 0.00010757d0, 0.02287910d0,
+     .  0.118d0, 1075.660d0, 0.00010747d0, 0.02277163d0,
+     .  0.118d0, 1075.778d0, 0.00010738d0, 0.02266424d0,
+     .  0.118d0, 1075.896d0, 0.00010729d0, 0.02255695d0,
+     .  0.118d0, 1076.014d0, 0.00010720d0, 0.02244975d0,
+     .  0.118d0, 1076.132d0, 0.00010711d0, 0.02234264d0,
+     .  0.118d0, 1076.250d0, 0.00010702d0, 0.02223562d0,
+     .  0.118d0, 1076.367d0, 0.00010693d0, 0.02212869d0,
+     .  0.118d0, 1076.485d0, 0.00010684d0, 0.02202185d0,
+     .  0.118d0, 1076.602d0, 0.00010675d0, 0.02191510d0,
+     .  0.117d0, 1076.720d0, 0.00010666d0, 0.02180844d0,
+     .  0.117d0, 1076.837d0, 0.00010657d0, 0.02170188d0,
+     .  0.117d0, 1076.954d0, 0.00010648d0, 0.02159540d0,
+     .  0.117d0, 1077.071d0, 0.00010638d0, 0.02148902d0,
+     .  0.117d0, 1077.188d0, 0.00010629d0, 0.02138273d0,
+     .  0.117d0, 1077.305d0, 0.00010620d0, 0.02127652d0,
+     .  0.117d0, 1077.422d0, 0.00010611d0, 0.02117041d0,
+     .  0.117d0, 1077.539d0, 0.00010602d0, 0.02106439d0,
+     .  0.117d0, 1077.655d0, 0.00010593d0, 0.02095846d0,
+     .  0.117d0, 1077.772d0, 0.00010584d0, 0.02085262d0,
+     .  0.116d0, 1077.888d0, 0.00010575d0, 0.02074687d0,
+     .  0.116d0, 1078.005d0, 0.00010566d0, 0.02064121d0,
+     .  0.116d0, 1078.121d0, 0.00010557d0, 0.02053565d0,
+     .  0.116d0, 1078.237d0, 0.00010548d0, 0.02043017d0,
+     .  0.116d0, 1078.353d0, 0.00010539d0, 0.02032479d0,
+     .  0.116d0, 1078.469d0, 0.00010529d0, 0.02021949d0,
+     .  0.116d0, 1078.585d0, 0.00010520d0, 0.02011429d0,
+     .  0.116d0, 1078.700d0, 0.00010511d0, 0.02000918d0,
+     .  0.116d0, 1078.816d0, 0.00010502d0, 0.01990415d0,
+     .  0.116d0, 1078.931d0, 0.00010493d0, 0.01979922d0,
+     .  0.115d0, 1079.047d0, 0.00010484d0, 0.01969438d0,
+     .  0.115d0, 1079.162d0, 0.00010475d0, 0.01958963d0,
+     .  0.115d0, 1079.277d0, 0.00010466d0, 0.01948498d0,
+     .  0.115d0, 1079.392d0, 0.00010457d0, 0.01938041d0,
+     .  0.115d0, 1079.507d0, 0.00010448d0, 0.01927593d0,
+     .  0.115d0, 1079.622d0, 0.00010439d0, 0.01917155d0,
+     .  0.115d0, 1079.737d0, 0.00010429d0, 0.01906725d0,
+     .  0.115d0, 1079.852d0, 0.00010420d0, 0.01896305d0,
+     .  0.115d0, 1079.966d0, 0.00010411d0, 0.01885893d0,
+     .  0.115d0, 1080.081d0, 0.00010402d0, 0.01875491d0,
+     .  0.114d0, 1080.195d0, 0.00010393d0, 0.01865098d0,
+     .  0.114d0, 1080.310d0, 0.00010384d0, 0.01854714d0,
+     .  0.114d0, 1080.424d0, 0.00010375d0, 0.01844339d0,
+     .  0.114d0, 1080.538d0, 0.00010366d0, 0.01833973d0,
+     .  0.114d0, 1080.652d0, 0.00010357d0, 0.01823616d0,
+     .  0.114d0, 1080.766d0, 0.00010348d0, 0.01813269d0,
+     .  0.114d0, 1080.880d0, 0.00010339d0, 0.01802930d0,
+     .  0.114d0, 1080.993d0, 0.00010330d0, 0.01792600d0,
+     .  0.114d0, 1081.107d0, 0.00010320d0, 0.01782280d0,
+     .  0.114d0, 1081.220d0, 0.00010311d0, 0.01771968d0,
+     .  0.113d0, 1081.334d0, 0.00010302d0, 0.01761666d0,
+     .  0.113d0, 1081.447d0, 0.00010293d0, 0.01751373d0,
+     .  0.113d0, 1081.560d0, 0.00010284d0, 0.01741089d0,
+     .  0.113d0, 1081.673d0, 0.00010275d0, 0.01730814d0,
+     .  0.113d0, 1081.786d0, 0.00010266d0, 0.01720548d0,
+     .  0.113d0, 1081.899d0, 0.00010257d0, 0.01710291d0,
+     .  0.113d0, 1082.012d0, 0.00010248d0, 0.01700043d0,
+     .  0.113d0, 1082.125d0, 0.00010239d0, 0.01689804d0,
+     .  0.113d0, 1082.237d0, 0.00010230d0, 0.01679575d0,
+     .  0.113d0, 1082.350d0, 0.00010221d0, 0.01669354d0,
+     .  0.112d0, 1082.462d0, 0.00010211d0, 0.01659143d0,
+     .  0.112d0, 1082.575d0, 0.00010202d0, 0.01648940d0,
+     .  0.112d0, 1082.687d0, 0.00010193d0, 0.01638747d0,
+     .  0.112d0, 1082.799d0, 0.00010184d0, 0.01628563d0,
+     .  0.112d0, 1082.911d0, 0.00010175d0, 0.01618388d0,
+     .  0.112d0, 1083.023d0, 0.00010166d0, 0.01608222d0,
+     .  0.112d0, 1083.135d0, 0.00010157d0, 0.01598065d0,
+     .  0.112d0, 1083.246d0, 0.00010148d0, 0.01587917d0,
+     .  0.112d0, 1083.358d0, 0.00010139d0, 0.01577778d0,
+     .  0.112d0, 1083.469d0, 0.00010130d0, 0.01567649d0,
+     .  0.111d0, 1083.581d0, 0.00010121d0, 0.01557528d0,
+     .  0.111d0, 1083.692d0, 0.00010112d0, 0.01547416d0,
+     .  0.111d0, 1083.803d0, 0.00010102d0, 0.01537314d0,
+     .  0.111d0, 1083.914d0, 0.00010093d0, 0.01527221d0,
+     .  0.111d0, 1084.025d0, 0.00010084d0, 0.01517136d0,
+     .  0.111d0, 1084.136d0, 0.00010075d0, 0.01507061d0,
+     .  0.111d0, 1084.247d0, 0.00010066d0, 0.01496995d0,
+     .  0.111d0, 1084.358d0, 0.00010057d0, 0.01486938d0,
+     .  0.111d0, 1084.468d0, 0.00010048d0, 0.01476890d0,
+     .  0.111d0, 1084.579d0, 0.00010039d0, 0.01466851d0,
+     .  0.110d0, 1084.689d0, 0.00010030d0, 0.01456822d0,
+     .  0.110d0, 1084.800d0, 0.00010021d0, 0.01446801d0,
+     .  0.110d0, 1084.910d0, 0.00010012d0, 0.01436789d0,
+     .  0.110d0, 1085.020d0, 0.00010002d0, 0.01426787d0,
+     .  0.110d0, 1085.130d0, 0.00009993d0, 0.01416793d0,
+     .  0.110d0, 1085.240d0, 0.00009984d0, 0.01406809d0,
+     .  0.110d0, 1085.350d0, 0.00009975d0, 0.01396834d0,
+     .  0.110d0, 1085.459d0, 0.00009966d0, 0.01386868d0,
+     .  0.110d0, 1085.569d0, 0.00009957d0, 0.01376911d0,
+     .  0.110d0, 1085.678d0, 0.00009948d0, 0.01366963d0,
+     .  0.109d0, 1085.788d0, 0.00009939d0, 0.01357024d0,
+     .  0.109d0, 1085.897d0, 0.00009930d0, 0.01347094d0,
+     .  0.109d0, 1086.006d0, 0.00009921d0, 0.01337173d0,
+     .  0.109d0, 1086.115d0, 0.00009912d0, 0.01327262d0,
+     .  0.109d0, 1086.224d0, 0.00009903d0, 0.01317359d0,
+     .  0.109d0, 1086.333d0, 0.00009893d0, 0.01307466d0,
+     .  0.109d0, 1086.442d0, 0.00009884d0, 0.01297581d0,
+     .  0.109d0, 1086.551d0, 0.00009875d0, 0.01287706d0,
+     .  0.109d0, 1086.659d0, 0.00009866d0, 0.01277840d0,
+     .  0.109d0, 1086.768d0, 0.00009857d0, 0.01267982d0,
+     .  0.108d0, 1086.876d0, 0.00009848d0, 0.01258134d0,
+     .  0.108d0, 1086.985d0, 0.00009839d0, 0.01248295d0,
+     .  0.108d0, 1087.093d0, 0.00009830d0, 0.01238466d0,
+     .  0.108d0, 1087.201d0, 0.00009821d0, 0.01228645d0,
+     .  0.108d0, 1087.309d0, 0.00009812d0, 0.01218833d0,
+     .  0.108d0, 1087.417d0, 0.00009803d0, 0.01209030d0,
+     .  0.108d0, 1087.525d0, 0.00009794d0, 0.01199237d0,
+     .  0.108d0, 1087.632d0, 0.00009784d0, 0.01189452d0,
+     .  0.108d0, 1087.740d0, 0.00009775d0, 0.01179677d0,
+     .  0.108d0, 1087.847d0, 0.00009766d0, 0.01169911d0,
+     .  0.107d0, 1087.955d0, 0.00009757d0, 0.01160154d0,
+     .  0.107d0, 1088.062d0, 0.00009748d0, 0.01150405d0,
+     .  0.107d0, 1088.169d0, 0.00009739d0, 0.01140666d0,
+     .  0.107d0, 1088.276d0, 0.00009730d0, 0.01130936d0,
+     .  0.107d0, 1088.383d0, 0.00009721d0, 0.01121216d0,
+     .  0.107d0, 1088.490d0, 0.00009712d0, 0.01111504d0,
+     .  0.107d0, 1088.597d0, 0.00009703d0, 0.01101801d0,
+     .  0.107d0, 1088.704d0, 0.00009694d0, 0.01092107d0,
+     .  0.107d0, 1088.810d0, 0.00009685d0, 0.01082423d0,
+     .  0.107d0, 1088.917d0, 0.00009675d0, 0.01072748d0,
+     .  0.106d0, 1089.023d0, 0.00009666d0, 0.01063081d0,
+     .  0.106d0, 1089.130d0, 0.00009657d0, 0.01053424d0,
+     .  0.106d0, 1089.236d0, 0.00009648d0, 0.01043776d0,
+     .  0.106d0, 1089.342d0, 0.00009639d0, 0.01034137d0,
+     .  0.106d0, 1089.448d0, 0.00009630d0, 0.01024507d0,
+     .  0.106d0, 1089.554d0, 0.00009621d0, 0.01014886d0,
+     .  0.106d0, 1089.660d0, 0.00009612d0, 0.01005274d0,
+     .  0.106d0, 1089.765d0, 0.00009603d0, 0.00995671d0,
+     .  0.106d0, 1089.871d0, 0.00009594d0, 0.00986077d0,
+     .  0.106d0, 1089.976d0, 0.00009585d0, 0.00976493d0,
+     .  0.105d0, 1090.082d0, 0.00009576d0, 0.00966917d0,
+     .  0.105d0, 1090.187d0, 0.00009566d0, 0.00957351d0,
+     .  0.105d0, 1090.292d0, 0.00009557d0, 0.00947793d0,
+     .  0.105d0, 1090.397d0, 0.00009548d0, 0.00938245d0,
+     .  0.105d0, 1090.502d0, 0.00009539d0, 0.00928706d0,
+     .  0.105d0, 1090.607d0, 0.00009530d0, 0.00919176d0,
+     .  0.105d0, 1090.712d0, 0.00009521d0, 0.00909655d0,
+     .  0.105d0, 1090.817d0, 0.00009512d0, 0.00900143d0,
+     .  0.105d0, 1090.921d0, 0.00009503d0, 0.00890640d0,
+     .  0.105d0, 1091.026d0, 0.00009494d0, 0.00881147d0,
+     .  0.104d0, 1091.130d0, 0.00009485d0, 0.00871662d0,
+     .  0.104d0, 1091.235d0, 0.00009476d0, 0.00862186d0,
+     .  0.104d0, 1091.339d0, 0.00009466d0, 0.00852720d0,
+     .  0.104d0, 1091.443d0, 0.00009457d0, 0.00843262d0,
+     .  0.104d0, 1091.547d0, 0.00009448d0, 0.00833814d0,
+     .  0.104d0, 1091.651d0, 0.00009439d0, 0.00824375d0,
+     .  0.104d0, 1091.755d0, 0.00009430d0, 0.00814945d0,
+     .  0.104d0, 1091.858d0, 0.00009421d0, 0.00805524d0,
+     .  0.104d0, 1091.962d0, 0.00009412d0, 0.00796112d0,
+     .  0.104d0, 1092.065d0, 0.00009403d0, 0.00786709d0,
+     .  0.103d0, 1092.169d0, 0.00009394d0, 0.00777315d0,
+     .  0.103d0, 1092.272d0, 0.00009385d0, 0.00767930d0,
+     .  0.103d0, 1092.375d0, 0.00009376d0, 0.00758555d0,
+     .  0.103d0, 1092.478d0, 0.00009367d0, 0.00749188d0,
+     .  0.103d0, 1092.581d0, 0.00009357d0, 0.00739831d0,
+     .  0.103d0, 1092.684d0, 0.00009348d0, 0.00730482d0,
+     .  0.103d0, 1092.787d0, 0.00009339d0, 0.00721143d0,
+     .  0.103d0, 1092.890d0, 0.00009330d0, 0.00711813d0,
+     .  0.103d0, 1092.992d0, 0.00009321d0, 0.00702492d0,
+     .  0.103d0, 1093.095d0, 0.00009312d0, 0.00693179d0,
+     .  0.102d0, 1093.197d0, 0.00009303d0, 0.00683877d0,
+     .  0.102d0, 1093.300d0, 0.00009294d0, 0.00674583d0,
+     .  0.102d0, 1093.402d0, 0.00009285d0, 0.00665298d0,
+     .  0.102d0, 1093.504d0, 0.00009276d0, 0.00656022d0,
+     .  0.102d0, 1093.606d0, 0.00009267d0, 0.00646756d0,
+     .  0.102d0, 1093.708d0, 0.00009258d0, 0.00637498d0,
+     .  0.102d0, 1093.810d0, 0.00009248d0, 0.00628250d0,
+     .  0.102d0, 1093.911d0, 0.00009239d0, 0.00619010d0,
+     .  0.102d0, 1094.013d0, 0.00009230d0, 0.00609780d0,
+     .  0.102d0, 1094.114d0, 0.00009221d0, 0.00600559d0,
+     .  0.101d0, 1094.216d0, 0.00009212d0, 0.00591347d0,
+     .  0.101d0, 1094.317d0, 0.00009203d0, 0.00582144d0,
+     .  0.101d0, 1094.418d0, 0.00009194d0, 0.00572950d0,
+     .  0.101d0, 1094.519d0, 0.00009185d0, 0.00563765d0,
+     .  0.101d0, 1094.620d0, 0.00009176d0, 0.00554589d0,
+     .  0.101d0, 1094.721d0, 0.00009167d0, 0.00545422d0,
+     .  0.101d0, 1094.822d0, 0.00009158d0, 0.00536265d0,
+     .  0.101d0, 1094.923d0, 0.00009149d0, 0.00527116d0,
+     .  0.101d0, 1095.023d0, 0.00009139d0, 0.00517977d0,
+     .  0.101d0, 1095.124d0, 0.00009130d0, 0.00508846d0,
+     .  0.100d0, 1095.224d0, 0.00009121d0, 0.00499725d0,
+     .  0.100d0, 1095.325d0, 0.00009112d0, 0.00490613d0,
+     .  0.100d0, 1095.425d0, 0.00009103d0, 0.00481510d0,
+     .  0.100d0, 1095.525d0, 0.00009094d0, 0.00472416d0,
+     .  0.100d0, 1095.625d0, 0.00009085d0, 0.00463331d0,
+     .  0.099d0, 1095.724d0, 0.00008997d0, 0.00454334d0,
+     .  0.098d0, 1095.822d0, 0.00008909d0, 0.00445426d0,
+     .  0.097d0, 1095.919d0, 0.00008820d0, 0.00436605d0,
+     .  0.096d0, 1096.015d0, 0.00008732d0, 0.00427873d0,
+     .  0.095d0, 1096.110d0, 0.00008644d0, 0.00419229d0,
+     .  0.094d0, 1096.205d0, 0.00008556d0, 0.00410674d0,
+     .  0.093d0, 1096.298d0, 0.00008467d0, 0.00402206d0,
+     .  0.092d0, 1096.390d0, 0.00008379d0, 0.00393827d0,
+     .  0.091d0, 1096.481d0, 0.00008291d0, 0.00385536d0,
+     .  0.090d0, 1096.572d0, 0.00008203d0, 0.00377333d0,
+     .  0.089d0, 1096.661d0, 0.00008115d0, 0.00369218d0,
+     .  0.088d0, 1096.749d0, 0.00008026d0, 0.00361192d0,
+     .  0.087d0, 1096.837d0, 0.00007938d0, 0.00353253d0,
+     .  0.086d0, 1096.923d0, 0.00007850d0, 0.00345403d0,
+     .  0.085d0, 1097.008d0, 0.00007762d0, 0.00337642d0,
+     .  0.084d0, 1097.093d0, 0.00007674d0, 0.00329968d0,
+     .  0.083d0, 1097.176d0, 0.00007585d0, 0.00322382d0,
+     .  0.083d0, 1097.259d0, 0.00007497d0, 0.00314885d0,
+     .  0.082d0, 1097.341d0, 0.00007409d0, 0.00307476d0,
+     .  0.081d0, 1097.421d0, 0.00007321d0, 0.00300155d0,
+     .  0.080d0, 1097.501d0, 0.00007233d0, 0.00292923d0,
+     .  0.079d0, 1097.579d0, 0.00007144d0, 0.00285778d0,
+     .  0.078d0, 1097.657d0, 0.00007056d0, 0.00278722d0,
+     .  0.077d0, 1097.734d0, 0.00006968d0, 0.00271754d0,
+     .  0.076d0, 1097.809d0, 0.00006880d0, 0.00264874d0,
+     .  0.075d0, 1097.884d0, 0.00006792d0, 0.00258082d0,
+     .  0.074d0, 1097.958d0, 0.00006703d0, 0.00251379d0,
+     .  0.073d0, 1098.031d0, 0.00006615d0, 0.00244764d0,
+     .  0.072d0, 1098.103d0, 0.00006527d0, 0.00238237d0,
+     .  0.071d0, 1098.174d0, 0.00006439d0, 0.00231798d0,
+     .  0.070d0, 1098.243d0, 0.00006351d0, 0.00225447d0,
+     .  0.069d0, 1098.312d0, 0.00006262d0, 0.00219185d0,
+     .  0.068d0, 1098.380d0, 0.00006174d0, 0.00213011d0,
+     .  0.067d0, 1098.447d0, 0.00006086d0, 0.00206925d0,
+     .  0.066d0, 1098.513d0, 0.00005998d0, 0.00200927d0,
+     .  0.065d0, 1098.578d0, 0.00005910d0, 0.00195017d0,
+     .  0.064d0, 1098.642d0, 0.00005821d0, 0.00189196d0,
+     .  0.063d0, 1098.706d0, 0.00005733d0, 0.00183462d0,
+     .  0.062d0, 1098.768d0, 0.00005645d0, 0.00177817d0,
+     .  0.061d0, 1098.829d0, 0.00005557d0, 0.00172261d0,
+     .  0.060d0, 1098.889d0, 0.00005469d0, 0.00166792d0,
+     .  0.059d0, 1098.948d0, 0.00005380d0, 0.00161412d0,
+     .  0.058d0, 1099.007d0, 0.00005292d0, 0.00156120d0,
+     .  0.057d0, 1099.064d0, 0.00005204d0, 0.00150916d0,
+     .  0.056d0, 1099.120d0, 0.00005116d0, 0.00145800d0,
+     .  0.055d0, 1099.175d0, 0.00005028d0, 0.00140772d0,
+     .  0.054d0, 1099.230d0, 0.00004939d0, 0.00135833d0,
+     .  0.053d0, 1099.283d0, 0.00004851d0, 0.00130982d0,
+     .  0.052d0, 1099.336d0, 0.00004763d0, 0.00126219d0,
+     .  0.051d0, 1099.387d0, 0.00004675d0, 0.00121544d0,
+     .  0.050d0, 1099.438d0, 0.00004587d0, 0.00116957d0,
+     .  0.050d0, 1099.487d0, 0.00004498d0, 0.00112459d0,
+     .  0.049d0, 1099.536d0, 0.00004410d0, 0.00108049d0,
+     .  0.048d0, 1099.583d0, 0.00004322d0, 0.00103727d0,
+     .  0.047d0, 1099.630d0, 0.00004234d0, 0.00099493d0,
+     .  0.046d0, 1099.675d0, 0.00004146d0, 0.00095348d0,
+     .  0.045d0, 1099.720d0, 0.00004057d0, 0.00091290d0,
+     .  0.044d0, 1099.764d0, 0.00003969d0, 0.00087321d0,
+     .  0.043d0, 1099.807d0, 0.00003881d0, 0.00083440d0,
+     .  0.042d0, 1099.848d0, 0.00003793d0, 0.00079647d0,
+     .  0.041d0, 1099.889d0, 0.00003705d0, 0.00075943d0,
+     .  0.040d0, 1099.929d0, 0.00003616d0, 0.00072327d0,
+     .  0.039d0, 1099.968d0, 0.00003528d0, 0.00068798d0,
+     .  0.038d0, 1100.006d0, 0.00003440d0, 0.00065359d0,
+     .  0.037d0, 1100.042d0, 0.00003352d0, 0.00062007d0,
+     .  0.036d0, 1100.078d0, 0.00003264d0, 0.00058743d0,
+     .  0.035d0, 1100.113d0, 0.00003175d0, 0.00055568d0,
+     .  0.034d0, 1100.147d0, 0.00003087d0, 0.00052481d0,
+     .  0.033d0, 1100.180d0, 0.00002999d0, 0.00049482d0,
+     .  0.032d0, 1100.212d0, 0.00002911d0, 0.00046571d0,
+     .  0.031d0, 1100.243d0, 0.00002822d0, 0.00043749d0,
+     .  0.030d0, 1100.274d0, 0.00002734d0, 0.00041014d0,
+     .  0.029d0, 1100.303d0, 0.00002646d0, 0.00038368d0,
+     .  0.028d0, 1100.331d0, 0.00002558d0, 0.00035810d0,
+     .  0.027d0, 1100.358d0, 0.00002470d0, 0.00033341d0,
+     .  0.026d0, 1100.384d0, 0.00002381d0, 0.00030959d0,
+     .  0.025d0, 1100.409d0, 0.00002293d0, 0.00028666d0,
+     .  0.024d0, 1100.434d0, 0.00002205d0, 0.00026461d0,
+     .  0.023d0, 1100.457d0, 0.00002117d0, 0.00024344d0,
+     .  0.022d0, 1100.479d0, 0.00002029d0, 0.00022315d0,
+     .  0.021d0, 1100.501d0, 0.00001940d0, 0.00020375d0,
+     .  0.020d0, 1100.521d0, 0.00001852d0, 0.00018523d0,
+     .  0.019d0, 1100.541d0, 0.00001764d0, 0.00016759d0,
+     .  0.018d0, 1100.559d0, 0.00001676d0, 0.00015083d0,
+     .  0.017d0, 1100.576d0, 0.00001588d0, 0.00013495d0,
+     .  0.017d0, 1100.593d0, 0.00001499d0, 0.00011996d0,
+     .  0.016d0, 1100.608d0, 0.00001411d0, 0.00010584d0,
+     .  0.015d0, 1100.623d0, 0.00001323d0, 0.00009261d0,
+     .  0.014d0, 1100.637d0, 0.00001235d0, 0.00008026d0,
+     .  0.013d0, 1100.649d0, 0.00001147d0, 0.00006880d0,
+     .  0.012d0, 1100.661d0, 0.00001058d0, 0.00005821d0,
+     .  0.011d0, 1100.672d0, 0.00000970d0, 0.00004851d0,
+     .  0.010d0, 1100.681d0, 0.00000882d0, 0.00003969d0,
+     .  0.009d0, 1100.690d0, 0.00000794d0, 0.00003175d0,
+     .  0.008d0, 1100.698d0, 0.00000706d0, 0.00002470d0,
+     .  0.007d0, 1100.705d0, 0.00000617d0, 0.00001852d0,
+     .  0.006d0, 1100.710d0, 0.00000529d0, 0.00001323d0,
+     .  0.005d0, 1100.715d0, 0.00000441d0, 0.00000882d0,
+     .  0.004d0, 1100.719d0, 0.00000353d0, 0.00000529d0,
+     .  0.003d0, 1100.722d0, 0.00000265d0, 0.00000265d0,
+     .  0.002d0, 1100.724d0, 0.00000176d0, 0.00000088d0,
+     .  0.001d0, 1100.725d0, 0.00000088d0, 0.00000000d0,
+     .  0.000d0, 1100.725d0, 0.00000000d0, 0.00000000d0/
+      end
+ 
+ 
+c #include "bd_traplist_nabcd.f"
+ 
+c
+c #==> traplist.nabcd <==
+c # nn      aa      bb      cc        dd
+c #
+c    1       7       7       7       7
+c    2      48      48      48      48
+c    3      73      73      73      73
+c    4     112     165     135      95
+c  ...
+c  600
+c
+ 
+ 
+ 
+      block data bd_abcd
+c     integer abcd(4,600)  ! previous
+      integer abcd(4,610)
+      common /abcd_/ abcd
+      data    abcd /
+c
+c          aa    bb     cc      dd
+c
+c    .      7,     7,     7,     7,  !  1 previous
+c
+     .      3,     3,     3,     3,  !  1
+     .      6,     6,     6,     6,  !  2
+     .      9,     9,     9,     9,  !  3
+     .     12,    12,    12,    12,  !  4
+     .     15,    15,    15,    15,  !  5
+     .     18,    18,    18,    18,  !  6
+     .     21,    21,    21,    21,  !  7
+     .     24,    24,    24,    24,  !  8
+     .     27,    27,    27,    27,  !  9
+     .     30,    30,    30,    30,  ! 10
+     .     39,    39,    39,    39,  ! 11 -- added 10, so first 11 count as 1
+c--as before-----------------------
+     .     48,    48,    48,    48,
+     .     73,    73,    73,    73,
+     .    112,   165,   135,    95,
+     .    150,   250,   200,   110,
+     .    200,   350,   275,   125,
+     .    250,   550,   350,   150,
+     .    300,   700,   375,   200,
+     .    375,   900,   400,   250,
+     .    400,  1000,   600,   300,
+     .    600,  1100,   700,   350,
+     .    700,  1250,   800,   400,
+     .    825,  1375,   900,   425,
+     .    950,  1500,  1000,   450,
+     .   1050,  1667,  1167,   533,
+     .   1150,  1833,  1333,   617,
+     .   1250,  2000,  1500,   700,
+     .   1367,  2133,  1667,   800,
+     .   1483,  2267,  1833,   900,
+     .   1600,  2400,  2000,  1000,
+     .   1700,  2520,  2200,  1080,
+     .   1800,  2640,  2400,  1160,
+     .   1900,  2760,  2600,  1240,
+     .   2000,  2880,  2800,  1320,
+     .   2100,  3000,  3000,  1400,
+     .   2240,  3140,  3160,  1540,
+     .   2380,  3280,  3320,  1680,
+     .   2520,  3420,  3480,  1820,
+     .   2660,  3560,  3640,  1960,
+     .   2800,  3700,  3800,  2100,
+     .   2920,  3880,  4020,  2240,
+     .   3040,  4060,  4240,  2380,
+     .   3160,  4240,  4460,  2520,
+     .   3280,  4420,  4680,  2660,
+     .   3400,  4600,  4900,  2800,
+     .   3520,  4780,  5120,  2940,
+     .   3640,  4960,  5340,  3080,
+     .   3760,  5140,  5560,  3220,
+     .   3880,  5320,  5780,  3360,
+     .   4000,  5500,  6000,  3500,
+     .   4300,  5700,  6200,  3700,
+     .   4600,  5900,  6400,  3900,
+     .   4900,  6100,  6600,  4100,
+     .   5200,  6300,  6800,  4300,
+     .   5500,  6500,  7000,  4500,
+     .   5800,  6700,  7200,  4700,
+     .   6100,  6900,  7400,  4900,
+     .   6400,  7100,  7600,  5100,
+     .   6700,  7300,  7800,  5300,
+     .   7000,  7500,  8000,  5500,
+     .   7200,  7680,  8280,  5720,
+     .   7400,  7860,  8560,  5940,
+     .   7600,  8040,  8840,  6160,
+     .   7800,  8220,  9120,  6380,
+     .   8000,  8400,  9400,  6600,
+     .   8200,  8580,  9680,  6820,
+     .   8400,  8760,  9960,  7040,
+     .   8600,  8940, 10240,  7260,
+     .   8800,  9120, 10520,  7480,
+     .   9000,  9300, 10800,  7700,
+     .   9200,  9480, 11080,  7920,
+     .   9400,  9660, 11360,  8140,
+     .   9600,  9840, 11640,  8360,
+     .   9800, 10020, 11920,  8580,
+     .  10000, 10200, 12200,  8800,
+     .  10200, 10380, 12480,  9020,
+     .  10400, 10560, 12760,  9240,
+     .  10600, 10740, 13040,  9460,
+     .  10800, 10920, 13320,  9680,
+     .  11000, 11100, 13600,  9900,
+     .  11200, 11280, 13880, 10120,
+     .  11400, 11460, 14160, 10340,
+     .  11600, 11640, 14440, 10560,
+     .  11800, 11820, 14720, 10780,
+     .  12000, 12000, 15000, 11000,
+     .  12140, 12140, 15100, 11200,
+     .  12280, 12280, 15200, 11400,
+     .  12420, 12420, 15300, 11600,
+     .  12560, 12560, 15400, 11800,
+     .  12700, 12700, 15500, 12000,
+     .  12840, 12840, 15600, 12200,
+     .  12980, 12980, 15700, 12400,
+     .  13120, 13120, 15800, 12600,
+     .  13260, 13260, 15900, 12800,
+     .  13400, 13400, 16000, 13000,
+     .  13540, 13540, 16100, 13200,
+     .  13680, 13680, 16200, 13400,
+     .  13820, 13820, 16300, 13600,
+     .  13960, 13960, 16400, 13800,
+     .  14100, 14100, 16500, 14000,
+     .  14240, 14240, 16600, 14200,
+     .  14380, 14380, 16700, 14400,
+     .  14520, 14520, 16800, 14600,
+     .  14660, 14660, 16900, 14800,
+     .  14800, 14800, 17000, 15000,
+     .  14940, 14940, 17100, 15200,
+     .  15080, 15080, 17200, 15400,
+     .  15220, 15220, 17300, 15600,
+     .  15360, 15360, 17400, 15800,
+     .  15500, 15500, 17500, 16000,
+     .  15580, 15600, 17600, 16080,
+     .  15660, 15700, 17700, 16160,
+     .  15740, 15800, 17800, 16240,
+     .  15820, 15900, 17900, 16320,
+     .  15900, 16000, 18000, 16400,
+     .  15980, 16100, 18100, 16480,
+     .  16060, 16200, 18200, 16560,
+     .  16140, 16300, 18300, 16640,
+     .  16220, 16400, 18400, 16720,
+     .  16300, 16500, 18500, 16800,
+     .  16380, 16600, 18600, 16880,
+     .  16460, 16700, 18700, 16960,
+     .  16540, 16800, 18800, 17040,
+     .  16620, 16900, 18900, 17120,
+     .  16700, 17000, 19000, 17200,
+     .  16780, 17100, 19100, 17280,
+     .  16860, 17200, 19200, 17360,
+     .  16940, 17300, 19300, 17440,
+     .  17020, 17400, 19400, 17520,
+     .  17100, 17500, 19500, 17600,
+     .  17180, 17600, 19600, 17680,
+     .  17260, 17700, 19700, 17760,
+     .  17340, 17800, 19800, 17840,
+     .  17420, 17900, 19900, 17920,
+     .  17500, 18000, 20000, 18000,
+     .  17600, 18120, 20200, 18120,
+     .  17700, 18240, 20400, 18240,
+     .  17800, 18360, 20600, 18360,
+     .  17900, 18480, 20800, 18480,
+     .  18000, 18600, 21000, 18600,
+     .  18100, 18720, 21200, 18720,
+     .  18200, 18840, 21400, 18840,
+     .  18300, 18960, 21600, 18960,
+     .  18400, 19080, 21800, 19080,
+     .  18500, 19200, 22000, 19200,
+     .  18600, 19320, 22200, 19320,
+     .  18700, 19440, 22400, 19440,
+     .  18800, 19560, 22600, 19560,
+     .  18900, 19680, 22800, 19680,
+     .  19000, 19800, 23000, 19800,
+     .  19100, 19920, 23200, 19920,
+     .  19200, 20040, 23400, 20040,
+     .  19300, 20160, 23600, 20160,
+     .  19400, 20280, 23800, 20280,
+     .  19500, 20400, 24000, 20400,
+     .  19600, 20520, 24200, 20520,
+     .  19700, 20640, 24400, 20640,
+     .  19800, 20760, 24600, 20760,
+     .  19900, 20880, 24800, 20880,
+     .  20000, 21000, 25000, 21000,
+     .  20080, 21080, 25040, 21080,
+     .  20160, 21160, 25080, 21160,
+     .  20240, 21240, 25120, 21240,
+     .  20320, 21320, 25160, 21320,
+     .  20400, 21400, 25200, 21400,
+     .  20480, 21480, 25240, 21480,
+     .  20560, 21560, 25280, 21560,
+     .  20640, 21640, 25320, 21640,
+     .  20720, 21720, 25360, 21720,
+     .  20800, 21800, 25400, 21800,
+     .  20880, 21880, 25440, 21880,
+     .  20960, 21960, 25480, 21960,
+     .  21040, 22040, 25520, 22040,
+     .  21120, 22120, 25560, 22120,
+     .  21200, 22200, 25600, 22200,
+     .  21280, 22280, 25640, 22280,
+     .  21360, 22360, 25680, 22360,
+     .  21440, 22440, 25720, 22440,
+     .  21520, 22520, 25760, 22520,
+     .  21600, 22600, 25800, 22600,
+     .  21680, 22680, 25840, 22680,
+     .  21760, 22760, 25880, 22760,
+     .  21840, 22840, 25920, 22840,
+     .  21920, 22920, 25960, 22920,
+     .  22000, 23000, 26000, 23000,
+     .  22080, 23080, 26040, 23080,
+     .  22160, 23160, 26080, 23160,
+     .  22240, 23240, 26120, 23240,
+     .  22320, 23320, 26160, 23320,
+     .  22400, 23400, 26200, 23400,
+     .  22480, 23480, 26240, 23480,
+     .  22560, 23560, 26280, 23560,
+     .  22640, 23640, 26320, 23640,
+     .  22720, 23720, 26360, 23720,
+     .  22800, 23800, 26400, 23800,
+     .  22880, 23880, 26440, 23880,
+     .  22960, 23960, 26480, 23960,
+     .  23040, 24040, 26520, 24040,
+     .  23120, 24120, 26560, 24120,
+     .  23200, 24200, 26600, 24200,
+     .  23280, 24280, 26640, 24280,
+     .  23360, 24360, 26680, 24360,
+     .  23440, 24440, 26720, 24440,
+     .  23520, 24520, 26760, 24520,
+     .  23600, 24600, 26800, 24600,
+     .  23680, 24680, 26840, 24680,
+     .  23760, 24760, 26880, 24760,
+     .  23840, 24840, 26920, 24840,
+     .  23920, 24920, 26960, 24920,
+     .  24000, 25000, 27000, 25000,
+     .  24085, 25110, 27105, 25120,
+     .  24170, 25220, 27210, 25240,
+     .  24255, 25330, 27315, 25360,
+     .  24340, 25440, 27420, 25480,
+     .  24425, 25550, 27525, 25600,
+     .  24510, 25660, 27630, 25720,
+     .  24595, 25770, 27735, 25840,
+     .  24680, 25880, 27840, 25960,
+     .  24765, 25990, 27945, 26080,
+     .  24850, 26100, 28050, 26200,
+     .  24935, 26210, 28155, 26320,
+     .  25020, 26320, 28260, 26440,
+     .  25105, 26430, 28365, 26560,
+     .  25190, 26540, 28470, 26680,
+     .  25275, 26650, 28575, 26800,
+     .  25360, 26760, 28680, 26920,
+     .  25445, 26870, 28785, 27040,
+     .  25530, 26980, 28890, 27160,
+     .  25615, 27090, 28995, 27280,
+     .  25700, 27200, 29100, 27400,
+     .  25785, 27310, 29205, 27520,
+     .  25870, 27420, 29310, 27640,
+     .  25955, 27530, 29415, 27760,
+     .  26040, 27640, 29520, 27880,
+     .  26125, 27750, 29625, 28000,
+     .  26210, 27860, 29730, 28120,
+     .  26295, 27970, 29835, 28240,
+     .  26380, 28080, 29940, 28360,
+     .  26465, 28190, 30045, 28480,
+     .  26550, 28300, 30150, 28600,
+     .  26635, 28410, 30255, 28720,
+     .  26720, 28520, 30360, 28840,
+     .  26805, 28630, 30465, 28960,
+     .  26890, 28740, 30570, 29080,
+     .  26975, 28850, 30675, 29200,
+     .  27060, 28960, 30780, 29320,
+     .  27145, 29070, 30885, 29440,
+     .  27230, 29180, 30990, 29560,
+     .  27315, 29290, 31095, 29680,
+     .  27400, 29400, 31200, 29800,
+     .  27485, 29510, 31305, 29920,
+     .  27570, 29620, 31410, 30040,
+     .  27655, 29730, 31515, 30160,
+     .  27740, 29840, 31620, 30280,
+     .  27825, 29950, 31725, 30400,
+     .  27910, 30060, 31830, 30520,
+     .  27995, 30170, 31935, 30640,
+     .  28080, 30280, 32040, 30760,
+     .  28165, 30390, 32145, 30880,
+     .  28250, 30500, 32250, 31000,
+     .  28335, 30610, 32355, 31120,
+     .  28420, 30720, 32460, 31240,
+     .  28505, 30830, 32565, 31360,
+     .  28590, 30940, 32670, 31480,
+     .  28675, 31050, 32775, 31600,
+     .  28760, 31160, 32880, 31720,
+     .  28845, 31270, 32985, 31840,
+     .  28930, 31380, 33090, 31960,
+     .  29015, 31490, 33195, 32080,
+     .  29100, 31600, 33300, 32200,
+     .  29185, 31710, 33405, 32320,
+     .  29270, 31820, 33510, 32440,
+     .  29355, 31930, 33615, 32560,
+     .  29440, 32040, 33720, 32680,
+     .  29525, 32150, 33825, 32800,
+     .  29610, 32260, 33930, 32920,
+     .  29695, 32370, 34035, 33040,
+     .  29780, 32480, 34140, 33160,
+     .  29865, 32590, 34245, 33280,
+     .  29950, 32700, 34350, 33400,
+     .  30035, 32810, 34455, 33520,
+     .  30120, 32920, 34560, 33640,
+     .  30205, 33030, 34665, 33760,
+     .  30290, 33140, 34770, 33880,
+     .  30375, 33250, 34875, 34000,
+     .  30460, 33360, 34980, 34120,
+     .  30545, 33470, 35085, 34240,
+     .  30630, 33580, 35190, 34360,
+     .  30715, 33690, 35295, 34480,
+     .  30800, 33800, 35400, 34600,
+     .  30885, 33910, 35505, 34720,
+     .  30970, 34020, 35610, 34840,
+     .  31055, 34130, 35715, 34960,
+     .  31140, 34240, 35820, 35080,
+     .  31225, 34350, 35925, 35200,
+     .  31310, 34460, 36030, 35320,
+     .  31395, 34570, 36135, 35440,
+     .  31480, 34680, 36240, 35560,
+     .  31565, 34790, 36345, 35680,
+     .  31650, 34900, 36450, 35800,
+     .  31735, 35010, 36555, 35920,
+     .  31820, 35120, 36660, 36040,
+     .  31905, 35230, 36765, 36160,
+     .  31990, 35340, 36870, 36280,
+     .  32075, 35450, 36975, 36400,
+     .  32160, 35560, 37080, 36520,
+     .  32245, 35670, 37185, 36640,
+     .  32330, 35780, 37290, 36760,
+     .  32415, 35890, 37395, 36880,
+     .  32500, 36000, 37500, 37000,
+     .  32600, 36105, 37595, 37150,
+     .  32700, 36210, 37690, 37300,
+     .  32800, 36315, 37785, 37450,
+     .  32900, 36420, 37880, 37600,
+     .  33000, 36525, 37975, 37750,
+     .  33100, 36630, 38070, 37900,
+     .  33200, 36735, 38165, 38050,
+     .  33300, 36840, 38260, 38200,
+     .  33400, 36945, 38355, 38350,
+     .  33500, 37050, 38450, 38500,
+     .  33600, 37155, 38545, 38650,
+     .  33700, 37260, 38640, 38800,
+     .  33800, 37365, 38735, 38950,
+     .  33900, 37470, 38830, 39100,
+     .  34000, 37575, 38925, 39250,
+     .  34100, 37680, 39020, 39400,
+     .  34200, 37785, 39115, 39550,
+     .  34300, 37890, 39210, 39700,
+     .  34400, 37995, 39305, 39850,
+     .  34500, 38100, 39400, 40000,
+     .  34600, 38205, 39495, 40150,
+     .  34700, 38310, 39590, 40300,
+     .  34800, 38415, 39685, 40450,
+     .  34900, 38520, 39780, 40600,
+     .  35000, 38625, 39875, 40750,
+     .  35100, 38730, 39970, 40900,
+     .  35200, 38835, 40065, 41050,
+     .  35300, 38940, 40160, 41200,
+     .  35400, 39045, 40255, 41350,
+     .  35500, 39150, 40350, 41500,
+     .  35600, 39255, 40445, 41650,
+     .  35700, 39360, 40540, 41800,
+     .  35800, 39465, 40635, 41950,
+     .  35900, 39570, 40730, 42100,
+     .  36000, 39675, 40825, 42250,
+     .  36100, 39780, 40920, 42400,
+     .  36200, 39885, 41015, 42550,
+     .  36300, 39990, 41110, 42700,
+     .  36400, 40095, 41205, 42850,
+     .  36500, 40200, 41300, 43000,
+     .  36600, 40305, 41395, 43150,
+     .  36700, 40410, 41490, 43300,
+     .  36800, 40515, 41585, 43450,
+     .  36900, 40620, 41680, 43600,
+     .  37000, 40725, 41775, 43750,
+     .  37100, 40830, 41870, 43900,
+     .  37200, 40935, 41965, 44050,
+     .  37300, 41040, 42060, 44200,
+     .  37400, 41145, 42155, 44350,
+     .  37500, 41250, 42250, 44500,
+     .  37600, 41355, 42345, 44650,
+     .  37700, 41460, 42440, 44800,
+     .  37800, 41565, 42535, 44950,
+     .  37900, 41670, 42630, 45100,
+     .  38000, 41775, 42725, 45250,
+     .  38100, 41880, 42820, 45400,
+     .  38200, 41985, 42915, 45550,
+     .  38300, 42090, 43010, 45700,
+     .  38400, 42195, 43105, 45850,
+     .  38500, 42300, 43200, 46000,
+     .  38600, 42405, 43295, 46150,
+     .  38700, 42510, 43390, 46300,
+     .  38800, 42615, 43485, 46450,
+     .  38900, 42720, 43580, 46600,
+     .  39000, 42825, 43675, 46750,
+     .  39100, 42930, 43770, 46900,
+     .  39200, 43035, 43865, 47050,
+     .  39300, 43140, 43960, 47200,
+     .  39400, 43245, 44055, 47350,
+     .  39500, 43350, 44150, 47500,
+     .  39600, 43455, 44245, 47650,
+     .  39700, 43560, 44340, 47800,
+     .  39800, 43665, 44435, 47950,
+     .  39900, 43770, 44530, 48100,
+     .  40000, 43875, 44625, 48250,
+     .  40100, 43980, 44720, 48400,
+     .  40200, 44085, 44815, 48550,
+     .  40300, 44190, 44910, 48700,
+     .  40400, 44295, 45005, 48850,
+     .  40500, 44400, 45100, 49000,
+     .  40600, 44505, 45195, 49150,
+     .  40700, 44610, 45290, 49300,
+     .  40800, 44715, 45385, 49450,
+     .  40900, 44820, 45480, 49600,
+     .  41000, 44925, 45575, 49750,
+     .  41100, 45030, 45670, 49900,
+     .  41200, 45135, 45765, 50050,
+     .  41300, 45240, 45860, 50200,
+     .  41400, 45345, 45955, 50350,
+     .  41500, 45450, 46050, 50500,
+     .  41600, 45555, 46145, 50650,
+     .  41700, 45660, 46240, 50800,
+     .  41800, 45765, 46335, 50950,
+     .  41900, 45870, 46430, 51100,
+     .  42000, 45975, 46525, 51250,
+     .  42100, 46080, 46620, 51400,
+     .  42200, 46185, 46715, 51550,
+     .  42300, 46290, 46810, 51700,
+     .  42400, 46395, 46905, 51850,
+     .  42500, 46500, 47000, 52000,
+     .  42635, 46625, 47110, 52155,
+     .  42770, 46750, 47220, 52310,
+     .  42905, 46875, 47330, 52465,
+     .  43040, 47000, 47440, 52620,
+     .  43175, 47125, 47550, 52775,
+     .  43310, 47250, 47660, 52930,
+     .  43445, 47375, 47770, 53085,
+     .  43580, 47500, 47880, 53240,
+     .  43715, 47625, 47990, 53395,
+     .  43850, 47750, 48100, 53550,
+     .  43985, 47875, 48210, 53705,
+     .  44120, 48000, 48320, 53860,
+     .  44255, 48125, 48430, 54015,
+     .  44390, 48250, 48540, 54170,
+     .  44525, 48375, 48650, 54325,
+     .  44660, 48500, 48760, 54480,
+     .  44795, 48625, 48870, 54635,
+     .  44930, 48750, 48980, 54790,
+     .  45065, 48875, 49090, 54945,
+     .  45200, 49000, 49200, 55100,
+     .  45335, 49125, 49310, 55255,
+     .  45470, 49250, 49420, 55410,
+     .  45605, 49375, 49530, 55565,
+     .  45740, 49500, 49640, 55720,
+     .  45875, 49625, 49750, 55875,
+     .  46010, 49750, 49860, 56030,
+     .  46145, 49875, 49970, 56185,
+     .  46280, 50000, 50080, 56340,
+     .  46415, 50125, 50190, 56495,
+     .  46550, 50250, 50300, 56650,
+     .  46685, 50375, 50410, 56805,
+     .  46820, 50500, 50520, 56960,
+     .  46955, 50625, 50630, 57115,
+     .  47090, 50750, 50740, 57270,
+     .  47225, 50875, 50850, 57425,
+     .  47360, 51000, 50960, 57580,
+     .  47495, 51125, 51070, 57735,
+     .  47630, 51250, 51180, 57890,
+     .  47765, 51375, 51290, 58045,
+     .  47900, 51500, 51400, 58200,
+     .  48035, 51625, 51510, 58355,
+     .  48170, 51750, 51620, 58510,
+     .  48305, 51875, 51730, 58665,
+     .  48440, 52000, 51840, 58820,
+     .  48575, 52125, 51950, 58975,
+     .  48710, 52250, 52060, 59130,
+     .  48845, 52375, 52170, 59285,
+     .  48980, 52500, 52280, 59440,
+     .  49115, 52625, 52390, 59595,
+     .  49250, 52750, 52500, 59750,
+     .  49385, 52875, 52610, 59905,
+     .  49520, 53000, 52720, 60060,
+     .  49655, 53125, 52830, 60215,
+     .  49790, 53250, 52940, 60370,
+     .  49925, 53375, 53050, 60525,
+     .  50060, 53500, 53160, 60680,
+     .  50195, 53625, 53270, 60835,
+     .  50330, 53750, 53380, 60990,
+     .  50465, 53875, 53490, 61145,
+     .  50600, 54000, 53600, 61300,
+     .  50735, 54125, 53710, 61455,
+     .  50870, 54250, 53820, 61610,
+     .  51005, 54375, 53930, 61765,
+     .  51140, 54500, 54040, 61920,
+     .  51275, 54625, 54150, 62075,
+     .  51410, 54750, 54260, 62230,
+     .  51545, 54875, 54370, 62385,
+     .  51680, 55000, 54480, 62540,
+     .  51815, 55125, 54590, 62695,
+     .  51950, 55250, 54700, 62850,
+     .  52085, 55375, 54810, 63005,
+     .  52220, 55500, 54920, 63160,
+     .  52355, 55625, 55030, 63315,
+     .  52490, 55750, 55140, 63470,
+     .  52625, 55875, 55250, 63625,
+     .  52760, 56000, 55360, 63780,
+     .  52895, 56125, 55470, 63935,
+     .  53030, 56250, 55580, 64090,
+     .  53165, 56375, 55690, 64245,
+     .  53300, 56500, 55800, 64400,
+     .  53435, 56625, 55910, 64555,
+     .  53570, 56750, 56020, 64710,
+     .  53705, 56875, 56130, 64865,
+     .  53840, 57000, 56240, 65020,
+     .  53975, 57125, 56350, 65175,
+     .  54110, 57250, 56460, 65330,
+     .  54245, 57375, 56570, 65485,
+     .  54380, 57500, 56680, 65640,
+     .  54515, 57625, 56790, 65795,
+     .  54650, 57750, 56900, 65950,
+     .  54785, 57875, 57010, 66105,
+     .  54920, 58000, 57120, 66260,
+     .  55055, 58125, 57230, 66415,
+     .  55190, 58250, 57340, 66570,
+     .  55325, 58375, 57450, 66725,
+     .  55460, 58500, 57560, 66880,
+     .  55595, 58625, 57670, 67035,
+     .  55730, 58750, 57780, 67190,
+     .  55865, 58875, 57890, 67345,
+     .  56000, 59000, 58000, 67500,
+     .  56115, 59060, 58070, 67675,
+     .  56230, 59120, 58140, 67850,
+     .  56345, 59180, 58210, 68025,
+     .  56460, 59240, 58280, 68200,
+     .  56575, 59300, 58350, 68375,
+     .  56690, 59360, 58420, 68550,
+     .  56805, 59420, 58490, 68725,
+     .  56920, 59480, 58560, 68900,
+     .  57035, 59540, 58630, 69075,
+     .  57150, 59600, 58700, 69250,
+     .  57265, 59660, 58770, 69425,
+     .  57380, 59720, 58840, 69600,
+     .  57495, 59780, 58910, 69775,
+     .  57610, 59840, 58980, 69950,
+     .  57725, 59900, 59050, 70125,
+     .  57840, 59960, 59120, 70300,
+     .  57955, 60020, 59190, 70475,
+     .  58070, 60080, 59260, 70650,
+     .  58185, 60140, 59330, 70825,
+     .  58300, 60200, 59400, 71000,
+     .  58415, 60260, 59470, 71175,
+     .  58530, 60320, 59540, 71350,
+     .  58645, 60380, 59610, 71525,
+     .  58760, 60440, 59680, 71700,
+     .  58875, 60500, 59750, 71875,
+     .  58990, 60560, 59820, 72050,
+     .  59105, 60620, 59890, 72225,
+     .  59220, 60680, 59960, 72400,
+     .  59335, 60740, 60030, 72575,
+     .  59450, 60800, 60100, 72750,
+     .  59565, 60860, 60170, 72925,
+     .  59680, 60920, 60240, 73100,
+     .  59795, 60980, 60310, 73275,
+     .  59910, 61040, 60380, 73450,
+     .  60025, 61100, 60450, 73625,
+     .  60140, 61160, 60520, 73800,
+     .  60255, 61220, 60590, 73975,
+     .  60370, 61280, 60660, 74150,
+     .  60485, 61340, 60730, 74325,
+     .  60600, 61400, 60800, 74500,
+     .  60715, 61460, 60870, 74675,
+     .  60830, 61520, 60940, 74850,
+     .  60945, 61580, 61010, 75025,
+     .  61060, 61640, 61080, 75200,
+     .  61175, 61700, 61150, 75375,
+     .  61290, 61760, 61220, 75550,
+     .  61405, 61820, 61290, 75725,
+     .  61520, 61880, 61360, 75900,
+     .  61635, 61940, 61430, 76075,
+     .  61750, 62000, 61500, 76250,
+     .  61865, 62060, 61570, 76425,
+     .  61980, 62120, 61640, 76600,
+     .  62095, 62180, 61710, 76775,
+     .  62210, 62240, 61780, 76950,
+     .  62325, 62300, 61850, 77125,
+     .  62440, 62360, 61920, 77300,
+     .  62555, 62420, 61990, 77475,
+     .  62670, 62480, 62060, 77650,
+     .  62785, 62540, 62130, 77825,
+     .  62900, 62600, 62200, 78000,
+     .  63015, 62660, 62270, 78175,
+     .  63130, 62720, 62340, 78350,
+     .  63245, 62780, 62410, 78525,
+     .  63360, 62840, 62480, 78700,
+     .  63475, 62900, 62550, 78875,
+     .  63590, 62960, 62620, 79050,
+     .  63705, 63020, 62690, 79225,
+     .  63820, 63080, 62760, 79400,
+     .  63935, 63140, 62830, 79575,
+     .  64050, 63200, 62900, 79750,
+     .  64165, 63260, 62970, 79925,
+     .  64280, 63320, 63040, 80100,
+     .  64395, 63380, 63110, 80275,
+     .  64510, 63440, 63180, 80450,
+     .  64625, 63500, 63250, 80625,
+     .  64740, 63560, 63320, 80800,
+     .  64855, 63620, 63390, 80975,
+     .  64970, 63680, 63460, 81150,
+     .  65085, 63740, 63530, 81325,
+     .  65200, 63800, 63600, 81500,
+     .  65315, 63860, 63670, 81675,
+     .  65430, 63920, 63740, 81850,
+     .  65545, 63980, 63810, 82025,
+     .  65660, 64040, 63880, 82200,
+     .  65775, 64100, 63950, 82375,
+     .  65890, 64160, 64020, 82550,
+     .  66005, 64220, 64090, 82725,
+     .  66120, 64280, 64160, 82900,
+     .  66235, 64340, 64230, 83075,
+     .  66350, 64400, 64300, 83250,
+     .  66465, 64460, 64370, 83425,
+     .  66580, 64520, 64440, 83600,
+     .  66695, 64580, 64510, 83775,
+     .  66810, 64640, 64580, 83950,
+     .  66925, 64700, 64650, 84125,
+     .  67040, 64760, 64720, 84300,
+     .  67155, 64820, 64790, 84475,
+     .  67270, 64880, 64860, 84650,
+     .  67385, 64940, 64930, 84825,
+     .  67500, 65000, 65000, 85000/
+      end
  
  
