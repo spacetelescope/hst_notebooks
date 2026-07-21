@@ -19,3 +19,6 @@ We compare `calwf3` v1.0 CTE correction versus v2.0, and explore
 when each version is useful. v1.0 will provide the most up-to-date calibration 
 procedures such as time-dependent photometric corrections and zeropoints, while 
 also including the v1.0 CTE correction.
+
+## Equalizing Amplifier Offsets in FLC/FLT Images
+The WFC3/UVIS detector has four amplifiers (A, B, C, D), each covering one quadrant of the 4Kx4K pixel field. Even after the standard `calwf3` pipeline reduction, small offsets to the bias level can persist between quadrants. These offsets are relatively constant across each quadrant, and sometimes show up as visible to the eye, with some amps brighter than others. In this notebook, you will be guided through how to determine the amplifier-dependent bias offsets in a Wide Field Camera 3 (WFC3) UVIS channel image and equalize the bias levels in each amplifier (amp) to the average across the image.
