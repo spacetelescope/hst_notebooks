@@ -13,6 +13,7 @@ General Tools:
 - [WFC3 Image Displayer and Analyzer](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/image_displayer_analyzer/wfc3_image_displayer_analyzer.html)
 - [Exception Report Checklist - WFC3](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/exception_report/wfc3_exception_report.html)
 - [Processing WFC3/UVIS Data with `calwf3` Using the v1.0 CTE-Correction](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/calwf3_v1.0_cte/calwf3_with_v1.0_PCTE.html)
+- [Equalizing Amplifier Offsets in FLC/FLT Images](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/uvis_amp_equalization/uvis_amp_equalization.html)
 
 WFC3/IR Time Variable Background (TVB):
 - [WFC3/IR IMA Visualization Tools with an Example of Time Variable Background](https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/ir_ima_visualization/IR_IMA_Visualization_with_an_Example_of_Time_Variable_Background.html)
