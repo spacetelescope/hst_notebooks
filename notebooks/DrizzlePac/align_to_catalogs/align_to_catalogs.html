@@ -683,16 +683,17 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaia-query">2.3 Gaia Query</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#align-with-tweakreg">3. Align with <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#align-images-with-tweakreg">3. Align images with <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sdss-alignment">3.1 SDSS Alignment</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-shift-file-and-fit-residuals">3.2 Inspect the shift file and fit residuals</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaia-alignment">3.3 Gaia Alignment</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">3.4 Inspect the shift file and fit residuals</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overplot-matched-sources-on-the-image">3.5 Overplot Matched Sources on the Image</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#update-header-with-optimal-parameters">3.6 Update header with optimal parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overplot-matched-sources-on-the-image">3.5 Overplot matched sources on the image</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-significance-of-proper-motions">3.6 Check the significance of proper motions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#update-header-with-optimal-parameters">3.7 Update header with optimal parameters</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combine-the-images-using-astrodrizzle">4. Combine the Images using <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combine-the-images-using-astrodrizzle">4. Combine the images using <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">Conclusions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
@@ -730,8 +731,9 @@
     <a class="reference internal" href="#fit_quality_sdss"><span class="xref myst">3.2 Inspect the shift file and fit residuals</span></a> <br>
     <a class="reference internal" href="#gaia_align"><span class="xref myst">3.3 Gaia Alignment</span></a> <br>
     <a class="reference internal" href="#fit_quality_gaia"><span class="xref myst">3.4 Inspect the shift file and fit residuals</span></a> <br>
-    <a class="reference internal" href="#overplot"><span class="xref myst">3.5 Overplot Matched Sources on the image</span></a> <br>
-    <a class="reference internal" href="#updatehdr"><span class="xref myst">3.6 Update header with optimal parameters</span></a> <br></p>
+    <a class="reference internal" href="#overplot"><span class="xref myst">3.5 Overplot matched sources on the image</span></a> <br>
+    <a class="reference internal" href="#propermotion"><span class="xref myst">3.6 Check the significance of proper motions</span></a> <br>
+    <a class="reference internal" href="#updatehdr"><span class="xref myst">3.7 Update header with optimal parameters</span></a> <br></p>
 <p><a class="reference internal" href="#adriz"><span class="xref myst">4. Combine the images using <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code></span></a> <br></p>
 <p><a class="reference internal" href="#conclude"><span class="xref myst">Conclusions</span></a> <br>
 <a class="reference internal" href="#about"><span class="xref myst">About this Notebook</span></a> <br></p>
@@ -739,9 +741,9 @@
 </section>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
-<p>The alignment of HST exposures is a critical step in image stacking or combination performed with software such as <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code>.  Generally, a <em>relative</em> alignment is performed to align one or multiple images to another image that is designated as the reference image. The reference image is generally the deepest exposure and/or that covering the largest area of all the exposures.  This process aligns the images to each other, but the pointing error of the observatory can still cause the images to have incorrect <em>absolute</em> astrometry. When absolute astrometry is desired, the images can be aligned to an external catalog with an absolute world coordinate system (WCS). In this example, we will provide a workflow to query catalogs such as SDSS and Gaia using the astroquery package, and then align the images to that catalog using TweakReg.</p>
-<p>The workflow in this notebook for aligning images to <a class="reference external" href="https://www.cosmos.esa.int/web/gaia/home">Gaia</a> is based on <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2017/WFC3-2017-19.pdf">WFC3 ISR 2017-19: Aligning HST Images to Gaia: a Faster Mosaicking Workflow</a> and contains a subset of the information and code found in <a class="reference external" href="https://github.com/spacetelescope/gaia_alignment">this repository</a>.  For more information, see the notebook in that repository titled <a class="reference external" href="https://github.com/spacetelescope/gaia_alignment/blob/master/Gaia_alignment.ipynb">Gaia_alignment.ipynb</a>.</p>
-<p>For more information about TweakReg, see the other notebooks in this repository or the <a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/user_reprocessing/tweakreg_api.html">TweakReg Documentation</a>.</p>
+<p>The alignment of HST exposures is a critical step in image stacking or combination performed with software such as <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code>.  Generally, a <em>relative</em> alignment is performed to align one or multiple images to another image that is designated as the reference image. The reference image is generally the deepest exposure and/or that covering the largest area of all the exposures.  This process aligns the images to each other, but the pointing error of the observatory can still cause the images to have incorrect <em>absolute</em> astrometry. When absolute astrometry is desired, the images can be aligned to an external catalog with an absolute world coordinate system (WCS). In this example, we will provide a workflow to query catalogs such as <a class="reference external" href="https://www.sdss.org">SDSS</a> and <a class="reference external" href="https://www.cosmos.esa.int/web/gaia/home">Gaia</a> using the astroquery package, and then align the images to that catalog using TweakReg.</p>
+<p>The workflow in this notebook for aligning images to <a class="reference external" href="https://www.cosmos.esa.int/web/gaia/home">Gaia</a> is based on <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/wfc3/documentation/instrument-science-reports-isrs/_documents/2017/WFC3-2017-19.pdf">WFC3 ISR 2017-19: Aligning HST Images to Gaia: a Faster Mosaicking Workflow</a> and contains a subset of the information and code found in the <a class="reference external" href="https://github.com/spacetelescope/gaia_alignment">gaia_alignment repository</a>.  For more information, see the notebook in that repository titled <a class="reference external" href="https://github.com/spacetelescope/gaia_alignment/blob/master/Gaia_alignment.ipynb">Gaia_alignment.ipynb</a>.</p>
+<p>For more information about TweakReg, see the other notebooks in this repository or the <a class="reference external" href="https://drizzlepac.readthedocs.io/en/latest/api/drizzlepac.tweakreg.TweakReg.html">TweakReg Documentation</a>.</p>
 <p>For more information on Astroquery, see the other notebooks in this repository or the <a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Astroquery Documentation</a>.</p>
 <p><a id="import"></a></p>
 </section>
@@ -773,6 +775,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">ascii</span><span class="p">,</span> <span class="n">fits</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">Quantity</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">Time</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.coordinates</span><span class="w"> </span><span class="kn">import</span> <span class="n">SkyCoord</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZScaleInterval</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.mast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observations</span>
@@ -793,11 +796,6 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>In preparation for Gaia DR4, the Gaia archive is in evolution. Unfortunately, it may be unstable at times and particular types of queries may time out. Please consider registering for a user account (https://www.cosmos.esa.int/web/gaia-users/register). For questions or advice, please contact the Gaia helpdesk (https://www.cosmos.esa.int/web/gaia/gaia-helpdesk).
-</pre></div>
-</div>
-</div>
 </div>
 <p><a id="download"></a></p>
 </section>
@@ -813,7 +811,7 @@ in the F606W filter acquired in Visit 01. The three FLC images have been process
 </pre></div>
 </div>
 <hr>
-MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/latest/mast/mast_obsquery.html#observation-criteria-queries"> `query_criteria`</a>, where we specify: <br>
+MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/latest/mast/mast_obsquery.html#observation-criteria-queries"> query_criteria</a>, where we specify: <br>
 <p>    <span class="math notranslate nohighlight">\(\rightarrow\)</span> obs_id, proposal_id, and filters</p>
 <p>MAST data products may be downloaded by using <a href="https://astroquery.readthedocs.io/en/latest/mast/mast_obsquery.html#downloading-data"> <code class="docutils literal notranslate"><span class="pre">download_products</span></code></a>, where we specify:<br></p>
 <p>    <span class="math notranslate nohighlight">\(\rightarrow\)</span> products = calibrated (FLT, FLC) or drizzled (DRZ, DRC) files</p>
@@ -854,7 +852,7 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 </pre></div>
 </div>
 <div class="output text_html"><div><i>Table length=3</i>
-<table id="table139810333116704" class="table-striped table-bordered table-condensed">
+<table id="table140395014440192" class="table-striped table-bordered table-condensed">
 <thead><tr><th>Local Path</th><th>Status</th><th>Message</th><th>URL</th></tr></thead>
 <thead><tr><th>str47</th><th>str8</th><th>object</th><th>object</th></tr></thead>
 <tr><td>./mastDownload/HST/ibwb01xqq/ibwb01xqq_flc.fits</td><td>COMPLETE</td><td>None</td><td>None</td></tr>
@@ -907,7 +905,7 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=3</i>
-<table id="table139810333366064" class="table-striped table-bordered table-condensed">
+<table id="table140395045357760" class="table-striped table-bordered table-condensed">
 <thead><tr><th>ROOTNAME</th><th>ASN_ID</th><th>TARGNAME</th><th>DETECTOR</th><th>FILTER</th><th>exptime</th><th>ra_targ</th><th>dec_targ</th><th>postarg1</th><th>postarg2</th><th>DATE-OBS</th><th>orientat</th></tr></thead>
 <thead><tr><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>str32</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>str32</th><th>float64</th></tr></thead>
 <tr><td>ibwb01xqq</td><td>NONE</td><td>NGC-6791</td><td>UVIS</td><td>F606W</td><td>30.0</td><td>290.2248</td><td>37.8027</td><td>0.000</td><td>0.000</td><td>2011-10-20</td><td>-56.27</td></tr>
@@ -919,7 +917,7 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 </section>
 <section id="inspect-the-alignment">
 <h3>1.2 Inspect the Alignment<a class="headerlink" href="#inspect-the-alignment" title="Link to this heading">#</a></h3>
-<p>Check the active WCS solution in the image header. If the image is aligned to a catalog, the list the number of matches and the fit RMS in milli-arcseconds. Next, convert the fit RMS values to pixels for comparison with the alignment results performed later in this notebook using <code class="docutils literal notranslate"><span class="pre">Tweakreg</span></code>.</p>
+<p>Check the active WCS solution in the image header. If the image is aligned to a catalog, then list the number of matches and the fit RMS in milli-arcseconds. Next, convert the fit RMS values to pixels for comparison with the alignment results performed later in this notebook using <code class="docutils literal notranslate"><span class="pre">Tweakreg</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ext_0_keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DETECTOR&#39;</span><span class="p">,</span> <span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span> <span class="c1"># extension 0 keywords.</span>
@@ -960,12 +958,12 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=3</i>
-<table id="table139810349382064" class="table-striped table-bordered table-condensed">
+<table id="table140395008609648" class="table-striped table-bordered table-condensed">
 <thead><tr><th>filename</th><th>DETECTOR</th><th>EXPTIME</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RA_pix</th><th>RMS_DEC_pix</th></tr></thead>
 <thead><tr><th>str18</th><th>str4</th><th>float64</th><th>str30</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
-<tr><td>ibwb01xqq_flc.fits</td><td>UVIS</td><td>30.0</td><td>IDC_2731450pi-FIT_IMG_GAIAeDR3</td><td>435</td><td>2.4</td><td>2.3</td><td>0.06</td><td>0.06</td></tr>
-<tr><td>ibwb01xrq_flc.fits</td><td>UVIS</td><td>360.0</td><td>IDC_2731450pi-FIT_IMG_GAIAeDR3</td><td>456</td><td>3.6</td><td>3.2</td><td>0.09</td><td>0.08</td></tr>
-<tr><td>ibwb01xxq_flc.fits</td><td>UVIS</td><td>360.0</td><td>IDC_2731450pi-FIT_IMG_GAIAeDR3</td><td>429</td><td>3.9</td><td>3.8</td><td>0.1</td><td>0.1</td></tr>
+<tr><td>ibwb01xqq_flc.fits</td><td>UVIS</td><td>30.0</td><td>IDC_2731450pi-FIT_IMG_GAIAeDR3</td><td>468</td><td>1.4</td><td>1.5</td><td>0.04</td><td>0.04</td></tr>
+<tr><td>ibwb01xrq_flc.fits</td><td>UVIS</td><td>360.0</td><td>IDC_2731450pi-FIT_IMG_GAIAeDR3</td><td>475</td><td>3.4</td><td>3.0</td><td>0.09</td><td>0.08</td></tr>
+<tr><td>ibwb01xxq_flc.fits</td><td>UVIS</td><td>360.0</td><td>IDC_2731450pi-FIT_IMG_GAIAeDR3</td><td>426</td><td>3.4</td><td>3.5</td><td>0.09</td><td>0.09</td></tr>
 </table></div></div></div>
 </div>
 <p><a id="query"></a></p>
@@ -978,11 +976,13 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 <p><a id="coords"></a></p>
 <section id="identify-coordinates">
 <h3>2.1 Identify Coordinates<a class="headerlink" href="#identify-coordinates" title="Link to this heading">#</a></h3>
-<p>We will first create a SkyCoord Object to point astroquery to where we are looking on the sky.  Since our example uses data from NGC 6791, we will use the <code class="docutils literal notranslate"><span class="pre">ra_targ</span></code> and <code class="docutils literal notranslate"><span class="pre">dec_targ</span></code> keywords from the first image to get the coordinates of the object.</p>
+<p>We will first create a SkyCoord Object to point astroquery to where we are looking on the sky.  Since our example uses data from NGC 6791, we will use the <code class="docutils literal notranslate"><span class="pre">ra_targ</span></code> and <code class="docutils literal notranslate"><span class="pre">dec_targ</span></code> keywords from the first image to get the coordinates of the object. We then use these RA and Dec values to an construct an astropy <code class="docutils literal notranslate"><span class="pre">SkyCoord</span></code> object, which we will later pass to the SDSS query.  Additionally, we use an astropy <code class="docutils literal notranslate"><span class="pre">Quantity</span></code> object to create a radius for the SDSS query in physical units. For reference, the UVIS detector field of view is approximately 2.7’<span class="math notranslate nohighlight">\(\times\)</span>2.7’ and a y-dither of 82 arcseconds covers a total area on the sky of approximately 2.7’<span class="math notranslate nohighlight">\(\times\)</span>4.1’. For SDSS the maximum search radius is 3 arcminutes, which covers the majority of our field of view in this example. In the Gaia query, we set the radius to 5 arcminutes to fully cover the area of our observations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">RA</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;ra_targ&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">Dec</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;dec_targ&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">coord</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="n">ra</span><span class="o">=</span><span class="n">RA</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="n">Dec</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -991,33 +991,39 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 </section>
 <section id="sdss-query">
 <h3>2.2 SDSS Query<a class="headerlink" href="#sdss-query" title="Link to this heading">#</a></h3>
-<p>We now give the RA and Dec values to an astropy <code class="docutils literal notranslate"><span class="pre">SkyCoord</span></code> object, which we will pass to the SDSS query.  Additionally, we use an astropy <code class="docutils literal notranslate"><span class="pre">Quantity</span></code> object to create a radius for the SDSS query in physical units. For reference, the UVIS detector field of view is approximately 2.7’<span class="math notranslate nohighlight">\(\times\)</span>2.7’ and a y-dither of 82 arcseconds covers a total area on the sky of approximately 2.7’<span class="math notranslate nohighlight">\(\times\)</span>4.1’. For SDSS the maximum search radius is 3 arcminutes, which covers the majority of our field of view in this example. In the Gaia query, we set the radius to 5 arcminutes to fully cover the area of our observations.</p>
+<p>Next, we perform the query via the <code class="docutils literal notranslate"><span class="pre">SDSS.query_region</span></code> method of <code class="docutils literal notranslate"><span class="pre">astroquery.sdss</span></code>. The <code class="docutils literal notranslate"><span class="pre">spectro=False</span></code> keyword argument means we want to exclude spectroscopic objects, as we are looking for objects to match with an image. In the fields parameter, we specify a list of fields we want returned by the query. In this case we only need the position, as well as a <em>g</em>-band magnitude if we want to remove very dim and/or bright objects from the catalog, as those are likely measured poorly. Details on selecting objects by magnitude may be found in the <a class="reference external" href="https://github.com/spacetelescope/gaia_alignment">Gaia_alignment.ipynb</a>. Many other fields are available in the <code class="docutils literal notranslate"><span class="pre">SDSS.query_region</span></code> function, which are <a class="reference external" href="https://astroquery.readthedocs.io/en/latest/api/astroquery.sdss.SDSSClass.html#astroquery.sdss.SDSSClass.query_region">documented on this webpage</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coord</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="n">ra</span><span class="o">=</span><span class="n">RA</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="n">Dec</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Next, we perform the query via the <code class="docutils literal notranslate"><span class="pre">SDSS.query_region</span></code> method of <code class="docutils literal notranslate"><span class="pre">astroquery.sdss</span></code>. The <code class="docutils literal notranslate"><span class="pre">spectro=False</span></code> keyword argument means we want to exclude spectroscopic objects, as we are looking for objects to match with an image. In the fields parameter, we specify a list of fields we want returned by the query. In this case we only need the position, as well as a <em>g</em>-band magnitude if we want to remove very dim and/or bright objects from the catalog, as those are likely measured poorly. Details on selecting objects by magnitude may be found in the <a class="reference external" href="https://github.com/spacetelescope/gaia_alignment">‘Gaia_alignment’ notebook</a>. Many other fields are available in the <code class="docutils literal notranslate"><span class="pre">SDSS.query_region</span></code> function, which are <a class="reference external" href="https://astroquery.readthedocs.io/en/latest/api/astroquery.sdss.SDSSClass.html#astroquery.sdss.SDSSClass.query_region">documented on this webpage</a>.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radius</span> <span class="o">=</span> <span class="n">Quantity</span><span class="p">(</span><span class="mf">3.</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">arcmin</span><span class="p">)</span>
-<span class="n">sdss_query</span> <span class="o">=</span> <span class="n">SDSS</span><span class="o">.</span><span class="n">query_region</span><span class="p">(</span><span class="n">coord</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">spectro</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">,</span> <span class="s1">&#39;dec&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SDSS</span><span class="o">.</span><span class="n">clear_cache</span><span class="p">()</span>
+<span class="n">radius</span> <span class="o">=</span> <span class="n">Quantity</span><span class="p">(</span><span class="mf">3.</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">arcmin</span><span class="p">)</span>
+
+<span class="c1"># If the query fails due to connection issues, proceed with the catalog included in the repository.</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># raise ValueError(&#39;Using offline mode.&#39;) # Allows users to work offline.</span>
+    <span class="n">sdss_query</span> <span class="o">=</span> <span class="n">SDSS</span><span class="o">.</span><span class="n">query_region</span><span class="p">(</span><span class="n">coord</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">spectro</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">,</span> <span class="s1">&#39;dec&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The query passed. Proceeding with the SDSS query catalog.&#39;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The query failed. Proceeding with the repository catalog.&#39;</span><span class="p">)</span>
+    <span class="n">sdss_query</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;sdss.ecsv&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.ecsv&#39;</span><span class="p">)</span>
 
 <span class="c1"># Handle the case where &#39;objID&#39; is included as the first column by some versions of astroquery.</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">sdss_query</span><span class="o">.</span><span class="n">remove_column</span><span class="p">(</span><span class="s1">&#39;objID&#39;</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The table does not contain an objID column... proceeding.&#39;</span><span class="p">)</span>
+
+<span class="c1"># sdss_query.write(&#39;sdss.ecsv&#39;, format=&#39;ascii.ecsv&#39;, overwrite=False) # Used to create a static catalog.</span>
     
 <span class="n">sdss_query</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The query passed. Proceeding with the SDSS query catalog.
+</pre></div>
+</div>
 <div class="output text_html"><div><i>Table length=2148</i>
-<table id="table139810356333888" class="table-striped table-bordered table-condensed">
+<table id="table140395009439024" class="table-striped table-bordered table-condensed">
 <thead><tr><th>ra</th><th>dec</th><th>g</th></tr></thead>
 <thead><tr><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>290.203062469049</td><td>37.8284558064513</td><td>18.85147</td></tr>
@@ -1042,7 +1048,7 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 <tr><td>290.222789411519</td><td>37.7534535032111</td><td>18.85183</td></tr>
 </table></div></div></div>
 </div>
-<p>We then need to save the catalog to use with <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code>. As the returned value of the query is an <code class="docutils literal notranslate"><span class="pre">astropy.Table</span></code>, saving the file is straightforward:</p>
+<p>We then need to save the catalog to use with <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code>, which by default expects that the first two columns are RA and Dec. The returned value of the query is an <code class="docutils literal notranslate"><span class="pre">astropy.Table</span></code>, so saving the file is straightforward:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sdss_query</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;sdss.cat&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.commented_header&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1054,21 +1060,33 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 </section>
 <section id="gaia-query">
 <h3>2.3 Gaia Query<a class="headerlink" href="#gaia-query" title="Link to this heading">#</a></h3>
-<p>Similarly to SDSS, we can query Gaia catalogs for our target via <code class="docutils literal notranslate"><span class="pre">astroquery.gaia</span></code>. This may be preferable in many cases because the spaced-based astrometry from Gaia is generally very accurate and precise. We can use the same <code class="docutils literal notranslate"><span class="pre">coord</span></code> search parameters from our earlier SDSS query, along with a slightly larger  <code class="docutils literal notranslate"><span class="pre">radius</span></code> that encompasses the full field of view of these observations.</p>
+<p>Similar to SDSS, we can query Gaia catalogs for our target via <code class="docutils literal notranslate"><span class="pre">astroquery.gaia</span></code>. This may be preferable in many cases because the spaced-based astrometry from Gaia is generally very accurate and precise. We can use the same <code class="docutils literal notranslate"><span class="pre">coord</span></code> search parameters from our earlier SDSS query, along with a slightly larger  <code class="docutils literal notranslate"><span class="pre">radius</span></code> that encompasses the full field of view of these observations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radius</span> <span class="o">=</span> <span class="n">Quantity</span><span class="p">(</span><span class="mf">5.</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">arcmin</span><span class="p">)</span>
-<span class="n">gaia_query</span> <span class="o">=</span> <span class="n">Gaia</span><span class="o">.</span><span class="n">query_object_async</span><span class="p">(</span><span class="n">coordinate</span><span class="o">=</span><span class="n">coord</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
+
+<span class="c1"># If the query fails due to connection issues, proceed with the catalog included in the repository.</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># raise ValueError(&#39;Using offline mode.&#39;) # Allows users to work offline.</span>
+    <span class="n">gaia_query</span> <span class="o">=</span> <span class="n">Gaia</span><span class="o">.</span><span class="n">query_object_async</span><span class="p">(</span><span class="n">coordinate</span><span class="o">=</span><span class="n">coord</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The query passed. Proceeding with the Gaia query catalog.&#39;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The query failed. Proceeding with the repository catalog.&#39;</span><span class="p">)</span>
+    <span class="n">gaia_query</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;gaia.ecsv&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.ecsv&#39;</span><span class="p">)</span>
+
+<span class="c1"># gaia_query.write(&#39;gaia.ecsv&#39;, format=&#39;ascii.ecsv&#39;, overwrite=False) # Used to create a static catalog.</span>
+    
 <span class="n">gaia_query</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Query finished. [astroquery.utils.tap.core]
+The query passed. Proceeding with the Gaia query catalog.
 </pre></div>
 </div>
 <div class="output text_html"><div><i>Table length=4865</i>
-<table id="table139811730933136" class="table-striped table-bordered table-condensed">
+<table id="table140395019032800" class="table-striped table-bordered table-condensed">
 <thead><tr><th>solution_id</th><th>designation</th><th>source_id</th><th>random_index</th><th>ref_epoch</th><th>ra</th><th>ra_error</th><th>dec</th><th>dec_error</th><th>parallax</th><th>parallax_error</th><th>parallax_over_error</th><th>pm</th><th>pmra</th><th>pmra_error</th><th>pmdec</th><th>pmdec_error</th><th>ra_dec_corr</th><th>ra_parallax_corr</th><th>ra_pmra_corr</th><th>ra_pmdec_corr</th><th>dec_parallax_corr</th><th>dec_pmra_corr</th><th>dec_pmdec_corr</th><th>parallax_pmra_corr</th><th>parallax_pmdec_corr</th><th>pmra_pmdec_corr</th><th>astrometric_n_obs_al</th><th>astrometric_n_obs_ac</th><th>astrometric_n_good_obs_al</th><th>astrometric_n_bad_obs_al</th><th>astrometric_gof_al</th><th>astrometric_chi2_al</th><th>astrometric_excess_noise</th><th>astrometric_excess_noise_sig</th><th>astrometric_params_solved</th><th>astrometric_primary_flag</th><th>nu_eff_used_in_astrometry</th><th>pseudocolour</th><th>pseudocolour_error</th><th>ra_pseudocolour_corr</th><th>dec_pseudocolour_corr</th><th>parallax_pseudocolour_corr</th><th>pmra_pseudocolour_corr</th><th>pmdec_pseudocolour_corr</th><th>astrometric_matched_transits</th><th>visibility_periods_used</th><th>astrometric_sigma5d_max</th><th>matched_transits</th><th>new_matched_transits</th><th>matched_transits_removed</th><th>ipd_gof_harmonic_amplitude</th><th>ipd_gof_harmonic_phase</th><th>ipd_frac_multi_peak</th><th>ipd_frac_odd_win</th><th>ruwe</th><th>scan_direction_strength_k1</th><th>scan_direction_strength_k2</th><th>scan_direction_strength_k3</th><th>scan_direction_strength_k4</th><th>scan_direction_mean_k1</th><th>scan_direction_mean_k2</th><th>scan_direction_mean_k3</th><th>scan_direction_mean_k4</th><th>duplicated_source</th><th>phot_g_n_obs</th><th>phot_g_mean_flux</th><th>phot_g_mean_flux_error</th><th>phot_g_mean_flux_over_error</th><th>phot_g_mean_mag</th><th>phot_bp_n_obs</th><th>phot_bp_mean_flux</th><th>phot_bp_mean_flux_error</th><th>phot_bp_mean_flux_over_error</th><th>phot_bp_mean_mag</th><th>phot_rp_n_obs</th><th>phot_rp_mean_flux</th><th>phot_rp_mean_flux_error</th><th>phot_rp_mean_flux_over_error</th><th>phot_rp_mean_mag</th><th>phot_bp_rp_excess_factor</th><th>phot_bp_n_contaminated_transits</th><th>phot_bp_n_blended_transits</th><th>phot_rp_n_contaminated_transits</th><th>phot_rp_n_blended_transits</th><th>phot_proc_mode</th><th>bp_rp</th><th>bp_g</th><th>g_rp</th><th>radial_velocity</th><th>radial_velocity_error</th><th>rv_method_used</th><th>rv_nb_transits</th><th>rv_nb_deblended_transits</th><th>rv_visibility_periods_used</th><th>rv_expected_sig_to_noise</th><th>rv_renormalised_gof</th><th>rv_chisq_pvalue</th><th>rv_time_duration</th><th>rv_amplitude_robust</th><th>rv_template_teff</th><th>rv_template_logg</th><th>rv_template_fe_h</th><th>rv_atm_param_origin</th><th>vbroad</th><th>vbroad_error</th><th>vbroad_nb_transits</th><th>grvs_mag</th><th>grvs_mag_error</th><th>grvs_mag_nb_transits</th><th>rvs_spec_sig_to_noise</th><th>phot_variable_flag</th><th>l</th><th>b</th><th>ecl_lon</th><th>ecl_lat</th><th>in_qso_candidates</th><th>in_galaxy_candidates</th><th>non_single_star</th><th>has_xp_continuous</th><th>has_xp_sampled</th><th>has_rvs</th><th>has_epoch_photometry</th><th>has_epoch_rv</th><th>has_mcmc_gspphot</th><th>has_mcmc_msc</th><th>in_andromeda_survey</th><th>classprob_dsc_combmod_quasar</th><th>classprob_dsc_combmod_galaxy</th><th>classprob_dsc_combmod_star</th><th>teff_gspphot</th><th>teff_gspphot_lower</th><th>teff_gspphot_upper</th><th>logg_gspphot</th><th>logg_gspphot_lower</th><th>logg_gspphot_upper</th><th>mh_gspphot</th><th>mh_gspphot_lower</th><th>mh_gspphot_upper</th><th>distance_gspphot</th><th>distance_gspphot_lower</th><th>distance_gspphot_upper</th><th>azero_gspphot</th><th>azero_gspphot_lower</th><th>azero_gspphot_upper</th><th>ag_gspphot</th><th>ag_gspphot_lower</th><th>ag_gspphot_upper</th><th>ebpminrp_gspphot</th><th>ebpminrp_gspphot_lower</th><th>ebpminrp_gspphot_upper</th><th>libname_gspphot</th><th>dist</th></tr></thead>
 <thead><tr><th></th><th></th><th></th><th></th><th>yr</th><th>deg</th><th>mas</th><th>deg</th><th>mas</th><th>mas</th><th>mas</th><th></th><th>mas / yr</th><th>mas / yr</th><th>mas / yr</th><th>mas / yr</th><th>mas / yr</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th>mas</th><th></th><th></th><th></th><th>1 / um</th><th>1 / um</th><th>1 / um</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th>mas</th><th></th><th></th><th></th><th></th><th>deg</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th>deg</th><th>deg</th><th>deg</th><th>deg</th><th></th><th></th><th>electron / s</th><th>electron / s</th><th></th><th>mag</th><th></th><th>electron / s</th><th>electron / s</th><th></th><th>mag</th><th></th><th>electron / s</th><th>electron / s</th><th></th><th>mag</th><th></th><th></th><th></th><th></th><th></th><th></th><th>mag</th><th>mag</th><th>mag</th><th>km / s</th><th>km / s</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th>d</th><th>km / s</th><th>K</th><th>log(cm.s**-2)</th><th>dex</th><th></th><th>km / s</th><th>km / s</th><th></th><th>mag</th><th>mag</th><th></th><th></th><th></th><th>deg</th><th>deg</th><th>deg</th><th>deg</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th>K</th><th>K</th><th>K</th><th>log(cm.s**-2)</th><th>log(cm.s**-2)</th><th>log(cm.s**-2)</th><th>dex</th><th>dex</th><th>dex</th><th>pc</th><th>pc</th><th>pc</th><th>mag</th><th>mag</th><th>mag</th><th>mag</th><th>mag</th><th>mag</th><th>mag</th><th>mag</th><th>mag</th><th></th><th></th></tr></thead>
 <thead><tr><th>int64</th><th>object</th><th>int64</th><th>int64</th><th>float64</th><th>float64</th><th>float32</th><th>float64</th><th>float32</th><th>float64</th><th>float32</th><th>float32</th><th>float32</th><th>float64</th><th>float32</th><th>float64</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>int16</th><th>int16</th><th>int16</th><th>int16</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>int16</th><th>bool</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>int16</th><th>int16</th><th>float32</th><th>int16</th><th>int16</th><th>int16</th><th>float32</th><th>float32</th><th>int16</th><th>int16</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>bool</th><th>int16</th><th>float64</th><th>float32</th><th>float32</th><th>float32</th><th>int16</th><th>float64</th><th>float32</th><th>float32</th><th>float32</th><th>int16</th><th>float64</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>int16</th><th>int16</th><th>int16</th><th>int16</th><th>int16</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>int16</th><th>int16</th><th>int16</th><th>int16</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>int16</th><th>float32</th><th>float32</th><th>int16</th><th>float32</th><th>float32</th><th>int16</th><th>float32</th><th>object</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>bool</th><th>bool</th><th>int16</th><th>bool</th><th>bool</th><th>bool</th><th>bool</th><th>bool</th><th>bool</th><th>bool</th><th>bool</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>float32</th><th>object</th><th>float64</th></tr></thead>
@@ -1093,45 +1111,10 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 <tr><td>1636148068921376768</td><td>Gaia DR3 2051286967664775424</td><td>2051286967664775424</td><td>954310899</td><td>2016.0</td><td>290.1971807329532</td><td>0.29303434</td><td>37.72225240386049</td><td>0.3611389</td><td>0.5080668310750222</td><td>0.37153193</td><td>1.3674917</td><td>2.9852633</td><td>-0.4817031435724317</td><td>0.36552507</td><td>-2.9461430747317072</td><td>0.44257566</td><td>0.14276683</td><td>0.072574675</td><td>-0.1556142</td><td>-0.05411414</td><td>0.09976298</td><td>-0.10295689</td><td>-0.3932338</td><td>-0.21745701</td><td>-0.03672264</td><td>0.23811138</td><td>345</td><td>0</td><td>343</td><td>2</td><td>0.5666112</td><td>368.38873</td><td>0.0</td><td>0.0</td><td>95</td><td>False</td><td>--</td><td>1.4355559</td><td>0.09823673</td><td>-0.033583496</td><td>0.060646504</td><td>0.054102458</td><td>-0.074938364</td><td>-0.10565697</td><td>40</td><td>23</td><td>0.66058314</td><td>42</td><td>19</td><td>0</td><td>0.017682025</td><td>156.029</td><td>0</td><td>0</td><td>1.0209081</td><td>0.26176822</td><td>0.10280499</td><td>0.15333837</td><td>0.21728502</td><td>-115.630585</td><td>-75.681816</td><td>-4.198842</td><td>-29.578873</td><td>False</td><td>341</td><td>175.07776030520455</td><td>0.8039993</td><td>217.7586</td><td>20.079288</td><td>18</td><td>81.09285212765688</td><td>9.768502</td><td>8.301462</td><td>20.566086</td><td>21</td><td>184.31333266013976</td><td>7.4463835</td><td>24.75206</td><td>19.084003</td><td>1.5159332</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1.4820824</td><td>0.48679733</td><td>0.99528503</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>NOT_AVAILABLE</td><td>69.9049148304103</td><td>10.898961260981507</td><td>301.95982243002953</td><td>58.94095155723347</td><td>False</td><td>False</td><td>0</td><td>False</td><td>False</td><td>False</td><td>False</td><td>False</td><td>False</td><td>False</td><td>False</td><td>4.541147e-10</td><td>2.3747997e-08</td><td>0.9999982</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td></td><td>0.08333124886811095</td></tr>
 </table></div></div></div>
 </div>
-<p>This query has returned very large number of columns, so we select the most useful columns to make the catalog easier to use with <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code>.</p>
+<p>This query returns a large number of columns, and <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> expects that the first two are RA and Dec, so we write these to a file.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reduced_query</span> <span class="o">=</span> <span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">,</span> <span class="s1">&#39;dec&#39;</span><span class="p">,</span> <span class="s1">&#39;phot_g_mean_mag&#39;</span><span class="p">]</span>
-<span class="n">reduced_query</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div><i>Table length=4865</i>
-<table id="table139810327775856" class="table-striped table-bordered table-condensed">
-<thead><tr><th>ra</th><th>dec</th><th>phot_g_mean_mag</th></tr></thead>
-<thead><tr><th>deg</th><th>deg</th><th>mag</th></tr></thead>
-<thead><tr><th>float64</th><th>float64</th><th>float32</th></tr></thead>
-<tr><td>290.2248611356283</td><td>37.80192950361359</td><td>18.957083</td></tr>
-<tr><td>290.22327972754084</td><td>37.80283944795903</td><td>20.817099</td></tr>
-<tr><td>290.22261994880597</td><td>37.80270752474709</td><td>16.63462</td></tr>
-<tr><td>290.2248309701555</td><td>37.80058611405895</td><td>17.579128</td></tr>
-<tr><td>290.2225602638809</td><td>37.80397847004457</td><td>18.630041</td></tr>
-<tr><td>290.22681959687196</td><td>37.80112772770517</td><td>20.685486</td></tr>
-<tr><td>290.2275249308142</td><td>37.803472775139035</td><td>19.896347</td></tr>
-<tr><td>290.2242320409821</td><td>37.80039510739463</td><td>20.585316</td></tr>
-<tr><td>290.22302939666463</td><td>37.8003404115494</td><td>18.381582</td></tr>
-<tr><td>...</td><td>...</td><td>...</td></tr>
-<tr><td>290.1710542799103</td><td>37.874210138824154</td><td>18.457401</td></tr>
-<tr><td>290.1228125225418</td><td>37.7819163631625</td><td>19.053267</td></tr>
-<tr><td>290.1750101665401</td><td>37.87602842402639</td><td>17.952637</td></tr>
-<tr><td>290.2882629014902</td><td>37.86913015536792</td><td>19.127296</td></tr>
-<tr><td>290.1194354085638</td><td>37.80348115009846</td><td>19.38391</td></tr>
-<tr><td>290.33007288300433</td><td>37.799005196546766</td><td>20.413414</td></tr>
-<tr><td>290.14278652187744</td><td>37.75037525259858</td><td>16.866798</td></tr>
-<tr><td>290.17127999981165</td><td>37.73091082720331</td><td>17.266148</td></tr>
-<tr><td>290.1971807329532</td><td>37.72225240386049</td><td>20.079288</td></tr>
-</table></div></div></div>
-</div>
-<p>Then we write this catalog to an ascii file for use with <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code>.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reduced_query</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;gaia.cat&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.commented_header&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">,</span> <span class="s1">&#39;dec&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;gaia.cat&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.commented_header&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1139,8 +1122,8 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 <p><a id="tweakreg"></a></p>
 </section>
 </section>
-<section id="align-with-tweakreg">
-<h2>3. Align with <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code><a class="headerlink" href="#align-with-tweakreg" title="Link to this heading">#</a></h2>
+<section id="align-images-with-tweakreg">
+<h2>3. Align images with <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code><a class="headerlink" href="#align-images-with-tweakreg" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="#toc"><span class="xref myst">Table of Contents</span></a></p>
 <p>With the catalogs downloaded and the headers populated, we now need to run <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> with each catalog passed into the <code class="docutils literal notranslate"><span class="pre">refcat</span></code> parameter. The steps below compare the astrometric residuals obtained from aligning to each <code class="docutils literal notranslate"><span class="pre">refcat</span></code>. In each case, we set the <code class="docutils literal notranslate"><span class="pre">updatehdr</span></code> parameter to False to avoid altering the WCS of the images until we are satisfied with the alignment by inspecting both the <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> shift file and the astrometric residual plots.</p>
 <p><a id="sdss_align"></a></p>
@@ -1169,9 +1152,9 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../../_images/dbd7130a32030e93f54720a8639cbb1c0f3b158df19f6d7617fd6144580689f2.png"><img alt="../../../_images/dbd7130a32030e93f54720a8639cbb1c0f3b158df19f6d7617fd6144580689f2.png" src="../../../_images/dbd7130a32030e93f54720a8639cbb1c0f3b158df19f6d7617fd6144580689f2.png" style="width: 728px; height: 455px;" />
+<a class="reference internal image-reference" href="../../../_images/ff21b8a6829b6ccf8f3d89baffe1182ae5eaa3d368b733cf97848ec617e45c86.png"><img alt="../../../_images/ff21b8a6829b6ccf8f3d89baffe1182ae5eaa3d368b733cf97848ec617e45c86.png" src="../../../_images/ff21b8a6829b6ccf8f3d89baffe1182ae5eaa3d368b733cf97848ec617e45c86.png" style="width: 730px; height: 453px;" />
 </a>
-<a class="reference internal image-reference" href="../../../_images/21949b5a5401ccb7be046921d3f4b5a1e6ae9b78be86a722a56f0f9cc236cae0.png"><img alt="../../../_images/21949b5a5401ccb7be046921d3f4b5a1e6ae9b78be86a722a56f0f9cc236cae0.png" src="../../../_images/21949b5a5401ccb7be046921d3f4b5a1e6ae9b78be86a722a56f0f9cc236cae0.png" style="width: 581px; height: 476px;" />
+<a class="reference internal image-reference" href="../../../_images/f2da0f9a4335ed66189d70196e2478209ad86c2518c98606680bef9866f9c78d.png"><img alt="../../../_images/f2da0f9a4335ed66189d70196e2478209ad86c2518c98606680bef9866f9c78d.png" src="../../../_images/f2da0f9a4335ed66189d70196e2478209ad86c2518c98606680bef9866f9c78d.png" style="width: 580px; height: 477px;" />
 </a>
 </div>
 </div>
@@ -1193,7 +1176,7 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 </section>
 <section id="inspect-the-shift-file-and-fit-residuals">
 <h3>3.2 Inspect the shift file and fit residuals<a class="headerlink" href="#inspect-the-shift-file-and-fit-residuals" title="Link to this heading">#</a></h3>
-<p>We can look at the shift file to see how well the fit did (or we could open the output png images for more information). The columns are:</p>
+<p>We can look at the shift file to see how well the fit did (or we could open the output PNG images for more information). The columns are:</p>
 <ul class="simple">
 <li><p>Filename, X Shift [pixels], Y Shift [pixels], Rotation [degrees], Scale, X RMS [pixels], Y RMS [pixels]</p></li>
 </ul>
@@ -1212,45 +1195,26 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=3</i>
-<table id="table139810119170096" class="table-striped table-bordered table-condensed">
+<table id="table140394797368672" class="table-striped table-bordered table-condensed">
 <thead><tr><th>file</th><th>dx</th><th>dy</th><th>rot</th><th>scale</th><th>xrms</th><th>yrms</th></tr></thead>
 <thead><tr><th>str18</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
-<tr><td>ibwb01xxq_flc.fits</td><td>1.61</td><td>-0.02</td><td>359.999</td><td>1.00009</td><td>0.43</td><td>0.53</td></tr>
-<tr><td>ibwb01xqq_flc.fits</td><td>1.48</td><td>0.67</td><td>0.003</td><td>0.99993</td><td>0.37</td><td>0.35</td></tr>
-<tr><td>ibwb01xrq_flc.fits</td><td>1.48</td><td>0.58</td><td>0.002</td><td>0.99995</td><td>0.37</td><td>0.36</td></tr>
+<tr><td>ibwb01xrq_flc.fits</td><td>1.47</td><td>0.58</td><td>0.002</td><td>0.99995</td><td>0.38</td><td>0.36</td></tr>
+<tr><td>ibwb01xxq_flc.fits</td><td>1.45</td><td>-0.84</td><td>359.999</td><td>0.99999</td><td>0.35</td><td>0.40</td></tr>
+<tr><td>ibwb01xqq_flc.fits</td><td>1.48</td><td>0.68</td><td>0.003</td><td>0.99993</td><td>0.37</td><td>0.34</td></tr>
 </table></div></div></div>
 </div>
 <p>Show the astrometric residual plots.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;residuals_ibwb01xqq_flc.png&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Choose one of the files to view.</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;residuals_ibwb01xqq_flc.png&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="c1"># Image(filename=&#39;residuals_ibwb01xrq_flc.png&#39;, width=500, height=300)</span>
+<span class="c1"># Image(filename=&#39;residuals_ibwb01xxq_flc.png&#39;, width=500, height=300)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../../_images/5645628b7d7f4e49787fc307f5e62b5823dc58e43a02e2f1f23acdd1a25899c5.png"><img alt="../../../_images/5645628b7d7f4e49787fc307f5e62b5823dc58e43a02e2f1f23acdd1a25899c5.png" src="../../../_images/5645628b7d7f4e49787fc307f5e62b5823dc58e43a02e2f1f23acdd1a25899c5.png" style="width: 500px; height: 300px;" />
-</a>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;residuals_ibwb01xrq_flc.png&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../../_images/5030283a7afe6096a5c86573f19f962f8d3dc1a3b98e84aca39051868776caf1.png"><img alt="../../../_images/5030283a7afe6096a5c86573f19f962f8d3dc1a3b98e84aca39051868776caf1.png" src="../../../_images/5030283a7afe6096a5c86573f19f962f8d3dc1a3b98e84aca39051868776caf1.png" style="width: 500px; height: 300px;" />
-</a>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;residuals_ibwb01xxq_flc.png&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../../_images/7d645f1b60bab966fab07c3d2d6e314a93b27ba1debce827e458b6ee75032a00.png"><img alt="../../../_images/7d645f1b60bab966fab07c3d2d6e314a93b27ba1debce827e458b6ee75032a00.png" src="../../../_images/7d645f1b60bab966fab07c3d2d6e314a93b27ba1debce827e458b6ee75032a00.png" style="width: 500px; height: 300px;" />
+<a class="reference internal image-reference" href="../../../_images/c3f2e380056d37a3e99c14f4b3e0b6b4539d3295024028828073e8e1900dbe48.png"><img alt="../../../_images/c3f2e380056d37a3e99c14f4b3e0b6b4539d3295024028828073e8e1900dbe48.png" src="../../../_images/c3f2e380056d37a3e99c14f4b3e0b6b4539d3295024028828073e8e1900dbe48.png" style="width: 500px; height: 300px;" />
 </a>
 </div>
 </div>
@@ -1274,7 +1238,7 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
                   <span class="n">outshifts</span><span class="o">=</span><span class="s1">&#39;Gaia_shifts.txt&#39;</span><span class="p">,</span>  <span class="c1"># Name of the shift file that will be saved.</span>
                   <span class="n">wcsname</span><span class="o">=</span><span class="n">wcsname</span><span class="p">,</span>              <span class="c1"># Give our WCS a new name defined above.</span>
                   <span class="n">reusename</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>               <span class="c1"># Overwrite the WCS if it exists.</span>
-                  <span class="n">ylimit</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>                   <span class="c1"># The ylimit for the residuals plot.</span>
+                  <span class="n">ylimit</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>                   <span class="c1"># The ylimit for the residuals plot.</span>
                   <span class="n">fitgeometry</span><span class="o">=</span><span class="s1">&#39;rscale&#39;</span><span class="p">,</span>         <span class="c1"># Allow for translation, rotation, and plate scaling.</span>
                   <span class="n">searchrad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>                <span class="c1"># With many sources use a smaller search radius for convergence.</span>
                   <span class="n">updatehdr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>              <span class="c1"># Don&#39;t update the header with new WCS until later.</span>
@@ -1283,9 +1247,9 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../../_images/494f960b49d26d28cc311474474519a1ee3281a18fd0be43e2f3b8d008f071d2.png"><img alt="../../../_images/494f960b49d26d28cc311474474519a1ee3281a18fd0be43e2f3b8d008f071d2.png" src="../../../_images/494f960b49d26d28cc311474474519a1ee3281a18fd0be43e2f3b8d008f071d2.png" style="width: 728px; height: 455px;" />
+<a class="reference internal image-reference" href="../../../_images/13658c5e8d8e53fd62a14d083b857e2750cc59a99ebc37befeb60581f4f2b24a.png"><img alt="../../../_images/13658c5e8d8e53fd62a14d083b857e2750cc59a99ebc37befeb60581f4f2b24a.png" src="../../../_images/13658c5e8d8e53fd62a14d083b857e2750cc59a99ebc37befeb60581f4f2b24a.png" style="width: 730px; height: 453px;" />
 </a>
-<a class="reference internal image-reference" href="../../../_images/78b3284b2bd7e8a1d90a349fed2ce8f52ae308ccc90e74f092694f45a966acd5.png"><img alt="../../../_images/78b3284b2bd7e8a1d90a349fed2ce8f52ae308ccc90e74f092694f45a966acd5.png" src="../../../_images/78b3284b2bd7e8a1d90a349fed2ce8f52ae308ccc90e74f092694f45a966acd5.png" style="width: 581px; height: 476px;" />
+<a class="reference internal image-reference" href="../../../_images/cd6367065221cdf2e861d28d3eec7fc096f4a86e68b7baf1d7ff42acfabf2b8e.png"><img alt="../../../_images/cd6367065221cdf2e861d28d3eec7fc096f4a86e68b7baf1d7ff42acfabf2b8e.png" src="../../../_images/cd6367065221cdf2e861d28d3eec7fc096f4a86e68b7baf1d7ff42acfabf2b8e.png" style="width: 580px; height: 477px;" />
 </a>
 </div>
 </div>
@@ -1324,33 +1288,29 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=3</i>
-<table id="table139810324166080" class="table-striped table-bordered table-condensed">
+<table id="table140395004718176" class="table-striped table-bordered table-condensed">
 <thead><tr><th>file</th><th>dx</th><th>dy</th><th>rot</th><th>scale</th><th>xrms</th><th>yrms</th></tr></thead>
 <thead><tr><th>str18</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
-<tr><td>ibwb01xxq_flc.fits</td><td>-0.21</td><td>0.10</td><td>0.000</td><td>1.00001</td><td>0.03</td><td>0.05</td></tr>
-<tr><td>ibwb01xqq_flc.fits</td><td>-0.22</td><td>0.10</td><td>360.000</td><td>1.00000</td><td>0.03</td><td>0.03</td></tr>
 <tr><td>ibwb01xrq_flc.fits</td><td>-0.22</td><td>0.11</td><td>0.000</td><td>1.00000</td><td>0.03</td><td>0.05</td></tr>
+<tr><td>ibwb01xxq_flc.fits</td><td>-0.22</td><td>0.10</td><td>360.000</td><td>1.00001</td><td>0.03</td><td>0.05</td></tr>
+<tr><td>ibwb01xqq_flc.fits</td><td>-0.22</td><td>0.10</td><td>360.000</td><td>1.00000</td><td>0.03</td><td>0.03</td></tr>
 </table></div></div></div>
 </div>
 <p>Print the Number of Gaia Matches per image from the TweakReg output.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rootname1</span> <span class="o">=</span> <span class="s1">&#39;ibwb01xqq&#39;</span>
-<span class="n">rootname2</span> <span class="o">=</span> <span class="s1">&#39;ibwb01xrq&#39;</span>
-<span class="n">rootname3</span> <span class="o">=</span> <span class="s1">&#39;ibwb01xxq&#39;</span>
-<span class="n">match_tab1</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">rootname1</span><span class="o">+</span><span class="s1">&#39;_flc_catalog_fit.match&#39;</span><span class="p">)</span>  <span class="c1"># load match file in astropy table</span>
-<span class="n">match_tab2</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">rootname2</span><span class="o">+</span><span class="s1">&#39;_flc_catalog_fit.match&#39;</span><span class="p">)</span>  <span class="c1"># load match file in astropy table</span>
-<span class="n">match_tab3</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">rootname3</span><span class="o">+</span><span class="s1">&#39;_flc_catalog_fit.match&#39;</span><span class="p">)</span>  <span class="c1"># load match file in astropy table</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">rootname1</span><span class="o">+</span><span class="s1">&#39;: Number of Gaia Matches =&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">match_tab1</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">rootname2</span><span class="o">+</span><span class="s1">&#39;: Number of Gaia Matches =&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">match_tab2</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">rootname3</span><span class="o">+</span><span class="s1">&#39;: Number of Gaia Matches =&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">match_tab3</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rootnames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ibwb01xqq&#39;</span><span class="p">,</span> <span class="s1">&#39;ibwb01xrq&#39;</span><span class="p">,</span> <span class="s1">&#39;ibwb01xxq&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">rootname</span> <span class="ow">in</span> <span class="n">rootnames</span><span class="p">:</span>
+    <span class="n">match_tab</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">rootname</span><span class="o">+</span><span class="s1">&#39;_flc_catalog_fit.match&#39;</span><span class="p">)</span> <span class="c1"># load match file in astropy table</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rootname</span><span class="o">+</span><span class="s1">&#39;: Number of Gaia Matches =&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">match_tab</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ibwb01xqq: Number of Gaia Matches = 564
-ibwb01xrq: Number of Gaia Matches = 567
-ibwb01xxq: Number of Gaia Matches = 546
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ibwb01xqq: Number of Gaia Matches = 565
+ibwb01xrq: Number of Gaia Matches = 566
+ibwb01xxq: Number of Gaia Matches = 545
 </pre></div>
 </div>
 </div>
@@ -1364,46 +1324,26 @@ ibwb01xxq: Number of Gaia Matches = 546
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html"><div><i>Table length=3</i>
-<table id="table139810349382064" class="table-striped table-bordered table-condensed">
+<table id="table140395008609648" class="table-striped table-bordered table-condensed">
 <thead><tr><th>filename</th><th>DETECTOR</th><th>EXPTIME</th><th>WCSNAME</th><th>NMATCHES</th><th>RMS_RA</th><th>RMS_DEC</th><th>RMS_RA_pix</th><th>RMS_DEC_pix</th></tr></thead>
 <thead><tr><th>str18</th><th>str4</th><th>float64</th><th>str30</th><th>int64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
-<tr><td>ibwb01xqq_flc.fits</td><td>UVIS</td><td>30.0</td><td>IDC_2731450pi-FIT_IMG_GAIAeDR3</td><td>435</td><td>2.4</td><td>2.3</td><td>0.06</td><td>0.06</td></tr>
-<tr><td>ibwb01xrq_flc.fits</td><td>UVIS</td><td>360.0</td><td>IDC_2731450pi-FIT_IMG_GAIAeDR3</td><td>456</td><td>3.6</td><td>3.2</td><td>0.09</td><td>0.08</td></tr>
-<tr><td>ibwb01xxq_flc.fits</td><td>UVIS</td><td>360.0</td><td>IDC_2731450pi-FIT_IMG_GAIAeDR3</td><td>429</td><td>3.9</td><td>3.8</td><td>0.1</td><td>0.1</td></tr>
+<tr><td>ibwb01xqq_flc.fits</td><td>UVIS</td><td>30.0</td><td>IDC_2731450pi-FIT_IMG_GAIAeDR3</td><td>468</td><td>1.4</td><td>1.5</td><td>0.04</td><td>0.04</td></tr>
+<tr><td>ibwb01xrq_flc.fits</td><td>UVIS</td><td>360.0</td><td>IDC_2731450pi-FIT_IMG_GAIAeDR3</td><td>475</td><td>3.4</td><td>3.0</td><td>0.09</td><td>0.08</td></tr>
+<tr><td>ibwb01xxq_flc.fits</td><td>UVIS</td><td>360.0</td><td>IDC_2731450pi-FIT_IMG_GAIAeDR3</td><td>426</td><td>3.4</td><td>3.5</td><td>0.09</td><td>0.09</td></tr>
 </table></div></div></div>
 </div>
-<p><b>The new Gaia solution looks better than the MAST solution, so we rerun <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> below and update the image headers with the new WCS solution.</b></p>
-<p>For more details on absolute astrometry in HST images, see <a class="reference external" href="https://hst-docs.stsci.edu/drizzpac/chapter-4-astrometric-information-in-the-header/4-5-absolute-astrometry">Section 4.5</a> in the DrizzlePac Handbook. Show the astrometric residual plots:</p>
+<p>The new Gaia solution is better than the MAST solution because there are a larger number of matches sources with smaller RMS values in both RA and Dec.</b> For more details on absolute astrometry in HST images, see <a class="reference external" href="https://hst-docs.stsci.edu/drizzpac/chapter-4-astrometric-information-in-the-header/4-5-absolute-astrometry">Section 4.5</a> in the DrizzlePac Handbook. Finally, show one of the astrometric residual plots as an example that highlights the small scatter in the best fit shift for all sources.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;residuals_ibwb01xqq_flc.png&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Choose one of the files to view.</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;residuals_ibwb01xqq_flc.png&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="c1"># Image(filename=&#39;residuals_ibwb01xrq_flc.png&#39;, width=500, height=300)</span>
+<span class="c1"># Image(filename=&#39;residuals_ibwb01xxq_flc.png&#39;, width=500, height=300)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../../_images/5e67a917db69ba728b2c4180ca09d8670594bf04a022040ef3df5516390fe492.png"><img alt="../../../_images/5e67a917db69ba728b2c4180ca09d8670594bf04a022040ef3df5516390fe492.png" src="../../../_images/5e67a917db69ba728b2c4180ca09d8670594bf04a022040ef3df5516390fe492.png" style="width: 500px; height: 300px;" />
-</a>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;residuals_ibwb01xrq_flc.png&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../../_images/fe00388eb037509f66d38a2ecf1bdead4ccd2576a669284fb501e0a72f81f05f.png"><img alt="../../../_images/fe00388eb037509f66d38a2ecf1bdead4ccd2576a669284fb501e0a72f81f05f.png" src="../../../_images/fe00388eb037509f66d38a2ecf1bdead4ccd2576a669284fb501e0a72f81f05f.png" style="width: 500px; height: 300px;" />
-</a>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;residuals_ibwb01xxq_flc.png&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../../_images/551dfb2db853082f6fc27951c88cb77de2e9ba205ef75db535708cf4c2c5d5d5.png"><img alt="../../../_images/551dfb2db853082f6fc27951c88cb77de2e9ba205ef75db535708cf4c2c5d5d5.png" src="../../../_images/551dfb2db853082f6fc27951c88cb77de2e9ba205ef75db535708cf4c2c5d5d5.png" style="width: 500px; height: 300px;" />
+<a class="reference internal image-reference" href="../../../_images/a4b42f0bfbb730ad84717613842e661dd3be5e096664d1c14302e1063b2c6764.png"><img alt="../../../_images/a4b42f0bfbb730ad84717613842e661dd3be5e096664d1c14302e1063b2c6764.png" src="../../../_images/a4b42f0bfbb730ad84717613842e661dd3be5e096664d1c14302e1063b2c6764.png" style="width: 500px; height: 300px;" />
 </a>
 </div>
 </div>
@@ -1417,7 +1357,8 @@ ibwb01xxq: Number of Gaia Matches = 546
 <p><a id="overplot"></a></p>
 </section>
 <section id="overplot-matched-sources-on-the-image">
-<h3>3.5 Overplot Matched Sources on the Image<a class="headerlink" href="#overplot-matched-sources-on-the-image" title="Link to this heading">#</a></h3>
+<h3>3.5 Overplot matched sources on the image<a class="headerlink" href="#overplot-matched-sources-on-the-image" title="Link to this heading">#</a></h3>
+<p><a class="reference internal" href="#toc"><span class="xref myst">Table of Contents</span></a></p>
 <p>Now, let’s plot the sources that were matched between all images on the “bottom” UVIS chip. This is referred to as chip 2 or SCI, 1 or extension 1.  The cell below reads in the <code class="docutils literal notranslate"><span class="pre">*_fit.match</span></code> file as an <code class="docutils literal notranslate"><span class="pre">astropy</span></code> table. Unfortunately, it doesn’t automatically name columns so we look at the header to grab the columns.</p>
 <p>To verify that TweakReg obtained an acceptable fit between matched source catalogs, it is useful to inspect the results before updating the image header WCS. In the figure below, sources that are matched with Gaia are overplotted on one of the input FLC frames with the two chips merged together.</p>
 <p>It can be useful to check that <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> locked onto stars and not hot pixels or other detector artifacts before proceeding to update the image header.</p>
@@ -1441,59 +1382,262 @@ ibwb01xxq: Number of Gaia Matches = 546
 <span class="n">x_cord1</span><span class="p">,</span> <span class="n">y_cord1</span> <span class="o">=</span> <span class="n">match_tab_chip1</span><span class="p">[</span><span class="s1">&#39;col11&#39;</span><span class="p">],</span> <span class="n">match_tab_chip1</span><span class="p">[</span><span class="s1">&#39;col12&#39;</span><span class="p">]</span>
 <span class="n">x_cord2</span><span class="p">,</span> <span class="n">y_cord2</span> <span class="o">=</span> <span class="n">match_tab_chip2</span><span class="p">[</span><span class="s1">&#39;col11&#39;</span><span class="p">],</span> <span class="n">match_tab_chip2</span><span class="p">[</span><span class="s1">&#39;col12&#39;</span><span class="p">]</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_cord1</span><span class="p">,</span> <span class="n">y_cord1</span><span class="o">+</span><span class="mi">2051</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Matched Sources&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_cord2</span><span class="p">,</span> <span class="n">y_cord2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">)</span>
+<span class="c1"># Correct for 0 vs. 1 indexing on the figure by subtracting 1.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_cord1</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">y_cord1</span><span class="o">+</span><span class="mi">2051</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Matched Sources&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_cord2</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">y_cord2</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Matched sources UVIS to Gaia: N = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">match_tab</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../../_images/4385d3d652caee7f8e3351e13a4719e05bf9f6f3bf2a61f100fdaba427238164.png"><img alt="../../../_images/4385d3d652caee7f8e3351e13a4719e05bf9f6f3bf2a61f100fdaba427238164.png" src="../../../_images/4385d3d652caee7f8e3351e13a4719e05bf9f6f3bf2a61f100fdaba427238164.png" style="width: 851px; height: 847px;" />
+<a class="reference internal image-reference" href="../../../_images/11e7cf9ac2983b75b9fa984fb79ed5e34c8b665965d0f547e992ba8f3766c260.png"><img alt="../../../_images/11e7cf9ac2983b75b9fa984fb79ed5e34c8b665965d0f547e992ba8f3766c260.png" src="../../../_images/11e7cf9ac2983b75b9fa984fb79ed5e34c8b665965d0f547e992ba8f3766c260.png" style="width: 852px; height: 848px;" />
 </a>
 </div>
 </div>
-<p><a id="updatehdr"></a></p>
+<p><a id="propermotion"></a></p>
 </section>
-<section id="update-header-with-optimal-parameters">
-<h3>3.6 Update header with optimal parameters<a class="headerlink" href="#update-header-with-optimal-parameters" title="Link to this heading">#</a></h3>
-<p>Once you’ve decided on the optimal set of parameters for your alignment, it is safe to update the header of the input data, (assuming that the new solution is better than the MAST alignment.) To apply these transformations to the image, we simply need to run TweakReg the same as before, but set the parameter <code class="docutils literal notranslate"><span class="pre">updatehdr</span></code> equal to <code class="docutils literal notranslate"><span class="pre">True</span></code>:</p>
+<section id="check-the-significance-of-proper-motions">
+<h3>3.6 Check the significance of proper motions<a class="headerlink" href="#check-the-significance-of-proper-motions" title="Link to this heading">#</a></h3>
+<p><a class="reference internal" href="#toc"><span class="xref myst">Table of Contents</span></a></p>
+<p>Prior to accepting the Gaia alignment solution derived above, there is one additional refinement users may wish to consider depending on their dataset and science goals. Specifically, stars move across the sky over time, with more nearby (and thus often brighter) stars moving more quickly. This movemement with respect to a fixed WCS is known as proper motion.</p>
+<p>By default, Gaia eDR3 coordinates are provided for an epoch of 2016. This means that the stars in images taken long before or after 2016, or those in high proper motion fields, may be displaced from their catalog coordinates. In general, the positions provided by Gaia are exceptionally accurate, and the accuracy of the proper motions vary depending on the brightness of the star, and the number of observations taken to measure the proper motion.</p>
+<p>Users can asses the importance of stellar proper motions for their observations by taking the default Gaia catalog coordinates and proper motions, and calculating the epoch-corrected position of each star for the time of their observations. In the figure below, we show the proper motions of stars from the Gaia catalog created earlier, with motions in milliarcseconds per year (mas yr<span class="math notranslate nohighlight">\(^{-1}\)</span>).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">refcat</span> <span class="o">=</span> <span class="s1">&#39;gaia.cat&#39;</span>
-<span class="n">wcsname</span> <span class="o">=</span> <span class="s1">&#39;Gaia&#39;</span>                   <span class="c1"># Specify the WCS name for this alignment</span>
-<span class="n">cw</span> <span class="o">=</span> <span class="mf">3.5</span>                           <span class="c1"># 2x the FWHM of the PSF = 3.5 for ACS/WFC, WFC3/UVIS or 2.5 for WFC3/IR </span>
-
-<span class="n">tweakreg</span><span class="o">.</span><span class="n">TweakReg</span><span class="p">(</span><span class="s1">&#39;*flc.fits&#39;</span><span class="p">,</span> <span class="c1"># Pass the input images to tweakreg.</span>
-                  <span class="n">imagefindcfg</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;threshold&#39;</span><span class="p">:</span> <span class="mf">500.</span><span class="p">,</span> <span class="s1">&#39;conv_width&#39;</span><span class="p">:</span> <span class="n">cw</span><span class="p">},</span>  <span class="c1"># Detection parameters that vary for different datasets.</span>
-                  <span class="n">refcat</span><span class="o">=</span><span class="n">refcat</span><span class="p">,</span>                <span class="c1"># Use user supplied catalog (Gaia).</span>
-                  <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>            <span class="c1"># Don&#39;t show the interactive interface.</span>
-                  <span class="n">see2dplot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>              <span class="c1"># Suppress additional figures in this test.</span>
-                  <span class="n">shiftfile</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>               <span class="c1"># Save output shift file to examine shifts later.</span>
-                  <span class="n">outshifts</span><span class="o">=</span><span class="s1">&#39;Gaia_shifts.txt&#39;</span><span class="p">,</span>  <span class="c1"># Name of the shift file that will be saved.</span>
-                  <span class="n">wcsname</span><span class="o">=</span><span class="n">wcsname</span><span class="p">,</span>              <span class="c1"># Give our WCS a new name defined above.</span>
-                  <span class="n">reusename</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>               <span class="c1"># Overwrite the WCS if it exists.</span>
-                  <span class="n">ylimit</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>                   <span class="c1"># The ylimit for the residuals plot.</span>
-                  <span class="n">fitgeometry</span><span class="o">=</span><span class="s1">&#39;rscale&#39;</span><span class="p">,</span>         <span class="c1"># Allow for translation, rotation, and plate scaling.</span>
-                  <span class="n">searchrad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>                <span class="c1"># With many sources use a smaller search radius for convergence.</span>
-                  <span class="n">updatehdr</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>               <span class="c1"># Update the header with new WCS solution.</span>
-
-<span class="n">clear_output</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">1.6</span><span class="o">*</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s1">&#39;constrained&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Gaia Proper Motions&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Proper Motion (RA)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Proper Motion (Dec)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Stars&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;pm&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;pmra&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;pmdec&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;pm&#39;</span><span class="p">]),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;pm&#39;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s1">&#39; mas/yr&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;pmra&#39;</span><span class="p">]),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;pmra&#39;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s1">&#39; mas/yr&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;pmdec&#39;</span><span class="p">]),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;pmdec&#39;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s1">&#39; mas/yr&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">80</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Proper Motion (mas yr$^{-1}$)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handlelength</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../../_images/494f960b49d26d28cc311474474519a1ee3281a18fd0be43e2f3b8d008f071d2.png"><img alt="../../../_images/494f960b49d26d28cc311474474519a1ee3281a18fd0be43e2f3b8d008f071d2.png" src="../../../_images/494f960b49d26d28cc311474474519a1ee3281a18fd0be43e2f3b8d008f071d2.png" style="width: 728px; height: 455px;" />
+<a class="reference internal image-reference" href="../../../_images/ac5fe8e036f7686bca05155115910257cdc91e1d7f2ce9f55636f3b0460f64ef.png"><img alt="../../../_images/ac5fe8e036f7686bca05155115910257cdc91e1d7f2ce9f55636f3b0460f64ef.png" src="../../../_images/ac5fe8e036f7686bca05155115910257cdc91e1d7f2ce9f55636f3b0460f64ef.png" style="width: 1035px; height: 491px;" />
 </a>
-<a class="reference internal image-reference" href="../../../_images/78b3284b2bd7e8a1d90a349fed2ce8f52ae308ccc90e74f092694f45a966acd5.png"><img alt="../../../_images/78b3284b2bd7e8a1d90a349fed2ce8f52ae308ccc90e74f092694f45a966acd5.png" src="../../../_images/78b3284b2bd7e8a1d90a349fed2ce8f52ae308ccc90e74f092694f45a966acd5.png" style="width: 581px; height: 476px;" />
-</a>
+</div>
+</div>
+<p>In this case, the median proper motion is <span class="math notranslate nohighlight">\(\approx\)</span> 2.42 mas yr<span class="math notranslate nohighlight">\(^{-1}\)</span>. The date of observation for the example dataset of NGC 6791 is 2011.8, which is <span class="math notranslate nohighlight">\(\approx\)</span> 4.2 years before the Gaia epoch of 2016. This means the median stellar motion is <span class="math notranslate nohighlight">\(\approx\)</span> 10 mas, or approximately 0.25 UVIS pixels. Some stars will have moved by less than this amount, while others will have moved more based on their measured proper motions. Because the median motion of 0.25 pixels is larger than the earlier alignment solution RMS uncertainties of <span class="math notranslate nohighlight">\(&lt;\)</span> 0.1 pixels, it may be worth considering the effects of proper motions for these observations.</p>
+<p>First, we define the epoch of Gaia (<code class="docutils literal notranslate"><span class="pre">gaia_epoch</span></code>), the epoch of the observations (<code class="docutils literal notranslate"><span class="pre">data_epoch</span></code>), and we remove stars without accurate proper motion measurements. Numerous different quality cuts can be applied to the Gaia catalog using the large array of provided measurements, including the proper motion uncertainties themselves. For this example, we’ll apply a single cut on the re-normalised unit weight error, or <code class="docutils literal notranslate"><span class="pre">RUWE</span></code>. This overall goodness of fit parameter indicates how well each source was fit as a single star, with values of <span class="math notranslate nohighlight">\(&lt;\)</span> 1.4 excluding most suspected binary star systems, and <span class="math notranslate nohighlight">\(&lt;\)</span> 1.25 providing clean, well fit samples of stars. See the report <a class="reference external" href="http://www.rssd.esa.int/doc_fetch.php?id=3757412">GAIA-C3-TN-LU-LL-124-01</a> and <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2022MNRAS.513.2437P/abstract">Penoyre et al. (2022)</a> for more information.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_epoch</span> <span class="o">=</span> <span class="n">Time</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;DATE-OBS&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">decimalyear</span>
+<span class="n">gaia_epoch</span> <span class="o">=</span> <span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;ref_epoch&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">epoch_diff</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data_epoch</span> <span class="o">-</span> <span class="n">gaia_epoch</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">The Gaia and Data epochs are </span><span class="si">{</span><span class="n">gaia_epoch</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">data_epoch</span><span class="si">}</span><span class="s1">, respectively, resulting in a baseline of </span><span class="si">{</span><span class="n">epoch_diff</span><span class="si">}</span><span class="s1"> years.&#39;</span><span class="p">)</span>
+<span class="n">gaia_string</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">gaia_epoch</span><span class="p">))</span>
+<span class="n">data_string</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">data_epoch</span><span class="p">))</span>
+
+<span class="c1"># Remove catalog entries with large fit uncertainties and empty data values.</span>
+<span class="n">gaia_query_masked</span> <span class="o">=</span> <span class="n">gaia_query</span><span class="p">[(</span><span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;ruwe&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">1.25</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;ruwe&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span><span class="p">]</span>
+
+<span class="c1"># Create a table with RA, Dec, and their proper motions.</span>
+<span class="n">gaia_table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">([</span><span class="n">gaia_query_masked</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">],</span> <span class="n">gaia_query_masked</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">],</span> <span class="n">gaia_query_masked</span><span class="p">[</span><span class="s1">&#39;pmra&#39;</span><span class="p">],</span> <span class="n">gaia_query_masked</span><span class="p">[</span><span class="s1">&#39;pmdec&#39;</span><span class="p">]])</span>
+
+<span class="c1"># Update the column names with their epoch.</span>
+<span class="n">gaia_table</span><span class="o">.</span><span class="n">rename_column</span><span class="p">(</span><span class="s1">&#39;ra&#39;</span><span class="p">,</span> <span class="s1">&#39;ra_&#39;</span><span class="o">+</span><span class="n">gaia_string</span><span class="p">)</span>
+<span class="n">gaia_table</span><span class="o">.</span><span class="n">rename_column</span><span class="p">(</span><span class="s1">&#39;dec&#39;</span><span class="p">,</span> <span class="s1">&#39;dec_&#39;</span><span class="o">+</span><span class="n">gaia_string</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">The quality mask removed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">gaia_query</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">gaia_query_masked</span><span class="p">)</span><span class="si">}</span><span class="s1"> sources, reducing the Gaia source catalog from </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">gaia_query</span><span class="p">)</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">gaia_query_masked</span><span class="p">)</span><span class="si">}</span><span class="s1"> objects.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The Gaia and Data epochs are 2016.0 and 2011.8, respectively, resulting in a baseline of 4.2 years.
+
+The quality mask removed 499 sources, reducing the Gaia source catalog from 4865 to 4366 objects.
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we create an Astropy <code class="docutils literal notranslate"><span class="pre">SkyCoord</span></code> object with the Gaia 2016 catalog coordinates and proper motions. We then use the <a class="reference external" href="https://docs.astropy.org/en/stable/coordinates/apply_space_motion.html">apply_space_motion</a> function to calculate the coordinates of each star at the epoch of observation, which is late 2011. See the <a class="reference external" href="https://learn.astropy.org/tutorials/3_Coordinates-Velocities.html#evolving-coordinate-positions-between-epochs">Evolving Coordinate Positions Between Epochs</a> Astropy tutorial and the <a class="reference external" href="https://docs.astropy.org/en/stable/time/index.html#time-from-epoch-formats">Time from Epoch Formats</a> documentation for additional information. As noted in those resources, the RA proper motions already contain the cosine of declination term, so these coordinates can be passed directly to <code class="docutils literal notranslate"><span class="pre">SkyCoord</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the SkyCoord object with RA, Dec, proper motions, and time of observation.</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="n">ra</span><span class="o">=</span><span class="n">gaia_table</span><span class="p">[</span><span class="s1">&#39;ra_&#39;</span><span class="o">+</span><span class="n">gaia_string</span><span class="p">],</span>
+             <span class="n">dec</span><span class="o">=</span><span class="n">gaia_table</span><span class="p">[</span><span class="s1">&#39;dec_&#39;</span><span class="o">+</span><span class="n">gaia_string</span><span class="p">],</span>
+             <span class="n">pm_ra_cosdec</span><span class="o">=</span><span class="n">gaia_table</span><span class="p">[</span><span class="s1">&#39;pmra&#39;</span><span class="p">],</span>
+             <span class="n">pm_dec</span><span class="o">=</span><span class="n">gaia_table</span><span class="p">[</span><span class="s1">&#39;pmdec&#39;</span><span class="p">],</span>
+             <span class="n">obstime</span><span class="o">=</span><span class="n">Time</span><span class="p">(</span><span class="n">gaia_epoch</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;decimalyear&#39;</span><span class="p">))</span>
+
+<span class="c1"># Calculate coordinates for each epoch of observation.</span>
+<span class="n">gaia_coord</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="n">ra</span><span class="o">=</span><span class="n">gaia_table</span><span class="p">[</span><span class="s1">&#39;ra_&#39;</span><span class="o">+</span><span class="n">gaia_string</span><span class="p">],</span> <span class="n">dec</span><span class="o">=</span><span class="n">gaia_table</span><span class="p">[</span><span class="s1">&#39;dec_&#39;</span><span class="o">+</span><span class="n">gaia_string</span><span class="p">])</span>
+<span class="n">data_coord</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">apply_space_motion</span><span class="p">(</span><span class="n">Time</span><span class="p">(</span><span class="n">data_epoch</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;decimalyear&#39;</span><span class="p">))</span>
+
+<span class="c1"># Extract the separations from the resulting catalogs.</span>
+<span class="n">idx</span><span class="p">,</span> <span class="n">sep_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">data_coord</span><span class="o">.</span><span class="n">match_to_catalog_sky</span><span class="p">(</span><span class="n">gaia_coord</span><span class="p">)</span>
+
+<span class="c1"># Create a list of the stellar separations between the two epochs in milliarcseconds.</span>
+<span class="n">separations_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(((</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">arcsec</span><span class="p">)</span><span class="o">*</span><span class="mf">1000.0</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">sep_data</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The median proper motion is&#39;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">separations_list</span><span class="p">)),</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;milliarcseconds.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The median proper motion is 10.1 milliarcseconds.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/micromamba/envs/ci-env/lib/python3.12/site-packages/erfa/core.py:133: ErfaWarning: ERFA function &quot;pmsafe&quot; yielded 4365 of &quot;distance overridden (Note 6)&quot;, 1 of &quot;binary logical OR of the above warnings&quot;
+  warn(f&#39;ERFA function &quot;{func_name}&quot; yielded {wmsg}&#39;, ErfaWarning)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert the results to a table and write to a file.</span>
+<span class="n">table_multi_epoch</span> <span class="o">=</span> <span class="n">Table</span><span class="p">([</span><span class="n">gaia_table</span><span class="p">[</span><span class="s1">&#39;ra_2016&#39;</span><span class="p">],</span>
+                           <span class="n">gaia_table</span><span class="p">[</span><span class="s1">&#39;dec_2016&#39;</span><span class="p">],</span>
+                           <span class="n">data_coord</span><span class="o">.</span><span class="n">to_table</span><span class="p">()[</span><span class="s1">&#39;ra&#39;</span><span class="p">],</span>
+                           <span class="n">data_coord</span><span class="o">.</span><span class="n">to_table</span><span class="p">()[</span><span class="s1">&#39;dec&#39;</span><span class="p">],</span>
+                           <span class="n">separations_list</span><span class="p">],</span>
+                          <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;ra_&#39;</span><span class="o">+</span><span class="n">gaia_string</span><span class="p">,</span> <span class="s1">&#39;dec_&#39;</span><span class="o">+</span><span class="n">gaia_string</span><span class="p">,</span> <span class="s1">&#39;ra_&#39;</span><span class="o">+</span><span class="n">data_string</span><span class="p">,</span> <span class="s1">&#39;dec_&#39;</span><span class="o">+</span><span class="n">data_string</span><span class="p">,</span> <span class="s1">&#39;separation&#39;</span><span class="p">))</span>
+
+<span class="c1"># Save the table to a file with proper formatting.</span>
+<span class="n">table_multi_epoch</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;gaia_multi_epoch.cat&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.fast_commented_header&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">table_multi_epoch</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=4366</i>
+<table id="table140395002534400" class="table-striped table-bordered table-condensed">
+<thead><tr><th>ra_2016</th><th>dec_2016</th><th>ra_2011</th><th>dec_2011</th><th>separation</th></tr></thead>
+<thead><tr><th>deg</th><th>deg</th><th>deg</th><th>deg</th><th></th></tr></thead>
+<thead><tr><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>290.2248611356283</td><td>37.80192950361359</td><td>290.22486205497364</td><td>37.801922466008946</td><td>25.46998</td></tr>
+<tr><td>290.22327972754084</td><td>37.80283944795903</td><td>290.22328046129354</td><td>37.80284388390957</td><td>16.10523</td></tr>
+<tr><td>290.22261994880597</td><td>37.80270752474709</td><td>290.2226209842266</td><td>37.802710440923306</td><td>10.90354</td></tr>
+<tr><td>290.2248309701555</td><td>37.80058611405895</td><td>290.22483183052253</td><td>37.80058876385366</td><td>9.8482</td></tr>
+<tr><td>290.2225602638809</td><td>37.80397847004457</td><td>290.22256056792554</td><td>37.80398120771446</td><td>9.89348</td></tr>
+<tr><td>290.22681959687196</td><td>37.80112772770517</td><td>290.2268202501215</td><td>37.80113302842852</td><td>19.17286</td></tr>
+<tr><td>290.2275249308142</td><td>37.803472775139035</td><td>290.2275260738658</td><td>37.8034748043064</td><td>7.99588</td></tr>
+<tr><td>290.2242320409821</td><td>37.80039510739463</td><td>290.2242334744281</td><td>37.80039744343509</td><td>9.34611</td></tr>
+<tr><td>290.22212330415425</td><td>37.800777820408136</td><td>290.22212495883775</td><td>37.800781650999006</td><td>14.57126</td></tr>
+<tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+<tr><td>290.1710542799103</td><td>37.874210138824154</td><td>290.17106361859726</td><td>37.87421780234066</td><td>38.28035</td></tr>
+<tr><td>290.1228125225418</td><td>37.7819163631625</td><td>290.1228221050927</td><td>37.78193326977083</td><td>66.6916</td></tr>
+<tr><td>290.1750101665401</td><td>37.87602842402639</td><td>290.17501074773094</td><td>37.8760310103734</td><td>9.45619</td></tr>
+<tr><td>290.2882629014902</td><td>37.86913015536792</td><td>290.28826687466113</td><td>37.86913995090914</td><td>37.02756</td></tr>
+<tr><td>290.1194354085638</td><td>37.80348115009846</td><td>290.11943873196947</td><td>37.80348787251983</td><td>25.98148</td></tr>
+<tr><td>290.33007288300433</td><td>37.799005196546766</td><td>290.3300875083115</td><td>37.799018457074794</td><td>63.32238</td></tr>
+<tr><td>290.14278652187744</td><td>37.75037525259858</td><td>290.1427871536142</td><td>37.750377827679095</td><td>9.44309</td></tr>
+<tr><td>290.17127999981165</td><td>37.73091082720331</td><td>290.1712804292001</td><td>37.7309134639259</td><td>9.57061</td></tr>
+<tr><td>290.1971807329532</td><td>37.72225240386049</td><td>290.1971814434193</td><td>37.72225584091542</td><td>12.5377</td></tr>
+</table></div></div></div>
+</div>
+<p>Finally, we can bring these results together and examine how well the UVIS images are fit to 1) the default 2016 Gaia catalog from earlier, 2) the 2016 Gaia catalog with poorly fit sources removed, and 3) the proper motion corrected 2011 Gaia catalog with poorly fit sources removed. In the cell below, we loop over these three options by iterating through the keyword arguments (<code class="docutils literal notranslate"><span class="pre">kwargs</span></code>) for TweakReg. The <code class="docutils literal notranslate"><span class="pre">*.match</span></code> files are over-written each time, so we append the results to a table and add comments for clarity.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kwargs</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;refcat&#39;</span><span class="p">:</span> <span class="s1">&#39;gaia.cat&#39;</span><span class="p">,</span> <span class="s1">&#39;refxcol&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;refycol&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+          <span class="p">{</span><span class="s1">&#39;refcat&#39;</span><span class="p">:</span> <span class="s1">&#39;gaia_multi_epoch.cat&#39;</span><span class="p">,</span> <span class="s1">&#39;refxcol&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;refycol&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+          <span class="p">{</span><span class="s1">&#39;refcat&#39;</span><span class="p">:</span> <span class="s1">&#39;gaia_multi_epoch.cat&#39;</span><span class="p">,</span> <span class="s1">&#39;refxcol&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;refycol&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}]</span>
+
+<span class="k">for</span> <span class="n">iteration</span><span class="p">,</span> <span class="n">kwarg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
+    
+    <span class="n">tweakreg</span><span class="o">.</span><span class="n">TweakReg</span><span class="p">(</span><span class="s1">&#39;ibwb01xrq_flc.fits&#39;</span><span class="p">,</span>         <span class="c1"># Pass the input images to tweakreg.</span>
+                      <span class="n">imagefindcfg</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;threshold&#39;</span><span class="p">:</span> <span class="mf">500.</span><span class="p">,</span> <span class="s1">&#39;conv_width&#39;</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">},</span>  <span class="c1"># Detection parameters that vary for different datasets.</span>
+                      <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>            <span class="c1"># Don&#39;t show the interactive interface.</span>
+                      <span class="n">see2dplot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>              <span class="c1"># Suppress additional figures in this test.</span>
+                      <span class="n">shiftfile</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>               <span class="c1"># Save output shift file to examine shifts later.</span>
+                      <span class="n">outshifts</span><span class="o">=</span><span class="s1">&#39;Gaia_shifts.txt&#39;</span><span class="p">,</span>  <span class="c1"># Name of the shift file that will be saved.</span>
+                      <span class="n">wcsname</span><span class="o">=</span><span class="s1">&#39;Gaia&#39;</span><span class="p">,</span>               <span class="c1"># Give our WCS a new name defined above.</span>
+                      <span class="n">reusename</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>               <span class="c1"># Overwrite the WCS if it exists.</span>
+                      <span class="n">ylimit</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>                   <span class="c1"># The ylimit for the residuals plot.</span>
+                      <span class="n">fitgeometry</span><span class="o">=</span><span class="s1">&#39;rscale&#39;</span><span class="p">,</span>         <span class="c1"># Allow for translation, rotation, and plate scaling.</span>
+                      <span class="n">searchrad</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>                <span class="c1"># With many sources use a smaller search radius for convergence.</span>
+                      <span class="n">updatehdr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwarg</span><span class="p">)</span>     <span class="c1"># Do not update the header, and pass in the keyword arguments.</span>
+    
+    <span class="c1"># Read the shift file.    </span>
+    <span class="n">shift_table</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;Gaia_shifts.txt&#39;</span><span class="p">,</span>
+                             <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.no_header&#39;</span><span class="p">,</span> 
+                             <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;dx&#39;</span><span class="p">,</span> <span class="s1">&#39;dy&#39;</span><span class="p">,</span> <span class="s1">&#39;rot&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">,</span> <span class="s1">&#39;xrms&#39;</span><span class="p">,</span> <span class="s1">&#39;yrms&#39;</span><span class="p">])</span>
+    
+    <span class="n">match_table</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;ibwb01xrq_flc_catalog_fit.match&#39;</span><span class="p">)</span>
+    <span class="n">shift_table</span><span class="o">.</span><span class="n">add_column</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">match_table</span><span class="p">)],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;n_stars&#39;</span><span class="p">)</span>
+    
+    <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="s1">&#39;.3f&#39;</span><span class="p">,</span> <span class="s1">&#39;.5f&#39;</span><span class="p">,</span> <span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="s1">&#39;.0f&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shift_table</span><span class="o">.</span><span class="n">colnames</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+        <span class="n">shift_table</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">formats</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="c1"># Copy shift_table on the first iteration and then append so it is not over-written.</span>
+    <span class="k">if</span> <span class="n">iteration</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">shift_table_final</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">shift_table</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">shift_table_final</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">shift_table</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+    <span class="n">clear_output</span><span class="p">()</span>
+
+<span class="n">shift_table_final</span><span class="o">.</span><span class="n">add_column</span><span class="p">([</span><span class="s1">&#39;Gaia 2016 default catalog&#39;</span><span class="p">,</span> <span class="s1">&#39;Gaia 2016 cleaned catalog&#39;</span><span class="p">,</span> <span class="s1">&#39;Gaia 2011 cleaned catalog&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;comments&#39;</span><span class="p">)</span>
+
+<span class="n">shift_table_final</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><i>Table length=3</i>
+<table id="table140394797566000" class="table-striped table-bordered table-condensed">
+<thead><tr><th>file</th><th>dx</th><th>dy</th><th>rot</th><th>scale</th><th>xrms</th><th>yrms</th><th>n_stars</th><th>comments</th></tr></thead>
+<thead><tr><th>str18</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>int64</th><th>str25</th></tr></thead>
+<tr><td>ibwb01xrq_flc.fits</td><td>-0.21</td><td>0.11</td><td>0.000</td><td>1.00000</td><td>0.03</td><td>0.05</td><td>574</td><td>Gaia 2016 default catalog</td></tr>
+<tr><td>ibwb01xrq_flc.fits</td><td>-0.21</td><td>0.12</td><td>0.000</td><td>1.00000</td><td>0.03</td><td>0.05</td><td>511</td><td>Gaia 2016 cleaned catalog</td></tr>
+<tr><td>ibwb01xrq_flc.fits</td><td>0.02</td><td>0.02</td><td>0.000</td><td>1.00000</td><td>0.05</td><td>0.06</td><td>595</td><td>Gaia 2011 cleaned catalog</td></tr>
+</table></div></div></div>
+</div>
+<p>The table above shows the resulting shifts in X and Y, together with the rotation, scale, and RMS values we explored in earlier sections. In addition, the <code class="docutils literal notranslate"><span class="pre">n_stars</span></code> column lists the number of stars matched in the image from each repsective Gaia catalog. The first row duplicates our earlier TweakReg solution, with shifts in X and Y of -0.21 and 0.11 pixels, respectively. As shown in the second row, removing poorly fit sources from the Gaia catalog resulted in fewer matches, but the same overall shift solution and RMS values to within <span class="math notranslate nohighlight">\(\sim\)</span>0.01 pixels. In the third row, which uses the catalog accounting for proper motions, the X and Y shifts are now different by <span class="math notranslate nohighlight">\(\approx\)</span> 0.2 pixels in X and 0.1 pixels in Y. The RMS uncertainties have increased minutely, but are still a factor of 2-4 smaller than the shift values, with more sources matched, indicating the measured shift is physical.</p>
+<p>Overall, the best-fit global WCS changed by <span class="math notranslate nohighlight">\(\sim\)</span>0.2 pixels after accounting for stellar proper motions. The effect will generally be smaller for observations closer to the Gaia reference epoch of 2016, and continually grow for observations earlier and later in time. Whether or not accounting for proper motions is necessary for a specific set of observations depends on the science goals of the analysis, and the date of observation.</p>
+<p>As a general guide, differences in shifts that are larger than the RMS values of the fit usually indicate an improved WCS solution. In this example, we proceed with the epoch-corrected Gaia alignment solution.</p>
+<p><a id="updatehdr"></a></p>
+</section>
+<section id="update-header-with-optimal-parameters">
+<h3>3.7 Update header with optimal parameters<a class="headerlink" href="#update-header-with-optimal-parameters" title="Link to this heading">#</a></h3>
+<p><a class="reference internal" href="#toc"><span class="xref myst">Table of Contents</span></a></p>
+<p>Once you’ve decided on the optimal set of parameters for your alignment, it is safe to update the header of the input data, (assuming that the new solution is better than the MAST alignment). To apply these transformations to the image, we simply need to run TweakReg the same as before, but set the parameter <code class="docutils literal notranslate"><span class="pre">updatehdr</span></code> equal to <code class="docutils literal notranslate"><span class="pre">True</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;refcat&#39;</span><span class="p">:</span> <span class="s1">&#39;gaia_multi_epoch.cat&#39;</span><span class="p">,</span> <span class="s1">&#39;refxcol&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;refycol&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+
+<span class="n">tweakreg</span><span class="o">.</span><span class="n">TweakReg</span><span class="p">(</span><span class="s1">&#39;*flc.fits&#39;</span><span class="p">,</span> <span class="c1"># Pass the input images to tweakreg.</span>
+                  <span class="n">imagefindcfg</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;threshold&#39;</span><span class="p">:</span> <span class="mf">500.</span><span class="p">,</span> <span class="s1">&#39;conv_width&#39;</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">},</span>  <span class="c1"># Detection parameters that vary for different datasets.</span>
+                  <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>            <span class="c1"># Don&#39;t show the interactive interface.</span>
+                  <span class="n">see2dplot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>              <span class="c1"># Suppress additional figures in this test.</span>
+                  <span class="n">shiftfile</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>               <span class="c1"># Save output shift file to examine shifts later.</span>
+                  <span class="n">outshifts</span><span class="o">=</span><span class="s1">&#39;Gaia_shifts.txt&#39;</span><span class="p">,</span>  <span class="c1"># Name of the shift file that will be saved.</span>
+                  <span class="n">wcsname</span><span class="o">=</span><span class="s1">&#39;Gaia&#39;</span><span class="p">,</span>              <span class="c1"># Give our WCS a new name defined above.</span>
+                  <span class="n">reusename</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>               <span class="c1"># Overwrite the WCS if it exists.</span>
+                  <span class="n">ylimit</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>                   <span class="c1"># The ylimit for the residuals plot.</span>
+                  <span class="n">fitgeometry</span><span class="o">=</span><span class="s1">&#39;rscale&#39;</span><span class="p">,</span>         <span class="c1"># Allow for translation, rotation, and plate scaling.</span>
+                  <span class="n">searchrad</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>                <span class="c1"># With many sources use a smaller search radius for convergence.</span>
+                  <span class="n">updatehdr</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>     <span class="c1"># Update the header with new WCS solution, and pass in the keyword arguments.</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span> <span class="c1"># Close figures to reduce memory usage.</span>
+<span class="n">clear_output</span><span class="p">()</span>
+</pre></div>
+</div>
 </div>
 </div>
 <p><a id="adriz"></a></p>
 </section>
 </section>
 <section id="combine-the-images-using-astrodrizzle">
-<h2>4. Combine the Images using <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code><a class="headerlink" href="#combine-the-images-using-astrodrizzle" title="Link to this heading">#</a></h2>
+<h2>4. Combine the images using <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code><a class="headerlink" href="#combine-the-images-using-astrodrizzle" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="#toc"><span class="xref myst">Table of Contents</span></a></p>
 <p>While the three sets of FLC files are now aligned, in this example we drizzle together only the two long exposures. When exposures are very different lengths, drizzling them together doesn’t work well when ‘EXP’ weighting is used. For objects that saturate in the long exposures, the problem occurs at the boundary where the signal transitions from only being present in short exposures near the core to being present at larger radii in the longer exposures. The result is a discontinuity in the PSF radial profile and a resulting flux that is too low in some regions. <b>For photometry of saturated objects, the short exposures should be drizzled separately from the long exposures.</b></p>
 <p>Next, we combine the images through drizzling, and retrieve some recommended values for this process from the MDRIZTAB reference file.  The parameters in this file are different for each detector and are based on the number of input frames. These are a good starting point for drizzling and may be adjusted based on your science goals.</p>
@@ -1513,7 +1657,7 @@ ibwb01xxq: Number of Gaia Matches = 546
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Searching for the MDRIZTAB file: ubi1853qi_mdz.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-latest&#39; resolves to &#39;hst_1335.pmap&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-latest&#39; resolves to &#39;hst_1349.pmap&#39;
 CRDS - INFO -  Reorganizing 0 references from &#39;instrument&#39; to &#39;flat&#39;
 CRDS - INFO -  Reorganizing from &#39;instrument&#39; to &#39;flat&#39; cache,  removing instrument directories.
 </pre></div>
@@ -1617,7 +1761,7 @@ final_bits 96
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../../_images/bb82a0a03d17449a1fe077580787c7887a9d13d20aac7df507ab9eb8cb4e0183.png"><img alt="../../../_images/bb82a0a03d17449a1fe077580787c7887a9d13d20aac7df507ab9eb8cb4e0183.png" src="../../../_images/bb82a0a03d17449a1fe077580787c7887a9d13d20aac7df507ab9eb8cb4e0183.png" style="width: 1634px; height: 1183px;" />
+<a class="reference internal image-reference" href="../../../_images/76f52190ef45a08358288a16c7cec859a2d6a6c1258d7915773522e518c5a1bd.png"><img alt="../../../_images/76f52190ef45a08358288a16c7cec859a2d6a6c1258d7915773522e518c5a1bd.png" src="../../../_images/76f52190ef45a08358288a16c7cec859a2d6a6c1258d7915773522e518c5a1bd.png" style="width: 1635px; height: 1183px;" />
 </a>
 </div>
 </div>
@@ -1634,7 +1778,7 @@ final_bits 96
 <h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Created: 14 Dec 2018;     V. Bajaj
 Updated: 27 May 2025;     M. Revalski, V. Bajaj, &amp; J. Mack
-Updated: 21 May 2026;     M. Revalski
+Updated: 27 Jul 2026;     M. Revalski
 </pre></div>
 </div>
 <p><strong>Source:</strong> GitHub <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks">spacetelescope/hst_notebooks</a></p>
@@ -1652,6 +1796,8 @@ Updated: 21 May 2026;     M. Revalski
 </section>
 <section id="citations">
 <h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
+<div class="alert alert-block alert-info"><b>When publishing results that use this notebook, please include a citation in your manuscript. A latex-ready bibliography entry can be copied from the HST Notebooks repository using the "Cite this repository" drop-down on <a href="https://github.com/spacetelescope/hst_notebooks">GitHub</a> or "Export > BibTex" on <a href="https://doi.org/10.5281/zenodo.17179607">Zenodo</a>.</b> </div>
+<hr>
 <p>If you use Python packages such as <code class="docutils literal notranslate"><span class="pre">astropy</span></code>, <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>, <code class="docutils literal notranslate"><span class="pre">drizzlepac</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, or <code class="docutils literal notranslate"><span class="pre">numpy</span></code> for published research, please cite the authors.</p>
 <p>Follow these links for more information about citing various packages:</p>
 <ul class="simple">
@@ -1747,16 +1893,17 @@ Updated: 21 May 2026;     M. Revalski
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaia-query">2.3 Gaia Query</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#align-with-tweakreg">3. Align with <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#align-images-with-tweakreg">3. Align images with <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sdss-alignment">3.1 SDSS Alignment</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-shift-file-and-fit-residuals">3.2 Inspect the shift file and fit residuals</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gaia-alignment">3.3 Gaia Alignment</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">3.4 Inspect the shift file and fit residuals</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overplot-matched-sources-on-the-image">3.5 Overplot Matched Sources on the Image</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#update-header-with-optimal-parameters">3.6 Update header with optimal parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overplot-matched-sources-on-the-image">3.5 Overplot matched sources on the image</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-significance-of-proper-motions">3.6 Check the significance of proper motions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#update-header-with-optimal-parameters">3.7 Update header with optimal parameters</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combine-the-images-using-astrodrizzle">4. Combine the Images using <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combine-the-images-using-astrodrizzle">4. Combine the images using <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">Conclusions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#about-this-notebook">About this Notebook</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-resources">Additional Resources</a></li>
