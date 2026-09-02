@@ -762,7 +762,7 @@ By the end of this notebook you will:<br>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># All imports needed through out this notebook are included at the beginning. </span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = 'retina'
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_output</span> 
@@ -785,7 +785,7 @@ By the end of this notebook you will:<br>
 <span class="kn">from</span><span class="w"> </span><span class="nn">drizzlepac.haputils.astrometric_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_astrometric_catalog</span>
 
 
-<span class="n">Gaia</span><span class="o">.</span><span class="n">MAIN_GAIA_TABLE</span> <span class="o">=</span> <span class="s1">&#39;gaiadr3.gaia_source&#39;</span>   <span class="c1"># Change if different data release is desired</span>
+<span class="n">Gaia</span><span class="o">.</span><span class="n">MAIN_GAIA_TABLE</span> <span class="o">=</span> <span class="s1">'gaiadr3.gaia_source'</span>   <span class="c1"># Change if different data release is desired</span>
 <span class="n">Gaia</span><span class="o">.</span><span class="n">ROW_LIMIT</span> <span class="o">=</span> <span class="mi">100000</span>
 </pre></div>
 </div>
@@ -807,17 +807,17 @@ will be used for this demonstration.</p>
 <p>The 18 FLT images <b>ibxl5*_flt.fits</b> have been processed by the HST WFC3 pipeline (calwf3), which includes bias subtraction, dark current correction, cosmic-ray rejection, and flatfielding. The 9 DRZ files <b>ibxl5*_drz.fits</b> have been processed with <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> to remove distortion and to combine the 2 dithered FLT frames by filter for each vist.</p>
 <div class="alert alert-block alert-warning" style="color:black" >  THIS IS A LARGE DOWNLOAD (~400 MB). Depending on your connection speed, the next cell may take a few minutes to execute. </div><div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ibxl5*&#39;</span><span class="p">]</span>
-<span class="n">props</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;12812&#39;</span><span class="p">]</span>
-<span class="n">filts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;F160W&#39;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'ibxl5*'</span><span class="p">]</span>
+<span class="n">props</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'12812'</span><span class="p">]</span>
+<span class="n">filts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'F160W'</span><span class="p">]</span>
 
 <span class="n">obsTable</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">obs_ids</span><span class="p">,</span> <span class="n">proposal_id</span><span class="o">=</span><span class="n">props</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="n">filts</span><span class="p">)</span>
 <span class="n">products</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">obsTable</span><span class="p">)</span>
 
-<span class="n">data_prod</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;FLT&#39;</span><span class="p">,</span> <span class="s1">&#39;DRZ&#39;</span><span class="p">]</span>     <span class="c1"># [&#39;FLC&#39;,&#39;FLT&#39;,&#39;DRC&#39;,&#39;DRZ&#39;]                  </span>
-<span class="n">data_type</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;CALWF3&#39;</span><span class="p">]</span>         <span class="c1"># [&#39;CALACS&#39;,&#39;CALWF3&#39;,&#39;CALWP2&#39;,&#39;HAP-SVM&#39;]    </span>
+<span class="n">data_prod</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'FLT'</span><span class="p">,</span> <span class="s1">'DRZ'</span><span class="p">]</span>     <span class="c1"># ['FLC','FLT','DRC','DRZ']                  </span>
+<span class="n">data_type</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'CALWF3'</span><span class="p">]</span>         <span class="c1"># ['CALACS','CALWF3','CALWP2','HAP-SVM']    </span>
 
-<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">download_dir</span><span class="o">=</span><span class="s1">&#39;./science&#39;</span><span class="p">,</span>
+<span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">download_dir</span><span class="o">=</span><span class="s1">'./science'</span><span class="p">,</span>
                                <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="n">data_prod</span><span class="p">,</span> 
                                <span class="n">project</span><span class="o">=</span><span class="n">data_type</span><span class="p">)</span>
 </pre></div>
@@ -1015,13 +1015,13 @@ will be used for this demonstration.</p>
 <p>Move the files to the local working directory</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">curdir</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">,</span> <span class="s1">&#39;mastDownload&#39;</span><span class="p">,</span> <span class="s1">&#39;HST&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;*fits&#39;</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">curdir</span><span class="p">,</span> <span class="s1">'science'</span><span class="p">,</span> <span class="s1">'mastDownload'</span><span class="p">,</span> <span class="s1">'HST'</span><span class="p">,</span> <span class="s1">'*'</span><span class="p">,</span> <span class="s1">'*fits'</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="s1">&#39;./&#39;</span> <span class="o">+</span> <span class="n">root</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="s1">'./'</span> <span class="o">+</span> <span class="n">root</span><span class="p">)</span>
     
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;./science&#39;</span><span class="p">):</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;science/&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">'./science'</span><span class="p">):</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">'science/'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1031,10 +1031,10 @@ will be used for this demonstration.</p>
 <p>Here we will look at important keywords in the image headers.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*fl?.fits&#39;</span><span class="p">))</span>
-<span class="n">keywords_ext0</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ROOTNAME&quot;</span><span class="p">,</span> <span class="s2">&quot;ASN_ID&quot;</span><span class="p">,</span> <span class="s2">&quot;TARGNAME&quot;</span><span class="p">,</span> <span class="s2">&quot;DETECTOR&quot;</span><span class="p">,</span> <span class="s2">&quot;FILTER&quot;</span><span class="p">,</span> <span class="s2">&quot;EXPTIME&quot;</span><span class="p">,</span> 
-                 <span class="s2">&quot;RA_TARG&quot;</span><span class="p">,</span> <span class="s2">&quot;DEC_TARG&quot;</span><span class="p">,</span> <span class="s2">&quot;POSTARG1&quot;</span><span class="p">,</span> <span class="s2">&quot;POSTARG2&quot;</span><span class="p">,</span> <span class="s2">&quot;DATE-OBS&quot;</span><span class="p">]</span>
-<span class="n">keywords_ext1</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ORIENTAT&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'*fl?.fits'</span><span class="p">))</span>
+<span class="n">keywords_ext0</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ROOTNAME"</span><span class="p">,</span> <span class="s2">"ASN_ID"</span><span class="p">,</span> <span class="s2">"TARGNAME"</span><span class="p">,</span> <span class="s2">"DETECTOR"</span><span class="p">,</span> <span class="s2">"FILTER"</span><span class="p">,</span> <span class="s2">"EXPTIME"</span><span class="p">,</span> 
+                 <span class="s2">"RA_TARG"</span><span class="p">,</span> <span class="s2">"DEC_TARG"</span><span class="p">,</span> <span class="s2">"POSTARG1"</span><span class="p">,</span> <span class="s2">"POSTARG2"</span><span class="p">,</span> <span class="s2">"DATE-OBS"</span><span class="p">]</span>
+<span class="n">keywords_ext1</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ORIENTAT"</span><span class="p">]</span>
 <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
@@ -1046,11 +1046,11 @@ will be used for this demonstration.</p>
     <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path_data</span><span class="p">)</span>
     
 <span class="n">keywords</span> <span class="o">=</span> <span class="n">keywords_ext0</span> <span class="o">+</span> <span class="n">keywords_ext1</span>
-<span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">names</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;f8&#39;</span><span class="p">])</span>
-<span class="n">table</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;7.1f&#39;</span> 
-<span class="n">table</span><span class="p">[</span><span class="s1">&#39;RA_TARG&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;DEC_TARG&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;7.4f&#39;</span>
-<span class="n">table</span><span class="p">[</span><span class="s1">&#39;POSTARG1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;POSTARG2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;7.3f&#39;</span> 
-<span class="n">table</span><span class="p">[</span><span class="s1">&#39;ORIENTAT&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;7.2f&#39;</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">names</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[</span><span class="s1">'str'</span><span class="p">,</span> <span class="s1">'str'</span><span class="p">,</span> <span class="s1">'str'</span><span class="p">,</span> <span class="s1">'str'</span><span class="p">,</span> <span class="s1">'str'</span><span class="p">,</span> <span class="s1">'f8'</span><span class="p">,</span> <span class="s1">'f8'</span><span class="p">,</span> <span class="s1">'f8'</span><span class="p">,</span> <span class="s1">'f8'</span><span class="p">,</span> <span class="s1">'f8'</span><span class="p">,</span> <span class="s1">'str'</span><span class="p">,</span> <span class="s1">'f8'</span><span class="p">])</span>
+<span class="n">table</span><span class="p">[</span><span class="s1">'EXPTIME'</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">'7.1f'</span> 
+<span class="n">table</span><span class="p">[</span><span class="s1">'RA_TARG'</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">'DEC_TARG'</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">'7.4f'</span>
+<span class="n">table</span><span class="p">[</span><span class="s1">'POSTARG1'</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">'POSTARG2'</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">'7.3f'</span> 
+<span class="n">table</span><span class="p">[</span><span class="s1">'ORIENTAT'</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">'7.2f'</span>
 <span class="n">table</span><span class="o">.</span><span class="n">show_in_notebook</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1065,31 +1065,31 @@ will be used for this demonstration.</p>
 Convert the fit RMS values to pixels for comparison with the alignment results performed later in this notebook.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ext_0_kws</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DETECTOR&#39;</span><span class="p">]</span>
-<span class="n">ext_1_kws</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;WCSNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;NMATCHES&#39;</span><span class="p">,</span> <span class="s1">&#39;RMS_RA&#39;</span><span class="p">,</span> <span class="s1">&#39;RMS_DEC&#39;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ext_0_kws</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'DETECTOR'</span><span class="p">]</span>
+<span class="n">ext_1_kws</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'WCSNAME'</span><span class="p">,</span> <span class="s1">'NMATCHES'</span><span class="p">,</span> <span class="s1">'RMS_RA'</span><span class="p">,</span> <span class="s1">'RMS_DEC'</span><span class="p">]</span>
 
-<span class="n">det_scale</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;IR&#39;</span><span class="p">:</span> <span class="mf">0.1283</span><span class="p">,</span> <span class="s1">&#39;UVIS&#39;</span><span class="p">:</span> <span class="mf">0.0396</span><span class="p">,</span> <span class="s1">&#39;WFC&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}</span>                  <span class="c1"># plate scale (arcsec/pixel)</span>
+<span class="n">det_scale</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'IR'</span><span class="p">:</span> <span class="mf">0.1283</span><span class="p">,</span> <span class="s1">'UVIS'</span><span class="p">:</span> <span class="mf">0.0396</span><span class="p">,</span> <span class="s1">'WFC'</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}</span>                  <span class="c1"># plate scale (arcsec/pixel)</span>
 
 <span class="n">format_dict</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="n">col_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*dr?.fits&#39;</span><span class="p">)):</span>
-    <span class="n">col_dict</span><span class="p">[</span><span class="s1">&#39;FILENAME&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'*dr?.fits'</span><span class="p">)):</span>
+    <span class="n">col_dict</span><span class="p">[</span><span class="s1">'FILENAME'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="n">hdr0</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">hdr1</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     
     <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">ext_0_kws</span><span class="p">:</span>                                                <span class="c1"># extension 0 keywords</span>
         <span class="n">col_dict</span><span class="p">[</span><span class="n">kw</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hdr0</span><span class="p">[</span><span class="n">kw</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">ext_1_kws</span><span class="p">:</span>                                                <span class="c1"># extension 1 keywords</span>
-        <span class="k">if</span> <span class="s1">&#39;RMS&#39;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'RMS'</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">hdr1</span><span class="p">[</span><span class="n">kw</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span> 
             <span class="n">val</span> <span class="o">=</span> <span class="n">hdr1</span><span class="p">[</span><span class="n">kw</span><span class="p">]</span>
         <span class="n">col_dict</span><span class="p">[</span><span class="n">kw</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
         
-    <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;RMS_RA&#39;</span><span class="p">,</span> <span class="s1">&#39;RMS_DEC&#39;</span><span class="p">]:</span>
-        <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">hdr1</span><span class="p">[</span><span class="n">kw</span><span class="p">]</span><span class="o">/</span><span class="mf">1000.</span><span class="o">/</span><span class="n">det_scale</span><span class="p">[</span><span class="n">hdr0</span><span class="p">[</span><span class="s1">&#39;DETECTOR&#39;</span><span class="p">]],</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># convert RMS from mas to pixels</span>
-        <span class="n">col_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">kw</span><span class="si">}</span><span class="s1">_pix&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'RMS_RA'</span><span class="p">,</span> <span class="s1">'RMS_DEC'</span><span class="p">]:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">hdr1</span><span class="p">[</span><span class="n">kw</span><span class="p">]</span><span class="o">/</span><span class="mf">1000.</span><span class="o">/</span><span class="n">det_scale</span><span class="p">[</span><span class="n">hdr0</span><span class="p">[</span><span class="s1">'DETECTOR'</span><span class="p">]],</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># convert RMS from mas to pixels</span>
+        <span class="n">col_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">kw</span><span class="si">}</span><span class="s1">_pix'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
 
 <span class="n">wcstable</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">col_dict</span><span class="p">)</span>
 <span class="n">wcstable</span><span class="o">.</span><span class="n">show_in_notebook</span><span class="p">()</span>
@@ -1109,8 +1109,8 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <p>This method uses the RA/Dec of the first image and a radius of 5’.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">RA</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;RA_TARG&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">Dec</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;DEC_TARG&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">RA</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">'RA_TARG'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">Dec</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">'DEC_TARG'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="n">coord</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="n">ra</span><span class="o">=</span><span class="n">RA</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="n">Dec</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">))</span>
 <span class="n">radius</span> <span class="o">=</span> <span class="n">Quantity</span><span class="p">(</span><span class="mf">5.</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">arcmin</span><span class="p">)</span>
@@ -1152,8 +1152,8 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reduced_query</span> <span class="o">=</span> <span class="n">gaia_query</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">,</span> <span class="s1">&#39;dec&#39;</span><span class="p">,</span> <span class="s1">&#39;phot_g_mean_mag&#39;</span><span class="p">]</span>
-<span class="n">reduced_query</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;gaia_no_pm.cat&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.commented_header&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reduced_query</span> <span class="o">=</span> <span class="n">gaia_query</span><span class="p">[</span><span class="s1">'ra'</span><span class="p">,</span> <span class="s1">'dec'</span><span class="p">,</span> <span class="s1">'phot_g_mean_mag'</span><span class="p">]</span>
+<span class="n">reduced_query</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'gaia_no_pm.cat'</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'ascii.commented_header'</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">reduced_query</span>
 </pre></div>
 </div>
@@ -1191,8 +1191,8 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <p>This method uses the image FLT footprints and gives 161 sources, compared to 183 with the prior method.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pm_cat</span> <span class="o">=</span> <span class="n">create_astrometric_catalog</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*flt.fits&#39;</span><span class="p">)))</span>
-<span class="n">pm_cat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;gaia_pm.cat&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.no_header&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pm_cat</span> <span class="o">=</span> <span class="n">create_astrometric_catalog</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'*flt.fits'</span><span class="p">)))</span>
+<span class="n">pm_cat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'gaia_pm.cat'</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'ascii.no_header'</span><span class="p">)</span>
 <span class="nb">len</span><span class="p">(</span><span class="n">pm_cat</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1202,7 +1202,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
     http://gsss.stsci.edu/webservices/vo/CatalogSearch.aspx?RA=85.25358125611297&amp;DEC=-2.4517874752980333&amp;SR=0.07776447588540084&amp;FORMAT=CSV&amp;CAT=GAIAedr3&amp;MINDET=5&amp;EPOCH=2012.839
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025336202244 INFO src=drizzlepac.haputils.astrometric_utils- Created catalog &#39;ref_cat.ecsv&#39; with 161  sources
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025336202244 INFO src=drizzlepac.haputils.astrometric_utils- Created catalog 'ref_cat.ecsv' with 161  sources
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>161
@@ -1217,15 +1217,15 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <p>Because the fit RMS values for the MAST products were large for some visits, we allow for a larger than usual search radius of 1”. We also set the <code class="docutils literal notranslate"><span class="pre">conv_width</span></code> value slightly higher than the recommended value of 2.5 for WFC3/IR data in order to use barely resolved sources for alignment.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">refcat</span> <span class="o">=</span> <span class="s1">&#39;gaia_pm.cat&#39;</span>                    <span class="c1"># Use the catalog with proper motion data</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">refcat</span> <span class="o">=</span> <span class="s1">'gaia_pm.cat'</span>                    <span class="c1"># Use the catalog with proper motion data</span>
 
-<span class="n">drz_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*drz.fits&#39;</span><span class="p">))</span>
+<span class="n">drz_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'*drz.fits'</span><span class="p">))</span>
 
 <span class="n">tweakreg</span><span class="o">.</span><span class="n">TweakReg</span><span class="p">(</span><span class="n">drz_files</span><span class="p">,</span> 
-                  <span class="n">imagefindcfg</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;threshold&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;conv_width&#39;</span><span class="p">:</span> <span class="mf">4.5</span><span class="p">},</span> 
+                  <span class="n">imagefindcfg</span><span class="o">=</span><span class="p">{</span><span class="s1">'threshold'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">'conv_width'</span><span class="p">:</span> <span class="mf">4.5</span><span class="p">},</span> 
                   <span class="n">minobj</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
                   <span class="n">shiftfile</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
-                  <span class="n">outshifts</span><span class="o">=</span><span class="s1">&#39;shift_drz.txt&#39;</span><span class="p">,</span>
+                  <span class="n">outshifts</span><span class="o">=</span><span class="s1">'shift_drz.txt'</span><span class="p">,</span>
                   <span class="n">refcat</span><span class="o">=</span><span class="n">refcat</span><span class="p">,</span>
                   <span class="n">searchrad</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                   <span class="n">ylimit</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> 
@@ -1303,136 +1303,136 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ibxl50030_drz.fits&#39;:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image 'ibxl50030_drz.fits':
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ibxl50030_drz.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:22:44.618 (02/12/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for 'ibxl50030_drz.fits', EXT=('SCI', 1) started at: 20:22:44.618 (02/12/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 75 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image &#39;ibxl50030_drz.fits&#39;: 75
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image 'ibxl50030_drz.fits': 75
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ibxl51030_drz.fits&#39;:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image 'ibxl51030_drz.fits':
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ibxl51030_drz.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:22:44.712 (02/12/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for 'ibxl51030_drz.fits', EXT=('SCI', 1) started at: 20:22:44.712 (02/12/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 83 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image &#39;ibxl51030_drz.fits&#39;: 83
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image 'ibxl51030_drz.fits': 83
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ibxl52030_drz.fits&#39;:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image 'ibxl52030_drz.fits':
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ibxl52030_drz.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:22:44.803 (02/12/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for 'ibxl52030_drz.fits', EXT=('SCI', 1) started at: 20:22:44.803 (02/12/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 87 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image &#39;ibxl52030_drz.fits&#39;: 87
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image 'ibxl52030_drz.fits': 87
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ibxl53030_drz.fits&#39;:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image 'ibxl53030_drz.fits':
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ibxl53030_drz.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:22:44.892 (02/12/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for 'ibxl53030_drz.fits', EXT=('SCI', 1) started at: 20:22:44.892 (02/12/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 51 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image &#39;ibxl53030_drz.fits&#39;: 51
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image 'ibxl53030_drz.fits': 51
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ibxl54030_drz.fits&#39;:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image 'ibxl54030_drz.fits':
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ibxl54030_drz.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:22:44.97 (02/12/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for 'ibxl54030_drz.fits', EXT=('SCI', 1) started at: 20:22:44.97 (02/12/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 54 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image &#39;ibxl54030_drz.fits&#39;: 54
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image 'ibxl54030_drz.fits': 54
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ibxl55030_drz.fits&#39;:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image 'ibxl55030_drz.fits':
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ibxl55030_drz.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:22:45.067 (02/12/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for 'ibxl55030_drz.fits', EXT=('SCI', 1) started at: 20:22:45.067 (02/12/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 99 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image &#39;ibxl55030_drz.fits&#39;: 99
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image 'ibxl55030_drz.fits': 99
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ibxl56030_drz.fits&#39;:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image 'ibxl56030_drz.fits':
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ibxl56030_drz.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:22:45.157 (02/12/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for 'ibxl56030_drz.fits', EXT=('SCI', 1) started at: 20:22:45.157 (02/12/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 73 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image &#39;ibxl56030_drz.fits&#39;: 73
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image 'ibxl56030_drz.fits': 73
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ibxl57030_drz.fits&#39;:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image 'ibxl57030_drz.fits':
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ibxl57030_drz.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:22:45.245 (02/12/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for 'ibxl57030_drz.fits', EXT=('SCI', 1) started at: 20:22:45.245 (02/12/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 93 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image &#39;ibxl57030_drz.fits&#39;: 93
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image 'ibxl57030_drz.fits': 93
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image &#39;ibxl58030_drz.fits&#39;:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  Source finding for image 'ibxl58030_drz.fits':
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for &#39;ibxl58030_drz.fits&#39;, EXT=(&#39;SCI&#39;, 1) started at: 20:22:45.334 (02/12/2025)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  #  Source finding for 'ibxl58030_drz.fits', EXT=('SCI', 1) started at: 20:22:45.334 (02/12/2025)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     Found 103 objects.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image &#39;ibxl58030_drz.fits&#39;: 103
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===  FINAL number of objects in image 'ibxl58030_drz.fits': 103
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -1447,7 +1447,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Performing alignment in the projection plane defined by the WCS
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>derived from &#39;ibxl50030_drz.fits&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>derived from 'ibxl50030_drz.fits'
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===============================================================
@@ -1468,7 +1468,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from &#39;ibxl50030_drz.fits&#39; with sources from reference catalog &#39;gaia_pm.cat&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from 'ibxl50030_drz.fits' with sources from reference catalog 'gaia_pm.cat'
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing initial guess for X and Y shifts...
@@ -1531,7 +1531,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from &#39;ibxl51030_drz.fits&#39; with sources from reference catalog &#39;gaia_pm.cat&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from 'ibxl51030_drz.fits' with sources from reference catalog 'gaia_pm.cat'
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing initial guess for X and Y shifts...
@@ -1594,7 +1594,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from &#39;ibxl52030_drz.fits&#39; with sources from reference catalog &#39;gaia_pm.cat&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from 'ibxl52030_drz.fits' with sources from reference catalog 'gaia_pm.cat'
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing initial guess for X and Y shifts...
@@ -1657,7 +1657,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from &#39;ibxl53030_drz.fits&#39; with sources from reference catalog &#39;gaia_pm.cat&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from 'ibxl53030_drz.fits' with sources from reference catalog 'gaia_pm.cat'
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing initial guess for X and Y shifts...
@@ -1720,7 +1720,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from &#39;ibxl54030_drz.fits&#39; with sources from reference catalog &#39;gaia_pm.cat&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from 'ibxl54030_drz.fits' with sources from reference catalog 'gaia_pm.cat'
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing initial guess for X and Y shifts...
@@ -1783,7 +1783,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from &#39;ibxl55030_drz.fits&#39; with sources from reference catalog &#39;gaia_pm.cat&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from 'ibxl55030_drz.fits' with sources from reference catalog 'gaia_pm.cat'
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing initial guess for X and Y shifts...
@@ -1846,7 +1846,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from &#39;ibxl56030_drz.fits&#39; with sources from reference catalog &#39;gaia_pm.cat&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from 'ibxl56030_drz.fits' with sources from reference catalog 'gaia_pm.cat'
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing initial guess for X and Y shifts...
@@ -1909,7 +1909,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from &#39;ibxl57030_drz.fits&#39; with sources from reference catalog &#39;gaia_pm.cat&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from 'ibxl57030_drz.fits' with sources from reference catalog 'gaia_pm.cat'
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing initial guess for X and Y shifts...
@@ -1972,7 +1972,7 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from &#39;ibxl58030_drz.fits&#39; with sources from reference catalog &#39;gaia_pm.cat&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matching sources from 'ibxl58030_drz.fits' with sources from reference catalog 'gaia_pm.cat'
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing initial guess for X and Y shifts...
@@ -2040,10 +2040,10 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># If the alignment is unsuccessful, stop the notebook</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;shift_drz.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">shift</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'shift_drz.txt'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">shift</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">line_number</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;nan&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;nan found in line </span><span class="si">{</span><span class="n">line_number</span><span class="si">}</span><span class="s1"> in shift file&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"nan"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'nan found in line </span><span class="si">{</span><span class="n">line_number</span><span class="si">}</span><span class="s1"> in shift file'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2055,14 +2055,14 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read the shift file just created by tweakreg</span>
 <span class="c1"># There are 7 columns including: filename, x-shift, y-shift, rotation, scale, x-RMS, and y-RMS</span>
-<span class="n">shift_table</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;shift_drz.txt&#39;</span><span class="p">,</span>
-                         <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;ascii.no_header&#39;</span><span class="p">,</span> 
-                         <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;dx&#39;</span><span class="p">,</span> <span class="s1">&#39;dy&#39;</span><span class="p">,</span> <span class="s1">&#39;rot&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">,</span> <span class="s1">&#39;xrms&#39;</span><span class="p">,</span> <span class="s1">&#39;yrms&#39;</span><span class="p">])</span>
+<span class="n">shift_table</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">'shift_drz.txt'</span><span class="p">,</span>
+                         <span class="nb">format</span><span class="o">=</span><span class="s1">'ascii.no_header'</span><span class="p">,</span> 
+                         <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">'file'</span><span class="p">,</span> <span class="s1">'dx'</span><span class="p">,</span> <span class="s1">'dy'</span><span class="p">,</span> <span class="s1">'rot'</span><span class="p">,</span> <span class="s1">'scale'</span><span class="p">,</span> <span class="s1">'xrms'</span><span class="p">,</span> <span class="s1">'yrms'</span><span class="p">])</span>
 
-<span class="c1"># Define the format for each column (excluding &#39;file&#39;).</span>
-<span class="n">formats</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="s1">&#39;.3f&#39;</span><span class="p">,</span> <span class="s1">&#39;.5f&#39;</span><span class="p">,</span> <span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="s1">&#39;.2f&#39;</span><span class="p">]</span>
+<span class="c1"># Define the format for each column (excluding 'file').</span>
+<span class="n">formats</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'.2f'</span><span class="p">,</span> <span class="s1">'.2f'</span><span class="p">,</span> <span class="s1">'.3f'</span><span class="p">,</span> <span class="s1">'.5f'</span><span class="p">,</span> <span class="s1">'.2f'</span><span class="p">,</span> <span class="s1">'.2f'</span><span class="p">]</span>
 
-<span class="c1"># Iterate over the columns &#39;dx&#39;, &#39;dy&#39;, &#39;rot&#39;, &#39;scale&#39;, &#39;xrms&#39;, &#39;yrms&#39;</span>
+<span class="c1"># Iterate over the columns 'dx', 'dy', 'rot', 'scale', 'xrms', 'yrms'</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shift_table</span><span class="o">.</span><span class="n">colnames</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
     <span class="c1"># Apply the format to the current column </span>
     <span class="n">shift_table</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">formats</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -2091,10 +2091,10 @@ Convert the fit RMS values to pixels for comparison with the alignment results p
 <p>Note that there are large residual rotation and scale terms in the shift file for several visits in the MAST data products.  These will be corrected when we run <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> an additional time and update the WCS in Section 2.6 below.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">match_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*_drz_catalog_fit.match&#39;</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">match_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'*_drz_catalog_fit.match'</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">match_files</span><span class="p">:</span>
     <span class="nb">input</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of matches for </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Number of matches for </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2145,48 +2145,48 @@ Number of matches for ibxl58030_drz_catalog_fit.match 14
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the rootnames for the two FITS files to be compared</span>
 <span class="c1"># Uncomment the pairs you want to use</span>
 
-<span class="c1"># rootname_A = &#39;ibxl50030&#39;</span>
-<span class="c1"># rootname_B = &#39;ibxl51030&#39;</span>
-<span class="n">rootname_A</span> <span class="o">=</span> <span class="s1">&#39;ibxl52030&#39;</span>
-<span class="n">rootname_B</span> <span class="o">=</span> <span class="s1">&#39;ibxl53030&#39;</span>
-<span class="c1"># rootname_A = &#39;ibxl54030&#39;</span>
-<span class="c1"># rootname_B = &#39;ibxl55030&#39;</span>
-<span class="c1"># rootname_A = &#39;ibxl56030&#39;</span>
-<span class="c1"># rootname_B = &#39;ibxl57030&#39;</span>
-<span class="c1"># rootname_A = &#39;ibxl57030&#39;</span>
-<span class="c1"># rootname_B = &#39;ibxl58030&#39;</span>
+<span class="c1"># rootname_A = 'ibxl50030'</span>
+<span class="c1"># rootname_B = 'ibxl51030'</span>
+<span class="n">rootname_A</span> <span class="o">=</span> <span class="s1">'ibxl52030'</span>
+<span class="n">rootname_B</span> <span class="o">=</span> <span class="s1">'ibxl53030'</span>
+<span class="c1"># rootname_A = 'ibxl54030'</span>
+<span class="c1"># rootname_B = 'ibxl55030'</span>
+<span class="c1"># rootname_A = 'ibxl56030'</span>
+<span class="c1"># rootname_B = 'ibxl57030'</span>
+<span class="c1"># rootname_A = 'ibxl57030'</span>
+<span class="c1"># rootname_B = 'ibxl58030'</span>
 
 <span class="c1"># Create subplots with 1 row and 2 columns</span>
 <span class="n">fig</span><span class="p">,</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 
-<span class="c1"># Open the FITS files and extract the data from the &#39;SCI&#39; extension</span>
-<span class="n">data_a</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">rootname_A</span><span class="o">+</span><span class="s1">&#39;_drz.fits&#39;</span><span class="p">)[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="n">data_b</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">rootname_B</span><span class="o">+</span><span class="s1">&#39;_drz.fits&#39;</span><span class="p">)[</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="c1"># Open the FITS files and extract the data from the 'SCI' extension</span>
+<span class="n">data_a</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">rootname_A</span><span class="o">+</span><span class="s1">'_drz.fits'</span><span class="p">)[</span><span class="s1">'SCI'</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">data_b</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">rootname_B</span><span class="o">+</span><span class="s1">'_drz.fits'</span><span class="p">)[</span><span class="s1">'SCI'</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 
 <span class="c1"># Display the images in grayscale with a stretch from 0 to 2 </span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_a</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_b</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_a</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys'</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data_b</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys'</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="c1"># Read the matching catalog files for both rootnames</span>
-<span class="n">match_tab_a</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">rootname_A</span><span class="o">+</span><span class="s1">&#39;_drz_catalog_fit.match&#39;</span><span class="p">)</span>
-<span class="n">match_tab_b</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">rootname_B</span><span class="o">+</span><span class="s1">&#39;_drz_catalog_fit.match&#39;</span><span class="p">)</span>
+<span class="n">match_tab_a</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">rootname_A</span><span class="o">+</span><span class="s1">'_drz_catalog_fit.match'</span><span class="p">)</span>
+<span class="n">match_tab_b</span> <span class="o">=</span> <span class="n">ascii</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">rootname_B</span><span class="o">+</span><span class="s1">'_drz_catalog_fit.match'</span><span class="p">)</span>
 
 <span class="c1"># Extract x and y coordinates from the matching catalogs</span>
-<span class="n">x_coord_a</span><span class="p">,</span> <span class="n">y_coord_a</span> <span class="o">=</span> <span class="n">match_tab_a</span><span class="p">[</span><span class="s1">&#39;col11&#39;</span><span class="p">],</span> <span class="n">match_tab_a</span><span class="p">[</span><span class="s1">&#39;col12&#39;</span><span class="p">]</span>
-<span class="n">x_coord_b</span><span class="p">,</span> <span class="n">y_coord_b</span> <span class="o">=</span> <span class="n">match_tab_b</span><span class="p">[</span><span class="s1">&#39;col11&#39;</span><span class="p">],</span> <span class="n">match_tab_b</span><span class="p">[</span><span class="s1">&#39;col12&#39;</span><span class="p">]</span>
+<span class="n">x_coord_a</span><span class="p">,</span> <span class="n">y_coord_a</span> <span class="o">=</span> <span class="n">match_tab_a</span><span class="p">[</span><span class="s1">'col11'</span><span class="p">],</span> <span class="n">match_tab_a</span><span class="p">[</span><span class="s1">'col12'</span><span class="p">]</span>
+<span class="n">x_coord_b</span><span class="p">,</span> <span class="n">y_coord_b</span> <span class="o">=</span> <span class="n">match_tab_b</span><span class="p">[</span><span class="s1">'col11'</span><span class="p">],</span> <span class="n">match_tab_b</span><span class="p">[</span><span class="s1">'col12'</span><span class="p">]</span>
 
 <span class="c1"># Plot the coordinates on the images with red circles</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_coord_a</span><span class="p">,</span> <span class="n">y_coord_a</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_coord_b</span><span class="p">,</span> <span class="n">y_coord_b</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_coord_a</span><span class="p">,</span> <span class="n">y_coord_a</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">'None'</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_coord_b</span><span class="p">,</span> <span class="n">y_coord_b</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">'None'</span><span class="p">)</span>
 
 <span class="c1"># Set the titles for the subplots, including the number of matches</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">rootname_A</span><span class="o">+</span><span class="sa">f</span><span class="s1">&#39;  N = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">match_tab_a</span><span class="p">)</span><span class="si">}</span><span class="s1">  Gaia Matches&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">rootname_B</span><span class="o">+</span><span class="sa">f</span><span class="s1">&#39;  N = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">match_tab_b</span><span class="p">)</span><span class="si">}</span><span class="s1">  Gaia Matches&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">rootname_A</span><span class="o">+</span><span class="sa">f</span><span class="s1">'  N = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">match_tab_a</span><span class="p">)</span><span class="si">}</span><span class="s1">  Gaia Matches'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">rootname_B</span><span class="o">+</span><span class="sa">f</span><span class="s1">'  N = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">match_tab_b</span><span class="p">)</span><span class="si">}</span><span class="s1">  Gaia Matches'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
 <span class="c1"># Load, display, and inspect fit residual PNG files</span>
-<span class="n">img_A</span> <span class="o">=</span> <span class="n">mpimg</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;residuals_</span><span class="si">{</span><span class="n">rootname_A</span><span class="si">}</span><span class="s1">_drz.png&#39;</span><span class="p">)</span>
-<span class="n">img_B</span> <span class="o">=</span> <span class="n">mpimg</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;residuals_</span><span class="si">{</span><span class="n">rootname_B</span><span class="si">}</span><span class="s1">_drz.png&#39;</span><span class="p">)</span>
+<span class="n">img_A</span> <span class="o">=</span> <span class="n">mpimg</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="sa">f</span><span class="s1">'residuals_</span><span class="si">{</span><span class="n">rootname_A</span><span class="si">}</span><span class="s1">_drz.png'</span><span class="p">)</span>
+<span class="n">img_B</span> <span class="o">=</span> <span class="n">mpimg</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="sa">f</span><span class="s1">'residuals_</span><span class="si">{</span><span class="n">rootname_B</span><span class="si">}</span><span class="s1">_drz.png'</span><span class="p">)</span>
 
 <span class="c1"># Create subplots for the residual images</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
@@ -2194,8 +2194,8 @@ Number of matches for ibxl58030_drz_catalog_fit.match 14
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img_B</span><span class="p">)</span>
 
 <span class="c1"># Remove unnecessary axis from the residual images</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span> 
-<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'off'</span><span class="p">)</span> 
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'off'</span><span class="p">)</span>
 
 <span class="c1"># Adjust layout to minimize margins and display plots</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
@@ -2216,10 +2216,10 @@ Number of matches for ibxl58030_drz_catalog_fit.match 14
 <p>Once we are happy with the alignment, we run <code class="docutils literal notranslate"><span class="pre">TweakReg</span></code> again with the same parameters but with the <code class="docutils literal notranslate"><span class="pre">updatehdr=True</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">refcat</span> <span class="o">=</span> <span class="s1">&#39;gaia_pm.cat&#39;</span>    <span class="c1"># Use the catalog with proper motion data</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">refcat</span> <span class="o">=</span> <span class="s1">'gaia_pm.cat'</span>    <span class="c1"># Use the catalog with proper motion data</span>
 
 <span class="n">tweakreg</span><span class="o">.</span><span class="n">TweakReg</span><span class="p">(</span><span class="n">drz_files</span><span class="p">,</span> 
-                  <span class="n">imagefindcfg</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;threshold&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;conv_width&#39;</span><span class="p">:</span> <span class="mf">4.5</span><span class="p">},</span> 
+                  <span class="n">imagefindcfg</span><span class="o">=</span><span class="p">{</span><span class="s1">'threshold'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">'conv_width'</span><span class="p">:</span> <span class="mf">4.5</span><span class="p">},</span> 
                   <span class="n">minobj</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
                   <span class="n">shiftfile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
                   <span class="n">refcat</span><span class="o">=</span><span class="n">refcat</span><span class="p">,</span>
@@ -2240,9 +2240,9 @@ Number of matches for ibxl58030_drz_catalog_fit.match 14
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">drz_files</span><span class="p">:</span>
-    <span class="n">tb_input</span> <span class="o">=</span> <span class="n">f</span><span class="o">+</span><span class="s1">&#39;[sci,1]&#39;</span>
+    <span class="n">tb_input</span> <span class="o">=</span> <span class="n">f</span><span class="o">+</span><span class="s1">'[sci,1]'</span>
     <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
-        <span class="n">tweakback</span><span class="o">.</span><span class="n">apply_tweak</span><span class="p">(</span><span class="n">tb_input</span><span class="p">,</span> <span class="n">orig_wcs_name</span><span class="o">=</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;WCSNAME&#39;</span><span class="p">])</span>
+        <span class="n">tweakback</span><span class="o">.</span><span class="n">apply_tweak</span><span class="p">(</span><span class="n">tb_input</span><span class="p">,</span> <span class="n">orig_wcs_name</span><span class="o">=</span><span class="n">hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">'WCSNAME'</span><span class="p">])</span>
     
 <span class="n">clear_output</span><span class="p">()</span>
 </pre></div>
@@ -2262,14 +2262,14 @@ Number of matches for ibxl58030_drz_catalog_fit.match 14
 <p>Because the WFC3/IR data products are already cleaned of cosmic rays during calwf3 processing, cosmic-ray rejection is turned off in AstroDrizzle by setting the parameters <code class="docutils literal notranslate"><span class="pre">driz_separate</span></code>, <code class="docutils literal notranslate"><span class="pre">median</span></code>, <code class="docutils literal notranslate"><span class="pre">blot</span></code>, and <code class="docutils literal notranslate"><span class="pre">driz_cr</span></code> to ‘False’. Note that <code class="docutils literal notranslate"><span class="pre">final_bits=16</span></code> means only the stable hot pixels are treated as good.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sky</span> <span class="o">=</span> <span class="s1">&#39;localmin&#39;</span>
-<span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">&#39;*flt.fits&#39;</span><span class="p">,</span> 
-                          <span class="n">output</span><span class="o">=</span><span class="s1">&#39;f160w_localmin&#39;</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sky</span> <span class="o">=</span> <span class="s1">'localmin'</span>
+<span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">'*flt.fits'</span><span class="p">,</span> 
+                          <span class="n">output</span><span class="o">=</span><span class="s1">'f160w_localmin'</span><span class="p">,</span>
                           <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
                           <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                           <span class="n">skymethod</span><span class="o">=</span><span class="n">sky</span><span class="p">,</span> 
                           <span class="n">driz_separate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">driz_cr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># CR-rej turned off</span>
-                          <span class="n">final_bits</span><span class="o">=</span><span class="s1">&#39;16&#39;</span><span class="p">,</span>
+                          <span class="n">final_bits</span><span class="o">=</span><span class="s1">'16'</span><span class="p">,</span>
                           <span class="n">final_wcs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
                           <span class="n">final_rot</span><span class="o">=</span><span class="mf">257.</span><span class="p">)</span>
 <span class="n">clear_output</span><span class="p">()</span>
@@ -2284,14 +2284,14 @@ Number of matches for ibxl58030_drz_catalog_fit.match 14
 <p>This is the <strong>recommended</strong> setting for images containing diffuse sources (e.g., galaxies, nebulae) covering significant parts of the image.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sky</span> <span class="o">=</span> <span class="s1">&#39;match&#39;</span>
-<span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">&#39;*flt.fits&#39;</span><span class="p">,</span> 
-                          <span class="n">output</span><span class="o">=</span><span class="s1">&#39;f160w_match&#39;</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sky</span> <span class="o">=</span> <span class="s1">'match'</span>
+<span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">'*flt.fits'</span><span class="p">,</span> 
+                          <span class="n">output</span><span class="o">=</span><span class="s1">'f160w_match'</span><span class="p">,</span>
                           <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
                           <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                           <span class="n">skymethod</span><span class="o">=</span><span class="n">sky</span><span class="p">,</span> 
                           <span class="n">driz_separate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">driz_cr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># CRREJ=None</span>
-                          <span class="n">final_bits</span><span class="o">=</span><span class="s1">&#39;16&#39;</span><span class="p">,</span>
+                          <span class="n">final_bits</span><span class="o">=</span><span class="s1">'16'</span><span class="p">,</span>
                           <span class="n">final_wcs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
                           <span class="n">final_rot</span><span class="o">=</span><span class="mf">257.</span><span class="p">)</span>
 <span class="n">clear_output</span><span class="p">()</span>
@@ -2305,14 +2305,14 @@ Number of matches for ibxl58030_drz_catalog_fit.match 14
 <p>When <code class="docutils literal notranslate"><span class="pre">skymethod</span></code> is set to ‘globalmin+match’, AstroDrizzle will first find a minimum “global” sky value in all input images and then use the ‘match’ method to equalize sky values between images.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sky</span> <span class="o">=</span> <span class="s1">&#39;globalmin+match&#39;</span>
-<span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">&#39;*flt.fits&#39;</span><span class="p">,</span> 
-                          <span class="n">output</span><span class="o">=</span><span class="s1">&#39;f160w_globalmin_match&#39;</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sky</span> <span class="o">=</span> <span class="s1">'globalmin+match'</span>
+<span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">'*flt.fits'</span><span class="p">,</span> 
+                          <span class="n">output</span><span class="o">=</span><span class="s1">'f160w_globalmin_match'</span><span class="p">,</span>
                           <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
                           <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                           <span class="n">skymethod</span><span class="o">=</span><span class="n">sky</span><span class="p">,</span> 
                           <span class="n">driz_separate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">driz_cr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># CRREJ=None</span>
-                          <span class="n">final_bits</span><span class="o">=</span><span class="s1">&#39;16&#39;</span><span class="p">,</span>
+                          <span class="n">final_bits</span><span class="o">=</span><span class="s1">'16'</span><span class="p">,</span>
                           <span class="n">final_wcs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
                           <span class="n">final_rot</span><span class="o">=</span><span class="mf">257.</span><span class="p">)</span>
 <span class="n">clear_output</span><span class="p">()</span>
@@ -2327,14 +2327,14 @@ Number of matches for ibxl58030_drz_catalog_fit.match 14
 <p>This method may be useful when input images already have matched background values.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sky</span> <span class="o">=</span> <span class="s1">&#39;globalmin&#39;</span>
-<span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">&#39;*flt.fits&#39;</span><span class="p">,</span> 
-                          <span class="n">output</span><span class="o">=</span><span class="s1">&#39;f160w_globalmin&#39;</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sky</span> <span class="o">=</span> <span class="s1">'globalmin'</span>
+<span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="s1">'*flt.fits'</span><span class="p">,</span> 
+                          <span class="n">output</span><span class="o">=</span><span class="s1">'f160w_globalmin'</span><span class="p">,</span>
                           <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
                           <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                           <span class="n">skymethod</span><span class="o">=</span><span class="n">sky</span><span class="p">,</span> 
                           <span class="n">driz_separate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">median</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">driz_cr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># CRREJ=None</span>
-                          <span class="n">final_bits</span><span class="o">=</span><span class="s1">&#39;16&#39;</span><span class="p">,</span>
+                          <span class="n">final_bits</span><span class="o">=</span><span class="s1">'16'</span><span class="p">,</span>
                           <span class="n">final_wcs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
                           <span class="n">final_rot</span><span class="o">=</span><span class="mf">257.</span><span class="p">)</span>
 <span class="n">clear_output</span><span class="p">()</span>
@@ -2351,11 +2351,11 @@ Number of matches for ibxl58030_drz_catalog_fit.match 14
 <p>Next we print the sky values computed for each image using the four different methods.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdrizsky_val</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;rootname&#39;</span><span class="p">:</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;f160w_globalmin_drz_sci.fits&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="s1">&#39;rootname&#39;</span><span class="p">],</span>
-                                 <span class="s1">&#39;local&#39;</span><span class="p">:</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;f160w_localmin_drz_sci.fits&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="s1">&#39;mdrizsky&#39;</span><span class="p">],</span>
-                                 <span class="s1">&#39;globalmin&#39;</span><span class="p">:</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;f160w_globalmin_drz_sci.fits&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="s1">&#39;mdrizsky&#39;</span><span class="p">],</span>
-                                 <span class="s1">&#39;globalmin_match&#39;</span><span class="p">:</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;f160w_globalmin_match_drz_sci.fits&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="s1">&#39;mdrizsky&#39;</span><span class="p">],</span>
-                                 <span class="s1">&#39;match&#39;</span><span class="p">:</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;f160w_match_drz_sci.fits&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="s1">&#39;mdrizsky&#39;</span><span class="p">]})</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mdrizsky_val</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'rootname'</span><span class="p">:</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">'f160w_globalmin_drz_sci.fits'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="s1">'rootname'</span><span class="p">],</span>
+                                 <span class="s1">'local'</span><span class="p">:</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">'f160w_localmin_drz_sci.fits'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="s1">'mdrizsky'</span><span class="p">],</span>
+                                 <span class="s1">'globalmin'</span><span class="p">:</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">'f160w_globalmin_drz_sci.fits'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="s1">'mdrizsky'</span><span class="p">],</span>
+                                 <span class="s1">'globalmin_match'</span><span class="p">:</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">'f160w_globalmin_match_drz_sci.fits'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="s1">'mdrizsky'</span><span class="p">],</span>
+                                 <span class="s1">'match'</span><span class="p">:</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">'f160w_match_drz_sci.fits'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="s1">'mdrizsky'</span><span class="p">]})</span>
 <span class="n">mdrizsky_val</span>
 </pre></div>
 </div>
@@ -2540,20 +2540,20 @@ Number of matches for ibxl58030_drz_catalog_fit.match 14
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">=</span> <span class="n">mdrizsky_val</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="n">globalmin</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mdrizsky_val</span><span class="p">[</span><span class="s1">&#39;globalmin&#39;</span><span class="p">])</span>
-<span class="n">globalmin_match</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mdrizsky_val</span><span class="p">[</span><span class="s1">&#39;globalmin_match&#39;</span><span class="p">])</span>
-<span class="n">match</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mdrizsky_val</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">])</span>
-<span class="n">local</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mdrizsky_val</span><span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">])</span>
+<span class="n">globalmin</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mdrizsky_val</span><span class="p">[</span><span class="s1">'globalmin'</span><span class="p">])</span>
+<span class="n">globalmin_match</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mdrizsky_val</span><span class="p">[</span><span class="s1">'globalmin_match'</span><span class="p">])</span>
+<span class="n">match</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mdrizsky_val</span><span class="p">[</span><span class="s1">'match'</span><span class="p">])</span>
+<span class="n">local</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mdrizsky_val</span><span class="p">[</span><span class="s1">'local'</span><span class="p">])</span>
 
 <span class="c1"># Plotting code: </span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">globalmin_match</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;magenta&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Globalmin + Match&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">match</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;navy&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Match&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;olive&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Local&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">globalmin</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Globalmin&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Individual Images&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;MDRIZSKY Value&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">globalmin_match</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'magenta'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Globalmin + Match'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">match</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'navy'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Match'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'olive'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Local'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">globalmin</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Globalmin'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Individual Images'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'MDRIZSKY Value'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'best'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -2577,9 +2577,9 @@ Number of matches for ibxl58030_drz_catalog_fit.match 14
 <p>Finally, we display the science and weight images for the combined mosaic.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sci</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;f160w_match_drz_sci.fits&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sci</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">'f160w_match_drz_sci.fits'</span><span class="p">)</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">130</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys_r'</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">shrink</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -2592,9 +2592,9 @@ Number of matches for ibxl58030_drz_catalog_fit.match 14
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sci</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;f160w_match_drz_wht.fits&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sci</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">'f160w_match_drz_wht.fits'</span><span class="p">)</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">130</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys_r'</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">shrink</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>

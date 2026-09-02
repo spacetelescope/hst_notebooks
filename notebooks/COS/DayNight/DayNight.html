@@ -783,12 +783,12 @@ This type of data separation is possible with the <a class="reference external" 
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># These will be important directories</span>
-<span class="n">datadir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./data&#39;</span><span class="p">)</span>
-<span class="n">outputdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./output/&#39;</span><span class="p">)</span>
-<span class="n">intermediate_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./intermediate/&#39;</span><span class="p">)</span>
-<span class="n">plotsdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./output/plots&#39;</span><span class="p">)</span>
+<span class="n">datadir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'./data'</span><span class="p">)</span>
+<span class="n">outputdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'./output/'</span><span class="p">)</span>
+<span class="n">intermediate_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'./intermediate/'</span><span class="p">)</span>
+<span class="n">plotsdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'./output/plots'</span><span class="p">)</span>
 
-<span class="c1"># Make the directories if they don&#39;t exist</span>
+<span class="c1"># Make the directories if they don't exist</span>
 <span class="n">datadir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">outputdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">plotsdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -803,36 +803,36 @@ This type of data separation is possible with the <a class="reference external" 
 <p>We choose the exposure with obs_id: <code class="docutils literal notranslate"><span class="pre">lbry01i6q</span></code>, because we happen to know it contains data taken both in the observatory’s night and day and shows strong airglow lines. For more information on downloading COS data, see our <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/blob/main/notebooks/COS/DataDl/DataDl.ipynb">notebook tutorial on downloading COS data</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename_root</span> <span class="o">=</span> <span class="s1">&#39;lbry01i6q&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename_root</span> <span class="o">=</span> <span class="s1">'lbry01i6q'</span>
 
 <span class="c1"># Create product list of all observations with that obs_id root</span>
 <span class="n">pl</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span>
             <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span>
-                <span class="n">proposal_id</span><span class="o">=</span><span class="s1">&#39;12604&#39;</span><span class="p">,</span>
-                <span class="n">obs_id</span><span class="o">=</span><span class="s1">&#39;lbry01*&#39;</span><span class="p">))</span>
+                <span class="n">proposal_id</span><span class="o">=</span><span class="s1">'12604'</span><span class="p">,</span>
+                <span class="n">obs_id</span><span class="o">=</span><span class="s1">'lbry01*'</span><span class="p">))</span>
 
 <span class="c1"># Create a mask with only the corrtag files</span>
-<span class="n">pl_mask</span> <span class="o">=</span> <span class="p">((</span><span class="n">pl</span><span class="p">[</span><span class="s1">&#39;productSubGroupDescription&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CORRTAG_A&quot;</span><span class="p">)</span>
-           <span class="o">|</span> <span class="p">(</span><span class="n">pl</span><span class="p">[</span><span class="s1">&#39;productSubGroupDescription&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CORRTAG_B&quot;</span><span class="p">))</span>\
-            <span class="o">&amp;</span> <span class="p">(</span><span class="n">pl</span><span class="p">[</span><span class="s1">&#39;obs_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">filename_root</span><span class="p">)</span>
+<span class="n">pl_mask</span> <span class="o">=</span> <span class="p">((</span><span class="n">pl</span><span class="p">[</span><span class="s1">'productSubGroupDescription'</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"CORRTAG_A"</span><span class="p">)</span>
+           <span class="o">|</span> <span class="p">(</span><span class="n">pl</span><span class="p">[</span><span class="s1">'productSubGroupDescription'</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"CORRTAG_B"</span><span class="p">))</span>\
+            <span class="o">&amp;</span> <span class="p">(</span><span class="n">pl</span><span class="p">[</span><span class="s1">'obs_id'</span><span class="p">]</span> <span class="o">==</span> <span class="n">filename_root</span><span class="p">)</span>
 
 <span class="c1"># Download those corrtag files</span>
 <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">pl</span><span class="p">[</span><span class="n">pl_mask</span><span class="p">],</span>
                                <span class="n">download_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">datadir</span><span class="p">))</span>
 
-<span class="n">file_locations_orig</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;./data/**/*corrtag*.fits&#39;</span><span class="p">,</span>
+<span class="n">file_locations_orig</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'./data/**/*corrtag*.fits'</span><span class="p">,</span>
                                 <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">file_orig</span> <span class="ow">in</span> <span class="n">file_locations_orig</span><span class="p">:</span>
     <span class="c1"># Aggregates the data from out of long convoluted filepaths</span>
     <span class="c1"># NOTE: can cause problems if you have non-unique filenames</span>
     <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">file_orig</span><span class="p">,</span>
-              <span class="s1">&#39;./data/&#39;</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file_orig</span><span class="p">))</span>
+              <span class="s1">'./data/'</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file_orig</span><span class="p">))</span>
 
 <span class="c1"># Finds all the FUVA and FUVB files</span>
-<span class="n">file_locations_a</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;./data/**/*corrtag_a.fits&#39;</span><span class="p">,</span>
+<span class="n">file_locations_a</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'./data/**/*corrtag_a.fits'</span><span class="p">,</span>
                              <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">file_locations_b</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;./data/**/*corrtag_b.fits&#39;</span><span class="p">,</span>
+<span class="n">file_locations_b</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'./data/**/*corrtag_b.fits'</span><span class="p">,</span>
                              <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -870,16 +870,16 @@ This type of data separation is possible with the <a class="reference external" 
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">check_time_tag</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Function which yields descriptive errors if the input file is not a COS TIME-TAG file.</span>
 <span class="sd">    Inputs: </span>
 <span class="sd">      filepath (str): path to your data</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">instrume</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;INSTRUME&#39;</span><span class="p">),</span> 
-    <span class="n">imagetyp</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">&#39;IMAGETYP&#39;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">instrume</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'INSTRUME'</span><span class="p">),</span> 
+    <span class="n">imagetyp</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'IMAGETYP'</span><span class="p">)</span>
     
-    <span class="k">assert</span> <span class="n">instrume</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;COS&#39;</span><span class="p">,</span> <span class="s2">&quot;DataTypeError: Files not from COS&quot;</span>
-    <span class="k">assert</span> <span class="n">imagetyp</span> <span class="o">==</span> <span class="s1">&#39;TIME-TAG&#39;</span><span class="p">,</span> <span class="s2">&quot;DataTypeError: Files not TIME-TAG. Cannot process with timefilter.&quot;</span>
+    <span class="k">assert</span> <span class="n">instrume</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'COS'</span><span class="p">,</span> <span class="s2">"DataTypeError: Files not from COS"</span>
+    <span class="k">assert</span> <span class="n">imagetyp</span> <span class="o">==</span> <span class="s1">'TIME-TAG'</span><span class="p">,</span> <span class="s2">"DataTypeError: Files not TIME-TAG. Cannot process with timefilter."</span>
 
 
 <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">(</span><span class="n">file_locations_a</span> <span class="o">+</span> <span class="n">file_locations_b</span><span class="p">):</span>
@@ -982,30 +982,30 @@ This type of data separation is possible with the <a class="reference external" 
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># If the files already exist, delete them so you may run the filter again</span>
 <span class="c1"># Check if you have created a filtered FUVA file:</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">intermediate_dir</span> <span class="o">/</span> <span class="s2">&quot;filtered_corrtag_a.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File exists; deleting </span><span class="si">{</span><span class="n">intermediate_dir</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;filtered_corrtag_a.fits&#39;</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">intermediate_dir</span> <span class="o">/</span> <span class="s2">"filtered_corrtag_a.fits"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File exists; deleting </span><span class="si">{</span><span class="n">intermediate_dir</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'filtered_corrtag_a.fits'</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
     <span class="c1"># If so, delete the file so we can re-create it with TimelineFilter</span>
-    <span class="p">(</span><span class="n">intermediate_dir</span> <span class="o">/</span> <span class="s2">&quot;filtered_corrtag_a.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">intermediate_dir</span> <span class="o">/</span> <span class="s2">"filtered_corrtag_a.fits"</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
 
 <span class="c1"># Repeat the check-delete process above with FUVB file:</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">intermediate_dir</span> <span class="o">/</span> <span class="s2">&quot;filtered_corrtag_b.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File exists; deleting </span><span class="si">{</span><span class="n">intermediate_dir</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;filtered_corrtag_b.fits&#39;</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="p">(</span><span class="n">intermediate_dir</span> <span class="o">/</span> <span class="s2">&quot;filtered_corrtag_b.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">intermediate_dir</span> <span class="o">/</span> <span class="s2">"filtered_corrtag_b.fits"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File exists; deleting </span><span class="si">{</span><span class="n">intermediate_dir</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">'filtered_corrtag_b.fits'</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">intermediate_dir</span> <span class="o">/</span> <span class="s2">"filtered_corrtag_b.fits"</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
 
 <span class="c1"># Filter the files based on your criteria</span>
 <span class="c1"># This must be repeated for all exposure files, so both FUVA and FUVB</span>
 <span class="k">for</span> <span class="n">afile</span><span class="p">,</span> <span class="n">bfile</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">file_locations_a</span><span class="p">,</span> <span class="n">file_locations_b</span><span class="p">):</span>
     <span class="n">timefilter</span><span class="o">.</span><span class="n">TimelineFilter</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">afile</span><span class="p">,</span>
                               <span class="c1"># Run TimelineFilter on FUVA file</span>
-                              <span class="n">output</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">intermediate_dir</span> <span class="o">/</span> <span class="s2">&quot;filtered_corrtag_a.fits&quot;</span><span class="p">),</span>
-                              <span class="c1"># Removes daytime data, where the Sun&#39;s altitude above horizon is 0 degrees</span>
-                              <span class="nb">filter</span><span class="o">=</span><span class="s2">&quot;sun_alt &gt; 0.&quot;</span><span class="p">,</span>
+                              <span class="n">output</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">intermediate_dir</span> <span class="o">/</span> <span class="s2">"filtered_corrtag_a.fits"</span><span class="p">),</span>
+                              <span class="c1"># Removes daytime data, where the Sun's altitude above horizon is 0 degrees</span>
+                              <span class="nb">filter</span><span class="o">=</span><span class="s2">"sun_alt &gt; 0."</span><span class="p">,</span>
                               <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">timefilter</span><span class="o">.</span><span class="n">TimelineFilter</span><span class="p">(</span><span class="n">bfile</span><span class="p">,</span>
                               <span class="c1"># Run TimelineFilter on FUVB file</span>
-                              <span class="nb">str</span><span class="p">(</span><span class="n">intermediate_dir</span> <span class="o">/</span> <span class="s2">&quot;filtered_corrtag_b.fits&quot;</span><span class="p">),</span>
-                              <span class="s2">&quot;sun_alt &gt; 0.&quot;</span><span class="p">)</span>
+                              <span class="nb">str</span><span class="p">(</span><span class="n">intermediate_dir</span> <span class="o">/</span> <span class="s2">"filtered_corrtag_b.fits"</span><span class="p">),</span>
+                              <span class="s2">"sun_alt &gt; 0."</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1037,11 +1037,11 @@ Writing to /home/runner/work/hst_notebooks/hst_notebooks/notebooks/COS/DayNight/
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First, create asn for the newly filtered-by-sun_alt files (this and next cell):</span>
 <span class="c1"># This dict properly assigns the type of exposure in a way that CalCOS will recognize</span>
-<span class="n">type_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;WAVECAL&#39;</span><span class="p">:</span> <span class="s1">&#39;EXP-AWAVE&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;EXTERNAL/SCI&#39;</span><span class="p">:</span> <span class="s1">&#39;EXP-FP&#39;</span><span class="p">}</span>
+<span class="n">type_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'WAVECAL'</span><span class="p">:</span> <span class="s1">'EXP-AWAVE'</span><span class="p">,</span>
+             <span class="s1">'EXTERNAL/SCI'</span><span class="p">:</span> <span class="s1">'EXP-FP'</span><span class="p">}</span>
 
 <span class="c1"># Finds all the corrtag_a (just FUVA) files downloaded above</span>
-<span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">intermediate_dir</span><span class="o">/</span><span class="s2">&quot;*_corrtag_a.fits&quot;</span><span class="p">))</span>
+<span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">intermediate_dir</span><span class="o">/</span><span class="s2">"*_corrtag_a.fits"</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1055,41 +1055,41 @@ Writing to /home/runner/work/hst_notebooks/hst_notebooks/notebooks/COS/DayNight/
     <span class="c1"># MEMNAME:</span>
     <span class="n">rootnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">]</span>
     <span class="c1"># MEMTYPE:</span>
-    <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="n">type_dict</span><span class="p">[</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;EXPTYPE&#39;</span><span class="p">)]]</span>
+    <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="n">type_dict</span><span class="p">[</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">'EXPTYPE'</span><span class="p">)]]</span>
     <span class="c1"># MEMPRSNT</span>
     <span class="n">included</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span>
     
     <span class="c1"># Adding the ASN details to the end of the association table</span>
     <span class="c1"># the rootname needs to be the full name, not just the rootname:</span>
-    <span class="c1"># Remove the extra &quot;_&quot; at the end of string</span>
-    <span class="n">asn_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;corrtag&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1"># Remove the extra "_" at the end of string</span>
+    <span class="n">asn_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'corrtag'</span><span class="p">)[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
     <span class="c1"># MEMNAME:</span>
     <span class="n">rootnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asn_root</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
     <span class="c1"># MEMTYPE:</span>
-    <span class="n">types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;PROD-FP&#39;</span><span class="p">)</span>
+    <span class="n">types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'PROD-FP'</span><span class="p">)</span>
     <span class="c1"># MEMPRSNT</span>
     <span class="n">included</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
     
     <span class="c1"># Putting together the FITS table</span>
-    <span class="c1"># 40 is the number of characters allowed in this &#39;40A&#39; field.</span>
+    <span class="c1"># 40 is the number of characters allowed in this '40A' field.</span>
     <span class="c1"># If your rootname is longer than 40, you will need to increase this</span>
-    <span class="n">c1</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;MEMNAME&#39;</span><span class="p">,</span>
+    <span class="n">c1</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'MEMNAME'</span><span class="p">,</span>
                      <span class="n">array</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rootnames</span><span class="p">),</span>
-                     <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;40A&#39;</span><span class="p">)</span>
-    <span class="n">c2</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;MEMTYPE&#39;</span><span class="p">,</span>
+                     <span class="nb">format</span><span class="o">=</span><span class="s1">'40A'</span><span class="p">)</span>
+    <span class="n">c2</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'MEMTYPE'</span><span class="p">,</span>
                      <span class="n">array</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">types</span><span class="p">),</span>
-                     <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;14A&#39;</span><span class="p">)</span>
-    <span class="n">c3</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;MEMPRSNT&#39;</span><span class="p">,</span>
-                     <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;L&#39;</span><span class="p">,</span>
+                     <span class="nb">format</span><span class="o">=</span><span class="s1">'14A'</span><span class="p">)</span>
+    <span class="n">c3</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'MEMPRSNT'</span><span class="p">,</span>
+                     <span class="nb">format</span><span class="o">=</span><span class="s1">'L'</span><span class="p">,</span>
                      <span class="n">array</span><span class="o">=</span><span class="n">included</span><span class="p">)</span>
 
     <span class="n">t</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">BinTableHDU</span><span class="o">.</span><span class="n">from_columns</span><span class="p">([</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="p">])</span>
 
     <span class="c1"># Writing the FITS table</span>
-    <span class="n">t</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">asn_root</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">+</span><span class="s1">&#39;_asn.fits&#39;</span><span class="p">,</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">asn_root</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">+</span><span class="s1">'_asn.fits'</span><span class="p">,</span>
               <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">asn_root</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">+</span><span class="s1">&#39;_asn.fits&#39;</span><span class="p">),</span> <span class="s2">&quot;in cwd&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Saved: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">asn_root</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">+</span><span class="s1">'_asn.fits'</span><span class="p">),</span> <span class="s2">"in cwd"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1102,7 +1102,7 @@ Writing to /home/runner/work/hst_notebooks/hst_notebooks/notebooks/COS/DayNight/
 <p>We can see the contents of this new association file below:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;filtered_asn.fits&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">"filtered_asn.fits"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1124,39 +1124,39 @@ Writing to /home/runner/work/hst_notebooks/hst_notebooks/notebooks/COS/DayNight/
     <span class="c1"># MEMNAME:</span>
     <span class="n">rootnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">]</span>
     <span class="c1"># MEMTYPE</span>
-    <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="n">type_dict</span><span class="p">[</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;EXPTYPE&#39;</span><span class="p">)]]</span>
+    <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="n">type_dict</span><span class="p">[</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">'EXPTYPE'</span><span class="p">)]]</span>
     <span class="c1"># MEMPRSNT</span>
     <span class="n">included</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span>
 
     <span class="c1"># Adding the ASN details to the end of the association table:</span>
     <span class="c1"># The rootname needs to be full name, not just the rootname</span>
-    <span class="c1"># Removing the extra &quot;_&quot; at end of string</span>
-    <span class="n">asn_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;corrtag&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1"># Removing the extra "_" at end of string</span>
+    <span class="n">asn_root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'corrtag'</span><span class="p">)[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
     <span class="c1"># MEMNAME:</span>
     <span class="n">rootnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asn_root</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
     <span class="c1"># MEMTYPE</span>
-    <span class="n">types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;PROD-FP&#39;</span><span class="p">)</span>
+    <span class="n">types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'PROD-FP'</span><span class="p">)</span>
     <span class="c1"># MEMPRSNT</span>
     <span class="n">included</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
     
     <span class="c1"># Putting together the FITS table</span>
-    <span class="n">c1</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;MEMNAME&#39;</span><span class="p">,</span>
+    <span class="n">c1</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'MEMNAME'</span><span class="p">,</span>
                      <span class="n">array</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rootnames</span><span class="p">),</span>
-                     <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;40A&#39;</span><span class="p">)</span> 
-    <span class="n">c2</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;MEMTYPE&#39;</span><span class="p">,</span>
+                     <span class="nb">format</span><span class="o">=</span><span class="s1">'40A'</span><span class="p">)</span> 
+    <span class="n">c2</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'MEMTYPE'</span><span class="p">,</span>
                      <span class="n">array</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">types</span><span class="p">),</span>
-                     <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;14A&#39;</span><span class="p">)</span>
-    <span class="n">c3</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;MEMPRSNT&#39;</span><span class="p">,</span>
-                     <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;L&#39;</span><span class="p">,</span>
+                     <span class="nb">format</span><span class="o">=</span><span class="s1">'14A'</span><span class="p">)</span>
+    <span class="n">c3</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'MEMPRSNT'</span><span class="p">,</span>
+                     <span class="nb">format</span><span class="o">=</span><span class="s1">'L'</span><span class="p">,</span>
                      <span class="n">array</span><span class="o">=</span><span class="n">included</span><span class="p">)</span>
 
     <span class="n">t</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">BinTableHDU</span><span class="o">.</span><span class="n">from_columns</span><span class="p">([</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="p">])</span>
     
     <span class="c1"># Writing the FITS table</span>
-    <span class="n">t</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">asn_root</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">+</span><span class="s1">&#39;_asn.fits&#39;</span><span class="p">,</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">asn_root</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">+</span><span class="s1">'_asn.fits'</span><span class="p">,</span>
               <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">asn_root</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">+</span><span class="s1">&#39;_asn.fits&#39;</span><span class="p">),</span> <span class="s2">&quot;in cwd&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Saved: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">asn_root</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">+</span><span class="s1">'_asn.fits'</span><span class="p">),</span> <span class="s2">"in cwd"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1169,7 +1169,7 @@ Writing to /home/runner/work/hst_notebooks/hst_notebooks/notebooks/COS/DayNight/
 <p>Again, we can see the contents of this association file below:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename_root</span><span class="si">}</span><span class="s2">_asn.fits&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">filename_root</span><span class="si">}</span><span class="s2">_asn.fits"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1223,7 +1223,7 @@ In the next two cells, we will setup an environment of reference files, download
 
 <span class="c1"># The next line depends on your context and pmap file</span>
 <span class="c1"># You can find the latest pmap file at https://hst-crds.stsci.edu</span>
-<span class="err">!</span><span class="n">crds</span> <span class="n">bestrefs</span> <span class="o">--</span><span class="n">files</span> <span class="o">**/*</span><span class="n">corrtag</span><span class="o">*.</span><span class="n">fits</span>  <span class="o">--</span><span class="n">sync</span><span class="o">-</span><span class="n">references</span><span class="o">=</span><span class="mi">2</span> <span class="o">--</span><span class="n">update</span><span class="o">-</span><span class="n">bestrefs</span> <span class="o">--</span><span class="n">new</span><span class="o">-</span><span class="n">context</span> <span class="s1">&#39;hst_1123.pmap&#39;</span>
+<span class="err">!</span><span class="n">crds</span> <span class="n">bestrefs</span> <span class="o">--</span><span class="n">files</span> <span class="o">**/*</span><span class="n">corrtag</span><span class="o">*.</span><span class="n">fits</span>  <span class="o">--</span><span class="n">sync</span><span class="o">-</span><span class="n">references</span><span class="o">=</span><span class="mi">2</span> <span class="o">--</span><span class="n">update</span><span class="o">-</span><span class="n">bestrefs</span> <span class="o">--</span><span class="n">new</span><span class="o">-</span><span class="n">context</span> <span class="s1">'hst_1123.pmap'</span>
 </pre></div>
 </div>
 </div>
@@ -1231,7 +1231,7 @@ In the next two cells, we will setup an environment of reference files, download
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This file now contains the output of the last cell</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s1">&#39;crds_output_1.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span><span class="o">/</span><span class="s1">'crds_output_1.txt'</span><span class="p">),</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1248,13 +1248,13 @@ In the next two cells, we will setup an environment of reference files, download
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> cap --no-stderr
-<span class="c1"># First, run with &quot;filtered&quot; data with only time-tag datapoints allowed by filter</span>
+<span class="c1"># First, run with "filtered" data with only time-tag datapoints allowed by filter</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">calcos</span><span class="o">.</span><span class="n">calcos</span><span class="p">(</span><span class="s1">&#39;./filtered_asn.fits&#39;</span><span class="p">,</span>
-                  <span class="n">outdir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span> <span class="o">/</span> <span class="s2">&quot;filtered_data_outs&quot;</span><span class="p">),</span>
+    <span class="n">calcos</span><span class="o">.</span><span class="n">calcos</span><span class="p">(</span><span class="s1">'./filtered_asn.fits'</span><span class="p">,</span>
+                  <span class="n">outdir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span> <span class="o">/</span> <span class="s2">"filtered_data_outs"</span><span class="p">),</span>
                   <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;An error occured&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'An error occured'</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1262,13 +1262,13 @@ In the next two cells, we will setup an environment of reference files, download
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span> cap --no-stderr
-<span class="c1"># Now, run CalCOS with the initial &quot;full&quot; data - with all time-tag datapoints</span>
+<span class="c1"># Now, run CalCOS with the initial "full" data - with all time-tag datapoints</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">calcos</span><span class="o">.</span><span class="n">calcos</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;./</span><span class="si">{</span><span class="n">filename_root</span><span class="si">}</span><span class="s1">_asn.fits&#39;</span><span class="p">,</span>
-                  <span class="n">outdir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span> <span class="o">/</span> <span class="s2">&quot;full_data_outs&quot;</span><span class="p">),</span>
+    <span class="n">calcos</span><span class="o">.</span><span class="n">calcos</span><span class="p">(</span><span class="sa">f</span><span class="s1">'./</span><span class="si">{</span><span class="n">filename_root</span><span class="si">}</span><span class="s1">_asn.fits'</span><span class="p">,</span>
+                  <span class="n">outdir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">outputdir</span> <span class="o">/</span> <span class="s2">"full_data_outs"</span><span class="p">),</span>
                   <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;An error occured&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'An error occured'</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1284,14 +1284,14 @@ In the next two cells, we will setup an environment of reference files, download
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read in the wvln, flux, flux error of the *UNfiltered* spectrum file</span>
-<span class="n">unfilt_tab</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;./output/full_data_outs/</span><span class="si">{</span><span class="n">filename_root</span><span class="si">}</span><span class="s2">_x1dsum.fits&quot;</span><span class="p">)[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX&#39;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">]</span>
+<span class="n">unfilt_tab</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="sa">f</span><span class="s2">"./output/full_data_outs/</span><span class="si">{</span><span class="n">filename_root</span><span class="si">}</span><span class="s2">_x1dsum.fits"</span><span class="p">)[</span><span class="s1">'WAVELENGTH'</span><span class="p">,</span> <span class="s1">'FLUX'</span><span class="p">,</span> <span class="s1">'ERROR'</span><span class="p">]</span>
 
 <span class="c1"># Read in the wvln, flux, flux error of the *filtered* spectrum file</span>
-<span class="n">filt_tab</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;./output/filtered_data_outs/filtered_x1dsum.fits&quot;</span><span class="p">)[</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX&#39;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">]</span>
+<span class="n">filt_tab</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">"./output/filtered_data_outs/filtered_x1dsum.fits"</span><span class="p">)[</span><span class="s1">'WAVELENGTH'</span><span class="p">,</span> <span class="s1">'FLUX'</span><span class="p">,</span> <span class="s1">'ERROR'</span><span class="p">]</span>
 
 <span class="c1"># Convert to dict and combine segments</span>
-<span class="n">combo_dict_f</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;FLUX&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">:</span> <span class="p">[]}</span>
-<span class="n">combo_dict_u</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;WAVELENGTH&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;FLUX&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="n">combo_dict_f</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'WAVELENGTH'</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">'FLUX'</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">'ERROR'</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="n">combo_dict_u</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'WAVELENGTH'</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">'FLUX'</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">'ERROR'</span><span class="p">:</span> <span class="p">[]}</span>
 
 <span class="c1"># Reverse segments FUVA and B for filtered data</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">filt_tab</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
@@ -1318,33 +1318,33 @@ In the next two cells, we will setup an environment of reference files, download
 <span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 
 <span class="c1"># Plot the data in 3 subplots</span>
-<span class="n">ax0</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">],</span>
-            <span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">],</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">"WAVELENGTH"</span><span class="p">],</span>
+            <span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">"FLUX"</span><span class="p">],</span>
             <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Unfiltered&quot;</span><span class="p">)</span>
+            <span class="n">c</span><span class="o">=</span><span class="s1">'C1'</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"Unfiltered"</span><span class="p">)</span>
 
-<span class="n">ax0</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">],</span>
-            <span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">],</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">"WAVELENGTH"</span><span class="p">],</span>
+            <span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">"FLUX"</span><span class="p">],</span>
             <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Filtered to SUN_ALT&lt;0&quot;</span><span class="p">)</span>
+            <span class="n">c</span><span class="o">=</span><span class="s1">'C2'</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"Filtered to SUN_ALT&lt;0"</span><span class="p">)</span>
 
-<span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">],</span>
-            <span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">],</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">"WAVELENGTH"</span><span class="p">],</span>
+            <span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">"FLUX"</span><span class="p">],</span>
             <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Unfiltered&quot;</span><span class="p">)</span>
+            <span class="n">c</span><span class="o">=</span><span class="s1">'C1'</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"Unfiltered"</span><span class="p">)</span>
 
-<span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">],</span>
-            <span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">],</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">"WAVELENGTH"</span><span class="p">],</span>
+            <span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">"FLUX"</span><span class="p">],</span>
             <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Filtered to SUN_ALT&lt;0&quot;</span><span class="p">)</span>
+            <span class="n">c</span><span class="o">=</span><span class="s1">'C2'</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"Filtered to SUN_ALT&lt;0"</span><span class="p">)</span>
 
 <span class="c1"># Format the figure</span>
 <span class="n">ax0</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
@@ -1358,20 +1358,20 @@ In the next two cells, we will setup an environment of reference files, download
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">2E-14</span><span class="p">,</span> <span class="mf">6.5E-13</span><span class="p">)</span>
 <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ax1</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">())</span>
 
-<span class="n">ax0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Fig 2.1</span><span class="se">\n</span><span class="s2">Spectra Filtered and Unfiltered</span><span class="se">\n</span><span class="s2">by Solar altitude (`SUN_ALT`)&quot;</span><span class="p">,</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Fig 2.1</span><span class="se">\n</span><span class="s2">Spectra Filtered and Unfiltered</span><span class="se">\n</span><span class="s2">by Solar altitude (`SUN_ALT`)"</span><span class="p">,</span>
               <span class="n">size</span><span class="o">=</span><span class="mi">35</span><span class="p">)</span>
 
-<span class="n">ax0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Flux [$\dfrac</span><span class="si">{erg}</span><span class="s2">{cm\ s\ \AA}$]&quot;</span><span class="p">,</span> 
+<span class="n">ax0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Flux [$\dfrac</span><span class="si">{erg}</span><span class="s2">{cm\ s\ \AA}$]"</span><span class="p">,</span> 
                <span class="n">fontsize</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
                <span class="n">y</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-               <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+               <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">'center'</span><span class="p">)</span>
 
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Wavelength [$\AA$]&quot;</span><span class="p">,</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Wavelength [$\AA$]"</span><span class="p">,</span>
                <span class="n">fontsize</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">plotsdir</span> <span class="o">/</span> <span class="s1">&#39;compare_spectra_sunalt.png&#39;</span><span class="p">),</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">plotsdir</span> <span class="o">/</span> <span class="s1">'compare_spectra_sunalt.png'</span><span class="p">),</span>
             <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1390,39 +1390,39 @@ In the next two cells, we will setup an environment of reference files, download
              <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
              <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 
-<span class="n">ax0</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">],</span>
-             <span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">],</span>
-             <span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">&quot;ERROR&quot;</span><span class="p">],</span> 
-             <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">"WAVELENGTH"</span><span class="p">],</span>
+             <span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">"FLUX"</span><span class="p">],</span>
+             <span class="n">combo_dict_u</span><span class="p">[</span><span class="s2">"ERROR"</span><span class="p">],</span> 
+             <span class="n">linestyle</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span>
              <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
              <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-             <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span>
-             <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Unfiltered&quot;</span><span class="p">)</span>
+             <span class="n">c</span><span class="o">=</span><span class="s1">'C1'</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s2">"Unfiltered"</span><span class="p">)</span>
 
-<span class="n">ax0</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">],</span>
-             <span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">&quot;FLUX&quot;</span><span class="p">],</span>
-             <span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">&quot;ERROR&quot;</span><span class="p">],</span> 
-             <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">"WAVELENGTH"</span><span class="p">],</span>
+             <span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">"FLUX"</span><span class="p">],</span>
+             <span class="n">combo_dict_f</span><span class="p">[</span><span class="s2">"ERROR"</span><span class="p">],</span> 
+             <span class="n">linestyle</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span>
              <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
              <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-             <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span>
-             <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Filtered to SUN_ALT&lt;0&quot;</span><span class="p">)</span>
+             <span class="n">c</span><span class="o">=</span><span class="s1">'C2'</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s2">"Filtered to SUN_ALT&lt;0"</span><span class="p">)</span>
 
 <span class="n">ax0</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
-<span class="n">ax0</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Wavelength [$\AA$]&quot;</span><span class="p">,</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Wavelength [$\AA$]"</span><span class="p">,</span>
                <span class="n">fontsize</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-<span class="n">ax0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Flux [$\dfrac</span><span class="si">{erg}</span><span class="s2">{cm\ s\ \AA}$]&quot;</span><span class="p">,</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Flux [$\dfrac</span><span class="si">{erg}</span><span class="s2">{cm\ s\ \AA}$]"</span><span class="p">,</span>
                <span class="n">fontsize</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
-               <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
-<span class="n">ax0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Fig 2.2</span><span class="se">\n</span><span class="s2">Spectra with Errors of Filtered and Unfiltered by `SUN_ALT`&quot;</span><span class="p">,</span>
+               <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">'center'</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Fig 2.2</span><span class="se">\n</span><span class="s2">Spectra with Errors of Filtered and Unfiltered by `SUN_ALT`"</span><span class="p">,</span>
               <span class="n">size</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 
 <span class="n">ax0</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1213</span><span class="p">,</span> <span class="mi">1218</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">plotsdir</span> <span class="o">/</span> <span class="s1">&#39;ebar_compare_spectra_sunalt.png&#39;</span><span class="p">),</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">plotsdir</span> <span class="o">/</span> <span class="s1">'ebar_compare_spectra_sunalt.png'</span><span class="p">),</span>
             <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
 </pre></div>
 </div>

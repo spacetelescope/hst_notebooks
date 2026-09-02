@@ -828,18 +828,18 @@ statistic (mean, median, mode, or, standard deviation). <br></p>
 being a <code class="docutils literal notranslate"><span class="pre">ima.fits</span></code> in WFC3/IR. After downloading the images, we move them to our current working directory (cwd).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;idgga5*&#39;</span><span class="p">,</span> <span class="s1">&#39;UVIS&#39;</span><span class="p">,</span> <span class="s1">&#39;FLT&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
-         <span class="p">(</span><span class="s1">&#39;i*&#39;</span><span class="p">,</span> <span class="s1">&#39;IR&#39;</span><span class="p">,</span> <span class="s1">&#39;IMA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">))]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">'idgga5*'</span><span class="p">,</span> <span class="s1">'UVIS'</span><span class="p">,</span> <span class="s1">'FLT'</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
+         <span class="p">(</span><span class="s1">'i*'</span><span class="p">,</span> <span class="s1">'IR'</span><span class="p">,</span> <span class="s1">'IMA'</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">))]</span>
 
 <span class="k">for</span> <span class="n">criteria</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
     <span class="c1"># Get the observation records</span>
-    <span class="n">obs_table</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">proposal_id</span><span class="o">=</span><span class="mi">15145</span><span class="p">,</span> <span class="n">target_name</span><span class="o">=</span><span class="s1">&#39;N2525&#39;</span><span class="p">,</span> <span class="n">instrument_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;WFC3/</span><span class="si">{</span><span class="n">criteria</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">obs_table</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">proposal_id</span><span class="o">=</span><span class="mi">15145</span><span class="p">,</span> <span class="n">target_name</span><span class="o">=</span><span class="s1">'N2525'</span><span class="p">,</span> <span class="n">instrument_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"WFC3/</span><span class="si">{</span><span class="n">criteria</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Get the listing of data products</span>
     <span class="n">products</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">obs_table</span><span class="p">)</span>
 
     <span class="c1"># Filter the products for the file type</span>
-    <span class="n">filtered_products</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">filter_products</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="n">criteria</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">dataproduct_type</span><span class="o">=</span><span class="s1">&#39;image&#39;</span><span class="p">)</span>
+    <span class="n">filtered_products</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">filter_products</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="n">criteria</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">dataproduct_type</span><span class="o">=</span><span class="s1">'image'</span><span class="p">)</span>
 
     <span class="c1"># Display the table</span>
     <span class="n">filtered_products</span><span class="p">[</span><span class="n">criteria</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span><span class="n">criteria</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">]]</span>
@@ -848,13 +848,13 @@ being a <code class="docutils literal notranslate"><span class="pre">ima.fits</s
     <span class="n">download_table</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">filtered_products</span><span class="p">[</span><span class="n">criteria</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span><span class="n">criteria</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">]],</span> <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># For convenience move file to cwd and remove empty download dir</span>
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">download_table</span><span class="p">[</span><span class="s1">&#39;Local Path&#39;</span><span class="p">]:</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">download_table</span><span class="p">[</span><span class="s1">'Local Path'</span><span class="p">]:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;mastDownload/HST/&#39;</span><span class="o">+</span><span class="n">filename</span><span class="p">[:</span><span class="mi">9</span><span class="p">])</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">'mastDownload/HST/'</span><span class="o">+</span><span class="n">filename</span><span class="p">[:</span><span class="mi">9</span><span class="p">])</span>
         
-    <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;mastDownload/HST/&#39;</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">&#39;mastDownload/&#39;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">'mastDownload/HST/'</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="s1">'mastDownload/'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -903,8 +903,8 @@ file to the screen. The WFC3/UVIS image is in electrons and the WFC3/IR image is
 of the <a class="reference external" href="https://hst-docs.stsci.edu/wfc3dhb">WFC3 Data Handbook</a> for full descriptions of <code class="docutils literal notranslate"><span class="pre">SCI</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR</span></code>, and <code class="docutils literal notranslate"><span class="pre">DQ</span></code> arrays.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits&#39;</span><span class="p">,</span> <span class="n">printmeta</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idggabk1q_ima.fits&#39;</span><span class="p">,</span> <span class="n">printmeta</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display_image</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits'</span><span class="p">,</span> <span class="n">printmeta</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">display_image</span><span class="p">(</span><span class="s1">'idggabk1q_ima.fits'</span><span class="p">,</span> <span class="n">printmeta</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -934,8 +934,8 @@ image name as shown below. Notice how we need to specify the full axis range <co
 <code class="docutils literal notranslate"><span class="pre">[:,:2051]</span></code> as in standard <code class="docutils literal notranslate"><span class="pre">numpy</span></code> notation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Display UVIS1&#39;</span><span class="p">)</span>
-<span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[0:4096,2051:4102]&#39;</span><span class="p">)</span> 
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'Display UVIS1'</span><span class="p">)</span>
+<span class="n">display_image</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits[0:4096,2051:4102]'</span><span class="p">)</span> 
 </pre></div>
 </div>
 </div>
@@ -948,8 +948,8 @@ image name as shown below. Notice how we need to specify the full axis range <co
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Display UVIS2&#39;</span><span class="p">)</span>
-<span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[0:4096,0:2051]&#39;</span><span class="p">)</span> 
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'Display UVIS2'</span><span class="p">)</span>
+<span class="n">display_image</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits[0:4096,0:2051]'</span><span class="p">)</span> 
 </pre></div>
 </div>
 </div>
@@ -968,8 +968,8 @@ image name as shown below. Notice how we need to specify the full axis range <co
 colormaps must be provided. The elements of <code class="docutils literal notranslate"><span class="pre">colormaps</span></code> sequentially correspond with the <code class="docutils literal notranslate"><span class="pre">SCI</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR</span></code>, and <code class="docutils literal notranslate"><span class="pre">DQ</span></code> arrays.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
-              <span class="n">colormaps</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="s2">&quot;Greys_r&quot;</span><span class="p">,</span> <span class="s2">&quot;inferno_r&quot;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display_image</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits[3420:3575,2590:2770]'</span><span class="p">,</span>
+              <span class="n">colormaps</span><span class="o">=</span><span class="p">[</span><span class="s2">"viridis"</span><span class="p">,</span> <span class="s2">"Greys_r"</span><span class="p">,</span> <span class="s2">"inferno_r"</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -987,8 +987,8 @@ The default scaling value of <code class="docutils literal notranslate"><span cl
 (see <a class="reference external" href="https://docs.astropy.org/en/stable/api/astropy.visualization.ZScaleInterval.html">documentation</a> for more information).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
-              <span class="n">colormaps</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="s2">&quot;inferno_r&quot;</span><span class="p">],</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display_image</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits[3420:3575,2590:2770]'</span><span class="p">,</span>
+              <span class="n">colormaps</span><span class="o">=</span><span class="p">[</span><span class="s2">"viridis"</span><span class="p">,</span> <span class="s2">"viridis"</span><span class="p">,</span> <span class="s2">"inferno_r"</span><span class="p">],</span>
               <span class="n">scaling</span><span class="o">=</span><span class="p">[(</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">80000</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">400</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)])</span>
 </pre></div>
 </div>
@@ -1004,8 +1004,8 @@ The default scaling value of <code class="docutils literal notranslate"><span cl
 <p>In addition to changing each <code class="docutils literal notranslate"><span class="pre">SCI</span></code> array’s colormap and scaling, we display each read of the <code class="docutils literal notranslate"><span class="pre">ima</span></code> by setting <code class="docutils literal notranslate"><span class="pre">ima_multiread=True</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idggabk1q_ima.fits[43:55,299:311]&#39;</span><span class="p">,</span>
-              <span class="n">colormaps</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="s2">&quot;Greys_r&quot;</span><span class="p">,</span> <span class="s2">&quot;inferno_r&quot;</span><span class="p">],</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display_image</span><span class="p">(</span><span class="s1">'idggabk1q_ima.fits[43:55,299:311]'</span><span class="p">,</span>
+              <span class="n">colormaps</span><span class="o">=</span><span class="p">[</span><span class="s2">"viridis"</span><span class="p">,</span> <span class="s2">"Greys_r"</span><span class="p">,</span> <span class="s2">"inferno_r"</span><span class="p">],</span>
               <span class="n">scaling</span><span class="o">=</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">18</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)],</span>
               <span class="n">ima_multiread</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -1041,14 +1041,14 @@ an image, and individual <code class="docutils literal notranslate"><span class=
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot column median for the full image</span>
-<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits&#39;</span><span class="p">,</span>
-                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span>
-                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits'</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">'median'</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">'column'</span><span class="p">)</span>
 
 <span class="c1"># plot column standard deviation for the full image</span>
-<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits&#39;</span><span class="p">,</span>
-                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;stddev&#39;</span><span class="p">,</span>
-                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits'</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">'stddev'</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">'column'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1064,26 +1064,26 @@ an image, and individual <code class="docutils literal notranslate"><span class=
 <p>Next, we plot the column medians for each individual WFC3/UVIS chip.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get column median values for UVIS2 but don&#39;t plot </span>
-<span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[0:4096,0:2051]&#39;</span><span class="p">,</span>
-                          <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span>
-                          <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get column median values for UVIS2 but don't plot </span>
+<span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits[0:4096,0:2051]'</span><span class="p">,</span>
+                          <span class="n">stat</span><span class="o">=</span><span class="s1">'median'</span><span class="p">,</span>
+                          <span class="n">axis</span><span class="o">=</span><span class="s1">'column'</span><span class="p">,</span>
                           <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="c1"># get column median values for UVIS1 but don&#39;t plot </span>
-<span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[0:4096,2051:4102]&#39;</span><span class="p">,</span>
-                          <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span>
-                          <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">,</span>
+<span class="c1"># get column median values for UVIS1 but don't plot </span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits[0:4096,2051:4102]'</span><span class="p">,</span>
+                          <span class="n">stat</span><span class="o">=</span><span class="s1">'median'</span><span class="p">,</span>
+                          <span class="n">axis</span><span class="o">=</span><span class="s1">'column'</span><span class="p">,</span>
                           <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1"># overplot UVIS1 and UVIS2 data on one figure </span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">130</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;UVIS 1&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;UVIS 2&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;WFC3/UVIS idgga5m1q_flt.fits&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Column Number&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Column Median [e-]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'UVIS 1'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'UVIS 2'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'C3'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'WFC3/UVIS idgga5m1q_flt.fits'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Column Number'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Column Median [e-]'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1103,17 +1103,17 @@ an image, and individual <code class="docutils literal notranslate"><span class=
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display a section of the image</span>
-<span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">)</span>
+<span class="n">display_image</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits[3420:3575,2590:2770]'</span><span class="p">)</span>
 
 <span class="c1"># plot row mean for a section of the image</span>
-<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
-                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits[3420:3575,2590:2770]'</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">'mean'</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">'row'</span><span class="p">)</span>
 
 <span class="c1"># plot column mean for a section of the image</span>
-<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
-                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits[3420:3575,2590:2770]'</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">'mean'</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">'column'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1131,18 +1131,18 @@ Set <code class="docutils literal notranslate"><span class="pre">ylim</span></co
 <span class="n">y2</span> <span class="o">=</span> <span class="mi">220</span>
 
 <span class="c1"># Display a section of the image</span>
-<span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">)</span>
+<span class="n">display_image</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits[3420:3575,2590:2770]'</span><span class="p">)</span>
 
 <span class="c1"># plot row mean for single source with custom yaxis limits</span>
-<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
-                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits[3420:3575,2590:2770]'</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">'mean'</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">'row'</span><span class="p">,</span>
                         <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">))</span>
 
 <span class="c1"># plot column mean for single source with custom yaxis limits</span>
-<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idgga5m1q_flt.fits[3420:3575,2590:2770]&#39;</span><span class="p">,</span>
-                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">,</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">'idgga5m1q_flt.fits[3420:3575,2590:2770]'</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">'mean'</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">'column'</span><span class="p">,</span>
                         <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -1161,12 +1161,12 @@ Set <code class="docutils literal notranslate"><span class="pre">ylim</span></co
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display a section of the image</span>
-<span class="n">display_image</span><span class="p">(</span><span class="s1">&#39;idggabk1q_ima.fits[43:55,299:311]&#39;</span><span class="p">)</span>
+<span class="n">display_image</span><span class="p">(</span><span class="s1">'idggabk1q_ima.fits[43:55,299:311]'</span><span class="p">)</span>
 
 <span class="c1"># plot column mean for section of ima</span>
-<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">&#39;idggabk1q_ima.fits[43:55,299:311]&#39;</span><span class="p">,</span>
-                        <span class="n">stat</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-                        <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">,</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">row_column_stats</span><span class="p">(</span><span class="s1">'idggabk1q_ima.fits[43:55,299:311]'</span><span class="p">,</span>
+                        <span class="n">stat</span><span class="o">=</span><span class="s1">'mean'</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="s1">'column'</span><span class="p">,</span>
                         <span class="n">ima_multiread</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>

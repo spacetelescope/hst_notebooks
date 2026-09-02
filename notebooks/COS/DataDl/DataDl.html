@@ -831,24 +831,24 @@ You may read through all three, or you may wish to focus on a particular method 
 
 <span class="c1"># 2. Download an example dataset using astroquery:</span>
 <span class="c1"># 2.1. Find all the observations from a single HST Proposal:</span>
-<span class="c1"># We&#39;ll search for a program with Proposal ID 15366</span>
+<span class="c1"># We'll search for a program with Proposal ID 15366</span>
 <span class="c1"># A list of search criteria can be found by running:</span>
-<span class="c1">#    Observations.get_metadata(&#39;observations&#39;)</span>
-<span class="n">obs_from_proposal</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">proposal_id</span><span class="o">=</span><span class="s2">&quot;15366&quot;</span><span class="p">)</span>
+<span class="c1">#    Observations.get_metadata('observations')</span>
+<span class="n">obs_from_proposal</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">proposal_id</span><span class="o">=</span><span class="s2">"15366"</span><span class="p">)</span>
 
 <span class="c1"># 2.2. Find all the data products for these observations:</span>
 <span class="c1"># These include all the files associated with your observation</span>
 <span class="n">products_from_proposal</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">obs_from_proposal</span><span class="p">)</span>
 
 <span class="c1"># 2.3. Tell the user how many total files were found:</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">products_from_proposal</span><span class="p">)</span><span class="si">}</span><span class="s2"> data products&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">products_from_proposal</span><span class="p">)</span><span class="si">}</span><span class="s2"> data products"</span><span class="p">)</span>
 
 <span class="c1"># 2.4. Filter to a specific subset of these products:</span>
 <span class="c1"># Here we filter X1DSUM files, which are the final 1-D extracted spectra</span>
 <span class="c1"># and association files, which list related exposures combined into the X1DSUM</span>
 <span class="n">products_to_download</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">filter_products</span><span class="p">(</span>
     <span class="n">products_from_proposal</span><span class="p">,</span>
-    <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;X1DSUM&quot;</span><span class="p">,</span> <span class="s2">&quot;ASN&quot;</span><span class="p">]</span>
+    <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s2">"X1DSUM"</span><span class="p">,</span> <span class="s2">"ASN"</span><span class="p">]</span>
 <span class="p">)</span>
 
 <span class="c1"># 2.5. Download the filtered products:</span>
@@ -858,13 +858,13 @@ You may read through all three, or you may wish to focus on a particular method 
 <span class="c1"># Turn string paths to the files into python pathlib.Path objects</span>
 <span class="c1"># Then make lists of these local paths, aggregated by type of file</span>
 <span class="n">onecell_x1dsum_products</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">local_path</span><span class="p">)</span> <span class="k">for</span> <span class="n">local_path</span> <span class="ow">in</span>
-                           <span class="n">dl_table</span><span class="p">[</span><span class="s2">&quot;Local Path&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;x1dsum&quot;</span> <span class="ow">in</span> <span class="n">local_path</span><span class="p">]</span>
+                           <span class="n">dl_table</span><span class="p">[</span><span class="s2">"Local Path"</span><span class="p">]</span> <span class="k">if</span> <span class="s2">"x1dsum"</span> <span class="ow">in</span> <span class="n">local_path</span><span class="p">]</span>
 
 <span class="n">onecell_asn_products</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">local_path</span><span class="p">)</span> <span class="k">for</span> <span class="n">local_path</span> <span class="ow">in</span>
-                        <span class="n">dl_table</span><span class="p">[</span><span class="s2">&quot;Local Path&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;asn&quot;</span> <span class="ow">in</span> <span class="n">local_path</span><span class="p">]</span>
+                        <span class="n">dl_table</span><span class="p">[</span><span class="s2">"Local Path"</span><span class="p">]</span> <span class="k">if</span> <span class="s2">"asn"</span> <span class="ow">in</span> <span class="n">local_path</span><span class="p">]</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Downloaded X1DSUM Files: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">onecell_x1dsum_products</span><span class="p">,</span>
-      <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Downloaded ASN Files: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">onecell_asn_products</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Downloaded X1DSUM Files: </span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">onecell_x1dsum_products</span><span class="p">,</span>
+      <span class="s2">"</span><span class="se">\n</span><span class="s2">Downloaded ASN Files: </span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">onecell_asn_products</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -882,9 +882,9 @@ INFO: Found cached file ./mastDownload/HST/ldm701030/ldm701030_asn.fits with exp
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: Found cached file ./mastDownload/HST/ldm701030/ldm701030_x1dsum.fits with expected size 1814400. [astroquery.query]
 Downloaded X1DSUM Files: 
- [PosixPath(&#39;mastDownload/HST/ldm701010/ldm701010_x1dsum.fits&#39;), PosixPath(&#39;mastDownload/HST/ldm701020/ldm701020_x1dsum.fits&#39;), PosixPath(&#39;mastDownload/HST/ldm701030/ldm701030_x1dsum.fits&#39;)] 
+ [PosixPath('mastDownload/HST/ldm701010/ldm701010_x1dsum.fits'), PosixPath('mastDownload/HST/ldm701020/ldm701020_x1dsum.fits'), PosixPath('mastDownload/HST/ldm701030/ldm701030_x1dsum.fits')] 
 Downloaded ASN Files: 
- [PosixPath(&#39;mastDownload/HST/ldm701010/ldm701010_asn.fits&#39;), PosixPath(&#39;mastDownload/HST/ldm701020/ldm701020_asn.fits&#39;), PosixPath(&#39;mastDownload/HST/ldm701030/ldm701030_asn.fits&#39;)]
+ [PosixPath('mastDownload/HST/ldm701010/ldm701010_asn.fits'), PosixPath('mastDownload/HST/ldm701020/ldm701020_asn.fits'), PosixPath('mastDownload/HST/ldm701030/ldm701030_asn.fits')]
 </pre></div>
 </div>
 </div>
@@ -900,8 +900,8 @@ Downloaded ASN Files:
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># This will be an important directory for the Notebook, where we save data</span>
-<span class="n">data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./data/&#39;</span><span class="p">)</span>
-<span class="c1"># If directory doesn&#39;t exist, it&#39;ll be created</span>
+<span class="n">data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'./data/'</span><span class="p">)</span>
+<span class="c1"># If directory doesn't exist, it'll be created</span>
 <span class="n">data_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1010,18 +1010,18 @@ You can also search by right ascension and declination, instead of by dataset ID
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The three observation IDs we want to gather</span>
-<span class="n">obsIdList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;LDYR52010&#39;</span><span class="p">,</span> <span class="s1">&#39;LBNM01040&#39;</span><span class="p">,</span> <span class="s1">&#39;LBBD04040&#39;</span><span class="p">]</span>
+<span class="n">obsIdList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'LDYR52010'</span><span class="p">,</span> <span class="s1">'LBNM01040'</span><span class="p">,</span> <span class="s1">'LBBD04040'</span><span class="p">]</span>
 
-<span class="c1"># Open up this new file in &quot;write&quot; mode</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./obsId_list.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="c1"># The first line tells the search what type of parameter we&#39;re searching</span>
-    <span class="c1"># Here, it&#39;s the dataset ID.</span>
+<span class="c1"># Open up this new file in "write" mode</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'./obsId_list.txt'</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="c1"># The first line tells the search what type of parameter we're searching</span>
+    <span class="c1"># Here, it's the dataset ID.</span>
     <span class="c1"># It could be RA, DEC. In that case each row has two values</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Dataset_id</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"Dataset_id</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
     <span class="c1"># We want a newline after each obs_id except the last one</span>
     <span class="k">for</span> <span class="n">obsId</span> <span class="ow">in</span> <span class="n">obsIdList</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">obsId</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="c1"># Make sure we don&#39;t end the file with a blank line (below)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">obsId</span> <span class="o">+</span> <span class="s2">","</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+    <span class="c1"># Make sure we don't end the file with a blank line (below)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">obsIdList</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -1173,7 +1173,7 @@ Check the box labelled “HST” to select all files included by the filters, an
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">WD_query</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_object</span><span class="p">(</span>
     <span class="c1"># Searching for objects within 5 arcseconds of coordinates</span>
-    <span class="s2">&quot;11:00:34.126 +71:38:02.80&quot;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="s2">&quot;5 sec&quot;</span><span class="p">)</span>
+    <span class="s2">"11:00:34.126 +71:38:02.80"</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="s2">"5 sec"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1181,8 +1181,8 @@ Check the box labelled “HST” to select all files included by the filters, an
 <p>This command has generated a table of objects called <strong>“WD_query”</strong>. We can see what information we have on the objects in the table by printing its <em><code class="docutils literal notranslate"><span class="pre">keys</span></code></em>, and see how many objects are in the table with <code class="docutils literal notranslate"><span class="pre">len(WD_query)</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;We have table information on </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">WD_query</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span>
-      <span class="s2">&quot;observations in the following categories/columns:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"We have table information on </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">WD_query</span><span class="p">)</span><span class="si">}</span><span class="s2"> "</span> <span class="o">+</span>
+      <span class="s2">"observations in the following categories/columns:</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">WD_q_keys</span> <span class="o">=</span> <span class="p">(</span><span class="n">WD_query</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 <span class="n">WD_q_keys</span>
 </pre></div>
@@ -1192,39 +1192,39 @@ Check the box labelled “HST” to select all files included by the filters, an
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>We have table information on 1143 observations in the following categories/columns:
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;intentType&#39;,
- &#39;obs_collection&#39;,
- &#39;provenance_name&#39;,
- &#39;instrument_name&#39;,
- &#39;project&#39;,
- &#39;filters&#39;,
- &#39;wavelength_region&#39;,
- &#39;target_name&#39;,
- &#39;target_classification&#39;,
- &#39;obs_id&#39;,
- &#39;s_ra&#39;,
- &#39;s_dec&#39;,
- &#39;dataproduct_type&#39;,
- &#39;proposal_pi&#39;,
- &#39;calib_level&#39;,
- &#39;t_min&#39;,
- &#39;t_max&#39;,
- &#39;t_exptime&#39;,
- &#39;em_min&#39;,
- &#39;em_max&#39;,
- &#39;obs_title&#39;,
- &#39;t_obs_release&#39;,
- &#39;proposal_id&#39;,
- &#39;proposal_type&#39;,
- &#39;sequence_number&#39;,
- &#39;s_region&#39;,
- &#39;jpegURL&#39;,
- &#39;dataURL&#39;,
- &#39;dataRights&#39;,
- &#39;mtFlag&#39;,
- &#39;srcDen&#39;,
- &#39;obsid&#39;,
- &#39;distance&#39;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>['intentType',
+ 'obs_collection',
+ 'provenance_name',
+ 'instrument_name',
+ 'project',
+ 'filters',
+ 'wavelength_region',
+ 'target_name',
+ 'target_classification',
+ 'obs_id',
+ 's_ra',
+ 's_dec',
+ 'dataproduct_type',
+ 'proposal_pi',
+ 'calib_level',
+ 't_min',
+ 't_max',
+ 't_exptime',
+ 'em_min',
+ 'em_max',
+ 'obs_title',
+ 't_obs_release',
+ 'proposal_id',
+ 'proposal_type',
+ 'sequence_number',
+ 's_region',
+ 'jpegURL',
+ 'dataURL',
+ 'dataRights',
+ 'mtFlag',
+ 'srcDen',
+ 'obsid',
+ 'distance']
 </pre></div>
 </div>
 </div>
@@ -1248,30 +1248,30 @@ The parameter limits we add to the search are:</p>
 <span class="n">WD_query_narrow</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span>
                                       <span class="n">s_ra</span><span class="o">=</span><span class="p">[</span><span class="mf">165.</span><span class="p">,</span> <span class="mf">166.</span><span class="p">],</span>
                                       <span class="n">s_dec</span><span class="o">=</span><span class="p">[</span><span class="o">+</span><span class="mf">71.</span><span class="p">,</span> <span class="o">+</span><span class="mf">72.</span><span class="p">],</span>
-                                      <span class="n">wavelength_region</span><span class="o">=</span><span class="s2">&quot;UV&quot;</span><span class="p">,</span>
-                                      <span class="n">instrument_name</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;COS/NUV&quot;</span><span class="p">,</span> <span class="s2">&quot;COS/FUV&quot;</span><span class="p">],</span>
-                                      <span class="n">dataproduct_type</span><span class="o">=</span><span class="s2">&quot;spectrum&quot;</span><span class="p">,</span>
-                                      <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;G160M&#39;</span><span class="p">)</span>
+                                      <span class="n">wavelength_region</span><span class="o">=</span><span class="s2">"UV"</span><span class="p">,</span>
+                                      <span class="n">instrument_name</span><span class="o">=</span><span class="p">[</span><span class="s2">"COS/NUV"</span><span class="p">,</span> <span class="s2">"COS/FUV"</span><span class="p">],</span>
+                                      <span class="n">dataproduct_type</span><span class="o">=</span><span class="s2">"spectrum"</span><span class="p">,</span>
+                                      <span class="n">filters</span><span class="o">=</span><span class="s1">'G160M'</span><span class="p">)</span>
 
 <span class="c1"># Next lines simplifies the columns of data we see to some useful data</span>
 <span class="n">col_data</span> <span class="o">=</span> <span class="n">WD_query_narrow</span><span class="p">[</span>
-                <span class="s1">&#39;obsid&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;obs_id&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;target_name&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;dataproduct_type&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;instrument_name&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;project&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;filters&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;wavelength_region&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;t_exptime&#39;</span><span class="p">]</span>
+                <span class="s1">'obsid'</span><span class="p">,</span>
+                <span class="s1">'obs_id'</span><span class="p">,</span>
+                <span class="s1">'target_name'</span><span class="p">,</span>
+                <span class="s1">'dataproduct_type'</span><span class="p">,</span>
+                <span class="s1">'instrument_name'</span><span class="p">,</span>
+                <span class="s1">'project'</span><span class="p">,</span>
+                <span class="s1">'filters'</span><span class="p">,</span>
+                <span class="s1">'wavelength_region'</span><span class="p">,</span>
+                <span class="s1">'t_exptime'</span><span class="p">]</span>
 
 <span class="c1"># This is the index list in order of exposure time, increasing</span>
-<span class="n">sort_order</span> <span class="o">=</span> <span class="n">WD_query_narrow</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="s1">&#39;t_exptime&#39;</span><span class="p">)</span>
+<span class="n">sort_order</span> <span class="o">=</span> <span class="n">WD_query_narrow</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="s1">'t_exptime'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">col_data</span><span class="p">[</span><span class="n">sort_order</span><span class="p">])</span>
 
 <span class="n">chosenObs</span> <span class="o">=</span> <span class="n">col_data</span><span class="p">[</span><span class="n">sort_order</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Grab the last value of the sorted list</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">The longest COS/FUV exposure with the G160M filter is:&quot;</span> <span class="o">+</span>
-      <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="si">{</span><span class="n">chosenObs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">The longest COS/FUV exposure with the G160M filter is:"</span> <span class="o">+</span>
+      <span class="sa">f</span><span class="s2">"</span><span class="se">\n\n</span><span class="si">{</span><span class="n">chosenObs</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1319,13 +1319,13 @@ The longest COS/FUV exposure with the G160M filter is:
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Searching a table generated with a query</span>
 <span class="c1"># First, correct way using masking</span>
-<span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">WD_query</span><span class="p">[</span><span class="s1">&#39;obs_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;lbbd01020&#39;</span><span class="p">)</span>  <span class="c1"># NOTE, obs_id must be lower-case</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Correct way yields: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">WD_query</span><span class="p">[</span><span class="n">mask</span><span class="p">][</span><span class="s1">&#39;obs_id&#39;</span><span class="p">],</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">WD_query</span><span class="p">[</span><span class="s1">'obs_id'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'lbbd01020'</span><span class="p">)</span>  <span class="c1"># NOTE, obs_id must be lower-case</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Correct way yields: </span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">WD_query</span><span class="p">[</span><span class="n">mask</span><span class="p">][</span><span class="s1">'obs_id'</span><span class="p">],</span> <span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Second INCORRECT way, done with Pandas DataFrames data structures</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Incorrect way yields: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
-      <span class="n">WD_query</span><span class="p">[</span><span class="s1">&#39;obs_id&#39;</span> <span class="o">==</span> <span class="s1">&#39;LBBD01020&#39;</span><span class="p">][</span><span class="s1">&#39;obs_id&#39;</span><span class="p">],</span>
-      <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">which is NOT what we&#39;re looking for!&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Incorrect way yields: </span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span>
+      <span class="n">WD_query</span><span class="p">[</span><span class="s1">'obs_id'</span> <span class="o">==</span> <span class="s1">'LBBD01020'</span><span class="p">][</span><span class="s1">'obs_id'</span><span class="p">],</span>
+      <span class="s2">"</span><span class="se">\n</span><span class="s2">which is NOT what we're looking for!"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1338,7 +1338,7 @@ lbbd01020
 
 Incorrect way yields: 
  tess-s0014-4-3 
-which is NOT what we&#39;re looking for!
+which is NOT what we're looking for!
 </pre></div>
 </div>
 </div>
@@ -1388,7 +1388,7 @@ which is NOT what we&#39;re looking for!
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">downloads</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span>
                             <span class="n">product_list</span><span class="p">,</span>
                             <span class="n">download_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">data_dir</span><span class="p">),</span>
-                            <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;fits&#39;</span><span class="p">,</span>
+                            <span class="n">extension</span><span class="o">=</span><span class="s1">'fits'</span><span class="p">,</span>
                             <span class="n">mrp_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                             <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
@@ -1438,13 +1438,13 @@ which is NOT what we&#39;re looking for!
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The 5 sources we want to look for</span>
-<span class="n">sourcelist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;omega Centauri&#39;</span><span class="p">,</span> <span class="s1">&#39;M5&#39;</span><span class="p">,</span> <span class="s1">&#39;M13&#39;</span><span class="p">,</span> <span class="s1">&#39;M15&#39;</span><span class="p">,</span> <span class="s1">&#39;M53&#39;</span><span class="p">]</span>
+<span class="n">sourcelist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'omega Centauri'</span><span class="p">,</span> <span class="s1">'M5'</span><span class="p">,</span> <span class="s1">'M13'</span><span class="p">,</span> <span class="s1">'M15'</span><span class="p">,</span> <span class="s1">'M53'</span><span class="p">]</span>
 
-<span class="c1"># Open this new file in &quot;write&quot; mode</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./objectname_list.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="c1"># Open this new file in "write" mode</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'./objectname_list.csv'</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="c1"># We want a comma after each source name except the last one</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sourcelist</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">item</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">item</span> <span class="o">+</span> <span class="s2">","</span><span class="p">)</span>
     <span class="c1"># No comma after the last entry</span>
     <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">sourcelist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
@@ -1453,24 +1453,24 @@ which is NOT what we&#39;re looking for!
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Open the file we just wrote in &quot;read&quot; mode</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./objectname_list.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvFile</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Open the file we just wrote in "read" mode</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'./objectname_list.csv'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvFile</span><span class="p">:</span>
     <span class="c1"># This is the exact same list as `sourcelist`!</span>
-    <span class="n">objList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">reader</span><span class="p">(</span><span class="n">csvFile</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">objList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">reader</span><span class="p">(</span><span class="n">csvFile</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">','</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The input csv file contained the following sources:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">objList</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"The input csv file contained the following sources:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">objList</span><span class="p">)</span>
 
 <span class="c1"># Make a dictionary, where each source name</span>
 <span class="c1"># corresponds to a list of its observations with COS</span>
 <span class="n">globular_cluster_queries</span> <span class="o">=</span> <span class="p">{}</span>
 
-<span class="c1"># Each &quot;obj&quot; is a source name</span>
+<span class="c1"># Each "obj" is a source name</span>
 <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objList</span><span class="p">:</span>
     <span class="n">query_x</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span>
                             <span class="n">objectname</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span>
                             <span class="c1"># Query the area in +/- 5 arcminutes</span>
-                            <span class="n">radius</span><span class="o">=</span><span class="s2">&quot;5 min&quot;</span><span class="p">,</span>
-                            <span class="n">instrument_name</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;COS/FUV&#39;</span><span class="p">,</span> <span class="s1">&#39;COS/NUV&#39;</span><span class="p">])</span>
+                            <span class="n">radius</span><span class="o">=</span><span class="s2">"5 min"</span><span class="p">,</span>
+                            <span class="n">instrument_name</span><span class="o">=</span><span class="p">[</span><span class="s1">'COS/FUV'</span><span class="p">,</span> <span class="s1">'COS/NUV'</span><span class="p">])</span>
     <span class="c1"># Add this entry to the dictionary</span>
     <span class="n">globular_cluster_queries</span><span class="p">[</span><span class="n">obj</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">query_x</span><span class="p">)</span>
 
@@ -1481,10 +1481,10 @@ which is NOT what we&#39;re looking for!
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The input csv file contained the following sources:
- [&#39;omega Centauri&#39;, &#39;M5&#39;, &#39;M13&#39;, &#39;M15&#39;, &#39;M53&#39;]
+ ['omega Centauri', 'M5', 'M13', 'M15', 'M53']
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;omega Centauri&#39;: &lt;Table masked=True length=75&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{'omega Centauri': &lt;Table masked=True length=75&gt;
   intentType obs_collection provenance_name ...   objID1        distance     
     str11         str3            str6      ...   str10         float64      
  ----------- -------------- --------------- ... ---------- ------------------
@@ -1508,7 +1508,7 @@ which is NOT what we&#39;re looking for!
  calibration            HST          CALCOS ...  907301114 14.544185611228317
      science            HST          CALCOS ... 1006575801  79.19208944309166
      science            HST          CALCOS ... 1006575812  79.19208944309166,
- &#39;M5&#39;: &lt;Table masked=True length=11&gt;
+ 'M5': &lt;Table masked=True length=11&gt;
   intentType obs_collection provenance_name ...   objID1        distance    
     str11         str3            str6      ...   str10         float64     
  ----------- -------------- --------------- ... ---------- -----------------
@@ -1523,7 +1523,7 @@ which is NOT what we&#39;re looking for!
  calibration            HST          CALCOS ...  892071582  13.5181312584415
      science            HST          CALCOS ... 1007530512 61.83368183652463
      science            HST          CALCOS ... 1007530527 61.83368183652463,
- &#39;M13&#39;: &lt;Table masked=True length=5&gt;
+ 'M13': &lt;Table masked=True length=5&gt;
  intentType obs_collection provenance_name ...   objID1        distance     
     str7         str3            str6      ...   str10         float64      
  ---------- -------------- --------------- ... ---------- ------------------
@@ -1532,7 +1532,7 @@ which is NOT what we&#39;re looking for!
     science            HST          CALCOS ... 1006445232 132.11394638529515
     science            HST          CALCOS ... 1006448439 132.11394638529515
     science            HST          CALCOS ...  891410125  132.1139463852337,
- &#39;M15&#39;: &lt;Table masked=True length=15&gt;
+ 'M15': &lt;Table masked=True length=15&gt;
   intentType obs_collection provenance_name ...   objID1        distance     
     str11         str3            str6      ...   str10         float64      
  ----------- -------------- --------------- ... ---------- ------------------
@@ -1551,7 +1551,7 @@ which is NOT what we&#39;re looking for!
      science            HST          CALCOS ... 1006544963  28.10036224918268
      science            HST          CALCOS ... 1006545160  28.10036224918268
      science            HST          CALCOS ... 1006550848 100.13025803285203,
- &#39;M53&#39;: &lt;Table masked=True length=3&gt;
+ 'M53': &lt;Table masked=True length=3&gt;
  intentType obs_collection provenance_name ...   objID1        distance     
     str7         str3            str6      ...   str10         float64      
  ---------- -------------- --------------- ... ---------- ------------------
@@ -1612,10 +1612,10 @@ authors. Follow these links for more information about citations:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ex. 1 solution:</span>
-<span class="n">dataset_id_</span> <span class="o">=</span> <span class="s1">&#39;LDLM40010&#39;</span>
+<span class="n">dataset_id_</span> <span class="o">=</span> <span class="s1">'LDLM40010'</span>
 <span class="n">exptime_</span> <span class="o">=</span> <span class="mf">12403.904</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The TRAPPIST-1 COS data is in dataset </span><span class="si">{</span><span class="n">dataset_id_</span><span class="si">}</span><span class="s2">,&quot;</span> <span class="o">+</span>
-      <span class="sa">f</span><span class="s2">&quot; taken with an exosure time of </span><span class="si">{</span><span class="n">exptime_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The TRAPPIST-1 COS data is in dataset </span><span class="si">{</span><span class="n">dataset_id_</span><span class="si">}</span><span class="s2">,"</span> <span class="o">+</span>
+      <span class="sa">f</span><span class="s2">" taken with an exosure time of </span><span class="si">{</span><span class="n">exptime_</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1629,31 +1629,31 @@ authors. Follow these links for more information about citations:</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ex. 2 solution:</span>
 <span class="n">query_3</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span>
-                        <span class="n">obs_id</span><span class="o">=</span><span class="s1">&#39;LDLM40010&#39;</span><span class="p">,</span>
-                        <span class="n">wavelength_region</span><span class="o">=</span><span class="s2">&quot;UV&quot;</span><span class="p">,</span>
-                        <span class="n">instrument_name</span><span class="o">=</span><span class="s2">&quot;COS/FUV&quot;</span><span class="p">,</span>
-                        <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;G130M&#39;</span><span class="p">)</span>
+                        <span class="n">obs_id</span><span class="o">=</span><span class="s1">'LDLM40010'</span><span class="p">,</span>
+                        <span class="n">wavelength_region</span><span class="o">=</span><span class="s2">"UV"</span><span class="p">,</span>
+                        <span class="n">instrument_name</span><span class="o">=</span><span class="s2">"COS/FUV"</span><span class="p">,</span>
+                        <span class="n">filters</span><span class="o">=</span><span class="s1">'G130M'</span><span class="p">)</span>
 
 <span class="n">product_list2</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">query_3</span><span class="p">)</span>
-<span class="n">rawRowsA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">product_list2</span><span class="p">[</span><span class="s1">&#39;productSubGroupDescription&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;RAWTAG_A&quot;</span><span class="p">)</span>
-<span class="n">rawRowsB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">product_list2</span><span class="p">[</span><span class="s1">&#39;productSubGroupDescription&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;RAWTAG_B&quot;</span><span class="p">)</span>
+<span class="n">rawRowsA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">product_list2</span><span class="p">[</span><span class="s1">'productSubGroupDescription'</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"RAWTAG_A"</span><span class="p">)</span>
+<span class="n">rawRowsB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">product_list2</span><span class="p">[</span><span class="s1">'productSubGroupDescription'</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"RAWTAG_B"</span><span class="p">)</span>
 <span class="n">rawRows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rawRowsA</span><span class="p">,</span> <span class="n">rawRowsB</span><span class="p">)</span>
 <span class="o">!</span>mkdir<span class="w"> </span>./data/Ex2/
 <span class="n">downloads2</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span>
                             <span class="n">product_list2</span><span class="p">[</span><span class="n">rawRows</span><span class="p">],</span>
-                            <span class="n">download_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">data_dir</span><span class="o">/</span><span class="s1">&#39;Ex2/&#39;</span><span class="p">),</span>
-                            <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;fits&#39;</span><span class="p">,</span>
+                            <span class="n">download_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">data_dir</span><span class="o">/</span><span class="s1">'Ex2/'</span><span class="p">),</span>
+                            <span class="n">extension</span><span class="o">=</span><span class="s1">'fits'</span><span class="p">,</span>
                             <span class="n">mrp_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                             <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">downloads3</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span>
                             <span class="n">product_list2</span><span class="p">,</span>
-                            <span class="n">download_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">data_dir</span><span class="o">/</span><span class="s1">&#39;Ex2/&#39;</span><span class="p">),</span>
-                            <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;fits&#39;</span><span class="p">,</span>
+                            <span class="n">download_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">data_dir</span><span class="o">/</span><span class="s1">'Ex2/'</span><span class="p">),</span>
+                            <span class="n">extension</span><span class="o">=</span><span class="s1">'fits'</span><span class="p">,</span>
                             <span class="n">mrp_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                             <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">asn_data</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
-    <span class="s1">&#39;./data/Ex2/mastDownload/HST/ldlm40010/ldlm40010_asn.fits&#39;</span><span class="p">,</span> <span class="n">hdu</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="s1">'./data/Ex2/mastDownload/HST/ldlm40010/ldlm40010_asn.fits'</span><span class="p">,</span> <span class="n">hdu</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">asn_data</span><span class="p">)</span>
 </pre></div>

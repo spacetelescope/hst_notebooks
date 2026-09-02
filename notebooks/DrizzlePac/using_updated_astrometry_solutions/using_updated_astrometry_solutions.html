@@ -775,7 +775,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="o">%</span><span class="k">matplotlib</span> notebook
 <span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39; # Improves the resolution of figures rendered in notebooks.
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = 'retina' # Improves the resolution of figures rendered in notebooks.
 </pre></div>
 </div>
 </div>
@@ -788,10 +788,10 @@
 <p>Some steps in this notebook require access to HST reference files, so we will create a temporary ‘iref’ directory for these reference files after download. This step is typically done by defining the ‘iref’ path in your bash profile so that all reference files for all datasets can be in one static location, but for the portability of this notebook we will create a directory.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER_URL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_SERVER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://hst-crds.stsci.edu&#39;</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CRDS_PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache&#39;</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;iref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;./crds_cache/references/hst/wfc3/&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'CRDS_SERVER_URL'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'https://hst-crds.stsci.edu'</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'CRDS_SERVER'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'https://hst-crds.stsci.edu'</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'CRDS_PATH'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'./crds_cache'</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'iref'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'./crds_cache/references/hst/wfc3/'</span>
 </pre></div>
 </div>
 </div>
@@ -810,13 +810,13 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 <p>Let’s find some example HST data from MAST and download it. The example used here is from visit 14 of program <a class="reference external" href="https://www.stsci.edu/hst-program-info/program/?program=16801">16801</a>. The associations IEPW14030 and IEPW14040 each contain two FLC images in the F336W and F225W filters and a single DRC combined image for each filter.  Here we download the FLC, DRC, and ASN files using <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>.</p>
 <div class="alert alert-block alert-info" style="color:black" >  Depending on your connection speed this cell may take a few minutes to execute. </div><div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;IEPW14030&#39;</span><span class="p">,</span> <span class="s1">&#39;IEPW14040&#39;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'IEPW14030'</span><span class="p">,</span> <span class="s1">'IEPW14040'</span><span class="p">]</span>
 
 <span class="n">obsTable</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">query_criteria</span><span class="p">(</span><span class="n">obs_id</span><span class="o">=</span><span class="n">obs_ids</span><span class="p">)</span>
 <span class="n">products</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">get_product_list</span><span class="p">(</span><span class="n">obsTable</span><span class="p">)</span>
 
-<span class="n">data_prod</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;FLC&#39;</span><span class="p">,</span> <span class="s1">&#39;ASN&#39;</span><span class="p">,</span> <span class="s1">&#39;DRC&#39;</span><span class="p">]</span> <span class="c1"># [&#39;FLC&#39;, &#39;FLT&#39;, &#39;DRC&#39;, &#39;DRZ&#39;]</span>
-<span class="n">data_type</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;CALWF3&#39;</span><span class="p">]</span> <span class="c1"># [&#39;CALACS&#39;, &#39;CALWF3&#39;, &#39;CALWP2&#39;, &#39;HAP-SVM&#39;]</span>
+<span class="n">data_prod</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'FLC'</span><span class="p">,</span> <span class="s1">'ASN'</span><span class="p">,</span> <span class="s1">'DRC'</span><span class="p">]</span> <span class="c1"># ['FLC', 'FLT', 'DRC', 'DRZ']</span>
+<span class="n">data_type</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'CALWF3'</span><span class="p">]</span> <span class="c1"># ['CALACS', 'CALWF3', 'CALWP2', 'HAP-SVM']</span>
 
 <span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="n">data_prod</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">data_type</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -888,7 +888,7 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 <p>Next, we retrieve the Hubble Advanced Product (HAP) headerlets, which we will use to change between different WCS solutions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;HLET&#39;</span><span class="p">],</span> <span class="n">project</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;HAP-SVM&#39;</span><span class="p">],</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Observations</span><span class="o">.</span><span class="n">download_products</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">productSubGroupDescription</span><span class="o">=</span><span class="p">[</span><span class="s1">'HLET'</span><span class="p">],</span> <span class="n">project</span><span class="o">=</span><span class="p">[</span><span class="s1">'HAP-SVM'</span><span class="p">],</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -930,12 +930,12 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 <p>Now to make the paths easier to work with, we move those files from their default download location into the notebook directory. In addition, we add one to the headerlet extension numbers because lists are zero indexed while the EXTVER’s extensions are unity based. We do this by defining a small <code class="docutils literal notranslate"><span class="pre">correct_hdrlet_extvers()</span></code> function.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">fits_file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;./mastDownload/HST/*/*.fits&#39;</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">fits_file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'./mastDownload/HST/*/*.fits'</span><span class="p">):</span>
     <span class="n">fits_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fits_file</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">fits_file</span><span class="p">,</span> <span class="n">fits_name</span><span class="p">)</span>
     
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;mastDownload&#39;</span><span class="p">):</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;mastDownload&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">'mastDownload'</span><span class="p">):</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">'mastDownload'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -943,13 +943,13 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">correct_hdrlet_extvers</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Correctly renumbers hdrlet EXTVER values&quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;update&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Correctly renumbers hdrlet EXTVER values"""</span>
+    <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'update'</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdulist</span><span class="p">:</span>
         <span class="n">hdrlet_count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ext</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">hdulist</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">ext</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;HDRLET&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ext</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">'HDRLET'</span><span class="p">:</span>
                 <span class="n">hdrlet_count</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">hdulist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;EXTVER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdrlet_count</span>
+                <span class="n">hdulist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">'EXTVER'</span><span class="p">]</span> <span class="o">=</span> <span class="n">hdrlet_count</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">continue</span>
 </pre></div>
@@ -958,7 +958,7 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">flc_file</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*flc.fits&#39;</span><span class="p">)):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">flc_file</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'*flc.fits'</span><span class="p">)):</span>
     <span class="n">correct_hdrlet_extvers</span><span class="p">(</span><span class="n">flc_file</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -967,21 +967,21 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 <p>Now we can check the active WCS solution in the image header. If the image is aligned to a catalog, we list the number of matches and the fit RMS converted from milliarcseconds to pixels.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ext_0_keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DETECTOR&#39;</span><span class="p">,</span> <span class="s1">&#39;EXPTIME&#39;</span><span class="p">,</span> <span class="s1">&#39;FILTER&#39;</span><span class="p">]</span> <span class="c1"># extension 0 keywords.</span>
-<span class="n">ext_1_keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;WCSNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;NMATCHES&#39;</span><span class="p">,</span> <span class="s1">&#39;RMS_RA&#39;</span><span class="p">,</span> <span class="s1">&#39;RMS_DEC&#39;</span><span class="p">]</span> <span class="c1"># extension 1 keywords.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ext_0_keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'DETECTOR'</span><span class="p">,</span> <span class="s1">'EXPTIME'</span><span class="p">,</span> <span class="s1">'FILTER'</span><span class="p">]</span> <span class="c1"># extension 0 keywords.</span>
+<span class="n">ext_1_keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'WCSNAME'</span><span class="p">,</span> <span class="s1">'NMATCHES'</span><span class="p">,</span> <span class="s1">'RMS_RA'</span><span class="p">,</span> <span class="s1">'RMS_DEC'</span><span class="p">]</span> <span class="c1"># extension 1 keywords.</span>
 
 <span class="c1"># Define the detector plate scales in arcsec per pixel.</span>
 <span class="n">DETECTOR_SCALES</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="s1">&#39;IR&#39;</span><span class="p">:</span> <span class="mf">0.1283</span><span class="p">,</span> 
-  <span class="s1">&#39;UVIS&#39;</span><span class="p">:</span> <span class="mf">0.0396</span><span class="p">,</span> 
-  <span class="s1">&#39;WFC&#39;</span><span class="p">:</span> <span class="mf">0.05</span>
+  <span class="s1">'IR'</span><span class="p">:</span> <span class="mf">0.1283</span><span class="p">,</span> 
+  <span class="s1">'UVIS'</span><span class="p">:</span> <span class="mf">0.0396</span><span class="p">,</span> 
+  <span class="s1">'WFC'</span><span class="p">:</span> <span class="mf">0.05</span>
 <span class="p">}</span>
 
 <span class="n">formatted_data</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="n">column_data</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">fits_file</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*fl?.fits&#39;</span><span class="p">)):</span>
-    <span class="n">column_data</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fits_file</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">fits_file</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'*fl?.fits'</span><span class="p">)):</span>
+    <span class="n">column_data</span><span class="p">[</span><span class="s1">'filename'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fits_file</span><span class="p">)</span>
     <span class="n">header0</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">fits_file</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">header1</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="n">fits_file</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     
@@ -989,7 +989,7 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
         <span class="n">column_data</span><span class="p">[</span><span class="n">keyword</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">header0</span><span class="p">[</span><span class="n">keyword</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">ext_1_keywords</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">header1</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s1">&#39;RMS&#39;</span> <span class="ow">in</span> <span class="n">keyword</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">'RMS'</span> <span class="ow">in</span> <span class="n">keyword</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">header1</span><span class="p">[</span><span class="n">keyword</span><span class="p">],</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">header1</span><span class="p">[</span><span class="n">keyword</span><span class="p">]</span>
@@ -997,12 +997,12 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
         <span class="k">else</span><span class="p">:</span>
             <span class="n">column_data</span><span class="p">[</span><span class="n">keyword</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
             
-    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;RMS_RA&#39;</span><span class="p">,</span> <span class="s1">&#39;RMS_DEC&#39;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'RMS_RA'</span><span class="p">,</span> <span class="s1">'RMS_DEC'</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">header1</span><span class="p">:</span>
-            <span class="n">rms_value</span> <span class="o">=</span> <span class="n">header1</span><span class="p">[</span><span class="n">keyword</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">/</span> <span class="n">DETECTOR_SCALES</span><span class="p">[</span><span class="n">header0</span><span class="p">[</span><span class="s1">&#39;DETECTOR&#39;</span><span class="p">]]</span>
-            <span class="n">column_data</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s1">_pix&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">rms_value</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+            <span class="n">rms_value</span> <span class="o">=</span> <span class="n">header1</span><span class="p">[</span><span class="n">keyword</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">/</span> <span class="n">DETECTOR_SCALES</span><span class="p">[</span><span class="n">header0</span><span class="p">[</span><span class="s1">'DETECTOR'</span><span class="p">]]</span>
+            <span class="n">column_data</span><span class="p">[</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s1">_pix'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">rms_value</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">column_data</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s1">_pix&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="n">column_data</span><span class="p">[</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s1">_pix'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
 
 <span class="n">wcstable</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">column_data</span><span class="p">)</span>
 <span class="n">wcstable</span>
@@ -1028,7 +1028,7 @@ MAST queries may be done using <a href="https://astroquery.readthedocs.io/en/lat
 <p>Using <code class="docutils literal notranslate"><span class="pre">fits.info</span></code> prints basic information about the extensions in a FITS file.  In the following examples, we show operations for one F336W <code class="docutils literal notranslate"><span class="pre">flc.fits</span></code> file, though the same operations can be repeated in a loop for multiple files. The updated solutions should then show up as extra <code class="docutils literal notranslate"><span class="pre">HDRLET</span></code> extensions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;iepw14g4q_flc.fits&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s1">'iepw14g4q_flc.fits'</span>
 
 <span class="n">fits</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 </pre></div>
@@ -1070,7 +1070,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ext_indices</span> <span class="o">=</span> <span class="n">headerlet</span><span class="o">.</span><span class="n">find_headerlet_HDUs</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">ext_indices</span><span class="p">)</span> <span class="c1"># To show it&#39;s consistent with the fits.info from above.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ext_indices</span><span class="p">)</span> <span class="c1"># To show it's consistent with the fits.info from above.</span>
 </pre></div>
 </div>
 </div>
@@ -1084,10 +1084,10 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Ext</span><span class="se">\t</span><span class="s1">WCSNAME&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Ext</span><span class="se">\t</span><span class="s1">WCSNAME'</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">ext_ind</span> <span class="ow">in</span> <span class="n">ext_indices</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">ext_ind</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">hdu</span><span class="p">[</span><span class="n">ext_ind</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;WCSNAME&#39;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">ext_ind</span><span class="p">,</span> <span class="s1">'</span><span class="se">\t</span><span class="s1">'</span><span class="p">,</span> <span class="n">hdu</span><span class="p">[</span><span class="n">ext_ind</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">'WCSNAME'</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -1103,13 +1103,13 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <p>Alternatively, we can use the <code class="docutils literal notranslate"><span class="pre">get_headerlet_kw_names()</span></code> function:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_wcsnames</span> <span class="o">=</span> <span class="n">headerlet</span><span class="o">.</span><span class="n">get_headerlet_kw_names</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">kw</span><span class="o">=</span><span class="s1">&#39;WCSNAME&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_wcsnames</span> <span class="o">=</span> <span class="n">headerlet</span><span class="o">.</span><span class="n">get_headerlet_kw_names</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">kw</span><span class="o">=</span><span class="s1">'WCSNAME'</span><span class="p">)</span>
 <span class="n">new_wcsnames</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;IDC_2731450pi&#39;, &#39;IDC_2731450pi-GSC240&#39;, &#39;IDC_2731450pi-FIT_REL_GAIAeDR3&#39;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>['IDC_2731450pi', 'IDC_2731450pi-GSC240', 'IDC_2731450pi-FIT_REL_GAIAeDR3']
 </pre></div>
 </div>
 </div>
@@ -1119,16 +1119,16 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_hdrlet_wcsnames</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print and return list of WCS names in HDRLET extensions of fits file&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Print and return list of WCS names in HDRLET extensions of fits file"""</span>
 
     <span class="k">with</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">hdu</span><span class="p">:</span>
         <span class="n">ext_indices</span> <span class="o">=</span> <span class="n">headerlet</span><span class="o">.</span><span class="n">find_headerlet_HDUs</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Ext</span><span class="se">\t</span><span class="s1">WCSNAME&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'Ext</span><span class="se">\t</span><span class="s1">WCSNAME'</span><span class="p">)</span>
         <span class="n">new_wcsnames</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">ext_ind</span> <span class="ow">in</span> <span class="n">ext_indices</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="n">ext_ind</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;WCSNAME&#39;</span><span class="p">]</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">ext_ind</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="n">ext_ind</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">'WCSNAME'</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">ext_ind</span><span class="p">,</span> <span class="s1">'</span><span class="se">\t</span><span class="s1">'</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
             <span class="n">new_wcsnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">new_wcsnames</span>
@@ -1154,7 +1154,7 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 <p>We can also see which solution is the “active” solution (the one currently applied to the SCI extensions):</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">current_wcs</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;WCSNAME&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">current_wcs</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'WCSNAME'</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">'SCI'</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">current_wcs</span><span class="p">)</span>
 </pre></div>
@@ -1176,18 +1176,18 @@ No.    Name      Ver    Type      Cards   Dimensions   Format
 NOTE: This is especially useful in cases where some of the exposures in a visit will have solutions that are aligned to Gaia, but others won't.  This is true for grism images in the same visit as direct images, or shallow/deep exposure combinations.
 </div><div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Gets the index of list element with value &#39;IDC_2731450pi-GSC240&#39;.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Gets the index of list element with value 'IDC_2731450pi-GSC240'.</span>
 <span class="c1"># The index in this list + 1 is the same as the EXTVER of the corresponding HDRLET.</span>
-<span class="c1"># We need to add 1 because lists are 0-indexed, while EXTVER&#39;s are 1 indexed.</span>
+<span class="c1"># We need to add 1 because lists are 0-indexed, while EXTVER's are 1 indexed.</span>
 
-<span class="n">chosen_ext</span> <span class="o">=</span> <span class="n">new_wcsnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;IDC_2731450pi-FIT_REL_GAIAeDR3&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
+<span class="n">chosen_ext</span> <span class="o">=</span> <span class="n">new_wcsnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">'IDC_2731450pi-FIT_REL_GAIAeDR3'</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">headerlet</span><span class="o">.</span><span class="n">restore_from_headerlet</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">hdrext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;HDRLET&#39;</span><span class="p">,</span> <span class="n">chosen_ext</span><span class="p">),</span> <span class="n">archive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">headerlet</span><span class="o">.</span><span class="n">restore_from_headerlet</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">hdrext</span><span class="o">=</span><span class="p">(</span><span class="s1">'HDRLET'</span><span class="p">,</span> <span class="n">chosen_ext</span><span class="p">),</span> <span class="n">archive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1196,7 +1196,7 @@ NOTE: This is especially useful in cases where some of the exposures in a visit 
 <p>We can check that the solution was applied:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">current_wcs</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;WCSNAME&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">current_wcs</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'WCSNAME'</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">'SCI'</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">current_wcs</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1210,8 +1210,8 @@ NOTE: This is especially useful in cases where some of the exposures in a visit 
 <p>We can also apply the solution via the HDRNAME:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hdrlet_hdrnames</span> <span class="o">=</span> <span class="n">headerlet</span><span class="o">.</span><span class="n">get_headerlet_kw_names</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="s1">&#39;HDRNAME&#39;</span><span class="p">)</span>
-<span class="n">desired_hdrname</span> <span class="o">=</span> <span class="n">hdrlet_hdrnames</span><span class="p">[</span><span class="n">new_wcsnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;IDC_2731450pi-GSC240&#39;</span><span class="p">)]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hdrlet_hdrnames</span> <span class="o">=</span> <span class="n">headerlet</span><span class="o">.</span><span class="n">get_headerlet_kw_names</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="s1">'HDRNAME'</span><span class="p">)</span>
+<span class="n">desired_hdrname</span> <span class="o">=</span> <span class="n">hdrlet_hdrnames</span><span class="p">[</span><span class="n">new_wcsnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">'IDC_2731450pi-GSC240'</span><span class="p">)]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">desired_hdrname</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1233,16 +1233,16 @@ NOTE: This is especially useful in cases where some of the exposures in a visit 
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">wcsname</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">new_wcsnames</span><span class="p">):</span>
-    <span class="k">if</span> <span class="s1">&#39;IDC&#39;</span> <span class="ow">in</span> <span class="n">wcsname</span> <span class="ow">and</span> <span class="s1">&#39;GSC240&#39;</span> <span class="ow">in</span> <span class="n">wcsname</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">'IDC'</span> <span class="ow">in</span> <span class="n">wcsname</span> <span class="ow">and</span> <span class="s1">'GSC240'</span> <span class="ow">in</span> <span class="n">wcsname</span><span class="p">:</span>
         <span class="n">chosen_ext</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="c1"># Add one due to 0 indexing of enumerate vs 1 indexing of EXTVER</span>
         <span class="k">break</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The desired extension is:&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;HDRLET&#39;</span><span class="p">,</span> <span class="n">chosen_ext</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'The desired extension is:'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'HDRLET'</span><span class="p">,</span> <span class="n">chosen_ext</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The desired extension is: (&#39;HDRLET&#39;, 2)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The desired extension is: ('HDRLET', 2)
 </pre></div>
 </div>
 </div>
@@ -1258,9 +1258,9 @@ NOTE: This is especially useful in cases where some of the exposures in a visit 
 <p>When the WCS is <code class="docutils literal notranslate"><span class="pre">FIT_REL_eDR3</span></code>, the individual exposures are aligned to one another and then the entire association is aligned to Gaia eDR3.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chosen_ext</span> <span class="o">=</span> <span class="n">new_wcsnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;IDC_2731450pi-FIT_REL_GAIAeDR3&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-<span class="n">headerlet</span><span class="o">.</span><span class="n">restore_from_headerlet</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">hdrext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;HDRLET&#39;</span><span class="p">,</span> <span class="n">chosen_ext</span><span class="p">),</span> <span class="n">archive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">current_wcs</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;WCSNAME&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chosen_ext</span> <span class="o">=</span> <span class="n">new_wcsnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">'IDC_2731450pi-FIT_REL_GAIAeDR3'</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">headerlet</span><span class="o">.</span><span class="n">restore_from_headerlet</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">hdrext</span><span class="o">=</span><span class="p">(</span><span class="s1">'HDRLET'</span><span class="p">,</span> <span class="n">chosen_ext</span><span class="p">),</span> <span class="n">archive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">current_wcs</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'WCSNAME'</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">'SCI'</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">current_wcs</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1279,9 +1279,9 @@ NOTE: This is especially useful in cases where some of the exposures in a visit 
 <b>NOTE:</b> Data taken after October 2017 may not have an a priori solution, as the pointing information of the telescope was already calculated using GSC 2.4.0.  As such, the "old" solution may be of the same form as the a priori solution, i.e.: IDC_xxxxxxxxx-GSC240.
 </div><div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chosen_ext</span> <span class="o">=</span> <span class="n">new_wcsnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;IDC_2731450pi-GSC240&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-<span class="n">headerlet</span><span class="o">.</span><span class="n">restore_from_headerlet</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">hdrext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;HDRLET&#39;</span><span class="p">,</span> <span class="n">chosen_ext</span><span class="p">),</span> <span class="n">archive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">current_wcs</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;WCSNAME&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chosen_ext</span> <span class="o">=</span> <span class="n">new_wcsnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">'IDC_2731450pi-GSC240'</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">headerlet</span><span class="o">.</span><span class="n">restore_from_headerlet</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">hdrext</span><span class="o">=</span><span class="p">(</span><span class="s1">'HDRLET'</span><span class="p">,</span> <span class="n">chosen_ext</span><span class="p">),</span> <span class="n">archive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">current_wcs</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'WCSNAME'</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">'SCI'</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">current_wcs</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1298,9 +1298,9 @@ NOTE: This is especially useful in cases where some of the exposures in a visit 
 <p>If the original solution is desired, with no updates to the WCS and the original HST pointing information, it can be restored using the methods shown below, by replacing the WCSNAME simply with <code class="docutils literal notranslate"><span class="pre">IDC_2731450pi</span></code>, or whatever is the name of the IDCTAB reference file.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chosen_ext</span> <span class="o">=</span> <span class="n">new_wcsnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;IDC_2731450pi&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-<span class="n">headerlet</span><span class="o">.</span><span class="n">restore_from_headerlet</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">hdrext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;HDRLET&#39;</span><span class="p">,</span> <span class="n">chosen_ext</span><span class="p">),</span> <span class="n">archive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">current_wcs</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;WCSNAME&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chosen_ext</span> <span class="o">=</span> <span class="n">new_wcsnames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">'IDC_2731450pi'</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">headerlet</span><span class="o">.</span><span class="n">restore_from_headerlet</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">hdrext</span><span class="o">=</span><span class="p">(</span><span class="s1">'HDRLET'</span><span class="p">,</span> <span class="n">chosen_ext</span><span class="p">),</span> <span class="n">archive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">current_wcs</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'WCSNAME'</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">'SCI'</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">current_wcs</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1320,7 +1320,7 @@ NOTE: This is especially useful in cases where some of the exposures in a visit 
 <br>However, we can apply the SVM headerlet solutions, which are derived from first relatively aligning the HST images to each other, and then aligning the group to an absolute reference catalog.  Thus, they are often a better solution for datasets with a variety of filters/depths.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hlet_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*hlet.fits&#39;</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hlet_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'*hlet.fits'</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1330,9 +1330,9 @@ NOTE: This is especially useful in cases where some of the exposures in a visit 
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">root_to_hlet_dict</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">for</span> <span class="n">hlet</span> <span class="ow">in</span> <span class="n">hlet_files</span><span class="p">:</span>
-    <span class="n">dest_image</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">hlet</span><span class="p">,</span> <span class="s1">&#39;DESTIM&#39;</span><span class="p">)</span>
+    <span class="n">dest_image</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">hlet</span><span class="p">,</span> <span class="s1">'DESTIM'</span><span class="p">)</span>
     <span class="n">root_to_hlet_dict</span><span class="p">[</span><span class="n">dest_image</span><span class="p">]</span> <span class="o">=</span> <span class="n">hlet</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">hlet</span><span class="p">,</span> <span class="n">dest_image</span><span class="p">,</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">hlet</span><span class="p">,</span> <span class="s1">&#39;WCSNAME&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">hlet</span><span class="p">,</span> <span class="n">dest_image</span><span class="p">,</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">hlet</span><span class="p">,</span> <span class="s1">'WCSNAME'</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1348,8 +1348,8 @@ hst_16801_14_wfc3_uvis_f336w_iepw14g6_hlet.fits iepw14g6q IDC_2731450pi-FIT_SVM_
 <p>Now we simply have to match each SVM headerlet to its corresponding flc file, and apply it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">flc</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*flc.fits&#39;</span><span class="p">)):</span>
-    <span class="n">root</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">flc</span><span class="p">,</span> <span class="s1">&#39;rootname&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">flc</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'*flc.fits'</span><span class="p">)):</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">flc</span><span class="p">,</span> <span class="s1">'rootname'</span><span class="p">)</span>
     <span class="n">headerlet</span><span class="o">.</span><span class="n">apply_headerlet_as_primary</span><span class="p">(</span><span class="n">flc</span><span class="p">,</span> <span class="n">hdrlet</span><span class="o">=</span><span class="n">root_to_hlet_dict</span><span class="p">[</span><span class="n">root</span><span class="p">],</span> <span class="n">attach</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1379,10 +1379,10 @@ hst_16801_14_wfc3_uvis_f336w_iepw14g6_hlet.fits iepw14g6q IDC_2731450pi-FIT_SVM_
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">asn_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">flc</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*flc.fits&#39;</span><span class="p">)):</span>
-    <span class="n">asn_id</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">flc</span><span class="p">,</span> <span class="s1">&#39;asn_id&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">asn_id</span> <span class="o">==</span> <span class="s1">&#39;NONE&#39;</span><span class="p">:</span>
-        <span class="n">asn_id</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">flc</span><span class="p">,</span> <span class="s1">&#39;rootname&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">flc</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'*flc.fits'</span><span class="p">)):</span>
+    <span class="n">asn_id</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">flc</span><span class="p">,</span> <span class="s1">'asn_id'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">asn_id</span> <span class="o">==</span> <span class="s1">'NONE'</span><span class="p">:</span>
+        <span class="n">asn_id</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">flc</span><span class="p">,</span> <span class="s1">'rootname'</span><span class="p">)</span>
     <span class="n">asn_id</span> <span class="o">=</span> <span class="n">asn_id</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="n">asn_dict</span><span class="p">[</span><span class="n">asn_id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">flc</span><span class="p">)</span>
 <span class="n">asn_dict</span>
@@ -1391,8 +1391,8 @@ hst_16801_14_wfc3_uvis_f336w_iepw14g6_hlet.fits iepw14g6q IDC_2731450pi-FIT_SVM_
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>defaultdict(list,
-            {&#39;iepw14030&#39;: [&#39;iepw14g4q_flc.fits&#39;, &#39;iepw14g6q_flc.fits&#39;],
-             &#39;iepw14040&#39;: [&#39;iepw14gaq_flc.fits&#39;, &#39;iepw14geq_flc.fits&#39;]})
+            {'iepw14030': ['iepw14g4q_flc.fits', 'iepw14g6q_flc.fits'],
+             'iepw14040': ['iepw14gaq_flc.fits', 'iepw14geq_flc.fits']})
 </pre></div>
 </div>
 </div>
@@ -1400,10 +1400,10 @@ hst_16801_14_wfc3_uvis_f336w_iepw14g6_hlet.fits iepw14g6q IDC_2731450pi-FIT_SVM_
 <p>Next, we prepare to drizzle the data, and <b> we get some recommended values for drizzling from the MDRIZTAB reference file.</b>  The parameters in this file are different for each detector and are based on the number of input frames and the filter. These are a good starting point for drizzling and may be adjusted accordingly.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_images_f336w</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;iepw14g[46]q_flc.fits&#39;</span><span class="p">))</span>
-<span class="n">mdz</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">input_images_f336w</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;MDRIZTAB&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Searching for the MDRIZTAB file:&#39;</span><span class="p">,</span> <span class="n">mdz</span><span class="p">)</span>
-<span class="o">!</span>crds<span class="w"> </span>sync<span class="w"> </span>--hst<span class="w"> </span>--files<span class="w"> </span><span class="o">{</span>mdz<span class="o">}</span><span class="w"> </span>--output-dir<span class="w"> </span><span class="o">{</span>os.environ<span class="o">[</span><span class="s1">&#39;iref&#39;</span><span class="o">]}</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">input_images_f336w</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">'iepw14g[46]q_flc.fits'</span><span class="p">))</span>
+<span class="n">mdz</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">input_images_f336w</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">'MDRIZTAB'</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'$'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Searching for the MDRIZTAB file:'</span><span class="p">,</span> <span class="n">mdz</span><span class="p">)</span>
+<span class="o">!</span>crds<span class="w"> </span>sync<span class="w"> </span>--hst<span class="w"> </span>--files<span class="w"> </span><span class="o">{</span>mdz<span class="o">}</span><span class="w"> </span>--output-dir<span class="w"> </span><span class="o">{</span>os.environ<span class="o">[</span><span class="s1">'iref'</span><span class="o">]}</span>
 </pre></div>
 </div>
 </div>
@@ -1411,9 +1411,9 @@ hst_16801_14_wfc3_uvis_f336w_iepw14g6_hlet.fits iepw14g6q IDC_2731450pi-FIT_SVM_
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Searching for the MDRIZTAB file: 2ck18260i_mdz.fits
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context &#39;hst-latest&#39; resolves to &#39;hst_1298.pmap&#39;
-CRDS - INFO -  Reorganizing 0 references from &#39;instrument&#39; to &#39;flat&#39;
-CRDS - INFO -  Reorganizing from &#39;instrument&#39; to &#39;flat&#39; cache,  removing instrument directories.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CRDS - INFO -  Symbolic context 'hst-latest' resolves to 'hst_1298.pmap'
+CRDS - INFO -  Reorganizing 0 references from 'instrument' to 'flat'
+CRDS - INFO -  Reorganizing from 'instrument' to 'flat' cache,  removing instrument directories.
 CRDS - INFO -  Syncing explicitly listed files.
 CRDS - INFO -  0 errors
 CRDS - INFO -  0 warnings
@@ -1424,18 +1424,18 @@ CRDS - INFO -  4 infos
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_vals_from_mdriztab</span><span class="p">(</span><span class="n">input_images_f336w</span><span class="p">,</span> <span class="n">kw_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;driz_sep_bits&#39;</span><span class="p">,</span> 
-                                                        <span class="s1">&#39;combine_type&#39;</span><span class="p">,</span> 
-                                                        <span class="s1">&#39;driz_cr_snr&#39;</span><span class="p">,</span> 
-                                                        <span class="s1">&#39;driz_cr_scale&#39;</span><span class="p">,</span> 
-                                                        <span class="s1">&#39;final_bits&#39;</span><span class="p">]):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_vals_from_mdriztab</span><span class="p">(</span><span class="n">input_images_f336w</span><span class="p">,</span> <span class="n">kw_list</span><span class="o">=</span><span class="p">[</span><span class="s1">'driz_sep_bits'</span><span class="p">,</span> 
+                                                        <span class="s1">'combine_type'</span><span class="p">,</span> 
+                                                        <span class="s1">'driz_cr_snr'</span><span class="p">,</span> 
+                                                        <span class="s1">'driz_cr_scale'</span><span class="p">,</span> 
+                                                        <span class="s1">'final_bits'</span><span class="p">]):</span>
 <span class="w">    </span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;Get only selected parameters from the MDRIZTAB.&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">'''Get only selected parameters from the MDRIZTAB.'''</span>
     <span class="n">mdriz_dict</span> <span class="o">=</span> <span class="n">getMdriztabPars</span><span class="p">(</span><span class="n">input_images_f336w</span><span class="p">)</span>
     
     <span class="n">requested_params</span> <span class="o">=</span> <span class="p">{}</span>
     
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Outputting the following parameters:&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Outputting the following parameters:'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kw_list</span><span class="p">:</span>
         <span class="n">requested_params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">mdriz_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">mdriz_dict</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
@@ -1447,7 +1447,7 @@ CRDS - INFO -  4 infos
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">selected_params</span> <span class="o">=</span> <span class="n">get_vals_from_mdriztab</span><span class="p">(</span><span class="n">asn_dict</span><span class="p">[</span><span class="s1">&#39;iepw14030&#39;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">selected_params</span> <span class="o">=</span> <span class="n">get_vals_from_mdriztab</span><span class="p">(</span><span class="n">asn_dict</span><span class="p">[</span><span class="s1">'iepw14030'</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -1472,21 +1472,21 @@ final_bits 336
     <span class="n">input_images</span> <span class="o">=</span> <span class="n">asn_dict</span><span class="p">[</span><span class="n">asn_id</span><span class="p">]</span>
     
     <span class="c1"># To override any of the above values:</span>
-    <span class="c1"># selected_params[&#39;driz_sep_bits&#39;] = &#39;256, 64, 16&#39;</span>
-    <span class="c1"># selected_params[&#39;final_bits&#39;]    = &#39;256, 64, 16&#39;</span>
-    <span class="c1"># selected_params[&#39;combine_type&#39;]  = &#39;median&#39;</span>
-    <span class="c1"># selected_params[&#39;driz_cr_snr&#39;]   = &#39;4.0 3.5&#39;</span>
-    <span class="c1"># selected_params[&#39;driz_cr_scale&#39;] = &#39;1.2 1.0&#39;</span>
+    <span class="c1"># selected_params['driz_sep_bits'] = '256, 64, 16'</span>
+    <span class="c1"># selected_params['final_bits']    = '256, 64, 16'</span>
+    <span class="c1"># selected_params['combine_type']  = 'median'</span>
+    <span class="c1"># selected_params['driz_cr_snr']   = '4.0 3.5'</span>
+    <span class="c1"># selected_params['driz_cr_scale'] = '1.2 1.0'</span>
 
     <span class="n">selected_params</span> <span class="o">=</span> <span class="n">get_vals_from_mdriztab</span><span class="p">(</span><span class="n">input_images</span><span class="p">)</span>
     
     <span class="n">astrodrizzle</span><span class="o">.</span><span class="n">AstroDrizzle</span><span class="p">(</span><span class="n">input_images</span><span class="p">,</span> 
-                              <span class="n">output</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">asn_id</span><span class="si">}</span><span class="s1">_updated_wcs&#39;</span><span class="p">,</span>
+                              <span class="n">output</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">asn_id</span><span class="si">}</span><span class="s1">_updated_wcs'</span><span class="p">,</span>
                               <span class="n">preserve</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                               <span class="n">clean</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
                               <span class="n">build</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                               <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                              <span class="n">skymethod</span><span class="o">=</span><span class="s1">&#39;match&#39;</span><span class="p">,</span>
+                              <span class="n">skymethod</span><span class="o">=</span><span class="s1">'match'</span><span class="p">,</span>
                               <span class="n">in_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                               <span class="o">**</span><span class="n">selected_params</span><span class="p">)</span>
 <span class="n">clear_output</span><span class="p">()</span>
@@ -1506,8 +1506,8 @@ final_bits 336
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display the two science images and zoom in on an object to see the astrometric error.</span>
-<span class="n">image1</span> <span class="o">=</span> <span class="s1">&#39;iepw14030_drc.fits&#39;</span>
-<span class="n">image2</span> <span class="o">=</span> <span class="s1">&#39;iepw14040_drc.fits&#39;</span>
+<span class="n">image1</span> <span class="o">=</span> <span class="s1">'iepw14030_drc.fits'</span>
+<span class="n">image2</span> <span class="o">=</span> <span class="s1">'iepw14040_drc.fits'</span>
 
 <span class="n">sci_image1</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">image1</span><span class="p">)</span>
 <span class="n">sci_image2</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">image2</span><span class="p">)</span>
@@ -1520,17 +1520,17 @@ final_bits 336
 <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">wcs_image1</span><span class="p">)</span>
 <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">wcs_image2</span><span class="p">)</span>
 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;WCS: &#39;</span><span class="o">+</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">image1</span><span class="p">,</span> <span class="s1">&#39;WCSNAME&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;WCS: &#39;</span><span class="o">+</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">image2</span><span class="p">,</span> <span class="s1">&#39;WCSNAME&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci_image1</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmax</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci_image2</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image2</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmax</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'WCS: '</span><span class="o">+</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">image1</span><span class="p">,</span> <span class="s1">'WCSNAME'</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">'SCI'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'WCS: '</span><span class="o">+</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">image2</span><span class="p">,</span> <span class="s1">'WCSNAME'</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">'SCI'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci_image1</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmax</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys_r'</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci_image2</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image2</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmax</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys_r'</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
 
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">x1</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="n">x1</span><span class="o">+</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y1</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="n">y1</span><span class="o">+</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">x2</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="n">x2</span><span class="o">+</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y2</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="n">y2</span><span class="o">+</span><span class="mi">50</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'white'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">':'</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'white'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">':'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1546,8 +1546,8 @@ Finally, we  display the redrizzled image which uses the improved FIT-SVM-GAIAeD
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Display the two science images and zoom in on an object to see the astrometric error.</span>
-<span class="n">image1</span> <span class="o">=</span> <span class="s1">&#39;iepw14030_updated_wcs_drc.fits&#39;</span>
-<span class="n">image2</span> <span class="o">=</span> <span class="s1">&#39;iepw14040_updated_wcs_drc.fits&#39;</span>
+<span class="n">image1</span> <span class="o">=</span> <span class="s1">'iepw14030_updated_wcs_drc.fits'</span>
+<span class="n">image2</span> <span class="o">=</span> <span class="s1">'iepw14040_updated_wcs_drc.fits'</span>
 
 <span class="n">sci_image1</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">image1</span><span class="p">)</span>
 <span class="n">sci_image2</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">image2</span><span class="p">)</span>
@@ -1560,17 +1560,17 @@ Finally, we  display the redrizzled image which uses the improved FIT-SVM-GAIAeD
 <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">wcs_image1</span><span class="p">)</span>
 <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">wcs_image2</span><span class="p">)</span>
 
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;WCS: &#39;</span><span class="o">+</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">image1</span><span class="p">,</span> <span class="s1">&#39;WCSNAME&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;WCS: &#39;</span><span class="o">+</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">image2</span><span class="p">,</span> <span class="s1">&#39;WCSNAME&#39;</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;SCI&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci_image1</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmax</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci_image2</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image2</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmax</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'WCS: '</span><span class="o">+</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">image1</span><span class="p">,</span> <span class="s1">'WCSNAME'</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">'SCI'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'WCS: '</span><span class="o">+</span><span class="n">fits</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="n">image2</span><span class="p">,</span> <span class="s1">'WCSNAME'</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">(</span><span class="s1">'SCI'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci_image1</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmax</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys_r'</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sci_image2</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image2</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmax</span><span class="o">=</span><span class="n">z</span><span class="o">.</span><span class="n">get_limits</span><span class="p">(</span><span class="n">sci_image2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys_r'</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
 
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">x1</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="n">x1</span><span class="o">+</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y1</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="n">y1</span><span class="o">+</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">x2</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="n">x2</span><span class="o">+</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y2</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="n">y2</span><span class="o">+</span><span class="mi">50</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'white'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">':'</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'white'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">':'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
