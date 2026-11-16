@@ -1,188 +1,130 @@
 
 <!DOCTYPE html>
 
-
-<html lang="en" data-content_root="../../../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <title>Slitlessutils Cookbook: Spectral Extraction for ΑCS/WFC Full-Frame &#8212; HST Notebooks</title>
-  
-  
-  
-  <script data-cfasync="false">
+<html data-content_root="../../../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Slitlessutils Cookbook: Spectral Extraction for ΑCS/WFC Full-Frame — HST Notebooks</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
+<!--
     this give us a css class that will be invisible only if js is disabled
   -->
-  <noscript>
-    <style>
+<noscript>
+<style>
       .pst-js-only { display: none !important; }
 
     </style>
-  </noscript>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=6a604523" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/table.css?v=cd6c26fb" />
-  
-  <!-- So that users can add custom icons -->
-  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
-
-    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../../_static/design-tabs.js?v=fcb327ea"></script>
-    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-2XDY0S4S5Q"></script>
-    <script>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../../../_static/pygments.css?v=03e43079" rel="stylesheet" type="text/css"/>
+<link href="../../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" rel="stylesheet" type="text/css"/>
+<link href="../../../_static/togglebutton.css?v=9c3e77be" rel="stylesheet" type="text/css"/>
+<link href="../../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" rel="stylesheet" type="text/css"/>
+<link href="../../../_static/sphinx-thebe.css?v=4fa983c6" rel="stylesheet" type="text/css"/>
+<link href="../../../_static/sphinx-design.min.css?v=6a604523" rel="stylesheet" type="text/css"/>
+<link href="../../../_static/table.css?v=cd6c26fb" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../../../_static/doctools.js?v=9a2dae69"></script>
+<script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../../_static/copybutton.js?v=f281be69"></script>
+<script src="../../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+<script>let toggleHintShow = 'Click to show';</script>
+<script>let toggleHintHide = 'Click to hide';</script>
+<script>let toggleOpenOnPrint = 'true';</script>
+<script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+<script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+<script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../../_static/design-tabs.js?v=fcb327ea"></script>
+<script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-2XDY0S4S5Q"></script>
+<script>
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){ dataLayer.push(arguments); }
                 gtag('js', new Date());
                 gtag('config', 'G-2XDY0S4S5Q');
             </script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>
+<script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+<script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+<script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+<script>
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){ dataLayer.push(arguments); }
                 gtag('js', new Date());
                 gtag('config', 'G-2XDY0S4S5Q');
             </script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/ACS/acs_grism_extraction_fullframe/slitlessutils_ACSWFC_fullframe_extraction';</script>
-    <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Slitlessutils Cookbook: Spectral Extraction for ACS/WFC Subarrays" href="../acs_grism_extraction_subarray/slitlessutils_ACSWFC_subarray_extraction.html" />
-    <link rel="prev" title="Planning WFC Imaging While Taking into Account CTE-related Losses" href="../acs_etc_cte/acs_etc_cte.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
-  
-  <dialog id="pst-search-dialog">
-    
-<form class="bd-search d-flex align-items-center"
-      action="../../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/ACS/acs_grism_extraction_fullframe/slitlessutils_ACSWFC_fullframe_extraction';</script>
+<link href="../../../genindex.html" rel="index" title="Index"/>
+<link href="../../../search.html" rel="search" title="Search"/>
+<link href="../acs_grism_extraction_subarray/slitlessutils_ACSWFC_subarray_extraction.html" rel="next" title="Slitlessutils Cookbook: Spectral Extraction for ACS/WFC Subarrays"/>
+<link href="../acs_etc_cte/acs_etc_cte.html" rel="prev" title="Planning WFC Imaging While Taking into Account CTE-related Losses"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+<meta content="" name="docsearch:version"/>
+<style id="citation-footer-style">#citation-footer {
+  font-size: 0.8rem !important;
+  line-height: 1.4;
+}
+#citation-footer * {
+  font-size: inherit !important;
+  line-height: inherit;
+}</style></head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search this book..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search this book..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form>
-  </dialog>
-
-  <div class="pst-async-banner-revealer d-none">
-  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
 </div>
-
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-    
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-
-  
-    
-  
-
+<header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
 <a class="navbar-brand logo" href="../../../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../../_static/stsci_logo2.png" class="logo__image only-light" alt="HST Notebooks - Home"/>
-    <img src="../../../_static/stsci_logo2.png" class="logo__image only-dark pst-js-only" alt="HST Notebooks - Home"/>
-  
-  
+<img alt="HST Notebooks - Home" class="logo__image only-light" src="../../../_static/stsci_logo2.png"/>
+<img alt="HST Notebooks - Home" class="logo__image only-dark pst-js-only" src="../../../_static/stsci_logo2.png"/>
 </a></div>
-        <div class="sidebar-primary-item">
-
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
- <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
- <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
 </button></div>
-        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="../../../index.html">
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<ul class="nav bd-sidenav bd-sidenav__home-link">
+<li class="toctree-l1">
+<a class="reference internal" href="../../../index.html">
                     STScI HST Notebook Repository HQ
                 </a>
-            </li>
-        </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
+</li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">ACS</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../README.html">ACS Notebooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../acs_findsat_mrt/acs_findsat_mrt_example.html">Satellite trail detection in ACS/WFC data using acstools.findsat_mrt</a></li>
@@ -191,7 +133,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../acs_subarrays/acs_subarrays.html">ACS Image Reduction for Subarray Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../acs_sbc_dark_analysis/acs_sbc_dark_analysis.html">SBC Dark Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../acs_reduction/acs_reduction.html">ACS/WFC Image Reduction</a></li>
-
 <li class="toctree-l1"><a class="reference internal" href="../acs_pixel_area_maps/acs_pixel_area_maps.html">ACS Pixel Area Maps</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../acs_polarization_tools/acs_polarization_tools.html">Using ACS Polarization Tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../acs_focus_diverse_epsfs/acs_focus_diverse_epsfs.html">Focus Diverse ePSFs for ACS/WFC</a></li>
@@ -205,62 +146,15 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../COS/README.html">COS Notebooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../COS/Setup/Setup.html">Setting up your computer environment for working with COS data</a></li>
-
-
-
-
-
 <li class="toctree-l1"><a class="reference internal" href="../../COS/DataDl/DataDl.html">Downloading COS Data</a></li>
-
-
-
-
 <li class="toctree-l1"><a class="reference internal" href="../../COS/ViewData/ViewData.html">Viewing COS Data</a></li>
-
-
-
-
-
 <li class="toctree-l1"><a class="reference internal" href="../../COS/AsnFile/AsnFile.html">Modifying or Creating an Association File</a></li>
-
-
-
-
-
 <li class="toctree-l1"><a class="reference internal" href="../../COS/CalCOS/CalCOS.html">Running the COS Data Pipeline (<code class="docutils literal notranslate"><span class="pre">CalCOS</span></code>)</a></li>
-
-
-
-
-
-
 <li class="toctree-l1"><a class="reference internal" href="../../COS/SplitTag/SplitTag.html">Splitting COS Exposures into sub-exposures with <code class="docutils literal notranslate"><span class="pre">splittag</span></code></a></li>
-
-
-
-
-
-
-
 <li class="toctree-l1"><a class="reference internal" href="../../COS/DayNight/DayNight.html">Filtering out COS Data taken during the Day or Night</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../COS/LSF/LSF.html">Working with the COS Line Spread Function (LSF)</a></li>
-
 <li class="toctree-l1"><a class="reference internal" href="../../COS/Extract/Extract.html">Editing the extraction boxes in a spectral extraction file (<code class="docutils literal notranslate"><span class="pre">XTRACTAB</span></code>)</a></li>
-
-
-
-
-
-
-
 <li class="toctree-l1"><a class="reference internal" href="../../COS/ExceptionReport/ExceptionReport.html">What to do when you get an Exception Report for COS</a></li>
-
-
-
-
-
-
-
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">DrizzlePac</span></p>
 <ul class="nav bd-sidenav">
@@ -281,31 +175,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../HASP/README.html">HASP Notebooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../HASP/Setup/Setup.html">Installing the Hubble Advanced Spectral Products Script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../HASP/CoaddTutorial/CoaddTutorial.html">Inputting User Data using the Hubble Advanced Spectral Products Script</a></li>
-
 <li class="toctree-l1"><a class="reference internal" href="../../HASP/FluxScaleTutorial/FluxScaleTutorial.html">Scaling Flux while using the Hubble Advanced Spectral Products Script</a></li>
-
 <li class="toctree-l1"><a class="reference internal" href="../../HASP/DataDiagnostic/DataDiagnostics.html">HASP Data Diagnostic Notebook</a></li>
-
-
-
-
 <li class="toctree-l1"><a class="reference internal" href="../../HASP/WavelengthAdjustment/WavelengthAdjustment.html">Wavelength Adjustments for Running the Hubble Advanced Spectral Products (HASP) Script</a></li>
-
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">HSLA</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../HSLA/README.html">HSLA Notebooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../HSLA/COSLifetimePositions/COSLifetimePositions.html">Combining COS Data from Multiple Lifetime Positions and Central Wavelengths</a></li>
-
 <li class="toctree-l1"><a class="reference internal" href="../../HSLA/Intro/Intro.html">Introduction to the HSLA Data Products and Tools</a></li>
-
 <li class="toctree-l1"><a class="reference internal" href="../../HSLA/Setup/Setup.html">Installing the HASP/HSLA Spectral-Combination Script</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">NICMOS</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../NICMOS/nicmos_unit_conversion/nicmos_unit_conversion.html">Programmatic Replacements for NICMOS Units Conversion Form</a></li>
-
-
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">STIS</span></p>
 <ul class="nav bd-sidenav">
@@ -364,246 +247,124 @@
 </ul>
 </details></li>
 </ul>
-
-    </div>
+</div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item">
-<div id="ethical-ad-placement"
-      class="flat"
-      data-ea-publisher="readthedocs"
-      data-ea-type="readthedocs-sidebar"
-      data-ea-manual="true">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
 </div></div>
-  </div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main" role="main">
-        
-        
-
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
 <div class="sbt-scroll-pixel-helper"></div>
-
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article d-print-none">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <span class="fa-solid fa-bars"></span>
+<div class="header-article-items__start">
+<div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle primary sidebar">
+<span class="fa-solid fa-bars"></span>
 </button></div>
-      
-    </div>
-  
-  
-    <div class="header-article-items__end">
-      
-        <div class="header-article-item">
-
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
 <div class="article-header-buttons">
-
-
-
-
-
 <div class="dropdown dropdown-launch-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
-    <i class="fas fa-rocket"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/ACS/acs_grism_extraction_fullframe/slitlessutils_ACSWFC_fullframe_extraction.ipynb" target="_blank"
-   class="btn btn-sm dropdown-item"
-   title="Launch on Colab"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
+<button aria-expanded="false" aria-label="Launch interactive content" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+<i class="fas fa-rocket"></i>
+</button>
+<ul class="dropdown-menu">
+<li><a class="btn btn-sm dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="https://colab.research.google.com/github/spacetelescope/hst_notebooks/blob/main/notebooks/ACS/acs_grism_extraction_fullframe/slitlessutils_ACSWFC_fullframe_extraction.ipynb" target="_blank" title="Launch on Colab">
 <span class="btn__icon-container">
-  
-    <img alt="Colab logo" src="../../../_static/images/logo_colab.png">
-  </span>
+<img alt="Colab logo" src="../../../_static/images/logo_colab.png"/>
+</span>
 <span class="btn__text-container">Colab</span>
 </a>
 </li>
-      
-      
-      
-      
-      <li>
-<button onclick="initThebeSBT()"
-  class="btn btn-sm btn-launch-thebe dropdown-item"
-  title="Launch Thebe"
-  data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
+<li>
+<button class="btn btn-sm btn-launch-thebe dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="initThebeSBT()" title="Launch Thebe">
 <span class="btn__icon-container">
-  <i class="fas fa-play"></i>
-  </span>
+<i class="fas fa-play"></i>
+</span>
 <span class="btn__text-container">Live Code</span>
 </button>
 </li>
-      
-  </ul>
+</ul>
 </div>
-
-
-
-
-
-
 <div class="dropdown dropdown-source-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
-    <i class="fab fa-github"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://github.com/spacetelescope/hst_notebooks" target="_blank"
-   class="btn btn-sm btn-source-repository-button dropdown-item"
-   title="Source repository"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
+<button aria-expanded="false" aria-label="Source repositories" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+<i class="fab fa-github"></i>
+</button>
+<ul class="dropdown-menu">
+<li><a class="btn btn-sm btn-source-repository-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="https://github.com/spacetelescope/hst_notebooks" target="_blank" title="Source repository">
 <span class="btn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
+<i class="fab fa-github"></i>
+</span>
 <span class="btn__text-container">Repository</span>
 </a>
 </li>
-      
-      
-      
-      
-      <li><a href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/ACS/acs_grism_extraction_fullframe/slitlessutils_ACSWFC_fullframe_extraction.html&body=Your%20issue%20content%20here." target="_blank"
-   class="btn btn-sm btn-source-issues-button dropdown-item"
-   title="Open an issue"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
+<li><a class="btn btn-sm btn-source-issues-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="https://github.com/spacetelescope/hst_notebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/ACS/acs_grism_extraction_fullframe/slitlessutils_ACSWFC_fullframe_extraction.html&amp;body=Your%20issue%20content%20here." target="_blank" title="Open an issue">
 <span class="btn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
+<i class="fas fa-lightbulb"></i>
+</span>
 <span class="btn__text-container">Open issue</span>
 </a>
 </li>
-      
-  </ul>
+</ul>
 </div>
-
-
-
-
-
-
 <div class="dropdown dropdown-download-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
-    <i class="fas fa-download"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="../../../_sources/notebooks/ACS/acs_grism_extraction_fullframe/slitlessutils_ACSWFC_fullframe_extraction.ipynb" target="_blank"
-   class="btn btn-sm btn-download-source-button dropdown-item"
-   title="Download source file"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
+<button aria-expanded="false" aria-label="Download this page" class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button">
+<i class="fas fa-download"></i>
+</button>
+<ul class="dropdown-menu">
+<li><a class="btn btn-sm btn-download-source-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" href="../../../_sources/notebooks/ACS/acs_grism_extraction_fullframe/slitlessutils_ACSWFC_fullframe_extraction.ipynb" target="_blank" title="Download source file">
 <span class="btn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
+<i class="fas fa-file"></i>
+</span>
 <span class="btn__text-container">.ipynb</span>
 </a>
 </li>
-      
-      
-      
-      
-      <li>
-<button onclick="window.print()"
-  class="btn btn-sm btn-download-pdf-button dropdown-item"
-  title="Print to PDF"
-  data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
+<li>
+<button class="btn btn-sm btn-download-pdf-button dropdown-item" data-bs-placement="left" data-bs-toggle="tooltip" onclick="window.print()" title="Print to PDF">
 <span class="btn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
+<i class="fas fa-file-pdf"></i>
+</span>
 <span class="btn__text-container">.pdf</span>
 </button>
 </li>
-      
-  </ul>
+</ul>
 </div>
-
-
-
-
-<button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
-  title="Fullscreen mode"
-  data-bs-placement="bottom" data-bs-toggle="tooltip"
->
-  
-
+<button class="btn btn-sm btn-fullscreen-button pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" onclick="toggleFullScreen()" title="Fullscreen mode">
 <span class="btn__icon-container">
-  <i class="fas fa-expand"></i>
-  </span>
-
+<i class="fas fa-expand"></i>
+</span>
 </button>
-
-
-
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
 </button>
-
-
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button>
-<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
 </button>
 </div></div>
-      
-    </div>
-  
 </div>
 </div>
-              
-              
-
-<div id="jb-print-docs-body" class="onlyprint">
-    <h1>Slitlessutils Cookbook: Spectral Extraction for ΑCS/WFC Full-Frame</h1>
-    <!-- Table of contents -->
-    <div id="print-main-content">
-        <div id="jb-print-toc">
-            
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>Slitlessutils Cookbook: Spectral Extraction for ΑCS/WFC Full-Frame</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> Contents </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">1. Introduction</a></li>
@@ -635,23 +396,19 @@
 </ul>
 </li>
 </ul>
-            </nav>
-        </div>
-    </div>
+</nav>
 </div>
-
-              
-                
+</div>
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <p><a id="top"></a></p>
-<p><img alt="STScI Logo" src="../../../_images/stsci_header.png" /></p>
+<article class="bd-article">
+<p><a id="top"></a></p>
+<p><img alt="STScI Logo" src="../../../_images/stsci_header.png"/></p>
 <section class="tex2jax_ignore mathjax_ignore" id="slitlessutils-cookbook-spectral-extraction-for-cs-wfc-full-frame">
 <h1><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Cookbook: Spectral Extraction for ΑCS/WFC Full-Frame<a class="headerlink" href="#slitlessutils-cookbook-spectral-extraction-for-cs-wfc-full-frame" title="Link to this heading">#</a></h1>
-<p>This notebook contains a step-by-step guide for performing spectral extractions with Slitlessutils for G800L full frame data from ACS/WFC.<br>
+<p>This notebook contains a step-by-step guide for performing spectral extractions with Slitlessutils for G800L full frame data from ACS/WFC.<br/>
 The original source for this notebook is the ACS folder on the <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks">spacetelescope/hst_notebooks</a> GitHub repository.</p>
-<hr class="docutils" />
+<hr class="docutils"/>
 <section id="learning-goals">
 <h2>Learning Goals<a class="headerlink" href="#learning-goals" title="Link to this heading">#</a></h2>
 <p>In this tutorial you will:</p>
@@ -664,60 +421,60 @@ The original source for this notebook is the ACS folder on the <a class="referen
 </section>
 <section id="table-of-contents">
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="#intro"><span class="xref myst">1. Introduction</span></a> <br>
-      <a class="reference internal" href="#env"><span class="xref myst">1.1 Environment</span></a> <br>
-      <a class="reference internal" href="#import"><span class="xref myst">1.2 Imports</span></a> <br>
-      <a class="reference internal" href="#config"><span class="xref myst">1.3 Slitlessutils Configuration</span></a> <br>
-<a class="reference internal" href="#globalvar"><span class="xref myst">2. Define Global Variables</span></a> <br>
-<a class="reference internal" href="#download"><span class="xref myst">3. Download Data</span></a> <br>
-      <a class="reference internal" href="#organize"><span class="xref myst">3.1 Create Data Directories and Organize</span></a><br>
-<a class="reference internal" href="#checkwcs"><span class="xref myst">4. Check the WCS</span></a><br>
-<a class="reference internal" href="#grism"><span class="xref myst">5. Preprocess the G800L Grism Images</span></a><br>
-<a class="reference internal" href="#direct"><span class="xref myst">6. Preprocess the F775W Direct Images</span></a><br>
-      <a class="reference internal" href="#drizzle"><span class="xref myst">6.1 Display Drizzle Image and Overlay Segmentation Map</span></a><br>
-<a class="reference internal" href="#extract"><span class="xref myst">7. Extract the Spectra from the Grism Data</span></a><br>
-      <a class="reference internal" href="#region"><span class="xref myst">7.1 Display a Region File</span></a><br>
-      <a class="reference internal" href="#plot"><span class="xref myst">7.2 Plot the Spectrum</span></a><br>
-<a class="reference internal" href="#conclusions"><span class="xref myst">8. Conclusions</span></a> <br>
-<a class="reference internal" href="#add"><span class="xref myst">Additional Resources</span></a> <br>
-<a class="reference internal" href="#about"><span class="xref myst">About this Notebook</span></a> <br></p>
-<p><a class="reference internal" href="#cite"><span class="xref myst">Citations</span></a> <br></p>
+<p><a class="reference internal" href="#intro"><span class="xref myst">1. Introduction</span></a> <br/>
+      <a class="reference internal" href="#env"><span class="xref myst">1.1 Environment</span></a> <br/>
+      <a class="reference internal" href="#import"><span class="xref myst">1.2 Imports</span></a> <br/>
+      <a class="reference internal" href="#config"><span class="xref myst">1.3 Slitlessutils Configuration</span></a> <br/>
+<a class="reference internal" href="#globalvar"><span class="xref myst">2. Define Global Variables</span></a> <br/>
+<a class="reference internal" href="#download"><span class="xref myst">3. Download Data</span></a> <br/>
+      <a class="reference internal" href="#organize"><span class="xref myst">3.1 Create Data Directories and Organize</span></a><br/>
+<a class="reference internal" href="#checkwcs"><span class="xref myst">4. Check the WCS</span></a><br/>
+<a class="reference internal" href="#grism"><span class="xref myst">5. Preprocess the G800L Grism Images</span></a><br/>
+<a class="reference internal" href="#direct"><span class="xref myst">6. Preprocess the F775W Direct Images</span></a><br/>
+      <a class="reference internal" href="#drizzle"><span class="xref myst">6.1 Display Drizzle Image and Overlay Segmentation Map</span></a><br/>
+<a class="reference internal" href="#extract"><span class="xref myst">7. Extract the Spectra from the Grism Data</span></a><br/>
+      <a class="reference internal" href="#region"><span class="xref myst">7.1 Display a Region File</span></a><br/>
+      <a class="reference internal" href="#plot"><span class="xref myst">7.2 Plot the Spectrum</span></a><br/>
+<a class="reference internal" href="#conclusions"><span class="xref myst">8. Conclusions</span></a> <br/>
+<a class="reference internal" href="#add"><span class="xref myst">Additional Resources</span></a> <br/>
+<a class="reference internal" href="#about"><span class="xref myst">About this Notebook</span></a> <br/></p>
+<p><a class="reference internal" href="#cite"><span class="xref myst">Citations</span></a> <br/></p>
 <p><a id="intro"></a></p>
 </section>
 <section id="introduction">
 <h2>1. Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
-<p><a class="reference external" href="https://github.com/spacetelescope/slitlessutils">Slitlessutils</a> is an official STScI-supported Python package that provides spectral extraction processes for HST grism and <br>
-prism data. The <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> software package has formally replaced the <a class="reference external" href="https://github.com/spacetelescope/hstaxe">HSTaXe</a> Python package, which will remain<br>
+<p><a class="reference external" href="https://github.com/spacetelescope/slitlessutils">Slitlessutils</a> is an official STScI-supported Python package that provides spectral extraction processes for HST grism and <br/>
+prism data. The <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> software package has formally replaced the <a class="reference external" href="https://github.com/spacetelescope/hstaxe">HSTaXe</a> Python package, which will remain<br/>
 on the <a class="reference external" href="https://github.com/spacetelescope/">spacetelescope</a> GitHub organization, but will no longer be maintained or developed.</p>
-<p>Below, we show an example workflow of spectral extraction using ACS/WFC G800L grism data and F775W direct image data. <br>
-The example data were taken as part of ACS CAL program <a class="reference external" href="https://www.stsci.edu/hst-program-info/program/?program=15401">15401</a> (PI Hathi) and are downloaded from MAST via astroquery. <br>
-The images are all full frame exposures. Users with subarray data will need to employ the <a class="reference external" href="https://github.com/spacetelescope/slitlessutils/blob/fdc136156e0a47212bdabba07a0f4c865c839f99/slitlessutils/core/utilities/embedding.py">embedding</a> utility within <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> <br> before processing and extracting the data. See the WFC <a class="reference internal" href="#"><span class="xref myst">subarray cookbook</span></a> for a tutorial on using <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> with subarray <br>
+<p>Below, we show an example workflow of spectral extraction using ACS/WFC G800L grism data and F775W direct image data. <br/>
+The example data were taken as part of ACS CAL program <a class="reference external" href="https://www.stsci.edu/hst-program-info/program/?program=15401">15401</a> (PI Hathi) and are downloaded from MAST via astroquery. <br/>
+The images are all full frame exposures. Users with subarray data will need to employ the <a class="reference external" href="https://github.com/spacetelescope/slitlessutils/blob/fdc136156e0a47212bdabba07a0f4c865c839f99/slitlessutils/core/utilities/embedding.py">embedding</a> utility within <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> <br/> before processing and extracting the data. See the WFC <a class="reference internal" href="#"><span class="xref myst">subarray cookbook</span></a> for a tutorial on using <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> with subarray <br/>
 data. This tutorial is intended to run continuously without requiring any edits to the cells.</p>
-<p>Running this notebook requires creating a <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment from the provided requirements file in this notebook’s sub-folder <br>
+<p>Running this notebook requires creating a <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment from the provided requirements file in this notebook’s sub-folder <br/>
 in the GitHub repository. For more details about creating the necessary environment see the <a class="reference internal" href="#env"><span class="xref myst">next section</span></a>.</p>
-<p>To run <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>, we must download the configuration reference files. These files are instrument-specific and include <br>
-sensitivity curves, trace and dispersion files, flat fields, and more. <code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> has a <code class="docutils literal notranslate"><span class="pre">Config</span></code> class with an associated <br>
-function that will download the necessary reference files from a public Box folder. <a class="reference internal" href="#config"><span class="xref myst">Section 1.3</span></a> shows how to use <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> <br>
+<p>To run <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>, we must download the configuration reference files. These files are instrument-specific and include <br/>
+sensitivity curves, trace and dispersion files, flat fields, and more. <code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> has a <code class="docutils literal notranslate"><span class="pre">Config</span></code> class with an associated <br/>
+function that will download the necessary reference files from a public Box folder. <a class="reference internal" href="#config"><span class="xref myst">Section 1.3</span></a> shows how to use <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> <br/>
 to retrieve the files. Once downloaded, <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> will use them for the different processes.</p>
 <p><a id="env"></a></p>
 </section>
 <section id="environment">
 <h2>1.1 Environment<a class="headerlink" href="#environment" title="Link to this heading">#</a></h2>
-<p>This notebook requires users to install the packages listed in the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file located in the notebook’s <br>
-sub-folder on the GitHub repository. We will use the <code class="docutils literal notranslate"><span class="pre">conda</span></code> package manager to build the necessary virtual environment. <br>
-For more information about installing and getting started with Conda (or Mamba) please see <a class="reference external" href="https://stenv.readthedocs.io/getting_started.html">this page</a>. <br></p>
-<p>First, we will make sure the <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> channel is added so that <code class="docutils literal notranslate"><span class="pre">conda</span></code> can correctly find the various packages. <br>
+<p>This notebook requires users to install the packages listed in the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file located in the notebook’s <br/>
+sub-folder on the GitHub repository. We will use the <code class="docutils literal notranslate"><span class="pre">conda</span></code> package manager to build the necessary virtual environment. <br/>
+For more information about installing and getting started with Conda (or Mamba) please see <a class="reference external" href="https://stenv.readthedocs.io/getting_started.html">this page</a>. <br/></p>
+<p>First, we will make sure the <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> channel is added so that <code class="docutils literal notranslate"><span class="pre">conda</span></code> can correctly find the various packages. <br/>
 <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">config</span> <span class="pre">--add</span> <span class="pre">channels</span> <span class="pre">conda-forge</span></code></p>
-<p>Next, we will create a new environment called <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> and initialize it with <code class="docutils literal notranslate"><span class="pre">python</span></code>: <br>
-<code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">create</span> <span class="pre">--name</span> <span class="pre">slitlessutils</span> <span class="pre">&quot;python==3.12&quot;</span> </code></p>
-<p>Wait for <code class="docutils literal notranslate"><span class="pre">conda</span></code> to solve for the environment and confirm the packages/libraries with the <code class="docutils literal notranslate"><span class="pre">y</span></code> key when prompted. <br>
-Once completed you can activate the new environment with:<br>
+<p>Next, we will create a new environment called <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> and initialize it with <code class="docutils literal notranslate"><span class="pre">python</span></code>: <br/>
+<code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">create</span> <span class="pre">--name</span> <span class="pre">slitlessutils</span> <span class="pre">"python==3.12"</span> </code></p>
+<p>Wait for <code class="docutils literal notranslate"><span class="pre">conda</span></code> to solve for the environment and confirm the packages/libraries with the <code class="docutils literal notranslate"><span class="pre">y</span></code> key when prompted. <br/>
+Once completed you can activate the new environment with:<br/>
 <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">slitlessutils</span></code></p>
-<p>With the new environment activated, we can install the remaining packages from the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file with <code class="docutils literal notranslate"><span class="pre">pip</span></code>: <br>
+<p>With the new environment activated, we can install the remaining packages from the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file with <code class="docutils literal notranslate"><span class="pre">pip</span></code>: <br/>
 <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code></p>
-<p>Note, you may encounter an error installing <code class="docutils literal notranslate"><span class="pre">llvmlite</span></code>. To fix it, run the below command before installing <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>: <br>
+<p>Note, you may encounter an error installing <code class="docutils literal notranslate"><span class="pre">llvmlite</span></code>. To fix it, run the below command before installing <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>: <br/>
 <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">conda-forge</span> <span class="pre">llvmlite</span></code></p>
-<p>We have now successfully installed all the necessary packages for running this notebook. Launch Jupyter and begin: <br>
+<p>We have now successfully installed all the necessary packages for running this notebook. Launch Jupyter and begin: <br/>
 <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">jupyter-lab</span></code></p>
 <p><a id="import"></a></p>
 </section>
@@ -804,7 +561,7 @@ Once completed you can activate the new environment with:<br>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Logger (slitlessutils) with level=10 at 2026-04-07 16:35:07.119061</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Logger (slitlessutils) with level=10 at 2026-04-07 16:35:07.119061</span>
 </pre></div>
 </div>
 </div>
@@ -813,56 +570,56 @@ Once completed you can activate the new environment with:<br>
 </section>
 <section id="slitlessutils-configuration">
 <h2>1.3 <code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Configuration<a class="headerlink" href="#slitlessutils-configuration" title="Link to this heading">#</a></h2>
-<p>In order to extract or simulate grism spectra with <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> you must have the necessary reference files. <br>
-Below, we provide a table of file descriptions, example filenames, and file types for the different reference files <br>
+<p>In order to extract or simulate grism spectra with <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> you must have the necessary reference files. <br/>
+Below, we provide a table of file descriptions, example filenames, and file types for the different reference files <br/>
 required by <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>.</p>
 <table style="margin-left: 0; margin-right: auto; border-collapse: collapse;">
-  <thead>
-    <tr>
-      <th style="text-align: left; padding: 6px;">File Description</th>
-      <th style="text-align: left; padding: 6px;">Example Filename</th>
-      <th style="text-align: left; padding: 6px;">File Type</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="padding: 6px;">Sensitivity curves for the different spectral orders</td>
-      <td style="padding: 6px;"><code>ACS.WFC.G800L.+1.sens.fits</code></td>
-      <td style="padding: 6px;">FITS table</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px;">Config files with trace and dispersion coefficients</td>
-      <td style="padding: 6px;"><code>ACS.WFC.G800L.CHIP1.conf</code></td>
-      <td style="padding: 6px;">Text / ASCII</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px;">Instrument configuration parameters</td>
-      <td style="padding: 6px;"><code>hst_acswfc.yaml</code></td>
-      <td style="padding: 6px;">YAML</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px;">Normalized sky images</td>
-      <td style="padding: 6px;"><code>ACS_WFC_G800L_smooth_sky.fits</code></td>
-      <td style="padding: 6px;">FITS image</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px;">Filter throughput curves</td>
-      <td style="padding: 6px;"><code>hst_acs_f775w.fits</code></td>
-      <td style="padding: 6px;">FITS table</td>
-    </tr>
-  </tbody>
+<thead>
+<tr>
+<th style="text-align: left; padding: 6px;">File Description</th>
+<th style="text-align: left; padding: 6px;">Example Filename</th>
+<th style="text-align: left; padding: 6px;">File Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding: 6px;">Sensitivity curves for the different spectral orders</td>
+<td style="padding: 6px;"><code>ACS.WFC.G800L.+1.sens.fits</code></td>
+<td style="padding: 6px;">FITS table</td>
+</tr>
+<tr>
+<td style="padding: 6px;">Config files with trace and dispersion coefficients</td>
+<td style="padding: 6px;"><code>ACS.WFC.G800L.CHIP1.conf</code></td>
+<td style="padding: 6px;">Text / ASCII</td>
+</tr>
+<tr>
+<td style="padding: 6px;">Instrument configuration parameters</td>
+<td style="padding: 6px;"><code>hst_acswfc.yaml</code></td>
+<td style="padding: 6px;">YAML</td>
+</tr>
+<tr>
+<td style="padding: 6px;">Normalized sky images</td>
+<td style="padding: 6px;"><code>ACS_WFC_G800L_smooth_sky.fits</code></td>
+<td style="padding: 6px;">FITS image</td>
+</tr>
+<tr>
+<td style="padding: 6px;">Filter throughput curves</td>
+<td style="padding: 6px;"><code>hst_acs_f775w.fits</code></td>
+<td style="padding: 6px;">FITS table</td>
+</tr>
+</tbody>
 </table>
-<br>
-<p>These reference files that are required for spectral extraction and modeling with <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> must reside in a  <br>
-dot-directory within the user’s home directory, <code class="docutils literal notranslate"><span class="pre">{$HOME}/.slitlessutils</span></code>. Upon initialization, the <code class="docutils literal notranslate"><span class="pre">Config()</span></code>   <br>
-object verifies the existence of this directory and the presence of valid reference files. If the directory does not <br>
-exist, it is created; if the reference files are missing, the most recent versions are automatically retrieved from a <br>
-public Box directory. Once the files are downloaded, <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> will apply them automatically, relieving the <br>
-user from calling them manually. For more information about configuring <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>, please see the <br>
+<br/>
+<p>These reference files that are required for spectral extraction and modeling with <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> must reside in a  <br/>
+dot-directory within the user’s home directory, <code class="docutils literal notranslate"><span class="pre">{$HOME}/.slitlessutils</span></code>. Upon initialization, the <code class="docutils literal notranslate"><span class="pre">Config()</span></code> <br/>
+object verifies the existence of this directory and the presence of valid reference files. If the directory does not <br/>
+exist, it is created; if the reference files are missing, the most recent versions are automatically retrieved from a <br/>
+public Box directory. Once the files are downloaded, <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> will apply them automatically, relieving the <br/>
+user from calling them manually. For more information about configuring <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>, please see the <br/>
 documentation <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/configure.html#">here</a>.</p>
-<p>In the following code cell, we initialize the configuration with <code class="docutils literal notranslate"><span class="pre">su.config.Config()</span></code>. As stated above, if this is your <br>
-first time initializing <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> configuration, <code class="docutils literal notranslate"><span class="pre">su.config.Config()</span></code> will download the most recent reference <br>
-files. In the future, if a new reference file version is released it can be retrieved with <code class="docutils literal notranslate"><span class="pre">cfg.retrieve_reffiles(</span></code><br><code class="docutils literal notranslate"><span class="pre">update=True)</span></code>.</p>
+<p>In the following code cell, we initialize the configuration with <code class="docutils literal notranslate"><span class="pre">su.config.Config()</span></code>. As stated above, if this is your <br/>
+first time initializing <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> configuration, <code class="docutils literal notranslate"><span class="pre">su.config.Config()</span></code> will download the most recent reference <br/>
+files. In the future, if a new reference file version is released it can be retrieved with <code class="docutils literal notranslate"><span class="pre">cfg.retrieve_reffiles(</span></code><br/><code class="docutils literal notranslate"><span class="pre">update=True)</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize configuration </span>
@@ -874,7 +631,7 @@ files. In the future, if a new reference file version is released it can be retr
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Using reference path: /home/runner/.slitlessutils/1.0.8/</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Using reference path: /home/runner/.slitlessutils/1.0.8/</span>
 </pre></div>
 </div>
 </div>
@@ -884,11 +641,11 @@ files. In the future, if a new reference file version is released it can be retr
 <section id="define-global-variables">
 <h2>2. Define Global Variables<a class="headerlink" href="#define-global-variables" title="Link to this heading">#</a></h2>
 <p>These variables will be use throughout the notebook and should only be updated if you are processing different datasets.</p>
-<p><code class="docutils literal notranslate"><span class="pre">RA</span></code> and <code class="docutils literal notranslate"><span class="pre">DEC</span></code> should be the precise location of the source in the direct image. Header keywords RA_TARG and DEC_TARG are <br>
+<p><code class="docutils literal notranslate"><span class="pre">RA</span></code> and <code class="docutils literal notranslate"><span class="pre">DEC</span></code> should be the precise location of the source in the direct image. Header keywords RA_TARG and DEC_TARG are <br/>
 not always the most precise coordinates for the active WCS.</p>
 <p><b>Note</b>, the AB mag zeropoint for the direct image filter (here, F775W) is needed by <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>
-to measure the magnitude<br>
-within an aperture, which allows users to reject sources that are too faint. The value used for the zeropoint does not affect the<br>
+to measure the magnitude<br/>
+within an aperture, which allows users to reject sources that are too faint. The value used for the zeropoint does not affect the<br/>
 extracted spectrum. Zeropoints for ACS/WFC filters can be found via the calculator <a class="reference external" href="https://acszeropoints.stsci.edu/">here</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -922,12 +679,12 @@ extracted spectrum. Zeropoints for ACS/WFC filters can be found via the calculat
 </section>
 <section id="download-data">
 <h2>3. Download Data<a class="headerlink" href="#download-data" title="Link to this heading">#</a></h2>
-<p>Here, we download the example images via <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>. For more information, please look at the documentation for<br>
-<a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Astroquery</a>, <a class="reference external" href="https://astroquery.readthedocs.io/en/latest/mast/mast.html">Astroquery.mast</a>, and <a class="reference external" href="https://mast.stsci.edu/api/v0/_c_a_o_mfields.html">CAOM Field Descriptions</a>, which is used for the <code class="docutils literal notranslate"><span class="pre">obstab</span></code> variable below. Additionally,<br>
+<p>Here, we download the example images via <code class="docutils literal notranslate"><span class="pre">astroquery</span></code>. For more information, please look at the documentation for<br/>
+<a class="reference external" href="https://astroquery.readthedocs.io/en/latest/">Astroquery</a>, <a class="reference external" href="https://astroquery.readthedocs.io/en/latest/mast/mast.html">Astroquery.mast</a>, and <a class="reference external" href="https://mast.stsci.edu/api/v0/_c_a_o_mfields.html">CAOM Field Descriptions</a>, which is used for the <code class="docutils literal notranslate"><span class="pre">obstab</span></code> variable below. Additionally,<br/>
 you may download the data from MAST using either the <a class="reference external" href="https://mast.stsci.edu/search/hst/ui/#/">HST MAST Search Engine</a> or the more general <a class="reference external" href="https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html">MAST Portal</a>.</p>
 <p>We download G800L and F775W <code class="docutils literal notranslate"><span class="pre">_flc.fits</span></code> exposures of the Wolf-Rayet star, <a class="reference external" href="https://simbad.u-strasbg.fr/simbad/sim-basic?Ident=WRAY+15-1736&amp;amp;submit=SIMBAD+search">WRAY 15-1736</a>, from CAL
-program <a class="reference external" href="https://www.stsci.edu/hst-program-info/program/?program=15401">15401</a><br> (PI Hathi). This Wolf-Rayet star is relatively nearby and has bright emission lines, making it an ideal target for calibrating <br>
-the ACS/WFC grism (see ACS ISR <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr1901.pdf">2019-01</a> (Hathi et al.) and references therein).  After downloading the images, we move them to a <br>
+program <a class="reference external" href="https://www.stsci.edu/hst-program-info/program/?program=15401">15401</a><br/> (PI Hathi). This Wolf-Rayet star is relatively nearby and has bright emission lines, making it an ideal target for calibrating <br/>
+the ACS/WFC grism (see ACS ISR <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr1901.pdf">2019-01</a> (Hathi et al.) and references therein).  After downloading the images, we move them to a <br/>
 sub-directory within the current working directory.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -995,7 +752,7 @@ INFO: Found cached file ./mastDownload/HST/jdql01jvq/jdql01jvq_flc.fits with exp
 <p><a id="organize"></a></p>
 <section id="create-data-directories-and-organize">
 <h3>3.1 Create Data Directories and Organize<a class="headerlink" href="#create-data-directories-and-organize" title="Link to this heading">#</a></h3>
-<p>Below, we define the current working directory, <code class="docutils literal notranslate"><span class="pre">cwd</span></code>, and create directories, <code class="docutils literal notranslate"><span class="pre">g800l/</span></code>, <code class="docutils literal notranslate"><span class="pre">f775w/</span></code>, and <code class="docutils literal notranslate"><span class="pre">output/</span></code>, that will be used <br>
+<p>Below, we define the current working directory, <code class="docutils literal notranslate"><span class="pre">cwd</span></code>, and create directories, <code class="docutils literal notranslate"><span class="pre">g800l/</span></code>, <code class="docutils literal notranslate"><span class="pre">f775w/</span></code>, and <code class="docutils literal notranslate"><span class="pre">output/</span></code>, that will be used <br/>
 throughout the notebook. After the directories are created we move the downloaded FLC files into them.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1056,11 +813,11 @@ Moving jdql01jxq_flc.fits to g800l/
 </section>
 <section id="check-the-wcs">
 <h2>4. Check the WCS<a class="headerlink" href="#check-the-wcs" title="Link to this heading">#</a></h2>
-<p>It is likely that the WCS in the direct and grism images differ. In this section we will use <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> to view the active WCS. <br>
+<p>It is likely that the WCS in the direct and grism images differ. In this section we will use <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> to view the active WCS. <br/>
 To address the disagreement in WCS solution, we call the <code class="docutils literal notranslate"><span class="pre">upgrade_wcs</span></code> function within <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> also has the capability to downgrade the WCS to one of the other less complex solutions. Regardless of upgrading <br>
+<p><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> also has the capability to downgrade the WCS to one of the other less complex solutions. Regardless of upgrading <br/>
 or downgrading, <b>it is imperative that the grism and direct images are on the same astrometric reference for proper spectral extraction.</b></p>
-<p>More information about <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> astrometry can be found <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/astrometry.html">here</a>. For a more technical and detailed understanding of HST WCS<br>
+<p>More information about <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> astrometry can be found <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/astrometry.html">here</a>. For a more technical and detailed understanding of HST WCS<br/>
 and improved absolute astrometry please see ACS ISR <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2022wfc..rept....6M/abstract">2022-03</a> (Mack et al.). A general overview is also available on <a class="reference external" href="https://outerspace.stsci.edu/pages/viewpage.action?spaceKey=HAdP&amp;amp;title=Improvements+in+HST+Astrometry">Outerspace</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1074,7 +831,7 @@ and improved absolute astrometry please see ACS ISR <a class="reference external
 +----------+--------------------------------+--------------------------------+
 | WCSVERS  |                              1 |                              2 |
 +----------+--------------------------------+--------------------------------+
-|<span class=" -Color -Color-Bold"> WCSNAME  </span>| <span class=" -Color -Color-Bold">          IDC_4bb1536mj-GSC240</span> | <span class=" -Color -Color-Bold">          IDC_4bb1536mj-GSC240</span> | 
+|<span class="-Color -Color-Bold"> WCSNAME  </span>| <span class="-Color -Color-Bold">          IDC_4bb1536mj-GSC240</span> | <span class="-Color -Color-Bold">          IDC_4bb1536mj-GSC240</span> | 
 | WCSNAMEA |                  IDC_4bb1536mj |                  IDC_4bb1536mj | 
 | WCSNAMEB |           IDC_4bb1536mj-GSC240 |           IDC_4bb1536mj-GSC240 | 
 | WCSNAMEO |                           OPUS |                           OPUS | 
@@ -1085,7 +842,7 @@ and improved absolute astrometry please see ACS ISR <a class="reference external
 +----------+--------------------------------+--------------------------------+
 | WCSVERS  |                              1 |                              2 |
 +----------+--------------------------------+--------------------------------+
-|<span class=" -Color -Color-Bold"> WCSNAME  </span>| <span class=" -Color -Color-Bold">          IDC_4bb1536mj-GSC240</span> | <span class=" -Color -Color-Bold">          IDC_4bb1536mj-GSC240</span> | 
+|<span class="-Color -Color-Bold"> WCSNAME  </span>| <span class="-Color -Color-Bold">          IDC_4bb1536mj-GSC240</span> | <span class="-Color -Color-Bold">          IDC_4bb1536mj-GSC240</span> | 
 | WCSNAMEA |                  IDC_4bb1536mj |                  IDC_4bb1536mj | 
 | WCSNAMEB |           IDC_4bb1536mj-GSC240 |           IDC_4bb1536mj-GSC240 | 
 | WCSNAMEO |                           OPUS |                           OPUS | 
@@ -1096,7 +853,7 @@ and improved absolute astrometry please see ACS ISR <a class="reference external
 +----------+--------------------------------+--------------------------------+
 | WCSVERS  |                              1 |                              2 |
 +----------+--------------------------------+--------------------------------+
-|<span class=" -Color -Color-Bold"> WCSNAME  </span>| <span class=" -Color -Color-Bold">IDC_4bb1536mj-FIT_IMG_GAIAeDR3</span> | <span class=" -Color -Color-Bold">IDC_4bb1536mj-FIT_IMG_GAIAeDR3</span> | 
+|<span class="-Color -Color-Bold"> WCSNAME  </span>| <span class="-Color -Color-Bold">IDC_4bb1536mj-FIT_IMG_GAIAeDR3</span> | <span class="-Color -Color-Bold">IDC_4bb1536mj-FIT_IMG_GAIAeDR3</span> | 
 | WCSNAMEA |                  IDC_4bb1536mj |                  IDC_4bb1536mj | 
 | WCSNAMEB |         IDC_4bb1536mj-GSC240-1 |         IDC_4bb1536mj-GSC240-1 | 
 | WCSNAMEO |                           OPUS |                           OPUS | 
@@ -1107,7 +864,7 @@ and improved absolute astrometry please see ACS ISR <a class="reference external
 +----------+--------------------------------+--------------------------------+
 | WCSVERS  |                              1 |                              2 |
 +----------+--------------------------------+--------------------------------+
-|<span class=" -Color -Color-Bold"> WCSNAME  </span>| <span class=" -Color -Color-Bold">IDC_4bb1536mj-FIT_IMG_GAIAeDR3</span> | <span class=" -Color -Color-Bold">IDC_4bb1536mj-FIT_IMG_GAIAeDR3</span> | 
+|<span class="-Color -Color-Bold"> WCSNAME  </span>| <span class="-Color -Color-Bold">IDC_4bb1536mj-FIT_IMG_GAIAeDR3</span> | <span class="-Color -Color-Bold">IDC_4bb1536mj-FIT_IMG_GAIAeDR3</span> | 
 | WCSNAMEA |                  IDC_4bb1536mj |                  IDC_4bb1536mj | 
 | WCSNAMEB |         IDC_4bb1536mj-GSC240-1 |         IDC_4bb1536mj-GSC240-1 | 
 | WCSNAMEO |                           OPUS |                           OPUS | 
@@ -1116,10 +873,10 @@ and improved absolute astrometry please see ACS ISR <a class="reference external
 </div>
 </div>
 </div>
-<br>
-As shown above, the F775W active WCS (<em>IDC_4bb1536mj-FIT_IMG_GAIAeDR3</em>) is <b>different</b> than the G800L WCS <br>
-(<em>IDC_4bb1536mj-GSC240</em>). It is crucial that all files have the same WCS solution for successful spectral extraction. <br>
-To fix the discrepancy, we will use `slitlessutils` to downgrade the WCS of all the images to use the solution called <br><em>IDC_4bb1536mj</em>. For this tutorial we are not concernced with precise absolute astrometry. The key requirement is<br>that the images have a consistent reference, which preserves relative source position.<div class="cell docutils container">
+<br/>
+As shown above, the F775W active WCS (<em>IDC_4bb1536mj-FIT_IMG_GAIAeDR3</em>) is <b>different</b> than the G800L WCS <br/>
+(<em>IDC_4bb1536mj-GSC240</em>). It is crucial that all files have the same WCS solution for successful spectral extraction. <br/>
+To fix the discrepancy, we will use `slitlessutils` to downgrade the WCS of all the images to use the solution called <br/><em>IDC_4bb1536mj</em>. For this tutorial we are not concernced with precise absolute astrometry. The key requirement is<br/>that the images have a consistent reference, which preserves relative source position.<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">FILTER</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">/j*flc.fits'</span><span class="p">)</span> <span class="o">+</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">GRATING</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">/j*flc.fits'</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
@@ -1128,21 +885,21 @@ To fix the discrepancy, we will use `slitlessutils` to downgrade the WCS of all 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">downgrading WCS in f775w/jdql01jvq_flc.fits to WCSNAMEA</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">downgrading WCS in f775w/jdql01jvq_flc.fits to WCSNAMEA</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">downgrading WCS in f775w/jdql01jnq_flc.fits to WCSNAMEA</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">downgrading WCS in f775w/jdql01jnq_flc.fits to WCSNAMEA</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">downgrading WCS in g800l/jdql01jpq_flc.fits to WCSNAMEA</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">downgrading WCS in g800l/jdql01jpq_flc.fits to WCSNAMEA</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">downgrading WCS in g800l/jdql01jxq_flc.fits to WCSNAMEA</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">downgrading WCS in g800l/jdql01jxq_flc.fits to WCSNAMEA</span>
 </pre></div>
 </div>
 </div>
 </div>
-<br>
+<br/>
 Finally, we print the active WCS name one last time to verify the upgrade worked as intented. <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wcsnames</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1176,26 +933,26 @@ Success!
 </section>
 <section id="preprocess-the-g800l-grism-images">
 <h2>5. Preprocess the G800L Grism Images<a class="headerlink" href="#preprocess-the-g800l-grism-images" title="Link to this heading">#</a></h2>
-<p>The function below performs preprocessing steps to prepare the grism images for optimal spectral extraction. <br>
-This function completes two tasks, <b>(1) background subtraction via a master-sky image</b>, and <b>(2) cosmic ray <br>
+<p>The function below performs preprocessing steps to prepare the grism images for optimal spectral extraction. <br/>
+This function completes two tasks, <b>(1) background subtraction via a master-sky image</b>, and <b>(2) cosmic ray <br/>
 (CR) flagging via <code class="docutils literal notranslate"><span class="pre">drizzlepac</span></code></b>.</p>
-<p>In slitless spectroscopy, the background is inherently complex because every patch of sky is dispersed onto<br>
-the detector, and each spectral order has a different response and geometric footprint. This complexity is<br>
-further amplified by wavelength-dependent flat fields, resulting in a highly structured two-dimensional <br>
+<p>In slitless spectroscopy, the background is inherently complex because every patch of sky is dispersed onto<br/>
+the detector, and each spectral order has a different response and geometric footprint. This complexity is<br/>
+further amplified by wavelength-dependent flat fields, resulting in a highly structured two-dimensional <br/>
 background that cannot be treated like standard imaging backgrounds.</p>
-<p><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> handles this by subtracting a master-sky image, which is built from many science and <br>
-calibration exposures with sources removed, leaving only the instrumental and sky background structure. <br>
-This sky image is scaled to each individual exposure by fitting the sky-dominated pixels and is subtracted <br>
+<p><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> handles this by subtracting a master-sky image, which is built from many science and <br/>
+calibration exposures with sources removed, leaving only the instrumental and sky background structure. <br/>
+This sky image is scaled to each individual exposure by fitting the sky-dominated pixels and is subtracted <br/>
 before any further reduction steps. For more details about <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> background subtraction see <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/background.html">here</a>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> does not interpolate over CRs, and expects affected pixels to be flagged in the data quality <br>
-array. There are two methods in <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> for identifying and flagging CRs: a Laplacian edge-detection <br>
-technique that identifies sharp, high-contrast features in individual images, and a drizzle-based approach that <br>
-uses <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> to compare multiple aligned exposures and flag discrepant pixels. The Laplace method works <br>
-on single exposures using image gradients, while the drizzle method groups and aligns images before identifying <br>
+<p><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> does not interpolate over CRs, and expects affected pixels to be flagged in the data quality <br/>
+array. There are two methods in <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> for identifying and flagging CRs: a Laplacian edge-detection <br/>
+technique that identifies sharp, high-contrast features in individual images, and a drizzle-based approach that <br/>
+uses <code class="docutils literal notranslate"><span class="pre">AstroDrizzle</span></code> to compare multiple aligned exposures and flag discrepant pixels. The Laplace method works <br/>
+on single exposures using image gradients, while the drizzle method groups and aligns images before identifying <br/>
 CRs from their inconsistencies.</p>
-<p>Below, we flag CRs using the <code class="docutils literal notranslate"><span class="pre">drizzle</span></code> method. For reliable CR flagging, <code class="docutils literal notranslate"><span class="pre">drizzle</span></code> must be run on grism images <br>
-taken at a single orient (position angle). <code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> has the ability to group the data by visit or position angle <br>
-before processing. We do not employ any grouping in our example since the data are from the same orient. For more <br>
+<p>Below, we flag CRs using the <code class="docutils literal notranslate"><span class="pre">drizzle</span></code> method. For reliable CR flagging, <code class="docutils literal notranslate"><span class="pre">drizzle</span></code> must be run on grism images <br/>
+taken at a single orient (position angle). <code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> has the ability to group the data by visit or position angle <br/>
+before processing. We do not employ any grouping in our example since the data are from the same orient. For more <br/>
 information about CR flagging with <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> see the documentation <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/cosmicrays.html">here</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1800,7 +1557,7 @@ information about CR flagging with <code class="docutils literal notranslate"><s
 </div>
 </div>
 </div>
-<br>
+<br/>
 Next, we display one of the grism images for visual inspection. <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
@@ -1818,17 +1575,17 @@ Next, we display one of the grism images for visual inspection. <div class="cell
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/967eabb341e5c79d70c566e74da6af6fe31229814100c6abdb253700ed462fb7.png" src="../../../_images/967eabb341e5c79d70c566e74da6af6fe31229814100c6abdb253700ed462fb7.png" />
+<img alt="../../../_images/967eabb341e5c79d70c566e74da6af6fe31229814100c6abdb253700ed462fb7.png" src="../../../_images/967eabb341e5c79d70c566e74da6af6fe31229814100c6abdb253700ed462fb7.png"/>
 </div>
 </div>
 <p><a id="direct"></a></p>
 </section>
 <section id="preprocess-the-f775w-direct-images">
 <h2>6. Preprocess the F775W Direct Images<a class="headerlink" href="#preprocess-the-f775w-direct-images" title="Link to this heading">#</a></h2>
-<p>With the grism data calibrated, data embedded, and consistent WCS for all images, we can continue to the preprocessing of the <br>
+<p>With the grism data calibrated, data embedded, and consistent WCS for all images, we can continue to the preprocessing of the <br/>
 direct image. The two main steps we need to complete are <b>(1) drizzling the direct image</b> and <b>(2) creating a segmentation map.</b></p>
 <p>Information about <code class="docutils literal notranslate"><span class="pre">drizzlepac</span></code> can be found <a class="reference external" href="https://www.stsci.edu/scientific-community/software/drizzlepac">here</a>, and <code class="docutils literal notranslate"><span class="pre">astrodrizzle</span></code>
-tutorials are hosted in the <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/tree/main/notebooks/DrizzlePac">hst_notebook</a> GitHub repo. <br></p>
+tutorials are hosted in the <a class="reference external" href="https://github.com/spacetelescope/hst_notebooks/tree/main/notebooks/DrizzlePac">hst_notebook</a> GitHub repo. <br/></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">preprocess_direct</span><span class="p">(</span><span class="n">datasets</span><span class="p">,</span> <span class="n">filt</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">,</span> <span class="n">rad</span><span class="p">,</span> <span class="n">telescope</span><span class="p">,</span> <span class="n">instrument</span><span class="p">):</span>
@@ -2171,9 +1928,9 @@ tutorials are hosted in the <a class="reference external" href="https://github.c
 </section>
 <section id="display-drizzle-image-and-overlay-segmentation-map">
 <h3>6.1 Display Drizzle Image and Overlay Segmentation Map<a class="headerlink" href="#display-drizzle-image-and-overlay-segmentation-map" title="Link to this heading">#</a></h3>
-<p>Next, we display the the central region of the F775W drizzled image created in the cell above. We also overplot the segmentation map by getting <br>
-all the x and y pixels where the segmentation array is <code class="docutils literal notranslate"><span class="pre">True</span></code>. Visually inspect the drizzled science image (and other drizzled products if needed)<br>
-for accurate image alignment and combination, as well as the source location as defined by the segmentation map. Note that the image scaling is<br>
+<p>Next, we display the the central region of the F775W drizzled image created in the cell above. We also overplot the segmentation map by getting <br/>
+all the x and y pixels where the segmentation array is <code class="docutils literal notranslate"><span class="pre">True</span></code>. Visually inspect the drizzled science image (and other drizzled products if needed)<br/>
+for accurate image alignment and combination, as well as the source location as defined by the segmentation map. Note that the image scaling is<br/>
 specifically defined for this particular direct image, which is relatively low SNR, so it may need to be adjusted for your particular image.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2200,7 +1957,7 @@ specifically defined for this particular direct image, which is relatively low S
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/fe959b739e20fd1f418ec0d7ba04926dcf74e302e7b194d685170efa26567695.png" src="../../../_images/fe959b739e20fd1f418ec0d7ba04926dcf74e302e7b194d685170efa26567695.png" />
+<img alt="../../../_images/fe959b739e20fd1f418ec0d7ba04926dcf74e302e7b194d685170efa26567695.png" src="../../../_images/fe959b739e20fd1f418ec0d7ba04926dcf74e302e7b194d685170efa26567695.png"/>
 </div>
 </div>
 <p><a id="extract"></a></p>
@@ -2208,30 +1965,30 @@ specifically defined for this particular direct image, which is relatively low S
 </section>
 <section id="extract-the-spectrum-from-the-grism-data">
 <h2>7. Extract the Spectrum from the Grism Data<a class="headerlink" href="#extract-the-spectrum-from-the-grism-data" title="Link to this heading">#</a></h2>
-<p>We are now finished with all the preprocessing steps and ready to extract the 1D spectrum. The function below demonstrates a complete <br>
-single-orientation spectral extraction workflow using <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>, starting from calibrated ACS/WFC grism exposures and a direct-image–<br>
-based source catalog (segmentation map). <br></p>
-<p>First, the files are loaded into <code class="docutils literal notranslate"><span class="pre">WFSSCollection</span></code>, which serves as a container for the grism FLC exposures used in the extraction. Grouping <br>
-them into a collection allows <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> to treat the set of exposures as a unified dataset when projecting sources, building pixel‑dispersion <br>
+<p>We are now finished with all the preprocessing steps and ready to extract the 1D spectrum. The function below demonstrates a complete <br/>
+single-orientation spectral extraction workflow using <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>, starting from calibrated ACS/WFC grism exposures and a direct-image–<br/>
+based source catalog (segmentation map). <br/></p>
+<p>First, the files are loaded into <code class="docutils literal notranslate"><span class="pre">WFSSCollection</span></code>, which serves as a container for the grism FLC exposures used in the extraction. Grouping <br/>
+them into a collection allows <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> to treat the set of exposures as a unified dataset when projecting sources, building pixel‑dispersion <br/>
 tables (PDTs), and performing extraction. For more information about <code class="docutils literal notranslate"><span class="pre">WFSSCollection</span></code> see the documentation <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/wfss.html">here</a>.</p>
-<p>Next, sources are defined using the segmentation map and drizzled science image from the associated direct filter, which are initialized into a <br>
+<p>Next, sources are defined using the segmentation map and drizzled science image from the associated direct filter, which are initialized into a <br/>
 <code class="docutils literal notranslate"><span class="pre">SourceCollection</span></code> data structure.  For more information about <code class="docutils literal notranslate"><span class="pre">SourceCollection</span></code> see the documentation <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/sources.html">here</a>.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">Region</span></code> module creates visual outlines of where each source’s dispersed light appears on the grism images. It does this by reading <br>
-the PDTs and distilling them into <a class="reference external" href="https://sites.google.com/cfa.harvard.edu/saoimageds9">DS9</a>‑compatible region files that trace the footprint of each spectral order across the detector. These <br>
-region files are not required for extraction, but are useful for quickly inspecting which parts of the grism images contribute to each object’s <br>
+<p>The <code class="docutils literal notranslate"><span class="pre">Region</span></code> module creates visual outlines of where each source’s dispersed light appears on the grism images. It does this by reading <br/>
+the PDTs and distilling them into <a class="reference external" href="https://sites.google.com/cfa.harvard.edu/saoimageds9">DS9</a>‑compatible region files that trace the footprint of each spectral order across the detector. These <br/>
+region files are not required for extraction, but are useful for quickly inspecting which parts of the grism images contribute to each object’s <br/>
 spectrum. More information about <code class="docutils literal notranslate"><span class="pre">Region</span></code> can be found <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/regions.html">here</a>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">Tabulate</span></code> performs the forward‑modeling step that connects the direct image to the grism frames. For every relevant direct‑image pixel, <br>
-it computes the trace, wavelength mapping, and fractional pixel coverage and stores the results in a PDT. Because this calculation is <br>
-computationally expensive, <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> only computes PDTs when requested and then saves them in hierarchical data-format 5 (HDF5) <br>
-files inside the <code class="docutils literal notranslate"><span class="pre">su_tables/</span></code> directory for later use. The PDT files only capture the geometric mapping of the scene. Instrumental effects and <br>
-the actual astrophysical signal are added later in the workflow, so the PDTs depend solely on the WCS and its calibration. See the <code class="docutils literal notranslate"><span class="pre">Tabulate</span></code> <br>
+<p><code class="docutils literal notranslate"><span class="pre">Tabulate</span></code> performs the forward‑modeling step that connects the direct image to the grism frames. For every relevant direct‑image pixel, <br/>
+it computes the trace, wavelength mapping, and fractional pixel coverage and stores the results in a PDT. Because this calculation is <br/>
+computationally expensive, <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> only computes PDTs when requested and then saves them in hierarchical data-format 5 (HDF5) <br/>
+files inside the <code class="docutils literal notranslate"><span class="pre">su_tables/</span></code> directory for later use. The PDT files only capture the geometric mapping of the scene. Instrumental effects and <br/>
+the actual astrophysical signal are added later in the workflow, so the PDTs depend solely on the WCS and its calibration. See the <code class="docutils literal notranslate"><span class="pre">Tabulate</span></code> <br/>
 <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/tabulation.html">documentation</a> for more information.</p>
-<p>Finally, the <code class="docutils literal notranslate"><span class="pre">Single</span></code> class carries out the one‑dimensional extraction for a <em>single</em> telescope orientation (position angle) and spectral <br>
-order (here, the +1 order). It uses the PDTs to forward‑model how each direct‑image pixel contributes to the dispersed spectrum and <br>
-assembles these contributions into a 1D spectrum. The method is conceptually similar to <code class="docutils literal notranslate"><span class="pre">HSTaXe</span></code>, but with a more flexible contamination <br>
-model and a full forward‑modeling approach that can support optimization such as SED‑fitting workflows. This extraction mode is intended <br>
-for relatively simple, isolated sources where self‑contamination is not severe. A given spectral order should be extracted one at a time. Note,<br>
-the software will overwrite the <code class="docutils literal notranslate"><span class="pre">x1d.fits</span></code> file so users must use unique file names with <code class="docutils literal notranslate"><span class="pre">root</span></code>. The documentation for <code class="docutils literal notranslate"><span class="pre">Single</span></code> can be <br>
+<p>Finally, the <code class="docutils literal notranslate"><span class="pre">Single</span></code> class carries out the one‑dimensional extraction for a <em>single</em> telescope orientation (position angle) and spectral <br/>
+order (here, the +1 order). It uses the PDTs to forward‑model how each direct‑image pixel contributes to the dispersed spectrum and <br/>
+assembles these contributions into a 1D spectrum. The method is conceptually similar to <code class="docutils literal notranslate"><span class="pre">HSTaXe</span></code>, but with a more flexible contamination <br/>
+model and a full forward‑modeling approach that can support optimization such as SED‑fitting workflows. This extraction mode is intended <br/>
+for relatively simple, isolated sources where self‑contamination is not severe. A given spectral order should be extracted one at a time. Note,<br/>
+the software will overwrite the <code class="docutils literal notranslate"><span class="pre">x1d.fits</span></code> file so users must use unique file names with <code class="docutils literal notranslate"><span class="pre">root</span></code>. The documentation for <code class="docutils literal notranslate"><span class="pre">Single</span></code> can be <br/>
 found <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/single.html">here</a>.</p>
 <!--For convenience, a table of zeropoints for common filters <br>
 is provided below. These zeropoints were created using the [`stsynphot`](https://stsynphot.readthedocs.io/en/latest/index.html) Python package with an `obsmode` of `'wfc3, uvis2, {filter},`<br> `mjd#56073, aper#6'`. For the most accurate and time-dependent zeropoints, we recommend using `stsynphot`. A tutorial for calculating <br>
@@ -2319,37 +2076,37 @@ WFC3 time-dependent zeropoints with `stsynphot` is available
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Loading from glob: ../g800l/*_flc.fits</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Loading from glob: ../g800l/*_flc.fits</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Loading WFSS data from python list</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Loading WFSS data from python list</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">loading throughput from keys: ('hst', 'acs', 'f775w')</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">loading throughput from keys: ('hst', 'acs', 'f775w')</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Loading a classic segmentation map: ../f775w/ACS_WFC_WRAY-15-1736_drc_seg.fits</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Loading a classic segmentation map: ../f775w/ACS_WFC_WRAY-15-1736_drc_seg.fits</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Serial processing</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Serial processing</span>
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Regions:   0%|          | 0/2 [00:00&lt;?, ?it/s]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Regions:  50%|█████     | 1/2 [00:01&lt;00:01,  1.04s/it]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Regions: 100%|██████████| 2/2 [00:01&lt;00:00,  1.96it/s]
@@ -2358,7 +2115,7 @@ WFC3 time-dependent zeropoints with `stsynphot` is available
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Regions: 100%|██████████| 2/2 [00:01&lt;00:00,  1.69it/s]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Serial processing</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Serial processing</span>
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -2367,13 +2124,13 @@ WFC3 time-dependent zeropoints with `stsynphot` is available
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Tabulating:   0%|          | 0/2 [00:00&lt;?, ?it/s]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Tabulating:  50%|█████     | 1/2 [00:15&lt;00:15, 15.98s/it]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Tabulating: 100%|██████████| 2/2 [00:32&lt;00:00, 16.09s/it]
@@ -2382,7 +2139,7 @@ WFC3 time-dependent zeropoints with `stsynphot` is available
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Tabulating: 100%|██████████| 2/2 [00:32&lt;00:00, 16.08s/it]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Serial processing</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Serial processing</span>
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
@@ -2391,37 +2148,37 @@ WFC3 time-dependent zeropoints with `stsynphot` is available
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Extracting (single):   0%|          | 0/2 [00:00&lt;?, ?it/s]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Building contamination model for jdql01jpq_flc.fits/WFC1</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Building contamination model for jdql01jpq_flc.fits/WFC1</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Building contamination model for jdql01jpq_flc.fits/WFC2</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Building contamination model for jdql01jpq_flc.fits/WFC2</span>
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Extracting (single):  50%|█████     | 1/2 [00:01&lt;00:01,  1.31s/it]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold">WARNING MainProcess&gt; </span>Filename does not contain suffix.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Building contamination model for jdql01jxq_flc.fits/WFC1</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Building contamination model for jdql01jxq_flc.fits/WFC1</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Building contamination model for jdql01jxq_flc.fits/WFC2</span>
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Extracting (single): 100%|██████████| 2/2 [00:02&lt;00:00,  1.29s/it]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Building contamination model for jdql01jxq_flc.fits/WFC2</span>
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Extracting (single): 100%|██████████| 2/2 [00:02&lt;00:00,  1.29s/it]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Combining the 1d spectra</span>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Extracting (single): 100%|██████████| 2/2 [00:02&lt;00:00,  1.29s/it]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class=" -Color -Color-Green">Writing: /home/runner/work/hst_notebooks/hst_notebooks/notebooks/ACS/acs_grism_extraction_fullframe/output/ACS_WFC_WRAY-15-1736_x1d.fits</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Combining the 1d spectra</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="-Color -Color-Bold -Color-Bold-Green">INFO MainProcess&gt; </span><span class="-Color -Color-Green">Writing: /home/runner/work/hst_notebooks/hst_notebooks/notebooks/ACS/acs_grism_extraction_fullframe/output/ACS_WFC_WRAY-15-1736_x1d.fits</span>
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
@@ -2429,13 +2186,13 @@ WFC3 time-dependent zeropoints with `stsynphot` is available
 </div>
 </div>
 </div>
-<br>
+<br/>
 <p><a id="region"></a></p>
 <section id="display-a-region-file">
 <h3>7.1 Display a Region File<a class="headerlink" href="#display-a-region-file" title="Link to this heading">#</a></h3>
-<p>Below, we display a grism FLC file and the associated region file. The region files are useful for quickly inspecting which part <br>
-of the grism image contribute to each object’s spectrum. The +1, +2, -1, and -2 spectral orders for the observation are outlined in <br>
-dark blue, dark orange, light blue, and light orange respectively. More information about the <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> region files can be <br>found <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/regions.html">here</a>. <br></p>
+<p>Below, we display a grism FLC file and the associated region file. The region files are useful for quickly inspecting which part <br/>
+of the grism image contribute to each object’s spectrum. The +1, +2, -1, and -2 spectral orders for the observation are outlined in <br/>
+dark blue, dark orange, light blue, and light orange respectively. More information about the <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code> region files can be <br/>found <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/regions.html">here</a>. <br/></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># which image to display</span>
@@ -2465,19 +2222,19 @@ dark blue, dark orange, light blue, and light orange respectively. More informat
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/496aaf7d7bae97d393850b7986efbed1f3c76db14d029904022ee09652617cc0.png" src="../../../_images/496aaf7d7bae97d393850b7986efbed1f3c76db14d029904022ee09652617cc0.png" />
+<img alt="../../../_images/496aaf7d7bae97d393850b7986efbed1f3c76db14d029904022ee09652617cc0.png" src="../../../_images/496aaf7d7bae97d393850b7986efbed1f3c76db14d029904022ee09652617cc0.png"/>
 </div>
 </div>
-<br>
+<br/>
 <p><a id="plot"></a></p>
 </section>
 <section id="plot-the-spectrum">
 <h3>7.2 Plot the Spectrum<a class="headerlink" href="#plot-the-spectrum" title="Link to this heading">#</a></h3>
-<p>Finally, what we’ve all been waiting for(!), plotting the extracted spectrum. The <code class="docutils literal notranslate"><span class="pre">Single</span></code> module produces a single spectrum for each <br>
-source and grism image. Those spectra are then combined together into a single one-dimensional spectrum for each source and saved <br>
+<p>Finally, what we’ve all been waiting for(!), plotting the extracted spectrum. The <code class="docutils literal notranslate"><span class="pre">Single</span></code> module produces a single spectrum for each <br/>
+source and grism image. Those spectra are then combined together into a single one-dimensional spectrum for each source and saved <br/>
 as a <code class="docutils literal notranslate"><span class="pre">x1d.fits</span></code> file. In this example, we only have one source so there is a single spectrum.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">x1d</span></code> file is a binary table with columns for the wavelength (<code class="docutils literal notranslate"><span class="pre">lamb</span></code>), flux (<code class="docutils literal notranslate"><span class="pre">flam</span></code>), uncertainty (<code class="docutils literal notranslate"><span class="pre">func</span></code>), contamination (<code class="docutils literal notranslate"><span class="pre">cont</span></code>), <br>
-and number of pixels (<code class="docutils literal notranslate"><span class="pre">npix</span></code>). By default <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/configure.html#global-variables-config">configuration</a>, the flux and uncertainty values are in units of <em>erg s<sup>-1</sup> cm<sup>-2</sup> · Å<sup>-1</sup></em> and scaled by <br>
+<p>The <code class="docutils literal notranslate"><span class="pre">x1d</span></code> file is a binary table with columns for the wavelength (<code class="docutils literal notranslate"><span class="pre">lamb</span></code>), flux (<code class="docutils literal notranslate"><span class="pre">flam</span></code>), uncertainty (<code class="docutils literal notranslate"><span class="pre">func</span></code>), contamination (<code class="docutils literal notranslate"><span class="pre">cont</span></code>), <br/>
+and number of pixels (<code class="docutils literal notranslate"><span class="pre">npix</span></code>). By default <a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/configure.html#global-variables-config">configuration</a>, the flux and uncertainty values are in units of <em>erg s<sup>-1</sup> cm<sup>-2</sup> · Å<sup>-1</sup></em> and scaled by <br/>
 10<sup>-17</sup> (see <code class="docutils literal notranslate"><span class="pre">cfg.fluxunits</span></code> and <code class="docutils literal notranslate"><span class="pre">cfg.fluxscale</span></code> below).</p>
 <p>For a reference, the G800L spectrum was published in ACS ISR <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr1901.pdf">2019-01</a> (Hathi et al., Figure 5) and ACS ISR <a class="reference external" href="https://www.stsci.edu/files/live/sites/www/files/home/hst/instrumentation/acs/documentation/instrument-science-reports-isrs/_documents/isr0301.pdf">2003-01</a> (Pasquali et al.).</p>
 <div class="cell docutils container">
@@ -2519,7 +2276,7 @@ and number of pixels (<code class="docutils literal notranslate"><span class="pr
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../../_images/35e3292d6671020f494bc6f9ff7455785cdd88399ae3d80570a74681823d0ea9.png" src="../../../_images/35e3292d6671020f494bc6f9ff7455785cdd88399ae3d80570a74681823d0ea9.png" />
+<img alt="../../../_images/35e3292d6671020f494bc6f9ff7455785cdd88399ae3d80570a74681823d0ea9.png" src="../../../_images/35e3292d6671020f494bc6f9ff7455785cdd88399ae3d80570a74681823d0ea9.png"/>
 </div>
 </div>
 <p><a id="conclusions"></a></p>
@@ -2527,7 +2284,7 @@ and number of pixels (<code class="docutils literal notranslate"><span class="pr
 </section>
 <section id="conclusions">
 <h2>8. Conclusions<a class="headerlink" href="#conclusions" title="Link to this heading">#</a></h2>
-<p>Thank you for going through this notebook. You should now have all the necessary tools for extracting a 1D spectrum from ACS WFC <br>
+<p>Thank you for going through this notebook. You should now have all the necessary tools for extracting a 1D spectrum from ACS WFC <br/>
 grism data with <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code>. After completing this notebook you should be more familiar with:</p>
 <ul class="simple">
 <li><p>Downloading data.</p></li>
@@ -2549,14 +2306,14 @@ grism data with <code class="docutils literal notranslate"><span class="pre">sli
 </section>
 <section id="about-this-notebook">
 <h2>About this Notebook<a class="headerlink" href="#about-this-notebook" title="Link to this heading">#</a></h2>
-<p><strong>Authors:</strong> Roberto Avila &amp; Jenna Ryon (ACS Team), Benjamin Kuhn (WFC3 Team) <br>
-<strong>Last Updated:</strong> 2026-03-31<br>
+<p><strong>Authors:</strong> Roberto Avila &amp; Jenna Ryon (ACS Team), Benjamin Kuhn (WFC3 Team) <br/>
+<strong>Last Updated:</strong> 2026-03-31<br/>
 <strong>Created</strong> 2026-01-20</p>
 <p><a id="cite"></a></p>
 </section>
 <section id="citations">
 <h2>Citations<a class="headerlink" href="#citations" title="Link to this heading">#</a></h2>
-<p>If you use Python packages for published research, please cite the authors. <br>
+<p>If you use Python packages for published research, please cite the authors. <br/>
 Follow these links for more information about citing packages used in this notebook:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.astropy.org/acknowledging.html">Citing <code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></p></li>
@@ -2566,19 +2323,18 @@ Follow these links for more information about citing packages used in this noteb
 <li><p><a class="reference external" href="https://www.scipy.org/citing.html#numpy">Citing <code class="docutils literal notranslate"><span class="pre">numpy</span></code></a></p></li>
 <li><p><a class="reference external" href="https://slitlessutils.readthedocs.io/en/latest/citation.html">Citing <code class="docutils literal notranslate"><span class="pre">slitlessutils</span></code></a></p></li>
 </ul>
-<hr class="docutils" />
+<hr class="docutils"/>
 <section id="for-more-help">
 <h3>For more help:<a class="headerlink" href="#for-more-help" title="Link to this heading">#</a></h3>
 <p>More details may be found on the <a class="reference external" href="http://www.stsci.edu/hst/instrumentation/acs">ACS website</a> and in the <a class="reference external" href="https://hst-docs.stsci.edu/display/ACSIHB">ACS Instrument</a> and <a class="reference external" href="https://hst-docs.stsci.edu/acsdhb">Data Handbooks</a>.</p>
 <p>Please visit the <a class="reference external" href="https://stsci.service-now.com/hst">HST Help Desk</a>. Through the help desk portal, you can explore the HST Knowledge Base and request additional help from experts.</p>
-<hr>
+<hr/>
 <p><a class="reference internal" href="#titleImageReduction"><span class="xref myst">Top of Page</span></a>
-<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/hst_notebooks/main/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/hst_notebooks/main/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;" /></a></p>
+<a class="reference internal" href="https://raw.githubusercontent.com/spacetelescope/hst_notebooks/main/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png"><img alt="Space Telescope Logo" src="https://raw.githubusercontent.com/spacetelescope/hst_notebooks/main/assets/stsci_pri_combo_mark_horizonal_white_bkgd.png" style="width: 200px;"/></a></p>
 </section>
 </section>
 </section>
-
-    <script type="text/x-thebe-config">
+<script type="text/x-thebe-config">
     {
         requestKernel: true,
         binderOptions: {
@@ -2596,54 +2352,52 @@ Follow these links for more information about citing packages used in this noteb
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
-
-                </article>
-              
-
-              
-              
-              
-              
-                <footer class="prev-next-footer d-print-none">
-                  
+<script>kernelName = 'python3'</script>
+<section aria-label="Notebook citation" id="citation-footer"><!-- CITATION_FOOTER:DO_NOT_EDIT -->
+<hr/>
+<p><em>This research makes use of the <code>slitlessutils_ACSWFC_fullframe_extraction.ipynb</code>, released on
+2026-04-07. This notebook is part of the <code>HST Notebooks</code>
+repository (Perpetual DOI: <a href="https://doi.org/10.5281/zenodo.0000000">10.5281/zenodo.0000000</a>),
+developed by the Space Telescope Science Institute, which is operated by
+the Association of Universities for Research in Astronomy, Inc. under NASA contract NAS 5-26555.</em></p>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>When publishing results that use this notebook, please
+include a citation in your manuscript.</strong></p>
+<p>A LaTeX-ready bibliography entry can be copied from the
+<a href="https://github.com/spacetelescope/hst_notebooks">HST Notebooks GitHub repository</a>
+using "Cite this repository", or from
+<a href="https://doi.org/10.5281/zenodo.17179607">Zenodo</a>
+using "Export &gt; BibTeX".</p>
+</blockquote>
+<hr/>
+</section></article>
+<footer class="prev-next-footer d-print-none">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="../acs_etc_cte/acs_etc_cte.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Planning WFC Imaging While Taking into Account CTE-related Losses</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="../acs_grism_extraction_subarray/slitlessutils_ACSWFC_subarray_extraction.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Cookbook: Spectral Extraction for ACS/WFC Subarrays</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
+<a class="left-prev" href="../acs_etc_cte/acs_etc_cte.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Planning WFC Imaging While Taking into Account CTE-related Losses</p>
 </div>
-                </footer>
-              
-            </div>
-            
-            
-              
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item"><div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
+</a>
+<a class="right-next" href="../acs_grism_extraction_subarray/slitlessutils_ACSWFC_subarray_extraction.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">Slitlessutils</span></code> Cookbook: Spectral Extraction for ACS/WFC Subarrays</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<dialog id="pst-secondary-sidebar-modal"></dialog>
+<div class="bd-sidebar-secondary bd-toc" id="pst-secondary-sidebar"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item"><div class="page-toc tocsection onthispage" id="pst-page-navigation-heading-2">
+<i class="fa-solid fa-list"></i> Contents
   </div>
-  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+<nav aria-labelledby="pst-page-navigation-heading-2" class="page-toc" id="pst-page-toc-nav">
+<ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-goals">Learning Goals</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">1. Introduction</a></li>
@@ -2675,57 +2429,36 @@ Follow these links for more information about citing packages used in this noteb
 </ul>
 </li>
 </ul>
-  </nav></div>
-
+</nav></div>
 </div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
+</div>
+<footer class="bd-footer-content">
 <div class="bd-footer-content__inner container">
-  
-  <div class="footer-item">
-    
+<div class="footer-item">
 <p class="component-author">
 By STScI
 </p>
-
-  </div>
-  
-  <div class="footer-item">
-    
-
-  <p class="copyright">
+</div>
+<div class="footer-item">
+<p class="copyright">
     
       © Copyright 2022-2025.
       <br/>
-    
-  </p>
-
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
+</p>
 </div>
-          </footer>
-        
-
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
-
-  <footer class="bd-footer">
-  </footer>
-  </body>
+<div class="footer-item">
+</div>
+<div class="footer-item">
+</div>
+</div>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="bd-footer">
+</footer>
+</body>
 </html>
