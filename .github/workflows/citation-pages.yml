@@ -1,0 +1,144 @@
+name: Cite and publish gh-pages
+
+on:
+  workflow_run:
+    workflows:
+      - Notebook CI - Main Branch
+      - Notebook CI - On-Demand Actions
+    types: [completed]
+    branches: [main]
+
+  workflow_dispatch:
+
+  push:
+    branches: [main]
+    paths:
+      - citation.toml
+      - .github/scripts/add_citation_footer.py
+      - .github/workflows/citation-pages.yml
+
+# The upstream workflow writes generated HTML to gh-pages.
+# This workflow commits missing citations to gh-pages,
+# then explicitly requests a branch-based Pages build.
+
+permissions:
+  contents: read
+
+concurrency:
+  group: citation-pages
+  cancel-in-progress: false
+
+jobs:
+  cite:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-24.04
+
+    permissions:
+      contents: write
+      actions: read
+      pages: write
+
+    steps:
+      - name: Check for a generated site
+        id: site
+        uses: actions/github-script@v8
+        with:
+          script: |
+            if (context.eventName === 'workflow_run') {
+              const jobs = await github.paginate(
+                github.rest.actions.listJobsForWorkflowRun,
+                {
+                  ...context.repo,
+                  run_id: context.payload.workflow_run.id,
+                  filter: 'latest',
+                  per_page: 100
+                }
+              );
+
+              const published = jobs.some(job =>
+                job.steps?.some(step =>
+                  step.name === 'Deploy to GitHub Pages' &&
+                  step.conclusion === 'success'
+                )
+              );
+
+              if (!published) {
+                core.info('Upstream run did not generate/publish HTML; skipping.');
+                core.setOutput('publish', 'false');
+                return;
+              }
+            }
+
+            // Pin the generated site to one commit.
+            const branch = await github.rest.repos.getBranch({
+              ...context.repo,
+              branch: 'gh-pages'
+            });
+
+            core.setOutput('sha', branch.data.commit.sha);
+            core.setOutput('publish', 'true');
+
+      - name: Checkout citation configuration and notebook sources
+        if: steps.site.outputs.publish == 'true'
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+          path: source
+          persist-credentials: false
+
+      - name: Checkout generated HTML
+        if: steps.site.outputs.publish == 'true'
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.site.outputs.sha }}
+          path: site
+          persist-credentials: true
+
+      - name: Set up Python
+        if: steps.site.outputs.publish == 'true'
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install citation dependencies
+        if: steps.site.outputs.publish == 'true'
+        run: python -m pip install nbformat beautifulsoup4 markdown-it-py
+
+      - name: Append missing citations to generated notebook HTML
+        if: steps.site.outputs.publish == 'true'
+        run: >-
+          python source/.github/scripts/add_citation_footer.py
+          --config source/citation.toml
+          --path source
+          --html-dir site
+
+      - name: Commit cited HTML to gh-pages
+        if: steps.site.outputs.publish == 'true'
+        working-directory: site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          touch .nojekyll
+          git add --all
+
+          if git diff --cached --quiet; then
+            echo "No citation changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Add missing notebook citations"
+          git push origin HEAD:refs/heads/gh-pages
+
+      - name: Request GitHub Pages build
+        if: steps.site.outputs.publish == 'true'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.repos.requestPagesBuild({
+              ...context.repo
+            });
+            core.info('GitHub Pages build requested.');
