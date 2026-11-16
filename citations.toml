@@ -1,0 +1,55 @@
+# citation.toml — example config for add_citation_footer.py
+#
+# The footer is rendered with Python's string.Template, so variables are
+# referenced as ${name}. This avoids conflicts with f-string-style braces
+# that may appear in citation text.
+#
+# Built-in (per-notebook) variables you can use in the template:
+#   ${notebook_name}   e.g. "analysis.ipynb"
+#   ${notebook_stem}   e.g. "analysis"
+#   ${notebook_path}   path relative to the repo root
+#   ${release_date}    determined by [date].source below
+#
+# Anything under [variables] is also available with the same ${name} syntax.
+
+template = """
+---
+
+*This research makes use of the `${notebook_name}`, released on
+${release_date}. This notebook is part of the `${repo_name}`
+repository (Perpetual DOI: [${doi}](https://doi.org/${doi})),
+developed by ${institution}, which is operated by
+${parent_org} under ${contract}.*
+
+> [!IMPORTANT]
+> **When publishing results that use this notebook, please
+> include a citation in your manuscript.**
+>
+> A LaTeX-ready bibliography entry can be copied from the
+> [$(repo_name) GitHub repository]($(repo_url))
+> using "Cite this repository", or from
+> [Zenodo](https://doi.org/10.5281/zenodo.17179607)
+> using "Export > BibTeX".
+
+---
+"""
+
+[variables]
+repo_name   = "HST Notebooks"
+doi         = "10.5281/zenodo.0000000"
+institution = "the Space Telescope Science Institute"
+parent_org  = "the Association of Universities for Research in Astronomy, Inc."
+contract    = "NASA contract NAS 5-26555"
+repo_url    = "https://github.com/spacetelescope/hst_notebooks"
+
+[date]
+# How to determine each notebook's "released on" date:
+#   "git"   – date of last commit touching the file (recommended)
+#   "mtime" – filesystem modification time
+#   "today" – today's date at run time
+source = "git"
+format = "%Y-%m-%d"
+
+[exclude]
+dirs  = [".ipynb_checkpoints", ".git", "build", "_build"]
+globs = ["**/scratch_*.ipynb"]
