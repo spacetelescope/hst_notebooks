@@ -43,7 +43,7 @@ jobs:
     steps:
       - name: Check for a generated site
         id: site
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             if (context.eventName === 'workflow_run') {
@@ -82,7 +82,7 @@ jobs:
 
       - name: Checkout citation configuration and notebook sources
         if: steps.site.outputs.publish == 'true'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: main
           fetch-depth: 0
@@ -91,7 +91,7 @@ jobs:
 
       - name: Checkout generated HTML
         if: steps.site.outputs.publish == 'true'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ steps.site.outputs.sha }}
           path: site
@@ -99,7 +99,7 @@ jobs:
 
       - name: Set up Python
         if: steps.site.outputs.publish == 'true'
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.11'
 
@@ -135,7 +135,7 @@ jobs:
 
       - name: Request GitHub Pages build
         if: steps.site.outputs.publish == 'true'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             await github.rest.repos.requestPagesBuild({
